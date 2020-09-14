@@ -150,7 +150,7 @@ drawControl 的事件类型和每个 Draw 的事件一致，如果在 drawContro
 图形更新时触发该事件，图形的平移，顶点的编辑
 
 ```javascript
-drawControl.on('draw.delete', (e) => {});
+drawControl.on('draw.delete', e => {});
 ```
 
 ### style
@@ -253,3 +253,7 @@ const style = {
   },
 };
 ```
+
+## demo
+
+<code src="./demo/draw_control.jsx" />
