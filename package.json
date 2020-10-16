@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@antv/l7-draw",
-  "version": "2.3.0",
+  "version": "2.3.38",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
