@@ -1,6 +1,6 @@
 {
   "name": "@antv/l7-draw",
-  "version": "2.3.38",
+  "version": "2.3.40",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
@@ -42,6 +42,7 @@
     "@turf/turf": "^5.1.6",
     "@types/mapbox-gl": "^1.11.2",
     "eventemitter3": "^4.0.0",
+    "load-styles": "^2.0.0",
     "lodash": "^4.6.2",
     "react": "^16.12.0"
   },

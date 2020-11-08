@@ -10,6 +10,7 @@ export default {
       '@antv/l7': 'L7',
     },
   },
+  lessInBabelMode: true,
   extraRollupPlugins: [
     commonjs({
       namedExports: {
