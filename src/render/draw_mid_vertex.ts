@@ -20,7 +20,7 @@ export default class DrawVertexLayer extends BaseRender {
   }
   public updateData(data: any) {
     const midFeatures = this.calcMidPointData(data);
-    this.drawLayers.forEach((layer) => layer.setData(midFeatures));
+    this.drawLayers.forEach(layer => layer.setData(midFeatures));
   }
   public enableEdit() {
     const layer = this.drawLayers[0];

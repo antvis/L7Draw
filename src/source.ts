@@ -76,7 +76,7 @@ export default class DrawSource {
   }
 
   private getFeatureIndex(feature: Feature): number | undefined {
-    return this.data.features.findIndex((fe) => {
+    return this.data.features.findIndex(fe => {
       return fe?.properties?.id === feature?.properties?.id;
     });
   }

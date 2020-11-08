@@ -6,7 +6,7 @@ interface IDelta {
 }
 type RingType = Array<[number, number]>;
 export default function(features: Feature[], delta: IDelta) {
-  features.forEach((feature) => {
+  features.forEach(feature => {
     const geometry = feature.geometry as Geometry;
     let nextCoord;
     const { type, coordinates } = geometry;
@@ -23,7 +23,7 @@ export default function(features: Feature[], delta: IDelta) {
         nextCoord = moveMultiPolygon(coordinates as RingType[], delta);
         break;
       case FeatureType.MULTI_POLYGON:
-        nextCoord = (coordinates as RingType[][]).map((mult) =>
+        nextCoord = (coordinates as RingType[][]).map(mult =>
           moveMultiPolygon(mult as RingType[], delta),
         );
         break;
@@ -44,9 +44,9 @@ export function movePoint(
 }
 
 export function moveRing(coords: RingType, delta: IDelta) {
-  return coords.map((coord) => movePoint(coord, delta));
+  return coords.map(coord => movePoint(coord, delta));
 }
 
 export function moveMultiPolygon(mult: RingType[], delta: IDelta) {
-  return mult.map((ring) => moveRing(ring, delta));
+  return mult.map(ring => moveRing(ring, delta));
 }

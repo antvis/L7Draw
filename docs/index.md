@@ -1,4 +1,3 @@
-
 ---
 title: Draw 实例
 order: 3
@@ -89,4 +88,5 @@ drawPoint.enable();
 图形更新时触发该事件，图形的平移，顶点的编辑
 
 ## demo
+
 <code src="./demo/draw.jsx" />
