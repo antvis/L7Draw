@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "@antv/l7-draw",
   "version": "2.3.38",
   "scripts": {
@@ -22,7 +21,7 @@
   "main": "lib/index.js",
   "module": "es/index.js",
   "unpkg": "dist/l7-draw.js",
-  "typings": "dist/index.d.ts",
+  "typings": "lib/index.d.ts",
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
