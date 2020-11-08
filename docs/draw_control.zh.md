@@ -253,3 +253,7 @@ const style = {
   },
 };
 ```
+
+## demo
+
+<code src="./demo/draw_control.jsx" />
