@@ -28,7 +28,7 @@ const DrawType: {
 import { isObject, polygon } from '@turf/helpers';
 import { DrawEvent, DrawModes } from './util/constant';
 export interface IControls {
-  [key: string]: boolean | IDrawFeatureOption;
+  [key: string]: boolean | Partial<IDrawFeatureOption>;
 }
 
 export interface IDrawControlOption extends IControlOption {

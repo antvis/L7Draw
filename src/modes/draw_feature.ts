@@ -18,6 +18,7 @@ import DrawSelected from './draw_selected';
 export interface IDrawFeatureOption extends IDrawOption {
   units: Units;
   steps: number;
+  showFeature: boolean;
   editEnable: boolean;
   selectEnable: boolean;
   cursor: string;
@@ -130,6 +131,7 @@ export default abstract class DrawFeature extends DrawMode {
       cursor: 'crosshair',
       editEnable: true,
       selectEnable: true,
+      showFeature: true,
     };
   }
   protected abstract onDragStart(e: IInteractionTarget): void;
@@ -164,7 +166,7 @@ export default abstract class DrawFeature extends DrawMode {
 
   private onModeChange = (mode: DrawModes[any]) => {
     switch (mode) {
-      case DrawModes.DIRECT_SELECT:
+      case DrawModes.DIRECT_SELECT: // 顶点编辑
         if (!this.editEnable) {
           return;
         }
@@ -181,7 +183,7 @@ export default abstract class DrawFeature extends DrawMode {
         this.showOtherLayer();
         this.drawStatus = 'DrawEdit';
         break;
-      case DrawModes.SIMPLE_SELECT:
+      case DrawModes.SIMPLE_SELECT: // 图形移动
         if (!this.selectEnable) {
           this.drawLayer.hide();
           this.drawVertexLayer.hide();
@@ -206,6 +208,9 @@ export default abstract class DrawFeature extends DrawMode {
         this.drawStatus = 'DrawSelected';
         break;
       case DrawModes.STATIC:
+        if (!this.getOption('showFeature')) {
+          return;
+        }
         this.source.updateFeature(this.currentFeature as Feature);
         this.selectMode.disable();
         this.editMode.disable();

@@ -47,7 +47,8 @@
     "react": "^16.12.0"
   },
   "devDependencies": {
-    "@antv/l7": "^2.2.34",
+    "@antv/l7": "^2.3.1",
+    "@antv/l7-maps": "^2.3.1",
     "@rollup/plugin-commonjs": "11.0.2",
     "@rollup/plugin-url": "^5.0.1",
     "@umijs/preset-react": "1.x",
@@ -61,6 +62,7 @@
     "yorkie": "^2.0.0"
   },
   "peerDependencies": {
-    "@antv/l7": "^2.2.34"
+    "@antv/l7": "^2.3.0",
+    "@antv/l7-maps": "^2.3.0"
   }
 }
