@@ -189,6 +189,7 @@ export class DrawControl extends Control {
       return;
     }
     this.currentDraw.deleteMode.enable();
+    this.emit('draw.delete');
     return false;
   };
 
