@@ -31,6 +31,9 @@ export default () => {
       drawControl.on('draw.update', e => {
         console.log('update', e);
       });
+      drawControl.on('draw.delete', e => {
+        console.log('delete', e);
+      });
       scene.addControl(drawControl);
     });
   }, []);
