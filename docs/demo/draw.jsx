@@ -2,6 +2,27 @@ import React from 'react';
 import { Scene } from '@antv/l7';
 import { DrawPolygon } from '@antv/l7-draw';
 import { GaodeMap } from '@antv/l7-maps';
+const polygon2 = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [95.625, 43.068887774169625],
+            [116.71874999999999, 43.068887774169625],
+            [116.71874999999999, 55.97379820507658],
+            [95.625, 55.97379820507658],
+            [95.625, 43.068887774169625],
+          ],
+        ],
+      },
+    },
+  ],
+};
 const polygon = {
   type: 'FeatureCollection',
   features: [
@@ -46,13 +67,14 @@ export default () => {
         pitch: 0,
         style: 'light',
         center: [116.30470275878906, 39.88352811449648],
-        zoom: 12,
+        zoom: 10,
       }),
     });
     scene.on('loaded', () => {
       const draw = new DrawPolygon(scene, {
         data: polygon,
       });
+
       draw.on('draw.create', e => {
         console.log(e);
       });

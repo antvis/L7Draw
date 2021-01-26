@@ -13,8 +13,10 @@ import DrawVertexLayer from '../render/draw_vertex';
 import { DrawEvent, DrawModes } from '../util/constant';
 import DrawDelete from './draw_delete';
 import DrawEdit from './draw_edit';
+import DrawSource from '../source';
 import DrawMode, { IDrawOption } from './draw_mode';
 import DrawSelected from './draw_selected';
+import merge from 'lodash/merge';
 export interface IDrawFeatureOption extends IDrawOption {
   units: Units;
   steps: number;
@@ -85,6 +87,14 @@ export default abstract class DrawFeature extends DrawMode {
 
   public getData(): FeatureCollection {
     return this.source.getData();
+  }
+
+  public resetData(data: FeatureCollection) {
+    this.source = new DrawSource(data);
+    this.options = merge(this.options, this.getDefaultOptions(), { data });
+    this.initData();
+    this.normalLayer.update(this.source.data);
+    this.normalLayer.enableSelect();
   }
 
   public removeAllData(): void {

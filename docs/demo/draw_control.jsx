@@ -28,8 +28,8 @@ export default () => {
             showFeature: false,
           },
           polygon: {
-            selectEnable: false,
-            showFeature: false,
+            selectEnable: true,
+            showFeature: true,
           },
           circle: false,
           rect: false,
