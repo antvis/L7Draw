@@ -13,11 +13,14 @@ import DrawVertexLayer from '../render/draw_vertex';
 import { DrawEvent, DrawModes } from '../util/constant';
 import DrawDelete from './draw_delete';
 import DrawEdit from './draw_edit';
+import DrawSource from '../source';
 import DrawMode, { IDrawOption } from './draw_mode';
 import DrawSelected from './draw_selected';
+import merge from 'lodash/merge';
 export interface IDrawFeatureOption extends IDrawOption {
   units: Units;
   steps: number;
+  showFeature: boolean;
   editEnable: boolean;
   selectEnable: boolean;
   cursor: string;
@@ -86,6 +89,14 @@ export default abstract class DrawFeature extends DrawMode {
     return this.source.getData();
   }
 
+  public resetData(data: FeatureCollection) {
+    this.source = new DrawSource(data);
+    this.options = merge(this.options, this.getDefaultOptions(), { data });
+    this.initData();
+    this.normalLayer.update(this.source.data);
+    this.normalLayer.enableSelect();
+  }
+
   public removeAllData(): void {
     this.source.removeAllFeatures();
     this.currentFeature = null;
@@ -130,6 +141,7 @@ export default abstract class DrawFeature extends DrawMode {
       cursor: 'crosshair',
       editEnable: true,
       selectEnable: true,
+      showFeature: true,
     };
   }
   protected abstract onDragStart(e: IInteractionTarget): void;
@@ -164,7 +176,7 @@ export default abstract class DrawFeature extends DrawMode {
 
   private onModeChange = (mode: DrawModes[any]) => {
     switch (mode) {
-      case DrawModes.DIRECT_SELECT:
+      case DrawModes.DIRECT_SELECT: // 顶点编辑
         if (!this.editEnable) {
           return;
         }
@@ -181,7 +193,7 @@ export default abstract class DrawFeature extends DrawMode {
         this.showOtherLayer();
         this.drawStatus = 'DrawEdit';
         break;
-      case DrawModes.SIMPLE_SELECT:
+      case DrawModes.SIMPLE_SELECT: // 图形移动
         if (!this.selectEnable) {
           this.drawLayer.hide();
           this.drawVertexLayer.hide();
@@ -206,6 +218,9 @@ export default abstract class DrawFeature extends DrawMode {
         this.drawStatus = 'DrawSelected';
         break;
       case DrawModes.STATIC:
+        if (!this.getOption('showFeature')) {
+          return;
+        }
         this.source.updateFeature(this.currentFeature as Feature);
         this.selectMode.disable();
         this.editMode.disable();

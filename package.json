@@ -1,6 +1,6 @@
 {
   "name": "@antv/l7-draw",
-  "version": "2.3.40",
+  "version": "2.4.0",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
@@ -47,8 +47,10 @@
     "react": "^16.12.0"
   },
   "devDependencies": {
-    "@antv/l7": "^2.2.34",
+    "@antv/l7": "^2.3.1",
+    "@antv/l7-maps": "^2.3.1",
     "@rollup/plugin-commonjs": "11.0.2",
+    "@rollup/plugin-url": "^5.0.1",
     "@umijs/preset-react": "1.x",
     "@umijs/test": "^3.0.5",
     "dumi": "^1.0.9",
@@ -56,9 +58,11 @@
     "gh-pages": "^3.0.0",
     "lint-staged": "^10.0.7",
     "prettier": "^1.19.1",
+    "rollup-plugin-svg": "^2.0.0",
     "yorkie": "^2.0.0"
   },
   "peerDependencies": {
-    "@antv/l7": "^2.2.34"
+    "@antv/l7": "^2.3.0",
+    "@antv/l7-maps": "^2.3.0"
   }
 }

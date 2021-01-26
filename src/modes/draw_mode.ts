@@ -47,13 +47,13 @@ export default abstract class DrawMode extends EventEmitter {
     this.title = this.getOption('title');
   }
   public enable() {
+    this.scene.setMapStatus({
+      dragEnable: false,
+    });
     if (this.isEnable) {
       return;
     }
     // @ts-ignore
-    this.scene.setMapStatus({
-      dragEnable: false,
-    });
     this.scene.on('dragstart', this.onDragStart);
     this.scene.on('dragging', this.onDragging);
     this.scene.on('dragend', this.onDragEnd);
