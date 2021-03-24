@@ -109,11 +109,27 @@ export default class DrawPolygon extends DrawFeature {
     return null;
   };
 
+  private isEqualsPrePoint(lngLat: ILngLat): boolean {
+    let pointLen = this.points.length;
+    if (pointLen == 0) {
+      return false;
+    }
+    let p = this.points[pointLen - 1];
+    if (p.lat === lngLat.lat && p.lng === lngLat.lng) {
+      return true;
+    }
+    return false;
+  }
   protected onClick = (e: any) => {
     if (this.drawStatus !== 'Drawing') {
       this.drawLayer.emit('unclick', null);
     }
     const lngLat = e.lngLat || e.lnglat;
+
+    if (this.isEqualsPrePoint(lngLat)) {
+      return;
+    }
+
     this.endPoint = lngLat;
     this.points.push(lngLat);
     const feature = this.createFeature(this.points);
@@ -139,7 +155,9 @@ export default class DrawPolygon extends DrawFeature {
     if (this.points.length < 2) {
       return;
     }
-    this.points.push(lngLat);
+    if (!this.isEqualsPrePoint(lngLat)) {
+      this.points.push(lngLat);
+    }
     this.drawFinish();
   };
 
