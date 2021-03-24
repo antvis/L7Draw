@@ -44,8 +44,8 @@ export default class DrawResultLayer extends BaseRender {
     layer.off('click', this.onDeleteClick);
   }
   public addFilter() {
-    this.drawLayers.forEach((layer) =>
-      layer.filter('active', (active) => {
+    this.drawLayers.forEach(layer =>
+      layer.filter('active', active => {
         return !active;
       }),
     );

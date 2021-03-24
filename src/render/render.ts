@@ -30,7 +30,7 @@ export default class RenderLayer {
       zIndex: 0,
     })
       .source(InitFeature)
-      .filter('active', (active) => {
+      .filter('active', active => {
         return !active;
       })
       .shape('fill')
@@ -43,7 +43,7 @@ export default class RenderLayer {
     })
       .source(InitFeature)
       .shape('line')
-      .filter('active', (active) => {
+      .filter('active', active => {
         return !active;
       })
       .size(linestyle.size)
@@ -74,7 +74,7 @@ export default class RenderLayer {
   }
 
   private addLayerEvent() {
-    this.polygonLayer.on('click', (e) => {
+    this.polygonLayer.on('click', e => {
       this.draw.setCurrentFeature(e.feature);
       this.draw.emit(DrawEvent.MODE_CHANGE, DrawModes.SIMPLE_SELECT);
     });

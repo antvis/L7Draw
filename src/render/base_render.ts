@@ -43,7 +43,7 @@ export default class BaseRenderLayer {
     if (this.drawLayers.length === 0) {
       this.update(data);
     }
-    this.drawLayers.forEach((layer) => layer.setData(data));
+    this.drawLayers.forEach(layer => layer.setData(data));
   }
 
   public destroy() {
@@ -52,18 +52,18 @@ export default class BaseRenderLayer {
 
   public removeLayers() {
     if (this.drawLayers.length !== 0) {
-      this.drawLayers.forEach((layer) => this.draw.scene.removeLayer(layer));
+      this.drawLayers.forEach(layer => this.draw.scene.removeLayer(layer));
     }
   }
   public addLayers() {
-    this.drawLayers.forEach((layer) => this.draw.scene.addLayer(layer));
+    this.drawLayers.forEach(layer => this.draw.scene.addLayer(layer));
   }
 
   public show() {
-    this.drawLayers.forEach((layer) => layer.show());
+    this.drawLayers.forEach(layer => layer.show());
   }
 
   public hide() {
-    this.drawLayers.forEach((layer) => layer.hide());
+    this.drawLayers.forEach(layer => layer.hide());
   }
 }

@@ -2,7 +2,7 @@
  * @Author: lzxue
  * @Date: 2020-04-03 19:24:16
  * @Last Modified by: lzxue
- * @Last Modified time: 2020-06-22 17:33:14
+ * @Last Modified time: 2020-11-20 01:00:22
  */
 import { Control, DOM, IControlOption, PositionType, Scene } from '@antv/l7';
 import './css/draw.less';
@@ -28,7 +28,7 @@ const DrawType: {
 import { isObject, polygon } from '@turf/helpers';
 import { DrawEvent, DrawModes } from './util/constant';
 export interface IControls {
-  [key: string]: boolean | IDrawFeatureOption;
+  [key: string]: boolean | Partial<IDrawFeatureOption>;
 }
 
 export interface IDrawControlOption extends IControlOption {
@@ -149,7 +149,7 @@ export class DrawControl extends Control {
       if (this.draw[draw]) {
         ['draw.create', 'draw.update', 'draw.delete'].forEach(
           (type: string) => {
-            this.draw[draw].on(type, (feature) => {
+            this.draw[draw].on(type, feature => {
               this.emit(type, {
                 drawType: draw,
                 feature,
@@ -189,6 +189,7 @@ export class DrawControl extends Control {
       return;
     }
     this.currentDraw.deleteMode.enable();
+    this.emit('draw.delete');
     return false;
   };
 

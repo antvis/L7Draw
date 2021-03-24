@@ -19,17 +19,29 @@ export default () => {
         position: 'topright',
         layout: 'horizontal', // horizontal vertical
         controls: {
-          point: true,
-          polygon: true,
-          line: true,
-          circle: true,
-          rect: true,
-          delete: true,
+          point: {
+            selectEnable: false,
+            showFeature: false,
+          },
+          line: {
+            selectEnable: false,
+            showFeature: false,
+          },
+          polygon: {
+            selectEnable: true,
+            showFeature: true,
+          },
+          circle: false,
+          rect: false,
+          delete: false,
         },
       });
       scene.on('click', () => {});
-      drawControl.on('draw.update', e => {
-        console.log('update', e);
+      drawControl.on('draw.create', e => {
+        console.log('create', e);
+      });
+      drawControl.on('draw.delete', e => {
+        console.log('delete', e);
       });
       scene.addControl(drawControl);
     });
@@ -38,7 +50,7 @@ export default () => {
   return (
     <div
       style={{
-        height: '400px',
+        height: '800px',
         position: 'relative',
       }}
       id="map"

@@ -1,12 +1,13 @@
 .l7-control-draw {
   border-radius: 4px;
   background: #fff;
-  box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   display: flex;
   button {
     background-repeat: no-repeat;
     background-position: center;
     background-size: 20px 20px;
+    background-color: #fff;
     width: 30px;
     height: 30px;
     display: block;
@@ -17,11 +18,11 @@
     box-sizing: border-box;
     cursor: pointer;
   }
- button:not(:disabled):hover {
+  button:not(:disabled):hover {
     background-color: rgba(0, 0, 0, 0.05);
   }
 
- button:focus {
+  button:focus {
     box-shadow: 0 0 2px 2px #0096ff;
   }
   .draw-point {
@@ -42,29 +43,28 @@
   .draw-delete {
     background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNTg1NzMwNDEyNjU0IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjQ4MDQiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCI+PGRlZnM+PHN0eWxlIHR5cGU9InRleHQvY3NzIj48L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNMjEzLjMzMzMzMyAyODIuODM3MzMzYzAtMjAuNjkzMzMzIDE2LjE3MDY2Ny0zNy40MTg2NjcgMzYuMDk2LTM3LjQxODY2NmgxODAuNDh2LTM3LjM3NmMwLTIwLjY1MDY2NyAxNi4yMTMzMzMtMzcuMzc2IDM2LjEzODY2Ny0zNy4zNzZoNzIuMTkyYzE5Ljk2OCAwIDM2LjEzODY2NyAxNi43MjUzMzMgMzYuMTM4NjY3IDM3LjM3NnYzNy4zNzZoMTgwLjQ4YzE5Ljk2OCAwIDM2LjA5NiAxNi43MjUzMzMgMzYuMDk2IDM3LjQxODY2NnYzNy4zNzZIMjEzLjMzMzMzM3YtMzcuMzc2eiBtNTQxLjUyNTMzNCAxMTIuMTI4djQyMC45OTJjMCAyMC42MDgtMTYuMTI4IDM3LjM3Ni0zNi4wOTYgMzcuMzc2SDI4NS41MjUzMzNjLTE5LjkyNTMzMyAwLTM2LjA5Ni0xNi43NjgtMzYuMDk2LTM3LjM3NlYzNTcuNTQ2NjY3aDUwNS40MjkzMzR2MzcuMzc2ek0zOTMuODU2IDQ2OS43NmMwLTIwLjY1MDY2Ny0xNi4xNzA2NjctMzcuNDE4NjY3LTM2LjA5Ni0zNy40MTg2NjctMTkuOTY4IDAtMzYuMTM4NjY3IDE2Ljc2OC0zNi4xMzg2NjcgMzcuNDE4NjY3djI3MS40MDI2NjdjMCAyMC42NTA2NjcgMTYuMjEzMzMzIDM3LjQxODY2NyAzNi4xMzg2NjcgMzcuNDE4NjY2IDE5LjkyNTMzMyAwIDM2LjA5Ni0xNi43NjggMzYuMDk2LTM3LjQxODY2NlY0NjkuNzZ6IG0xNDQuMzg0IDBjMC0yMC42NTA2NjctMTYuMTI4LTM3LjQxODY2Ny0zNi4wOTYtMzcuNDE4NjY3LTE5LjkyNTMzMyAwLTM2LjA5NiAxNi43NjgtMzYuMDk2IDM3LjQxODY2N3YyNzEuNDAyNjY3YzAgMjAuNjUwNjY3IDE2LjE3MDY2NyAzNy40MTg2NjcgMzYuMDk2IDM3LjQxODY2NiAxOS45NjggMCAzNi4wOTYtMTYuNzY4IDM2LjA5Ni0zNy40MTg2NjZWNDY5Ljc2eiBtMTQ0LjQyNjY2NyAwYzAtMjAuNjUwNjY3LTE2LjE3MDY2Ny0zNy40MTg2NjctMzYuMDk2LTM3LjQxODY2Ny0xOS45NjggMC0zNi4wOTYgMTYuNzY4LTM2LjA5NiAzNy40MTg2Njd2MjcxLjQwMjY2N2MwIDIwLjY1MDY2NyAxNi4xMjggMzcuNDE4NjY3IDM2LjA5NiAzNy40MTg2NjYgMTkuOTI1MzMzIDAgMzYuMDk2LTE2Ljc2OCAzNi4wOTYtMzcuNDE4NjY2VjQ2OS43NnoiIHAtaWQ9IjQ4MDUiPjwvcGF0aD48L3N2Zz4=');
   }
-
 }
 .horizontal {
   flex-direction: row;
- button:focus:first-child {
+  button:focus:first-child {
     border-radius: 4px 0px 0px 4px;
   }
- button:focus:last-child {
+  button:focus:last-child {
     border-radius: 0px 4px 4px 4px;
   }
- button+button {
+  button + button {
     border-left: 1px solid #eee;
   }
 }
 .vertical {
   flex-direction: column;
- button:focus:first-child {
+  button:focus:first-child {
     border-radius: 4px 4px 0 0;
   }
- button:focus:last-child {
+  button:focus:last-child {
     border-radius: 0px 0px 4px 4px;
   }
- button+button {
+  button + button {
     border-top: 1px solid #eee;
   }
 }

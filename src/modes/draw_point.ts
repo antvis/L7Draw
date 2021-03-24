@@ -73,7 +73,7 @@ export default class DrawPoint extends DrawFeature {
   }
   protected initData(): boolean {
     const features: Feature[] = [];
-    this.source.data.features.forEach((feature) => {
+    this.source.data.features.forEach(feature => {
       if (feature.geometry.type === 'Point') {
         const p = {
           lng: feature.geometry.coordinates[0] as number,

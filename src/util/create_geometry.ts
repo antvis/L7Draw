@@ -96,7 +96,7 @@ export function createPolygon(
     [key: string]: any;
   },
 ): any {
-  const coords = points.map((p) => [p.lng, p.lat]);
+  const coords = points.map(p => [p.lng, p.lat]);
   if (points.length < 2) {
     return point(coords[0], options);
   } else if (points.length < 3) {
@@ -111,7 +111,7 @@ export function createLine(
   points: Array<{ lng: number; lat: number }>,
   options: any,
 ): any {
-  const coords = points.map((p) => [p.lng, p.lat]);
+  const coords = points.map(p => [p.lng, p.lat]);
   if (points.length < 2) {
     return point(coords[0], options);
   } else {
