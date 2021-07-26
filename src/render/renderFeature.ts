@@ -2,10 +2,12 @@ import { ILayer, LineLayer, PointLayer, PolygonLayer } from '@antv/l7';
 import { FeatureCollection } from '@turf/helpers';
 export function renderFeature(fe: FeatureCollection, style: any): ILayer[] {
   const type = fe.features[0]?.geometry?.type;
+
   let layers;
   switch (type) {
     case 'Point':
-      layers = drawPoint(fe, style.point);
+      if (fe.features[0]?.properties?.value) layers = drawText(fe, style.point);
+      else layers = drawPoint(fe, style.point);
       break;
     case 'LineString':
       layers = drawLine(fe, style.line);
@@ -15,6 +17,20 @@ export function renderFeature(fe: FeatureCollection, style: any): ILayer[] {
       break;
   }
   return layers as ILayer[];
+}
+
+function drawText(fe: FeatureCollection, style: any) {
+  const layer = new PointLayer({
+    zIndex: 2,
+    pickingBuffer: 3,
+  })
+    .source(fe)
+    .style(style.style)
+    .shape('value', 'text')
+    .size(14)
+    .color(style.color);
+
+  return [layer];
 }
 
 function drawPoint(fe: FeatureCollection, style: any) {

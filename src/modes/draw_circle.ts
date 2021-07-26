@@ -9,6 +9,7 @@ import {
   Feature,
   featureCollection,
   Geometries,
+  lineString,
   Properties,
 } from '@turf/helpers';
 import { DrawEvent, DrawModes, unitsType } from '../util/constant';
@@ -23,10 +24,32 @@ export default class DrawCircle extends DrawFeature {
   constructor(scene: Scene, options: Partial<IDrawFeatureOption> = {}) {
     super(scene, options);
     this.type = 'circle';
+    this.on(DrawEvent.MODE_CHANGE, this.addDistanceLayerEvent);
   }
 
   public drawFinish() {
     return null;
+  }
+
+  private addDistanceLayerEvent(mode: DrawModes[any]) {
+    switch (mode) {
+      case DrawModes.SIMPLE_SELECT:
+        this.drawDistanceLayer.update(this.getDistanceLineString());
+        this.drawDistanceLayer.show();
+        break;
+      case DrawModes.STATIC:
+        this.drawDistanceLayer.hide();
+        break;
+    }
+  }
+
+  private getDistanceLineString() {
+    return featureCollection([
+      lineString([
+        [this.startPoint.lng, this.startPoint.lat],
+        [this.endPoint.lng, this.endPoint.lat],
+      ]),
+    ]);
   }
 
   public setCurrentFeature(feature: Feature) {
@@ -60,9 +83,11 @@ export default class DrawCircle extends DrawFeature {
   protected onDragging = (e: IInteractionTarget) => {
     this.endPoint = e.lngLat;
     const feature = this.createFeature() as Feature<Geometries, Properties>;
+
     const properties = feature.properties as { pointFeatures: Feature[] };
     this.drawLayer.update(featureCollection([feature]));
     this.drawVertexLayer.update(featureCollection(properties.pointFeatures));
+    this.drawDistanceLayer.update(this.getDistanceLineString());
   };
 
   protected onDragEnd = () => {
@@ -70,6 +95,8 @@ export default class DrawCircle extends DrawFeature {
     const properties = feature.properties as { pointFeatures: Feature[] };
     this.drawLayer.update(featureCollection([feature]));
     this.drawVertexLayer.update(featureCollection(properties.pointFeatures));
+    this.drawDistanceLayer.update(this.getDistanceLineString());
+
     this.emit(DrawEvent.CREATE, this.currentFeature);
     this.emit(DrawEvent.MODE_CHANGE, DrawModes.SIMPLE_SELECT);
     this.disable();
@@ -77,9 +104,10 @@ export default class DrawCircle extends DrawFeature {
 
   protected moveFeature(delta: ILngLat): void {
     const newFeature = moveFeatures([this.currentFeature as Feature], delta);
-    this.drawLayer.updateData(featureCollection(newFeature));
     const newPointFeture = moveFeatures(this.pointFeatures, delta);
+    this.drawLayer.updateData(featureCollection(newFeature));
     this.drawVertexLayer.updateData(featureCollection(newPointFeture));
+    this.drawDistanceLayer.update(this.getDistanceLineString());
     const newStartPoint = movePoint(
       [this.startPoint.lng, this.startPoint.lat],
       delta,
@@ -122,6 +150,7 @@ export default class DrawCircle extends DrawFeature {
         id,
       },
     );
+
     this.setCurrentFeature(feature as Feature);
     return feature;
   }
@@ -134,6 +163,8 @@ export default class DrawCircle extends DrawFeature {
     this.drawVertexLayer.updateData(
       featureCollection(properties.pointFeatures),
     );
+    this.drawDistanceLayer.update(this.getDistanceLineString());
+
     this.emit(DrawEvent.CHANGE, featureCollection([newFeature]).features[0]);
   }
 

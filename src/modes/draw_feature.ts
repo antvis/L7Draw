@@ -7,9 +7,10 @@ import {
   Units,
   unitsFactors,
 } from '@turf/helpers';
-import DrawRender from '../render/draw';
-import RenderLayer from '../render/draw_result';
-import DrawVertexLayer from '../render/draw_vertex';
+import RenderLayer from '@/render/draw_result';
+import DrawRender from '@/render/draw';
+import DrawVertexLayer from '@/render/draw_vertex';
+import DrawDistanceLayer from '@/render/draw_distance';
 import { DrawEvent, DrawModes } from '../util/constant';
 import DrawDelete from './draw_delete';
 import DrawEdit from './draw_edit';
@@ -36,11 +37,14 @@ export default abstract class DrawFeature extends DrawMode {
   protected normalLayer: RenderLayer;
   protected drawLayer: DrawRender;
   protected drawVertexLayer: DrawVertexLayer;
+  protected drawDistanceLayer: DrawDistanceLayer;
 
   constructor(scene: Scene, options: Partial<IDrawFeatureOption> = {}) {
     super(scene, options);
     this.drawLayer = new DrawRender(this);
     this.drawVertexLayer = new DrawVertexLayer(this);
+    this.drawDistanceLayer = new DrawDistanceLayer(this);
+
     this.normalLayer = new RenderLayer(this);
     this.selectEnable = this.getOption('selectEnable');
     this.editEnable = this.getOption('editEnable');
@@ -190,6 +194,7 @@ export default abstract class DrawFeature extends DrawMode {
         );
         this.drawVertexLayer.show();
         this.drawVertexLayer.enableEdit();
+        this.drawDistanceLayer.show();
         this.showOtherLayer();
         this.drawStatus = 'DrawEdit';
         break;
@@ -213,6 +218,7 @@ export default abstract class DrawFeature extends DrawMode {
         );
         this.drawVertexLayer.disableEdit();
         this.drawVertexLayer.show();
+        this.drawDistanceLayer.show();
         this.drawLayer.show();
         this.showOtherLayer();
         this.drawStatus = 'DrawSelected';
@@ -226,6 +232,7 @@ export default abstract class DrawFeature extends DrawMode {
         this.editMode.disable();
         this.source.clearFeatureActive();
         this.drawVertexLayer.hide();
+        this.drawDistanceLayer.hide();
         this.drawVertexLayer.disableEdit();
         this.hideOtherLayer();
         this.normalLayer.update(this.source.data);
