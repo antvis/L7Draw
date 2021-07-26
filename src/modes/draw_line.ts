@@ -1,6 +1,6 @@
 import { ILngLat, Scene } from '@antv/l7';
 import { Feature, featureCollection } from '@turf/helpers';
-import { unitsType } from '../util/constant';
+import { DrawModes, unitsType } from '../util/constant';
 import { createLine, createPoint } from '../util/create_geometry';
 import moveFeatures from '../util/move_featrues';
 import { IDrawFeatureOption } from './draw_feature';
@@ -12,6 +12,7 @@ export interface IDrawRectOption extends IDrawFeatureOption {
 export default class DrawLine extends DrawPolygon {
   constructor(scene: Scene, options: Partial<IDrawRectOption> = {}) {
     super(scene, options);
+    this.setDrawMode(DrawModes.DRAW_LINE_STRING);
     this.type = 'line';
   }
 
@@ -30,6 +31,7 @@ export default class DrawLine extends DrawPolygon {
     this.pointFeatures = newPointFeture;
     return this.currentFeature;
   }
+  // 构造线Feature
   protected createFeature(
     points: ILngLat[],
     id?: string,

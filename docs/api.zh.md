@@ -63,6 +63,12 @@ drawPoint.enable();
 - selectEnable `boolean` 是否允许选中
 - data `geojson` 传入数据
 
+### 属性
+
+#### drawStatus
+
+绘制空间的状态
+
 ### 方法
 
 #### enable
@@ -73,7 +79,24 @@ drawPoint.enable();
 
 结束编辑
 
+#### removeLatestVertex
+
+移除最新绘制的点
+目前绘制线和面支持
+
+#### resetDraw
+
+重置绘制 Draw,清除已有绘制，并重新绘制
+
 ### 事件
+
+### draw.modechange
+
+绘制状态变化事件
+
+- static 显示太
+- simple_select 选中太
+- direct_select 编辑态
 
 #### draw.create
 

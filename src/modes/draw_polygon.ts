@@ -27,6 +27,8 @@ export default class DrawPolygon extends DrawFeature {
   constructor(scene: Scene, options: Partial<IDrawRectOption> = {}) {
     super(scene, options);
     this.type = 'polygon';
+    this.setDrawMode(DrawModes.DRAW_POLYGON);
+    // 编辑态中心点图层
     this.drawMidVertexLayer = new DrawMidVertex(this);
     this.on(DrawEvent.MODE_CHANGE, this.addMidLayerEvent);
   }
@@ -57,6 +59,7 @@ export default class DrawPolygon extends DrawFeature {
     this.disable();
   }
 
+  // 编辑时增加一个顶点
   public addVertex(vertex: Feature<Geometries, Properties>) {
     // @ts-ignore
     const id = vertex.properties.id;
@@ -74,6 +77,7 @@ export default class DrawPolygon extends DrawFeature {
         });
       }
     } else {
+      // Line
       const coords = feature?.geometry?.coordinates as Position[];
       coords.splice(id + 1, 0, coord);
       for (const coor of coords) {
@@ -91,6 +95,35 @@ export default class DrawPolygon extends DrawFeature {
     // @ts-ignore
     feature.properties.pointFeatures = pointfeatures.features;
     this.setCurrentFeature(feature);
+  }
+  // 移除最后一个点
+
+  public removeLatestVertex() {
+    if (this.points.length === 1) {
+      this.resetDraw();
+      return;
+    }
+    this.points.pop();
+    const feature = this.createFeature(this.points);
+    this.drawLayer.update(featureCollection([feature]));
+    const pointfeatures = this.points.length ? [this.points[0]] : [];
+    if (this.points.length > 1) {
+      pointfeatures.push(this.points[this.points.length - 1]);
+    }
+    this.drawVertexLayer.update(
+      featureCollection(createPoint(pointfeatures).features),
+    );
+    this.onDraw();
+  }
+
+  public resetDraw() {
+    this.points = [];
+    this.drawLayer.destroy();
+    this.drawVertexLayer.destroy();
+    this.drawMidVertexLayer.destroy();
+    this.normalLayer.destroy();
+    this.disable();
+    this.enable();
   }
 
   protected getDefaultOptions(): Partial<IDrawFeatureOption> {
@@ -117,6 +150,7 @@ export default class DrawPolygon extends DrawFeature {
     const lngLat = e.lngLat || e.lnglat;
     this.endPoint = lngLat;
     this.points.push(lngLat);
+    // 更新Feature
     const feature = this.createFeature(this.points);
     const pointfeatures = createPoint([this.points[0], this.endPoint]);
     this.drawLayer.update(featureCollection([feature]));
@@ -124,6 +158,7 @@ export default class DrawPolygon extends DrawFeature {
     this.onDraw();
   };
 
+  // 鼠标移动时需要绘制最后一个顶点到到鼠标的连线
   protected onMouseMove = (e: any) => {
     const lngLat = e.lngLat || e.lnglat;
     if (this.points.length === 0) {
@@ -201,6 +236,7 @@ export default class DrawPolygon extends DrawFeature {
     }
   }
 
+  // 顶点事件监听
   protected onDraw = () => {
     this.drawVertexLayer.on('mousemove', (e: any) => {
       this.setCursor('pointer');
@@ -228,11 +264,11 @@ export default class DrawPolygon extends DrawFeature {
 
   protected addMidLayerEvent(mode: DrawModes[any]) {
     switch (mode) {
-      case DrawModes.DIRECT_SELECT:
+      case DrawModes.DIRECT_SELECT: // 选中态
         this.drawMidVertexLayer.update(featureCollection(this.pointFeatures));
         this.drawMidVertexLayer.show();
         break;
-      case DrawModes.STATIC:
+      case DrawModes.STATIC: // 绘制态
         this.drawMidVertexLayer.hide();
         break;
     }

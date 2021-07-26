@@ -23,6 +23,7 @@ export default class DrawCircle extends DrawFeature {
   constructor(scene: Scene, options: Partial<IDrawFeatureOption> = {}) {
     super(scene, options);
     this.type = 'circle';
+    this.setDrawMode(DrawModes.DRAW_Circle);
   }
 
   public drawFinish() {
@@ -38,6 +39,10 @@ export default class DrawCircle extends DrawFeature {
     // @ts-ignore
     this.endPoint = feature.properties.endPoint;
     this.source.setFeatureActive(feature);
+  }
+
+  public removeLatestVertex() {
+    return null;
   }
 
   protected getDefaultOptions(): Partial<IDrawFeatureOption> {
