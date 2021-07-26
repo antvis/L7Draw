@@ -1,11 +1,9 @@
-import { IInteractionTarget, ILayer, ILngLat, Popup, Scene } from '@antv/l7';
+import { IInteractionTarget, ILngLat, Popup, Scene } from '@antv/l7';
 import {
   Feature,
   FeatureCollection,
   featureCollection,
-  point,
   Units,
-  unitsFactors,
 } from '@turf/helpers';
 import RenderLayer from '@/render/draw_result';
 import DrawRender from '@/render/draw';
@@ -18,12 +16,15 @@ import DrawSource from '../source';
 import DrawMode, { IDrawOption } from './draw_mode';
 import DrawSelected from './draw_selected';
 import merge from 'lodash/merge';
+import BaseRenderLayer from '@/render/base_render';
+import DrawEmptyLayer from '@/render/draw_empty';
 export interface IDrawFeatureOption extends IDrawOption {
   units: Units;
   steps: number;
   showFeature: boolean;
   editEnable: boolean;
   selectEnable: boolean;
+  showDistance: boolean;
   cursor: string;
 }
 export default abstract class DrawFeature extends DrawMode {
@@ -32,15 +33,22 @@ export default abstract class DrawFeature extends DrawMode {
   public editMode: DrawEdit;
   public deleteMode: DrawDelete;
   public editEnable: boolean;
+  public showDistance: boolean;
+
   public selectEnable: boolean;
 
   protected normalLayer: RenderLayer;
   protected drawLayer: DrawRender;
   protected drawVertexLayer: DrawVertexLayer;
-  protected drawDistanceLayer: DrawDistanceLayer;
+  protected drawDistanceLayer: BaseRenderLayer;
 
   constructor(scene: Scene, options: Partial<IDrawFeatureOption> = {}) {
     super(scene, options);
+
+    this.selectEnable = this.getOption('selectEnable');
+    this.editEnable = this.getOption('editEnable');
+    this.showDistance = this.getOption('showDistance');
+
     // 绘制图层
     this.drawLayer = new DrawRender(this);
 
@@ -48,12 +56,11 @@ export default abstract class DrawFeature extends DrawMode {
     this.drawVertexLayer = new DrawVertexLayer(this);
 
     // 距离指示图层
-    this.drawDistanceLayer = new DrawDistanceLayer(this);
+    if (this.showDistance) this.drawDistanceLayer = new DrawDistanceLayer(this);
+    else this.drawDistanceLayer = new DrawEmptyLayer(this);
 
     // 显示态图层
     this.normalLayer = new RenderLayer(this);
-    this.selectEnable = this.getOption('selectEnable');
-    this.editEnable = this.getOption('editEnable');
 
     // this.editLayer = new EditLayer(this);
     this.selectMode = new DrawSelected(this.scene, {});
@@ -151,6 +158,7 @@ export default abstract class DrawFeature extends DrawMode {
       cursor: 'crosshair',
       editEnable: true,
       selectEnable: true,
+      showDistance: true,
       showFeature: true,
     };
   }

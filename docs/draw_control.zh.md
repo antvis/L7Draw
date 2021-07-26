@@ -81,7 +81,9 @@ UI 组件配置项
     },
     polygon: true,
     rect: true,
-    circle: true,
+    circle: {
+      showDistance: true
+    },
     delete: false
 ```
 
