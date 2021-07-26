@@ -112,10 +112,15 @@ export function createLine(
   options: any,
 ): any {
   const coords = points.map(p => [p.lng, p.lat]);
-  if (points.length < 2) {
+  if (points.length > 0 && points.length < 2) {
     return point(coords[0], options);
-  } else {
+  } else if (points.length >= 2) {
     return lineString(coords, options);
+  } else {
+    return {
+      type: 'FeatureCollection',
+      features: [],
+    };
   }
 }
 

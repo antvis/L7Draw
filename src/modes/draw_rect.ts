@@ -5,7 +5,7 @@ import {
   featureCollection,
   point,
 } from '@turf/helpers';
-import { unitsType } from '../util/constant';
+import { DrawModes, unitsType } from '../util/constant';
 import { createPoint, createRect } from '../util/create_geometry';
 import DrawCircle from './draw_circle';
 import { IDrawFeatureOption } from './draw_feature';
@@ -13,6 +13,7 @@ export default class DrawRect extends DrawCircle {
   constructor(scene: Scene, options: Partial<IDrawFeatureOption> = {}) {
     super(scene, options);
     this.type = 'rect';
+    this.setDrawMode(DrawModes.DRAW_Rect);
   }
   public drawFinish() {
     return null;

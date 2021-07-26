@@ -41,10 +41,16 @@ export default abstract class DrawFeature extends DrawMode {
 
   constructor(scene: Scene, options: Partial<IDrawFeatureOption> = {}) {
     super(scene, options);
+    // 绘制图层
     this.drawLayer = new DrawRender(this);
+
+    // 顶点图层
     this.drawVertexLayer = new DrawVertexLayer(this);
+
+    // 距离指示图层
     this.drawDistanceLayer = new DrawDistanceLayer(this);
 
+    // 显示态图层
     this.normalLayer = new RenderLayer(this);
     this.selectEnable = this.getOption('selectEnable');
     this.editEnable = this.getOption('editEnable');
@@ -162,6 +168,8 @@ export default abstract class DrawFeature extends DrawMode {
 
   protected abstract hideOtherLayer(): void;
 
+  protected abstract removeLatestVertex(): void;
+
   protected abstract showOtherLayer(): void;
   protected initData(): boolean {
     return false;
@@ -178,7 +186,8 @@ export default abstract class DrawFeature extends DrawMode {
     this.popup = popup;
   }
 
-  private onModeChange = (mode: DrawModes[any]) => {
+  private onModeChange = (mode: DrawModes[keyof DrawModes]) => {
+    this.setDrawMode(mode);
     switch (mode) {
       case DrawModes.DIRECT_SELECT: // 顶点编辑
         if (!this.editEnable) {
@@ -273,12 +282,19 @@ export default abstract class DrawFeature extends DrawMode {
       // this.drawStatus = 'DrawDelete';
     }
   };
-
+  // 键盘事件
   private addKeyDownEvent = (event: KeyboardEvent) => {
     // tslint:disable-next-line:no-arg
     const e = event || window.event;
     if (e && e.keyCode === 8) {
       this.deleteMode.enable();
+    }
+    // 键盘 Z
+    if (e && e.keyCode === 90 && e.ctrlKey) {
+      if (this.drawStatus === 'Drawing') {
+        // 撤销最新绘制的顶点
+        this.removeLatestVertex();
+      }
     }
   };
 }

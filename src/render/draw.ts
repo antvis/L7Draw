@@ -8,6 +8,9 @@ import Draw from '../modes/draw_feature';
 import { DrawEvent, DrawModes } from '../util/constant';
 import BaseRender from './base_render';
 import { renderFeature } from './renderFeature';
+/**
+ * 绘制图层
+ */
 export default class DrawLayer extends BaseRender {
   public update(feature: FeatureCollection) {
     this.removeLayers();

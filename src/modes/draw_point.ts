@@ -9,11 +9,16 @@ export default class DrawPoint extends DrawFeature {
   constructor(scene: Scene, options: Partial<IDrawFeatureOption> = {}) {
     super(scene, options);
     this.type = 'point';
+    this.setDrawMode(DrawModes.DRAW_POINT);
   }
   public drawFinish() {
     this.emit(DrawEvent.CREATE, this.currentFeature);
     this.emit(DrawEvent.MODE_CHANGE, DrawModes.SIMPLE_SELECT);
     this.disable();
+  }
+
+  public removeLatestVertex() {
+    return null;
   }
 
   protected getDefaultOptions(): Partial<IDrawFeatureOption> {

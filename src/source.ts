@@ -12,13 +12,7 @@ export default class DrawSource {
   }
 
   public getData(): FeatureCollection {
-    const features = cloneDeep(this.data.features).map((feature: Feature) => {
-      feature.properties = {
-        id: feature?.properties?.id,
-        type: feature?.properties?.type,
-      };
-      return feature;
-    });
+    const features = cloneDeep(this.data.features);
     return {
       type: 'FeatureCollection',
       features,

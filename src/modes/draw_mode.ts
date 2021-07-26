@@ -4,6 +4,7 @@ import { EventEmitter } from 'eventemitter3';
 // tslint:disable-next-line:no-submodule-imports
 import merge from 'lodash/merge';
 import DrawSource from '../source';
+import { DrawModes } from '../util/constant';
 import LayerStyles from '../util/layerstyle';
 
 export interface IDrawOption {
@@ -34,10 +35,11 @@ export default abstract class DrawMode extends EventEmitter {
   } = {
     style: LayerStyles,
   };
-  protected drawStatus: DrawStatus = 'Drawing';
+  public drawStatus: DrawStatus = 'Drawing';
   protected currentFeature: Feature | null;
   protected currentVertex: Feature | null;
   protected popup: IPopup;
+  protected drawMode: DrawModes[keyof DrawModes];
   constructor(scene: Scene, options: Partial<IDrawOption> = {}) {
     super();
     const { data } = options;
@@ -46,6 +48,11 @@ export default abstract class DrawMode extends EventEmitter {
     this.options = merge(this.options, this.getDefaultOptions(), options);
     this.title = this.getOption('title');
   }
+
+  public getDrawMode(): DrawModes[keyof DrawModes] {
+    return this.drawMode;
+  }
+
   public enable() {
     this.scene.setMapStatus({
       dragEnable: false,
@@ -61,6 +68,9 @@ export default abstract class DrawMode extends EventEmitter {
     this.setCursor(this.getOption('cursor'));
     this.isEnable = true;
   }
+
+  // 重置绘制组件
+  public resetDraw() {}
 
   public disable() {
     if (!this.isEnable) {
@@ -124,6 +134,10 @@ export default abstract class DrawMode extends EventEmitter {
     DrawFeatureId = 0;
     this.removeAllListeners();
     this.disable();
+  }
+
+  protected setDrawMode(mode: DrawModes[keyof DrawModes]) {
+    this.drawMode = mode;
   }
 
   protected getDefaultOptions(): any {

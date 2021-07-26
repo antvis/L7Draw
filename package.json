@@ -1,6 +1,6 @@
 {
   "name": "@antv/l7-draw",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
@@ -41,6 +41,7 @@
     "@turf/midpoint": "^5.1.5",
     "@turf/turf": "^5.1.6",
     "@types/mapbox-gl": "^1.11.2",
+    "antd": "^4.16.8",
     "eventemitter3": "^4.0.0",
     "load-styles": "^2.0.0",
     "lodash": "^4.6.2",
@@ -51,6 +52,7 @@
     "@antv/l7-maps": "^2.3.1",
     "@rollup/plugin-commonjs": "11.0.2",
     "@rollup/plugin-url": "^5.0.1",
+    "@types/lodash": "^4.14.171",
     "@umijs/preset-react": "1.x",
     "@umijs/test": "^3.0.5",
     "dumi": "^1.0.9",

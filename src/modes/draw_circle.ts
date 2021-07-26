@@ -25,6 +25,7 @@ export default class DrawCircle extends DrawFeature {
     super(scene, options);
     this.type = 'circle';
     this.on(DrawEvent.MODE_CHANGE, this.addDistanceLayerEvent);
+    this.setDrawMode(DrawModes.DRAW_Circle);
   }
 
   public drawFinish() {
@@ -61,6 +62,10 @@ export default class DrawCircle extends DrawFeature {
     // @ts-ignore
     this.endPoint = feature.properties.endPoint;
     this.source.setFeatureActive(feature);
+  }
+
+  public removeLatestVertex() {
+    return null;
   }
 
   protected getDefaultOptions(): Partial<IDrawFeatureOption> {
