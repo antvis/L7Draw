@@ -15,7 +15,7 @@ export enum DrawEvent {
 
 export enum DrawModes {
   DRAW_Circle = 'draw_circle',
-  DRAW_Rect = 'draw_react',
+  DRAW_Rect = 'draw_rect',
   DRAW_LINE_STRING = 'draw_line_string',
   DRAW_POLYGON = 'draw_polygon',
   DRAW_POINT = 'draw_point',
