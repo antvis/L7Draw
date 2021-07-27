@@ -12,6 +12,8 @@ export interface IDrawOption {
   data: FeatureCollection;
   title: string;
   style: any;
+  enableCustomDraw: boolean;
+  customDraw?: () => Promise<any>;
 }
 
 export type DrawStatus =
@@ -111,6 +113,10 @@ export default abstract class DrawMode extends EventEmitter {
     return this.options[key];
   }
 
+  public setOption(key: string, value: any) {
+    return (this.options[key] = value);
+  }
+
   public getStyle(id: string) {
     return this.getOption('style')[id];
   }
@@ -142,7 +148,9 @@ export default abstract class DrawMode extends EventEmitter {
   }
 
   protected getDefaultOptions(): Partial<IDrawFeatureOption> {
-    return {};
+    return {
+      enableCustomDraw: false,
+    };
   }
 
   protected abstract onDragStart(e: IInteractionTarget): void;

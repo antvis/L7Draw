@@ -104,6 +104,12 @@ export default class DrawPolygon extends DrawFeature {
       return;
     }
     this.points.pop();
+    while (
+      this.points.length !== 0 &&
+      this.points[this.points.length - 1]?.type === 'custom'
+    ) {
+      this.points.pop();
+    }
     const feature = this.createFeature(this.points);
     this.drawLayer.update(featureCollection([feature]));
     const pointfeatures = this.points.length ? [this.points[0]] : [];
@@ -124,6 +130,7 @@ export default class DrawPolygon extends DrawFeature {
     this.normalLayer.destroy();
     this.disable();
     this.enable();
+    this.drawStatus = 'Drawing';
   }
 
   protected getDefaultOptions(): Partial<IDrawFeatureOption> {
@@ -154,7 +161,7 @@ export default class DrawPolygon extends DrawFeature {
     }
     return false;
   }
-  protected onClick = (e: any) => {
+  protected onClick = async (e: any) => {
     if (this.drawStatus !== 'Drawing') {
       this.drawLayer.emit('unclick', null);
     }
@@ -163,9 +170,28 @@ export default class DrawPolygon extends DrawFeature {
     if (this.isEqualsPrePoint(lngLat)) {
       return;
     }
-
+    const customDraw = this.getOption('customDraw');
     this.endPoint = lngLat;
-    this.points.push(lngLat);
+    if (
+      this.getOption('enableCustomDraw') &&
+      customDraw &&
+      this.points.length > 0
+    ) {
+      const customPoint = await customDraw(
+        this.points[this.points.length - 1],
+        this.endPoint,
+      );
+      for (let i = 0; i < customPoint.length - 1; i++) {
+        this.points.push({
+          ...customPoint[i],
+          type: 'custom',
+        });
+      }
+      this.points.push(lngLat);
+    } else {
+      this.points.push(lngLat);
+    }
+
     // 更新Feature
     const feature = this.createFeature(this.points);
     const pointfeatures = createPoint([this.points[0], this.endPoint]);
@@ -230,7 +256,7 @@ export default class DrawPolygon extends DrawFeature {
       Geometries,
       Properties
     >;
-    if (selectVertexed === null) {
+    if (!selectVertexed) {
       return;
     } else {
       // @ts-ignore
