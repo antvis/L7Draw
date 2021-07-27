@@ -18,6 +18,7 @@ export default class DrawEdit extends DrawFeature {
     // @ts-ignore
   };
 
+  // @ts-ignore
   protected getDefaultOptions() {
     return {
       steps: 64,
