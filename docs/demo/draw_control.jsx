@@ -31,7 +31,11 @@ export default () => {
             selectEnable: true,
             showFeature: true,
           },
-          circle: false,
+          circle: {
+            selectEnable: true,
+            showFeature: true,
+            showDistance: true,
+          },
           rect: false,
           delete: false,
         },

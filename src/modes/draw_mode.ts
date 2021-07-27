@@ -6,6 +6,7 @@ import merge from 'lodash/merge';
 import DrawSource from '../source';
 import { DrawModes } from '../util/constant';
 import LayerStyles from '../util/layerstyle';
+import { IDrawFeatureOption } from './draw_feature';
 
 export interface IDrawOption {
   data: FeatureCollection;
@@ -140,7 +141,7 @@ export default abstract class DrawMode extends EventEmitter {
     this.drawMode = mode;
   }
 
-  protected getDefaultOptions(): any {
+  protected getDefaultOptions(): Partial<IDrawFeatureOption> {
     return {};
   }
 
