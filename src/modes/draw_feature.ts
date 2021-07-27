@@ -5,10 +5,10 @@ import {
   featureCollection,
   Units,
 } from '@turf/helpers';
-import RenderLayer from '@/render/draw_result';
-import DrawRender from '@/render/draw';
-import DrawVertexLayer from '@/render/draw_vertex';
-import DrawDistanceLayer from '@/render/draw_distance';
+import RenderLayer from '../render/draw_result';
+import DrawRender from '../render/draw';
+import DrawVertexLayer from '../render/draw_vertex';
+import DrawDistanceLayer from '../render/draw_distance';
 import { DrawEvent, DrawModes } from '../util/constant';
 import DrawDelete from './draw_delete';
 import DrawEdit from './draw_edit';
@@ -16,8 +16,8 @@ import DrawSource from '../source';
 import DrawMode, { IDrawOption } from './draw_mode';
 import DrawSelected from './draw_selected';
 import merge from 'lodash/merge';
-import BaseRenderLayer from '@/render/base_render';
-import DrawEmptyLayer from '@/render/draw_empty';
+import BaseRenderLayer from '../render/base_render';
+import DrawEmptyLayer from '../render/draw_empty';
 export interface IDrawFeatureOption extends IDrawOption {
   units: Units;
   steps: number;
