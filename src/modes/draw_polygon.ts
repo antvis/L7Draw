@@ -99,11 +99,13 @@ export default class DrawPolygon extends DrawFeature {
   // 移除最后一个点
 
   public removeLatestVertex() {
-    if (this.points.length === 1) {
+    if (this.points.length < 2) {
+      // 当Point小于两个点时，直接重置绘制
       this.resetDraw();
       return;
     }
     this.points.pop();
+    //
     while (
       this.points.length !== 0 &&
       this.points[this.points.length - 1]?.type === 'custom'

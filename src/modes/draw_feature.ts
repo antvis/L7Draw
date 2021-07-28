@@ -243,7 +243,6 @@ export default abstract class DrawFeature extends DrawMode {
         this.drawStatus = 'DrawSelected';
         break;
       case DrawModes.STATIC:
-        console.log(this.getOption('showFeature'));
         if (!this.getOption('showFeature')) {
           return;
         }
