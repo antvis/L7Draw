@@ -1,5 +1,9 @@
 # draw
 
+# API
+
+[API](./docs/api.zh.md)
+
 ## Getting Started
 
 Install dependencies,

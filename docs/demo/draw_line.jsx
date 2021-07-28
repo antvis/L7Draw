@@ -8,15 +8,12 @@ export default () => {
   const [drawTool, setDrawTool] = useState(undefined);
 
   const clearAllData = () => {
-    console.log('清除');
     drawTool.resetDraw();
   };
   const revokeData = () => {
-    console.log('drawMode', drawTool.getDrawMode());
     if (drawTool.drawStatus === 'Drawing') {
       drawTool.removeLatestVertex();
     }
-    console.log(drawTool.drawStatus);
   };
   React.useEffect(() => {
     const scene = new Scene({
@@ -25,11 +22,37 @@ export default () => {
         pitch: 0,
         style: 'light',
         center: [116.30470275878906, 39.88352811449648],
-        zoom: 10,
+        zoom: 20,
       }),
     });
     scene.on('loaded', () => {
-      const draw = new DrawLine(scene);
+      const draw = new DrawLine(scene, {
+        enableCustomDraw: true,
+        customDraw: async (start, end) => {
+          const coord = await (
+            await fetch(
+              `https://restapi.amap.com/v3/direction/walking?origin=${start.lng},${start.lat}&destination=${end.lng},${end.lat}&key=261fb8bfa6d9ed16ed977d7cc62596e4`,
+            )
+          ).json();
+          if (coord.info === 'ok') {
+            const stepString = coord.route.paths[0].steps
+              .map(item => item.polyline)
+              .join(';');
+
+            const res = stepString.split(';').map(item => {
+              const [lng, lat] = item.split(',');
+              return {
+                lng: lng * 1,
+                lat: lat * 1,
+              };
+            });
+
+            return res;
+          }
+
+          return [end];
+        },
+      });
       draw.enable();
 
       draw.on('draw.create', e => {

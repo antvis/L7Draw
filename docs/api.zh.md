@@ -62,12 +62,14 @@ drawPoint.enable();
 - editEnable `boolean` 是否允许编辑
 - selectEnable `boolean` 是否允许选中
 - data `geojson` 传入数据
+- showFeature `boolean` 绘制完成是否显绘制结果
+- showDistance `boolean` 是否显示绘制距离，目前只有圆支持显示半径
 
 ### 属性
 
 #### drawStatus
 
-绘制空间的状态
+绘制状态的状态
 
 ### 方法
 

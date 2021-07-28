@@ -12,6 +12,8 @@ export interface IDrawOption {
   data: FeatureCollection;
   title: string;
   style: any;
+  enableCustomDraw: boolean;
+  customDraw?: () => Promise<any>;
 }
 
 export type DrawStatus =
@@ -46,6 +48,7 @@ export default abstract class DrawMode extends EventEmitter {
     const { data } = options;
     this.scene = scene;
     this.source = new DrawSource(data);
+
     this.options = merge(this.options, this.getDefaultOptions(), options);
     this.title = this.getOption('title');
   }
@@ -109,6 +112,10 @@ export default abstract class DrawMode extends EventEmitter {
 
   public getOption(key: string) {
     return this.options[key];
+  }
+
+  public setOption(key: string, value: any) {
+    return (this.options[key] = value);
   }
 
   public getStyle(id: string) {
