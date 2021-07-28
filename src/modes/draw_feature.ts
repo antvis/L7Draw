@@ -21,6 +21,7 @@ import DrawEmptyLayer from '../render/draw_empty';
 export interface IDrawFeatureOption extends IDrawOption {
   units: Units;
   steps: number;
+  enableCustomDraw: boolean;
   showFeature: boolean;
   editEnable: boolean;
   selectEnable: boolean;
@@ -160,6 +161,7 @@ export default abstract class DrawFeature extends DrawMode {
       selectEnable: true,
       showDistance: true,
       showFeature: true,
+      enableCustomDraw: true,
     };
   }
   protected abstract onDragStart(e: IInteractionTarget): void;
@@ -241,6 +243,7 @@ export default abstract class DrawFeature extends DrawMode {
         this.drawStatus = 'DrawSelected';
         break;
       case DrawModes.STATIC:
+        console.log(this.getOption('showFeature'));
         if (!this.getOption('showFeature')) {
           return;
         }

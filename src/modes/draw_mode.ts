@@ -48,6 +48,7 @@ export default abstract class DrawMode extends EventEmitter {
     const { data } = options;
     this.scene = scene;
     this.source = new DrawSource(data);
+
     this.options = merge(this.options, this.getDefaultOptions(), options);
     this.title = this.getOption('title');
   }
@@ -148,9 +149,7 @@ export default abstract class DrawMode extends EventEmitter {
   }
 
   protected getDefaultOptions(): Partial<IDrawFeatureOption> {
-    return {
-      enableCustomDraw: false,
-    };
+    return {};
   }
 
   protected abstract onDragStart(e: IInteractionTarget): void;
