@@ -64,6 +64,7 @@ export default abstract class DrawMode extends EventEmitter {
     if (this.isEnable) {
       return;
     }
+    this.drawStatus = 'Drawing';
     // @ts-ignore
     this.scene.on('dragstart', this.onDragStart);
     this.scene.on('dragging', this.onDragging);
@@ -90,6 +91,7 @@ export default abstract class DrawMode extends EventEmitter {
       dragEnable: true,
     });
     this.isEnable = false;
+    this.drawStatus = 'DrawFinish';
   }
   public setCurrentFeature(feature: Feature) {
     this.currentFeature = feature;
