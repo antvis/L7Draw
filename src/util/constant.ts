@@ -11,6 +11,7 @@ export enum DrawEvent {
   RENDER = 'draw.render',
   COMBINE_FEATURES = 'draw.combine',
   UNCOMBINE_FEATURES = 'draw.uncombine',
+  ADD_POINT = 'draw.addpoint',
 }
 
 export enum DrawModes {

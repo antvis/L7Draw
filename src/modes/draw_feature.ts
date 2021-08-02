@@ -271,7 +271,10 @@ export default abstract class DrawFeature extends DrawMode {
   };
 
   private onDrawMove = (delta: ILngLat) => {
-    if (this.drawStatus === 'DrawSelected') {
+    if (
+      this.drawStatus === 'DrawSelected' ||
+      this.drawStatus === 'DrawFinish'
+    ) {
       this.moveFeature(delta);
     }
   };

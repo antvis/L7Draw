@@ -64,6 +64,7 @@ export default class DrawPolygon extends DrawFeature {
     // @ts-ignore
     const id = vertex.properties.id;
     const coord = vertex?.geometry?.coordinates as Position;
+    const [lng, lat] = coord;
     const feature = this.currentFeature as Feature<Geometries, Properties>;
     const type = feature?.geometry?.type;
     const points = [];
@@ -95,6 +96,7 @@ export default class DrawPolygon extends DrawFeature {
     // @ts-ignore
     feature.properties.pointFeatures = pointfeatures.features;
     this.setCurrentFeature(feature);
+    this.emit(DrawEvent.ADD_POINT, { lng, lat }, points);
   }
   // 移除最后一个点
 
@@ -200,6 +202,7 @@ export default class DrawPolygon extends DrawFeature {
     this.drawLayer.update(featureCollection([feature]));
     this.drawVertexLayer.update(featureCollection(pointfeatures.features));
     this.onDraw();
+    this.emit(DrawEvent.ADD_POINT, lngLat, this.points);
   };
 
   // 鼠标移动时需要绘制最后一个顶点到到鼠标的连线
@@ -288,7 +291,7 @@ export default class DrawPolygon extends DrawFeature {
       this.setCursor('pointer');
     });
     this.drawVertexLayer.on('mouseout', () => {
-      this.setCursor('crosshair');
+      this.setCursor(this.getOption('cursor'));
     });
     this.drawVertexLayer.on('click', () => {
       this.resetCursor();

@@ -29,40 +29,45 @@ export default () => {
       const draw = new DrawLine(scene, {
         enableCustomDraw: true,
         customDraw: async (start, end) => {
-          const coord = await (
-            await fetch(
-              `https://restapi.amap.com/v3/direction/walking?origin=${start.lng},${start.lat}&destination=${end.lng},${end.lat}&key=261fb8bfa6d9ed16ed977d7cc62596e4`,
-            )
-          ).json();
-          if (coord.info === 'ok') {
-            const stepString = coord.route.paths[0].steps
-              .map(item => item.polyline)
-              .join(';');
+          // const coord = await (
+          //   await fetch(
+          //     `https://restapi.amap.com/v3/direction/walking?origin=${start.lng},${start.lat}&destination=${end.lng},${end.lat}&key=261fb8bfa6d9ed16ed977d7cc62596e4`,
+          //   )
+          // ).json();
+          // if (coord.info === 'ok') {
+          //   const stepString = coord.route.paths[0].steps
+          //     .map(item => item.polyline)
+          //     .join(';');
 
-            const res = stepString.split(';').map(item => {
-              const [lng, lat] = item.split(',');
-              return {
-                lng: lng * 1,
-                lat: lat * 1,
-              };
-            });
+          //   const res = stepString.split(';').map(item => {
+          //     const [lng, lat] = item.split(',');
+          //     return {
+          //       lng: lng * 1,
+          //       lat: lat * 1,
+          //     };
+          //   });
 
-            return res;
-          }
+          //   return res;
+          // }
 
-          return [end];
+          // return [end];
+          return [];
         },
       });
       draw.enable();
 
       draw.on('draw.create', e => {
-        console.log(e);
+        console.log('draw.create', e);
       });
       draw.on('draw.update', e => {
         console.log('update', e);
       });
       draw.on('draw.modechange', e => {
         console.log('draw.modechange', e);
+      });
+
+      draw.on('draw.addpoint', (e, points) => {
+        console.log('draw.addpoint', e, points);
       });
       setDrawTool(draw);
     });
