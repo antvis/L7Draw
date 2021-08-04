@@ -44,8 +44,7 @@
     "antd": "^4.16.8",
     "eventemitter3": "^4.0.0",
     "load-styles": "^2.0.0",
-    "lodash": "^4.6.2",
-    "react": "^17.0.2"
+    "lodash": "^4.6.2"
   },
   "devDependencies": {
     "@antv/l7": "^2.3.1",
@@ -65,6 +64,7 @@
   },
   "peerDependencies": {
     "@antv/l7": "^2.3.0",
-    "@antv/l7-maps": "^2.3.0"
+    "@antv/l7-maps": "^2.3.0",
+    "react": "^16.12.0"
   }
 }
