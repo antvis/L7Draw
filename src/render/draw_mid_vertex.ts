@@ -10,10 +10,12 @@ import midPoint from '@turf/midpoint';
 import BaseRender from './base_render';
 import { renderFeature } from './renderFeature';
 export default class DrawVertexLayer extends BaseRender {
+  public styleVariant = 'mid_point';
+
   public update(pointFeatures: FeatureCollection) {
     this.removeLayers();
     const midFeatures = this.calcMidPointData(pointFeatures);
-    const style = this.draw.getStyle('mid_point');
+    const style = this.draw.getStyle(this.styleVariant);
     this.drawLayers = renderFeature(midFeatures, style);
     this.addLayers();
     this.enableEdit();

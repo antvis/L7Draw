@@ -12,9 +12,11 @@ import { renderFeature } from './renderFeature';
  * 绘制图层
  */
 export default class DrawLayer extends BaseRender {
+  public styleVariant = 'active';
+
   public update(feature: FeatureCollection) {
     this.removeLayers();
-    const style = this.draw.getStyle('active');
+    const style = this.draw.getStyle(this.styleVariant);
     this.drawLayers = renderFeature(feature, style);
     this.addLayers();
   }

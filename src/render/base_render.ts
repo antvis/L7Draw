@@ -13,6 +13,8 @@ export default class BaseRenderLayer {
   protected draw: Draw;
   protected isEnableDrag: boolean;
   protected isEnableEdit: boolean;
+  public styleVariant: string = 'normal'; // 用哪种style渲染
+
   constructor(draw: Draw) {
     this.draw = draw;
   }
@@ -21,7 +23,7 @@ export default class BaseRenderLayer {
     //   this.updateData(feature);
     // }
     this.removeLayers();
-    const style = this.draw.getStyle('normal');
+    const style = this.draw.getStyle(this.styleVariant);
     this.drawLayers = renderFeature(feature, style);
     this.addLayers();
   }

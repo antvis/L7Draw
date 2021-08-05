@@ -3,12 +3,8 @@ import BaseRender from './base_render';
 import { renderFeature } from './renderFeature';
 // 绘制过程中的顶点，绘制第一个和最后一个点
 export default class DrawVertexLayer extends BaseRender {
-  public update(feature: FeatureCollection) {
-    this.removeLayers();
-    const style = this.draw.getStyle('active');
-    this.drawLayers = renderFeature(feature, style);
-    this.addLayers();
-  }
+  public styleVariant = 'active';
+
   public enableSelect() {
     return;
   }

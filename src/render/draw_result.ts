@@ -3,13 +3,14 @@ import { DrawEvent, DrawModes } from '../util/constant';
 import BaseRender from './base_render';
 import { renderFeature } from './renderFeature';
 export default class DrawResultLayer extends BaseRender {
+  public styleVariant = 'normal';
   public update(feature: FeatureCollection) {
     if (this.drawLayers.length > 0) {
       this.updateData(feature);
       return;
     }
     this.removeLayers();
-    const style = this.draw.getStyle('normal');
+    const style = this.draw.getStyle(this.styleVariant);
     this.drawLayers = renderFeature(feature, style);
     this.addFilter();
     this.addLayers();
