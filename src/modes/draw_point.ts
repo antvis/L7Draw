@@ -28,18 +28,18 @@ export default class DrawPoint extends DrawFeature {
     };
   }
 
-  protected onDragStart = (e: IInteractionTarget) => {
+  protected onDragStart(e: IInteractionTarget) {
     return null;
-  };
-  protected onDragging = (e: IInteractionTarget) => {
+  }
+  protected onDragging(e: IInteractionTarget) {
     return null;
-  };
+  }
 
-  protected onDragEnd = () => {
+  protected onDragEnd() {
     return null;
-  };
+  }
 
-  protected onClick = (e: any) => {
+  protected onClick(e: any) {
     if (this.drawStatus !== 'Drawing') {
       this.drawLayer.emit('unclick', null);
     }
@@ -48,7 +48,7 @@ export default class DrawPoint extends DrawFeature {
     this.drawLayer.update(featureCollection([feature]));
     this.drawVertexLayer.update(featureCollection([feature]));
     this.drawFinish();
-  };
+  }
 
   protected moveFeature(delta: ILngLat): Feature {
     const newFeature = moveFeatures([this.currentFeature as Feature], delta);

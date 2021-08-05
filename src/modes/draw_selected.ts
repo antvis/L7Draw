@@ -30,10 +30,10 @@ export default class DrawSelect extends DrawFeature {
     this.currentFeature = feature;
   }
 
-  protected onDragStart = (e: IInteractionTarget) => {
+  protected onDragStart(e: IInteractionTarget) {
     this.scene.setMapStatus({ dragEnable: false });
     this.dragStartPoint = e.lngLat;
-  };
+  }
 
   protected getDefaultOptions(): Partial<IDrawFeatureOption> {
     return {
@@ -43,7 +43,7 @@ export default class DrawSelect extends DrawFeature {
     };
   }
 
-  protected onDragging = (e: IInteractionTarget) => {
+  protected onDragging(e: IInteractionTarget) {
     const delta = {
       lng: e.lngLat.lng - this.dragStartPoint.lng,
       lat: e.lngLat.lat - this.dragStartPoint.lat,
@@ -52,12 +52,12 @@ export default class DrawSelect extends DrawFeature {
     this.dragStartPoint = e.lngLat;
 
     return;
-  };
+  }
 
-  protected onDragEnd = () => {
+  protected onDragEnd() {
     this.emit(DrawEvent.UPDATE, this.currentFeature);
-  };
-  protected onClick = () => {
+  }
+  protected onClick() {
     return null;
-  };
+  }
 }

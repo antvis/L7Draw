@@ -75,7 +75,7 @@ export default class DrawCircle extends DrawFeature {
     };
   }
 
-  protected onDragStart = (e: IInteractionTarget) => {
+  protected onDragStart(e: IInteractionTarget) {
     if (this.drawStatus !== 'Drawing') {
       this.drawLayer.emit('unclick', null);
     }
@@ -83,9 +83,9 @@ export default class DrawCircle extends DrawFeature {
     this.setCursor('grabbing');
     this.initCenterLayer();
     this.centerLayer.setData([this.startPoint]);
-  };
+  }
 
-  protected onDragging = (e: IInteractionTarget) => {
+  protected onDragging(e: IInteractionTarget) {
     this.endPoint = e.lngLat;
     const feature = this.createFeature() as Feature<Geometries, Properties>;
 
@@ -93,9 +93,9 @@ export default class DrawCircle extends DrawFeature {
     this.drawLayer.update(featureCollection([feature]));
     this.drawVertexLayer.update(featureCollection(properties.pointFeatures));
     this.drawDistanceLayer.update(this.getDistanceLineString());
-  };
+  }
 
-  protected onDragEnd = () => {
+  protected onDragEnd() {
     const feature = this.createFeature(`${this.getUniqId()}`);
     const properties = feature.properties as { pointFeatures: Feature[] };
     this.drawLayer.update(featureCollection([feature]));
@@ -105,7 +105,7 @@ export default class DrawCircle extends DrawFeature {
     this.emit(DrawEvent.CREATE, this.currentFeature);
     this.emit(DrawEvent.MODE_CHANGE, DrawModes.SIMPLE_SELECT);
     this.disable();
-  };
+  }
 
   protected moveFeature(delta: ILngLat): void {
     const newFeature = moveFeatures([this.currentFeature as Feature], delta);

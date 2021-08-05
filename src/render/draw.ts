@@ -1,4 +1,4 @@
-import { IInteractionTarget, ILayer, Scene } from '@antv/l7';
+import { bindAll, IInteractionTarget, ILayer, Scene } from '@antv/l7';
 const InitFeature = {
   type: 'FeatureCollection',
   features: [],
@@ -13,6 +13,12 @@ import { renderFeature } from './renderFeature';
  */
 export default class DrawLayer extends BaseRender {
   public styleVariant = 'active';
+
+  constructor(draw: Draw) {
+    super(draw);
+
+    bindAll(['onMouseMove', 'onUnMouseMove', 'onClick', 'onUnClick'], this);
+  }
 
   public update(feature: FeatureCollection) {
     this.removeLayers();
@@ -64,15 +70,15 @@ export default class DrawLayer extends BaseRender {
     this.isEnableDrag = false;
   }
 
-  private onMouseMove = (e: any) => {
+  private onMouseMove(e: any) {
     this.draw.setCursor('move');
     this.draw.selectMode.enable();
-  };
-  private onUnMouseMove = (e: any) => {
+  }
+  private onUnMouseMove(e: any) {
     this.draw.resetCursor();
     this.draw.selectMode.disable();
-  };
-  private onClick = (e: any) => {
+  }
+  private onClick(e: any) {
     this.draw.selectMode.disable();
     this.draw.editMode.enable();
     this.disableSelect();
@@ -80,9 +86,9 @@ export default class DrawLayer extends BaseRender {
     this.enableEdit();
     this.draw.setCurrentFeature(e.feature);
     this.draw.emit(DrawEvent.MODE_CHANGE, DrawModes.DIRECT_SELECT);
-  };
+  }
 
-  private onUnClick = (e: any) => {
+  private onUnClick(e: any) {
     this.draw.selectMode.disable();
     this.draw.editMode.disable();
     this.draw.source.setFeatureUnActive(
@@ -92,5 +98,5 @@ export default class DrawLayer extends BaseRender {
     this.disableEdit();
     this.hide();
     this.draw.emit(DrawEvent.MODE_CHANGE, DrawModes.STATIC);
-  };
+  }
 }

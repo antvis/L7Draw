@@ -25,14 +25,14 @@ export default class DrawDelete extends DrawFeature {
   protected onDragStart(e: any): void {
     throw new Error('Method not implemented.');
   }
-  protected onDragging = (e: IInteractionTarget) => {
+  protected onDragging(e: IInteractionTarget) {
     return;
-  };
+  }
 
-  protected onDragEnd = () => {
+  protected onDragEnd() {
     throw new Error('Method not implemented.');
-  };
-  protected onClick = () => {
+  }
+  protected onClick() {
     return null;
-  };
+  }
 }

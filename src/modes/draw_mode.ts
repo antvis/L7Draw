@@ -1,4 +1,5 @@
-import { IInteractionTarget, IPopup, Scene } from '@antv/l7';
+import { bindAll, IInteractionTarget, IPopup, Scene } from '@antv/l7';
+
 import { Feature, FeatureCollection } from '@turf/helpers';
 import { EventEmitter } from 'eventemitter3';
 // tslint:disable-next-line:no-submodule-imports
@@ -51,6 +52,8 @@ export default abstract class DrawMode extends EventEmitter {
 
     this.options = merge(this.options, this.getDefaultOptions(), options);
     this.title = this.getOption('title');
+
+    bindAll(['onDragStart', 'onDragging', 'onDragEnd', 'onClick'], this);
   }
 
   public getDrawMode(): DrawModes[keyof DrawModes] {

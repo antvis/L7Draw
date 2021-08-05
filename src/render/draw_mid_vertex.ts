@@ -38,16 +38,16 @@ export default class DrawVertexLayer extends BaseRender {
     layer.off('click', this.onClick);
   }
 
-  private onMouseEnter = (e: any) => {
+  private onMouseEnter(e: any) {
     this.draw.setCursor('pointer');
-  };
-  private onMouseOut = (e: any) => {
+  }
+  private onMouseOut(e: any) {
     this.draw.resetCursor();
-  };
-  private onClick = (e: any) => {
+  }
+  private onClick(e: any) {
     this.draw.addVertex(e.feature);
     // 添加一个顶点 1.更新顶点 2.更新重点
-  };
+  }
 
   private calcMidPointData(fe: FeatureCollection) {
     const midFeatures: Feature[] = [];
