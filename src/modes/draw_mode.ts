@@ -15,7 +15,7 @@ export interface IDrawOption {
   enableCustomDraw: boolean;
   customDraw?: () => Promise<any>;
   rewriteCursor?: Record<string, string>;
-  checkDrawable?: (lngLat: ILngLat) => boolean;
+  checkDrawable?: (lngLat: ILngLat, context: DrawMode) => boolean;
 }
 
 export type DrawStatus =
