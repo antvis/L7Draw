@@ -1,3 +1,4 @@
+import { bindAll } from '@antv/l7';
 import {
   feature,
   Feature,
@@ -7,10 +8,16 @@ import {
   Properties,
 } from '@turf/helpers';
 import midPoint from '@turf/midpoint';
+import Draw from '../modes/draw_feature';
 import BaseRender from './base_render';
 import { renderFeature } from './renderFeature';
 export default class DrawVertexLayer extends BaseRender {
   public styleVariant = 'mid_point';
+
+  constructor(draw: Draw) {
+    super(draw);
+    bindAll(['onMouseEnter', 'onClick', 'onMouseOut'], this);
+  }
 
   public update(pointFeatures: FeatureCollection) {
     this.removeLayers();
