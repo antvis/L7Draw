@@ -43,6 +43,9 @@ export default class DrawVertexLayer extends BaseRender {
     this.draw.resetCursor();
   };
   private onClick = (e: any) => {
+    if (!this.draw.getDrawable()) {
+      return;
+    }
     this.draw.addVertex(e.feature);
     // 添加一个顶点 1.更新顶点 2.更新重点
   };

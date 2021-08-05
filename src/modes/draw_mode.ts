@@ -1,4 +1,4 @@
-import { IInteractionTarget, IPopup, Scene } from '@antv/l7';
+import { IInteractionTarget, IPopup, Scene, ILngLat } from '@antv/l7';
 import { Feature, FeatureCollection } from '@turf/helpers';
 import { EventEmitter } from 'eventemitter3';
 // tslint:disable-next-line:no-submodule-imports
@@ -14,6 +14,8 @@ export interface IDrawOption {
   style: any;
   enableCustomDraw: boolean;
   customDraw?: () => Promise<any>;
+  rewriteCursor?: Record<string, string>;
+  checkDrawable?: (lngLat: ILngLat, context: DrawMode) => boolean;
 }
 
 export type DrawStatus =
@@ -43,6 +45,7 @@ export default abstract class DrawMode extends EventEmitter {
   protected currentVertex: Feature | null;
   protected popup: IPopup;
   protected drawMode: DrawModes[keyof DrawModes];
+  protected drawable = true;
   constructor(scene: Scene, options: Partial<IDrawOption> = {}) {
     super();
     const { data } = options;
@@ -51,6 +54,21 @@ export default abstract class DrawMode extends EventEmitter {
 
     this.options = merge(this.options, this.getDefaultOptions(), options);
     this.title = this.getOption('title');
+
+    if (this.getOption('checkDrawable')) {
+      scene.on('mousemove', ({ lnglat }) => {
+        const checkDrawable = this.getOption('checkDrawable');
+        if (this.drawStatus === 'Drawing' && checkDrawable) {
+          if (checkDrawable(lnglat, this)) {
+            this.setCursor(this.getOption('cursor'));
+            this.drawable = true;
+          } else {
+            this.setCursor('not-allowed');
+            this.drawable = false;
+          }
+        }
+      });
+    }
   }
 
   public getDrawMode(): DrawModes[keyof DrawModes] {
@@ -131,7 +149,8 @@ export default abstract class DrawMode extends EventEmitter {
   public setCursor(cursor: string) {
     const container = this.scene.getMapCanvasContainer();
     if (container) {
-      container.style.cursor = cursor;
+      const rewriteCursor = this.getOption('rewriteCursor') ?? {};
+      container.style.cursor = rewriteCursor[cursor] ?? cursor;
     }
   }
   public resetCursor() {
@@ -140,10 +159,22 @@ export default abstract class DrawMode extends EventEmitter {
       container.removeAttribute('style');
     }
   }
+
+  public getCursor() {
+    const container = this.scene.getMapCanvasContainer();
+    if (container) {
+      return container.style.cursor ?? '';
+    }
+  }
+
   public destroy() {
     DrawFeatureId = 0;
     this.removeAllListeners();
     this.disable();
+  }
+
+  public getDrawable() {
+    return this.drawable;
   }
 
   protected setDrawMode(mode: DrawModes[keyof DrawModes]) {

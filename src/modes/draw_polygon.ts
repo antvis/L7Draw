@@ -46,7 +46,6 @@ export default class DrawPolygon extends DrawFeature {
   }
 
   public drawFinish() {
-    // debugger
     this.points = this.points.reverse();
     const feature = this.createFeature([...this.points]);
     const properties = feature.properties as { pointFeatures: Feature[] };
@@ -166,6 +165,9 @@ export default class DrawPolygon extends DrawFeature {
     return false;
   }
   protected onClick = async (e: any) => {
+    if (!this.getDrawable()) {
+      return;
+    }
     if (this.drawStatus !== 'Drawing') {
       this.drawLayer.emit('unclick', null);
     }
