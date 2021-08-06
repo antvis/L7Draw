@@ -10,7 +10,9 @@ import {
 import midPoint from '@turf/midpoint';
 import Draw from '../modes/draw_feature';
 import BaseRender from './base_render';
-import { renderFeature } from './renderFeature';
+import RenderFeature from './renderFeature';
+
+const rf = RenderFeature.defaultRenderer();
 export default class DrawVertexLayer extends BaseRender {
   public styleVariant = 'mid_point';
 
@@ -23,7 +25,7 @@ export default class DrawVertexLayer extends BaseRender {
     this.removeLayers();
     const midFeatures = this.calcMidPointData(pointFeatures);
     const style = this.draw.getStyle(this.styleVariant);
-    this.drawLayers = renderFeature(midFeatures, style);
+    this.drawLayers = rf.renderFeature(midFeatures, style);
     this.addLayers();
     this.enableEdit();
   }

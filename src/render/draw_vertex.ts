@@ -2,8 +2,8 @@ import { bindAll } from '@antv/l7';
 import { FeatureCollection } from '@turf/helpers';
 import BaseRender from './base_render';
 import Draw from '../modes/draw_feature';
-import { renderFeature } from './renderFeature';
 // 绘制过程中的顶点，绘制第一个和最后一个点
+
 export default class DrawVertexLayer extends BaseRender {
   public styleVariant = 'active';
   constructor(draw: Draw) {

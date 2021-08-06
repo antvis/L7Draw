@@ -2,8 +2,10 @@ import { bindAll } from '@antv/l7';
 import { Feature, FeatureCollection } from '@turf/helpers';
 import { DrawEvent, DrawModes } from '../util/constant';
 import BaseRender from './base_render';
-import { renderFeature } from './renderFeature';
+import RenderFeature from './renderFeature';
 import Draw from '../modes/draw_feature';
+
+const rf = RenderFeature.defaultRenderer();
 
 export default class DrawResultLayer extends BaseRender {
   public styleVariant = 'normal';
@@ -20,7 +22,7 @@ export default class DrawResultLayer extends BaseRender {
     }
     this.removeLayers();
     const style = this.draw.getStyle(this.styleVariant);
-    this.drawLayers = renderFeature(feature, style);
+    this.drawLayers = rf.renderFeature(feature, style);
     this.addFilter();
     this.addLayers();
   }
