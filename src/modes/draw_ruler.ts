@@ -50,6 +50,15 @@ export default class DrawRuler extends DrawPolygon {
     });
   }
 
+  public enable() {
+    this.drawRulerLayer.destroy();
+    super.enable();
+  }
+
+  public resetDraw() {
+    super.resetDraw();
+  }
+
   protected getDefaultOptions(): Partial<IDrawFeatureOption> {
     return {
       ...super.getDefaultOptions(),
@@ -131,13 +140,7 @@ export default class DrawRuler extends DrawPolygon {
   }
 
   protected moveFeature(delta: ILngLat): Feature {
-    const newFeature = moveFeatures([this.currentFeature as Feature], delta);
-    const newPointFeture = moveFeatures(this.pointFeatures, delta);
-    this.drawLayer.updateData(featureCollection(newFeature));
-    this.drawVertexLayer.updateData(featureCollection(newPointFeture));
-    this.currentFeature = newFeature[0];
-    this.pointFeatures = newPointFeture;
-    return this.currentFeature;
+    return this.currentFeature as Feature;
   }
   // 构造线Feature
   protected createFeature(
@@ -169,24 +172,5 @@ export default class DrawRuler extends DrawPolygon {
 
       return feature;
     }
-  }
-  protected initData(): boolean {
-    console.log('initdata');
-    const features: Feature[] = [];
-    this.source.data.features.forEach(feature => {
-      if (isLineString(feature)) {
-        const points = feature.geometry.coordinates.map(coord => {
-          return {
-            lng: coord[0],
-            lat: coord[1],
-          };
-        });
-        features.push(
-          this.createFeature(points, feature?.properties?.id, false),
-        );
-      }
-    });
-    this.source.data.features = features;
-    return true;
   }
 }

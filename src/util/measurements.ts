@@ -7,5 +7,5 @@ export const getDistance = (x: Coord | Point, y: Coord | Point) => {
 };
 
 export const getArea = (polygon: Polygon) => {
-  return turfArea(polygon).toFixed(2) + 'km^2';
+  return (turfArea(polygon) / 1000000).toFixed(2) + 'km^2';
 };
