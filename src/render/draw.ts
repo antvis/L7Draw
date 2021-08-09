@@ -82,6 +82,9 @@ export default class DrawLayer extends BaseRender {
     this.draw.selectMode.disable();
   }
   protected onClick(e: any) {
+    if (!this.draw.getDrawable()) {
+      return;
+    }
     this.draw.selectMode.disable();
     this.draw.editMode.enable();
     this.disableSelect();

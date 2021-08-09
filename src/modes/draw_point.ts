@@ -40,6 +40,9 @@ export default class DrawPoint extends DrawFeature {
   }
 
   protected onClick(e: any) {
+    if (!this.getDrawable()) {
+      return;
+    }
     if (this.drawStatus !== 'Drawing') {
       this.drawLayer.emit('unclick', null);
     }

@@ -62,7 +62,12 @@ export default class DrawResultLayer extends BaseRender {
       }),
     );
   }
+
   private onClick(e: any) {
+    if (!this.draw.getDrawable()) {
+      return;
+    }
+
     this.draw.source.setFeatureUnActive(
       this.draw.getCurrentFeature() as Feature,
     );

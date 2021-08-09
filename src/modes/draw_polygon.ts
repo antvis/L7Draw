@@ -186,7 +186,11 @@ export default class DrawPolygon extends DrawFeature {
     }
     return false;
   }
+
   protected async onClick(e: any) {
+    if (!this.getDrawable()) {
+      return;
+    }
     if (this.drawStatus !== 'Drawing') {
       this.drawLayer.emit('unclick', null);
     }

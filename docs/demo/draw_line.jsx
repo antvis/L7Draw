@@ -53,6 +53,12 @@ export default () => {
           // return [end];
           return [];
         },
+        rewriteCursor: {
+          crosshair: 'wait',
+        },
+        checkDrawable: ({ lng, lat }, drawLine) => {
+          return lng > 116.304907;
+        },
       });
       draw.enable();
 
@@ -65,7 +71,6 @@ export default () => {
       draw.on('draw.modechange', e => {
         console.log('draw.modechange', e);
       });
-
       draw.on('draw.addpoint', (e, points) => {
         console.log('draw.addpoint', e, points);
       });

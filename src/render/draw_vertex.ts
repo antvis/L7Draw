@@ -49,7 +49,11 @@ export default class DrawVertexLayer extends BaseRender {
     this.draw.resetCursor();
     this.draw.editMode.disable();
   }
+
   private onClick(e: any) {
+    if (!this.draw.getDrawable()) {
+      return;
+    }
     this.draw.setCurrentVertex(e.feature);
     this.draw.editMode.enable();
   }
