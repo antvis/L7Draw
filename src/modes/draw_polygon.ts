@@ -12,7 +12,7 @@ import CheckableTag from 'antd/lib/tag/CheckableTag';
 import DrawMidVertex from '../render/draw_mid_vertex';
 import { DrawEvent, DrawModes, unitsType } from '../util/constant';
 import { createPoint, createPolygon } from '../util/create_geometry';
-import moveFeatures from '../util/move_featrues';
+import moveFeatures from '../util/move_features';
 import DrawFeature, { IDrawFeatureOption } from './draw_feature';
 export interface IDrawRectOption extends IDrawFeatureOption {
   units: unitsType;

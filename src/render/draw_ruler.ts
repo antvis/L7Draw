@@ -25,7 +25,7 @@ class CustomRenderPolygonStrategy extends Singleton implements IRenderStrategy {
     const fill = new PolygonLayer()
       .source(fe)
       .shape('fill')
-      .color('black')
+      .color(style.color)
       .style({
         opacity: style.style.opacity,
       })
@@ -50,7 +50,7 @@ class CustomRenderPolygonStrategy extends Singleton implements IRenderStrategy {
 
     const lineStyle = styles['line'];
 
-    const line = new LineLayer({ pickingBuffer: 5 })
+    const line = new LineLayer({ pickingBuffer: 3 })
       .source(lineStrings)
       .color(lineStyle.style.stroke)
       .size(lineStyle.style.strokeWidth)
@@ -114,7 +114,11 @@ export default class DrawRulerLayer extends BaseRender {
 
   constructor(draw: Draw) {
     super(draw);
-    this.popup = new Popup({ closeButton: false, anchor: 'left' });
+    this.popup = new Popup({
+      closeButton: false,
+      anchor: 'left',
+      closeOnClick: false,
+    });
     this.draw.scene.addPopup(this.popup);
 
     bindAll(['onMouseEnter', 'onMouseOut'], this);

@@ -8,7 +8,7 @@ import {
   createPolygon,
 } from '../util/create_geometry';
 import { getDistance } from '../util/measurements';
-import moveFeatures from '../util/move_featrues';
+import moveFeatures from '../util/move_features';
 import { IDrawFeatureOption } from './draw_feature';
 import DrawPolygon from './draw_polygon';
 

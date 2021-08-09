@@ -1,7 +1,7 @@
 import { IInteractionTarget, ILayer, ILngLat, Scene } from '@antv/l7';
 import { Feature, featureCollection, point } from '@turf/helpers';
 import { DrawEvent, DrawModes, unitsType } from '../util/constant';
-import moveFeatures from '../util/move_featrues';
+import moveFeatures from '../util/move_features';
 import DrawFeature, { IDrawFeatureOption } from './draw_feature';
 export default class DrawPoint extends DrawFeature {
   protected pointFeatures: Feature[];

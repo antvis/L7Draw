@@ -2,7 +2,7 @@ import { ILngLat, Scene } from '@antv/l7';
 import { Feature, featureCollection } from '@turf/helpers';
 import { DrawModes, unitsType } from '../util/constant';
 import { createLine, createPoint } from '../util/create_geometry';
-import moveFeatures from '../util/move_featrues';
+import moveFeatures from '../util/move_features';
 import { IDrawFeatureOption } from './draw_feature';
 import DrawPolygon from './draw_polygon';
 export interface IDrawRectOption extends IDrawFeatureOption {

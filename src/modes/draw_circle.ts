@@ -14,7 +14,7 @@ import {
 } from '@turf/helpers';
 import { DrawEvent, DrawModes, unitsType } from '../util/constant';
 import { createCircle, createPoint } from '../util/create_geometry';
-import moveFeatures, { movePoint } from '../util/move_featrues';
+import moveFeatures, { movePoint } from '../util/move_features';
 import DrawFeature, { IDrawFeatureOption } from './draw_feature';
 export default class DrawCircle extends DrawFeature {
   protected startPoint: ILngLat;
