@@ -24,9 +24,21 @@ const DrawType: {
   polygon: DrawPolygon,
   circle: DrawCircle,
   rect: DrawRect,
+  ruler: DrawRuler,
 };
 import { isObject, polygon } from '@turf/helpers';
 import { DrawEvent, DrawModes } from './util/constant';
+import DrawRuler from './modes/draw_ruler';
+
+export type ControlKeys =
+  | 'polygon'
+  | 'circle'
+  | 'point'
+  | 'rect'
+  | 'line'
+  | 'delete'
+  | 'ruler';
+
 export interface IControls {
   [key: string]: boolean | Partial<IDrawFeatureOption>;
 }

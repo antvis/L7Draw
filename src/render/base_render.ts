@@ -5,7 +5,7 @@ const InitFeature = {
 };
 type CallBack = (...args: any[]) => any;
 import { FeatureCollection } from '@turf/helpers';
-import Draw from '../modes/draw_mode';
+import Draw from '../modes/draw_feature';
 import { DrawEvent, DrawModes } from '../util/constant';
 
 const rf = RenderFeature.defaultRenderer();

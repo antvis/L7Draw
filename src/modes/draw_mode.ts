@@ -27,7 +27,7 @@ export type DrawStatus =
 
 let DrawFeatureId = 0;
 
-export default abstract class DrawMode extends EventEmitter {
+abstract class DrawMode extends EventEmitter {
   public source: DrawSource;
   public scene: Scene;
   public type: string;
@@ -167,3 +167,5 @@ export default abstract class DrawMode extends EventEmitter {
     return null;
   }
 }
+
+export default DrawMode;

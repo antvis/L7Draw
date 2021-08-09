@@ -11,14 +11,14 @@ import {
 } from '@antv/l7';
 import { Feature, featureCollection, point } from '@turf/helpers';
 import { DrawEvent, DrawModes } from '../util/constant';
-import moveFeatures from '../util/move_featrues';
 import { IDrawFeatureOption } from './draw_feature';
-import DrawFeature, { IDrawOption } from './draw_mode';
+import DrawMode from './draw_mode';
+
 const InitFeature = {
   type: 'FeatureCollection',
   features: [],
 };
-export default class DrawSelect extends DrawFeature {
+export default class DrawSelect extends DrawMode {
   private center: ILngLat;
   private dragStartPoint: ILngLat;
   // 绘制完成之后显示

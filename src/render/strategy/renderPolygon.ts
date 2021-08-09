@@ -17,8 +17,9 @@ export default class RenderPolygonStrategy extends Singleton
       .size(style.size)
       .style({
         opacity: style.style.opacity,
-      })
-      .active(style.active || {});
+      });
+
+    if (style.active) fill.active(style.active);
 
     const line = new PolygonLayer()
       .source(fe)
@@ -29,10 +30,9 @@ export default class RenderPolygonStrategy extends Singleton
         opacity: style.style.strokeOpacity,
         lineType: style.style.lineType,
         dashArray: style.style.dashArray,
-      })
-      .active(style.active || {});
+      });
 
-    line.setBlend('max');
+    if (style.active) line.active(style.active);
 
     return [fill, line];
   }

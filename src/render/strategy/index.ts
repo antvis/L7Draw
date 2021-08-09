@@ -6,6 +6,9 @@ import RenderPolygonStrategy from './renderPolygon';
 import RenderTextStrategy from './renderText';
 
 export interface IRenderStrategy {
+  /**
+   * layerstyle.ts 中的feature类型
+   */
   styleVariant: string;
 
   execute: (fe: FeatureCollection, styles: any) => ILayer[];

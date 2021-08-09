@@ -17,10 +17,7 @@ export default class RenderLineStrategy extends Singleton
       .shape('line')
       .color(style.color)
       .size(style.size)
-      .style(style.style)
-      .active(style.active || {});
-
-    layer.setBlend('max');
+      .style(style.style);
 
     return [layer];
   }

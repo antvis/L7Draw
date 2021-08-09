@@ -7,7 +7,10 @@ import { Feature, FeatureCollection } from '@turf/helpers';
 import Draw from '../modes/draw_feature';
 import { DrawEvent, DrawModes } from '../util/constant';
 import BaseRender from './base_render';
-import { renderFeature } from './renderFeature';
+import RenderFeature from './renderFeature';
+
+const rf = RenderFeature.defaultRenderer();
+
 /**
  * 绘制图层
  */
@@ -16,14 +19,13 @@ export default class DrawLayer extends BaseRender {
 
   constructor(draw: Draw) {
     super(draw);
-
     bindAll(['onMouseMove', 'onUnMouseMove', 'onClick', 'onUnClick'], this);
   }
 
   public update(feature: FeatureCollection) {
     this.removeLayers();
     const style = this.draw.getStyle(this.styleVariant);
-    this.drawLayers = renderFeature(feature, style);
+    this.drawLayers = rf.renderFeature(feature, style);
     this.addLayers();
   }
   public enableSelect() {
@@ -70,15 +72,16 @@ export default class DrawLayer extends BaseRender {
     this.isEnableDrag = false;
   }
 
-  private onMouseMove(e: any) {
+  protected onMouseMove(e: any) {
     this.draw.setCursor('move');
     this.draw.selectMode.enable();
+    this.draw.measureMode.enable();
   }
-  private onUnMouseMove(e: any) {
+  protected onUnMouseMove(e: any) {
     this.draw.resetCursor();
     this.draw.selectMode.disable();
   }
-  private onClick(e: any) {
+  protected onClick(e: any) {
     this.draw.selectMode.disable();
     this.draw.editMode.enable();
     this.disableSelect();
@@ -88,7 +91,7 @@ export default class DrawLayer extends BaseRender {
     this.draw.emit(DrawEvent.MODE_CHANGE, DrawModes.DIRECT_SELECT);
   }
 
-  private onUnClick(e: any) {
+  protected onUnClick(e: any) {
     this.draw.selectMode.disable();
     this.draw.editMode.disable();
     this.draw.source.setFeatureUnActive(

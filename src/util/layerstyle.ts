@@ -87,6 +87,46 @@ const LayerStyles = {
       style: {},
     },
   },
+
+  ruler: {
+    polygon: {
+      type: 'PolygonLayer',
+      shape: 'fill',
+      active: { color: '#FB93FF' },
+      color: '#883BF2',
+      style: {
+        opacity: 0.1,
+        stroke: '#883BF2',
+        strokeWidth: 1,
+        strokeOpacity: 1,
+        lineType: 'solid',
+        dashArray: [2, 2],
+      },
+    },
+    line: {
+      type: 'LineLayer',
+      shape: 'line',
+      size: 1,
+      color: '#883BF2',
+      active: { color: '#FB93FF' },
+      style: {
+        stroke: '#883BF2',
+        strokeWidth: 1,
+        strokeOpacity: 1,
+        lineType: 'solid',
+      },
+    },
+    point: {
+      type: 'PointLayer',
+      shape: 'circle',
+      color: '#883BF2',
+      size: 3,
+      style: {
+        stroke: '#fff',
+        strokeWidth: 2,
+      },
+    },
+  },
 };
 
 export default LayerStyles;
