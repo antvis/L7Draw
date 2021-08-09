@@ -23,13 +23,12 @@ export default class DrawDistanceLayer extends BaseRender {
 
     this.removeLayers();
 
-    const distanceFeatures = fc.features.map((feature: Feature) => {
-      const x = (feature?.geometry as Geometries)?.coordinates[0];
-      const y = (feature?.geometry as Geometries)?.coordinates[1];
+    const distanceFeatures = fc.features.map((feature: Feature<LineString>) => {
+      const x = feature?.geometry?.coordinates[0];
+      const y = feature?.geometry?.coordinates[1];
 
       const distance = getDistance(x, y);
 
-      // @ts-ignore
       const mid = midPoint(x, y);
 
       //@ts-ignore

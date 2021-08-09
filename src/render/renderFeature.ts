@@ -1,6 +1,6 @@
 import { ILayer, LineLayer, PointLayer, PolygonLayer } from '@antv/l7';
 import { FeatureCollection } from '@turf/helpers';
-import { flatten } from 'lodash';
+import flatten from 'lodash/flatten';
 import {
   IRenderStrategy,
   RenderLineStrategy,

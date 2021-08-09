@@ -131,6 +131,7 @@ export default class DrawPolygon extends DrawFeature {
     //
     while (
       this.points.length !== 0 &&
+      //@ts-ignore
       this.points[this.points.length - 1]?.type === 'custom'
     ) {
       this.points.pop();
