@@ -33,6 +33,7 @@ export default class DrawDistanceLayer extends BaseRender {
 
       //@ts-ignore
       mid.properties.value = distance;
+
       return mid;
     });
 

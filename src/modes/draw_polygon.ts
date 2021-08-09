@@ -1,9 +1,12 @@
+import { isPolygon } from '@/util/typeguards';
 import { bindAll, IInteractionTarget, ILayer, ILngLat, Scene } from '@antv/l7';
 import {
+  feature,
   Feature,
   FeatureCollection,
   featureCollection,
   Geometries,
+  lineString,
   point,
   Position,
   Properties,
@@ -50,7 +53,20 @@ export default class DrawPolygon extends DrawFeature {
   }
 
   private getDistanceLineString() {
-    return featureCollection([]);
+    let lineStrings: any[] = [];
+    if (this.currentFeature && isPolygon(this.currentFeature)) {
+      const feature = this.currentFeature;
+      const coords = feature.geometry.coordinates[0];
+
+      lineStrings = coords
+        .map((coord, index) => {
+          if (!coords[index + 1]) return;
+          return lineString([coord, coords[index + 1]]);
+        })
+        .filter(Boolean);
+    }
+
+    return featureCollection(lineStrings);
   }
 
   public enable() {
@@ -258,6 +274,8 @@ export default class DrawPolygon extends DrawFeature {
     const newFeature = moveFeatures([this.currentFeature as Feature], delta);
     const newPointFeture = moveFeatures(this.pointFeatures, delta);
     this.drawLayer.updateData(featureCollection(newFeature));
+
+    this.drawDistanceLayer.update(this.getDistanceLineString());
     this.drawVertexLayer.updateData(featureCollection(newPointFeture));
     newFeature[0].properties = {
       ...newFeature[0].properties,
