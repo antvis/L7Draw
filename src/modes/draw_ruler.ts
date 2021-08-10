@@ -52,6 +52,11 @@ export default class DrawRuler extends DrawPolygon {
 
   public enable() {
     this.drawRulerLayer.destroy();
+    this.drawMidVertexLayer.destroy();
+    this.drawDistanceLayer.destroy();
+    this.drawLayer.destroy();
+    this.drawVertexLayer.destroy();
+
     super.enable();
   }
 
