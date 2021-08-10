@@ -1,4 +1,5 @@
 import {
+  bindAll,
   IInteractionTarget,
   ILayer,
   ILngLat,
@@ -9,23 +10,45 @@ import {
   Feature,
   featureCollection,
   Geometries,
+  Geometry,
+  GeometryCollection,
   lineString,
   Properties,
 } from '@turf/helpers';
+import BaseRenderLayer from '../render/base_render';
+import DrawRulerLayer from '../render/draw_ruler';
 import { DrawEvent, DrawModes, unitsType } from '../util/constant';
 import { createCircle, createPoint } from '../util/create_geometry';
 import moveFeatures, { movePoint } from '../util/move_features';
 import DrawFeature, { IDrawFeatureOption } from './draw_feature';
-export default class DrawCircle extends DrawFeature {
+import { IMeasureable } from './IMeasureable';
+export default class DrawCircle extends DrawFeature implements IMeasureable {
   protected startPoint: ILngLat;
   protected endPoint: ILngLat;
   protected pointFeatures: Feature[];
   protected centerLayer: ILayer;
+  drawRulerLayer: BaseRenderLayer;
+
   constructor(scene: Scene, options: Partial<IDrawFeatureOption> = {}) {
     super(scene, options);
+    bindAll(['onMeasure'], this);
+
     this.type = 'circle';
     this.on(DrawEvent.MODE_CHANGE, this.addDistanceLayerEvent);
     this.setDrawMode(DrawModes.DRAW_Circle);
+
+    this.drawRulerLayer = new DrawRulerLayer(this);
+    // this.enableMeasure();
+  }
+
+  onMeasure(feature: Feature<Geometry | GeometryCollection, Properties>): void {
+    this.drawRulerLayer.update(featureCollection([feature]));
+  }
+  enableMeasure(): void {
+    this.measureMode.on(DrawEvent.MEASURE, this.onMeasure);
+  }
+  disableMeasure(): void {
+    this.measureMode.off(DrawEvent.MEASURE, this.onMeasure);
   }
 
   public drawFinish() {

@@ -1,5 +1,3 @@
-import DrawRulerLayer from '@/render/draw_ruler';
-import { isLineString } from '@/util/typeguards';
 import { ILngLat, Popup, Scene } from '@antv/l7';
 import { Feature, featureCollection } from '@turf/helpers';
 import { DrawEvent, DrawModes, unitsType } from '../util/constant';
@@ -9,8 +7,8 @@ import {
   createPolygon,
 } from '../util/create_geometry';
 import { getDistance } from '../util/measurements';
-import moveFeatures from '../util/move_features';
 import { IDrawFeatureOption } from './draw_feature';
+import DrawRulerLayer from '../render/draw_ruler';
 import DrawPolygon from './draw_polygon';
 
 export interface IDrawRectOption extends IDrawFeatureOption {
@@ -20,8 +18,6 @@ export interface IDrawRectOption extends IDrawFeatureOption {
 export default class DrawRuler extends DrawPolygon {
   protected infoPopup: Popup;
   protected isAreaClosed: boolean = false; // 当闭合时测量面积，否则测量距离
-
-  protected drawRulerLayer: DrawRulerLayer;
 
   constructor(scene: Scene, options: Partial<IDrawRectOption> = {}) {
     super(scene, options);
@@ -45,9 +41,7 @@ export default class DrawRuler extends DrawPolygon {
     this.drawMidVertexLayer.styleVariant = 'ruler';
     this.drawDistanceLayer.styleVariant = 'ruler';
 
-    this.measureMode.on(DrawEvent.MEASURE, (feature: Feature) => {
-      this.drawRulerLayer.update(featureCollection([feature]));
-    });
+    this.enableMeasure();
   }
 
   public enable() {
