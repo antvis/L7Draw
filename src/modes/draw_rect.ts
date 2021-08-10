@@ -1,11 +1,6 @@
 import { Scene } from '@antv/l7';
-import {
-  Feature,
-  FeatureCollection,
-  featureCollection,
-  point,
-} from '@turf/helpers';
-import { DrawModes, unitsType } from '../util/constant';
+import { Feature } from '@turf/helpers';
+import { DrawModes } from '../util/constant';
 import { createPoint, createRect } from '../util/create_geometry';
 import DrawCircle from './draw_circle';
 import { IDrawFeatureOption } from './draw_feature';

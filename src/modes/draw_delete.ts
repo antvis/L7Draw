@@ -1,8 +1,8 @@
-import { IInteractionTarget, ILngLat, Scene } from '@antv/l7';
-import { Feature } from '@turf/helpers';
+import { IInteractionTarget, Scene } from '@antv/l7';
+
 import { DrawEvent } from '../util/constant';
 import { IDrawFeatureOption } from './draw_feature';
-import DrawMode, { IDrawOption } from './draw_mode';
+import DrawMode from './draw_mode';
 
 export default class DrawDelete extends DrawMode {
   // 绘制完成之后显示
