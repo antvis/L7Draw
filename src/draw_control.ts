@@ -188,7 +188,6 @@ export class DrawControl extends Control {
   private onButtonClick = (type: string, e: MouseEvent) => {
     for (const draw in this.draw) {
       if (draw === type) {
-        console.log(type);
         this.draw[draw].enable();
       } else {
         this.draw[draw].disable();
@@ -207,9 +206,12 @@ export class DrawControl extends Control {
   };
 
   private onModeChange = (type: string, mode: string) => {
-    console.log(mode);
     if (mode === DrawModes.SIMPLE_SELECT) {
       this.currentDraw = this.draw[type];
+    }
+
+    if (mode === DrawModes.STATIC) {
+      this.mapsService.setMapStatus({ dragEnable: true });
     }
   };
 }
