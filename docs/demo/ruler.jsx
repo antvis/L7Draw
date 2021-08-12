@@ -90,6 +90,7 @@ export default () => {
           rect: true,
           point: true,
 
+          multiSelect: true,
           ruler: true,
           delete: false,
         },

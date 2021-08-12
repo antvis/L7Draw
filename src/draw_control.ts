@@ -26,9 +26,11 @@ const DrawType: {
   circle: DrawCircle,
   rect: DrawRect,
   ruler: DrawRuler,
+  multiSelect: DrawMultiSelect,
 };
 import { isObject, polygon } from '@turf/helpers';
 import { DrawEvent, DrawModes } from './util/constant';
+import DrawMultiSelect from './modes/draw_multi_select';
 
 export type ControlKeys =
   | 'polygon'
