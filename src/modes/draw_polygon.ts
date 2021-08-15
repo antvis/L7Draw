@@ -103,6 +103,7 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
   public addVertex(vertex: Feature<Geometries, Properties>) {
     // @ts-ignore
     const id = vertex.properties.id;
+
     const coord = vertex?.geometry?.coordinates as Position;
     const [lng, lat] = coord;
     const feature = this.currentFeature as Feature<Geometries, Properties>;
@@ -110,7 +111,8 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
     const points = [];
     if (type === 'Polygon') {
       const coords = feature?.geometry?.coordinates as Position[][];
-      coords[0].splice(id + 1, 0, coord);
+      // 面的中心点数据上反的 ？
+      coords[0].reverse().splice(id + 1, 0, coord);
       for (let i = 0; i < coords[0].length - 1; i++) {
         points.push({
           lng: coords[0][i][0],

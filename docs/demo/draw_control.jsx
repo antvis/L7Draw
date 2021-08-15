@@ -24,8 +24,8 @@ export default () => {
             showFeature: false,
           },
           line: {
-            selectEnable: false,
-            showFeature: false,
+            selectEnable: true,
+            showFeature: true,
           },
           polygon: {
             selectEnable: true,
