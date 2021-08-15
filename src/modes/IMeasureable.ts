@@ -1,4 +1,4 @@
-import BaseRenderLayer from '@/render/base_render';
+import BaseRenderLayer from '../render/base_render';
 import { Feature } from '@turf/helpers';
 
 export interface IMeasureable {

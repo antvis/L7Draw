@@ -12,7 +12,7 @@ import { isLineString, isPolygon } from '../util/typeguards';
 import { IRenderStrategy } from './strategy';
 import { bindAll, ILngLat, LineLayer, PolygonLayer, Popup } from '@antv/l7';
 import { Singleton } from '../util/singleton';
-import { getArea, getDistance } from '@/util/measurements';
+import { getArea, getDistance } from '../util/measurements';
 
 const rf = new RenderFeature();
 
