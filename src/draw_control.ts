@@ -14,6 +14,7 @@ import {
   DrawPoint,
   DrawPolygon,
   DrawRect,
+  DrawRuler,
 } from './modes';
 import { IDrawFeatureOption } from './modes/draw_feature';
 const DrawType: {
@@ -24,9 +25,20 @@ const DrawType: {
   polygon: DrawPolygon,
   circle: DrawCircle,
   rect: DrawRect,
+  ruler: DrawRuler,
 };
 import { isObject, polygon } from '@turf/helpers';
 import { DrawEvent, DrawModes } from './util/constant';
+
+export type ControlKeys =
+  | 'polygon'
+  | 'circle'
+  | 'point'
+  | 'rect'
+  | 'line'
+  | 'delete'
+  | 'ruler';
+
 export interface IControls {
   [key: string]: boolean | Partial<IDrawFeatureOption>;
 }
@@ -196,6 +208,10 @@ export class DrawControl extends Control {
   private onModeChange = (type: string, mode: string) => {
     if (mode === DrawModes.SIMPLE_SELECT) {
       this.currentDraw = this.draw[type];
+    }
+
+    if (mode === DrawModes.STATIC) {
+      this.mapsService.setMapStatus({ dragEnable: true });
     }
   };
 }

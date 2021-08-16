@@ -1,37 +1,77 @@
-import { IInteractionTarget, ILayer, ILngLat, Scene } from '@antv/l7';
+import { bindAll, IInteractionTarget, ILayer, ILngLat, Scene } from '@antv/l7';
 import {
   Feature,
-  FeatureCollection,
   featureCollection,
   Geometries,
-  point,
+  Geometry,
+  GeometryCollection,
   Position,
   Properties,
 } from '@turf/helpers';
+
 import DrawMidVertex from '../render/draw_mid_vertex';
+import BaseRenderLayer from '../render/base_render';
+import DrawRulerLayer from '../render/draw_ruler';
 import { DrawEvent, DrawModes, unitsType } from '../util/constant';
 import { createPoint, createPolygon } from '../util/create_geometry';
-import moveFeatures from '../util/move_featrues';
+import moveFeatures from '../util/move_features';
 import DrawFeature, { IDrawFeatureOption } from './draw_feature';
+import { IMeasureable } from './IMeasureable';
 export interface IDrawRectOption extends IDrawFeatureOption {
   units: unitsType;
   steps: number;
 }
-export default class DrawPolygon extends DrawFeature {
+export default class DrawPolygon extends DrawFeature implements IMeasureable {
   protected startPoint: ILngLat;
   protected endPoint: ILngLat;
   protected points: ILngLat[] = [];
   protected pointFeatures: Feature[];
   protected drawMidVertexLayer: DrawMidVertex;
 
+  drawRulerLayer: BaseRenderLayer;
+
   constructor(scene: Scene, options: Partial<IDrawRectOption> = {}) {
     super(scene, options);
+    bindAll(['onMouseMove', 'onDblClick', 'onMeasure'], this);
+
     this.type = 'polygon';
     this.setDrawMode(DrawModes.DRAW_POLYGON);
     // 编辑态中心点图层
     this.drawMidVertexLayer = new DrawMidVertex(this);
     this.on(DrawEvent.MODE_CHANGE, this.addMidLayerEvent);
+    this.on(DrawEvent.MODE_CHANGE, this.addDistanceLayerEvent);
+
+    this.drawRulerLayer = new DrawRulerLayer(this);
+
+    // this.enableMeasure();
   }
+
+  onMeasure(feature: Feature<Geometry | GeometryCollection, Properties>): void {
+    this.drawRulerLayer.update(featureCollection([feature]));
+  }
+  enableMeasure(): void {
+    this.measureMode.on(DrawEvent.MEASURE, this.onMeasure);
+  }
+  disableMeasure(): void {
+    this.measureMode.off(DrawEvent.MEASURE, this.onMeasure);
+  }
+
+  private addDistanceLayerEvent(mode: DrawModes[any]) {
+    switch (mode) {
+      case DrawModes.SIMPLE_SELECT:
+        this.drawDistanceLayer.update(this.getDistanceLineString());
+        this.drawDistanceLayer.show();
+        break;
+      case DrawModes.STATIC:
+        this.drawDistanceLayer.hide();
+        break;
+    }
+  }
+
+  private getDistanceLineString() {
+    return featureCollection([]);
+  }
+
   public enable() {
     super.enable();
     this.scene.on('mousemove', this.onMouseMove);
@@ -45,7 +85,8 @@ export default class DrawPolygon extends DrawFeature {
     this.scene.off('dblclick', this.onDblClick);
   }
 
-  public drawFinish() {
+  public drawFinish(e?: any) {
+    // debugger
     this.points = this.points.reverse();
     const feature = this.createFeature([...this.points]);
     const properties = feature.properties as { pointFeatures: Feature[] };
@@ -109,6 +150,7 @@ export default class DrawPolygon extends DrawFeature {
     //
     while (
       this.points.length !== 0 &&
+      //@ts-ignore
       this.points[this.points.length - 1]?.type === 'custom'
     ) {
       this.points.pop();
@@ -142,16 +184,16 @@ export default class DrawPolygon extends DrawFeature {
       title: '绘制多边形',
     };
   }
-  protected onDragStart = (e: IInteractionTarget) => {
+  protected onDragStart(e: IInteractionTarget) {
     return null;
-  };
-  protected onDragging = (e: IInteractionTarget) => {
+  }
+  protected onDragging(e: IInteractionTarget) {
     return null;
-  };
+  }
 
-  protected onDragEnd = () => {
+  protected onDragEnd() {
     return null;
-  };
+  }
 
   private isEqualsPrePoint(lngLat: ILngLat): boolean {
     let pointLen = this.points.length;
@@ -164,7 +206,8 @@ export default class DrawPolygon extends DrawFeature {
     }
     return false;
   }
-  protected onClick = async (e: any) => {
+
+  protected async onClick(e: any) {
     if (!this.getDrawable()) {
       return;
     }
@@ -205,10 +248,10 @@ export default class DrawPolygon extends DrawFeature {
     this.drawVertexLayer.update(featureCollection(pointfeatures.features));
     this.onDraw();
     this.emit(DrawEvent.ADD_POINT, lngLat, this.points);
-  };
+  }
 
   // 鼠标移动时需要绘制最后一个顶点到到鼠标的连线
-  protected onMouseMove = (e: any) => {
+  protected onMouseMove(e: any) {
     const lngLat = e.lngLat || e.lnglat;
     if (this.points.length === 0) {
       return;
@@ -217,9 +260,9 @@ export default class DrawPolygon extends DrawFeature {
     tmpPoints.push(lngLat);
     const feature = this.createFeature(tmpPoints);
     this.drawLayer.update(featureCollection([feature]));
-  };
+  }
 
-  protected onDblClick = (e: any) => {
+  protected onDblClick(e: any) {
     const lngLat = e.lngLat || e.lnglat;
     if (this.points.length < 2) {
       return;
@@ -228,7 +271,7 @@ export default class DrawPolygon extends DrawFeature {
       this.points.push(lngLat);
     }
     this.drawFinish();
-  };
+  }
 
   protected moveFeature(delta: ILngLat): void {
     const newFeature = moveFeatures([this.currentFeature as Feature], delta);
@@ -258,7 +301,7 @@ export default class DrawPolygon extends DrawFeature {
     return feature;
   }
 
-  protected editFeature(vertex: ILngLat): void {
+  protected editFeature(vertex: ILngLat) {
     const selectVertexed = this.currentVertex as Feature<
       Geometries,
       Properties
@@ -288,18 +331,18 @@ export default class DrawPolygon extends DrawFeature {
   }
 
   // 顶点事件监听
-  protected onDraw = () => {
+  protected onDraw() {
     this.drawVertexLayer.on('mousemove', (e: any) => {
       this.setCursor('pointer');
     });
     this.drawVertexLayer.on('mouseout', () => {
       this.setCursor(this.getOption('cursor'));
     });
-    this.drawVertexLayer.on('click', () => {
+    this.drawVertexLayer.on('click', e => {
       this.resetCursor();
-      this.drawFinish();
+      this.drawFinish(e);
     });
-  };
+  }
 
   protected showOtherLayer() {
     // if (this.editMode.isEnable) {

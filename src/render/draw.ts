@@ -1,4 +1,4 @@
-import { IInteractionTarget, ILayer, Scene } from '@antv/l7';
+import { bindAll, IInteractionTarget, ILayer, Scene } from '@antv/l7';
 const InitFeature = {
   type: 'FeatureCollection',
   features: [],
@@ -7,15 +7,25 @@ import { Feature, FeatureCollection } from '@turf/helpers';
 import Draw from '../modes/draw_feature';
 import { DrawEvent, DrawModes } from '../util/constant';
 import BaseRender from './base_render';
-import { renderFeature } from './renderFeature';
+import RenderFeature from './renderFeature';
+
+const rf = RenderFeature.defaultRenderer();
+
 /**
  * 绘制图层
  */
 export default class DrawLayer extends BaseRender {
+  public styleVariant = 'active';
+
+  constructor(draw: Draw) {
+    super(draw);
+    bindAll(['onMouseMove', 'onUnMouseMove', 'onClick', 'onUnClick'], this);
+  }
+
   public update(feature: FeatureCollection) {
     this.removeLayers();
-    const style = this.draw.getStyle('active');
-    this.drawLayers = renderFeature(feature, style);
+    const style = this.draw.getStyle(this.styleVariant);
+    this.drawLayers = rf.renderFeature(feature, style);
     this.addLayers();
   }
   public enableSelect() {
@@ -62,15 +72,16 @@ export default class DrawLayer extends BaseRender {
     this.isEnableDrag = false;
   }
 
-  private onMouseMove = (e: any) => {
+  protected onMouseMove(e: any) {
     this.draw.setCursor('move');
     this.draw.selectMode.enable();
-  };
-  private onUnMouseMove = (e: any) => {
+    this.draw.measureMode.enable();
+  }
+  protected onUnMouseMove(e: any) {
     this.draw.resetCursor();
     this.draw.selectMode.disable();
-  };
-  private onClick = (e: any) => {
+  }
+  protected onClick(e: any) {
     if (!this.draw.getDrawable()) {
       return;
     }
@@ -81,9 +92,9 @@ export default class DrawLayer extends BaseRender {
     this.enableEdit();
     this.draw.setCurrentFeature(e.feature);
     this.draw.emit(DrawEvent.MODE_CHANGE, DrawModes.DIRECT_SELECT);
-  };
+  }
 
-  private onUnClick = (e: any) => {
+  protected onUnClick(e: any) {
     this.draw.selectMode.disable();
     this.draw.editMode.disable();
     this.draw.source.setFeatureUnActive(
@@ -93,5 +104,5 @@ export default class DrawLayer extends BaseRender {
     this.disableEdit();
     this.hide();
     this.draw.emit(DrawEvent.MODE_CHANGE, DrawModes.STATIC);
-  };
+  }
 }

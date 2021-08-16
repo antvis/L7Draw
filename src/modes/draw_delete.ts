@@ -1,9 +1,10 @@
-import { IInteractionTarget, ILngLat, Scene } from '@antv/l7';
-import { Feature } from '@turf/helpers';
+import { IInteractionTarget, Scene } from '@antv/l7';
+
 import { DrawEvent } from '../util/constant';
 import { IDrawFeatureOption } from './draw_feature';
-import DrawFeature, { IDrawOption } from './draw_mode';
-export default class DrawDelete extends DrawFeature {
+import DrawMode from './draw_mode';
+
+export default class DrawDelete extends DrawMode {
   // 绘制完成之后显示
   constructor(scene: Scene, options: Partial<IDrawFeatureOption> = {}) {
     super(scene, options);
@@ -25,14 +26,14 @@ export default class DrawDelete extends DrawFeature {
   protected onDragStart(e: any): void {
     throw new Error('Method not implemented.');
   }
-  protected onDragging = (e: IInteractionTarget) => {
+  protected onDragging(e: IInteractionTarget) {
     return;
-  };
+  }
 
-  protected onDragEnd = () => {
+  protected onDragEnd() {
     throw new Error('Method not implemented.');
-  };
-  protected onClick = () => {
+  }
+  protected onClick() {
     return null;
-  };
+  }
 }

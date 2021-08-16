@@ -1,24 +1,14 @@
-import {
-  IInteractionTarget,
-  ILayer,
-  ILngLat,
-  IPopup,
-  LineLayer,
-  PointLayer,
-  PolygonLayer,
-  Popup,
-  Scene,
-} from '@antv/l7';
-import { Feature, featureCollection, point } from '@turf/helpers';
-import { DrawEvent, DrawModes } from '../util/constant';
-import moveFeatures from '../util/move_featrues';
+import { IInteractionTarget, ILngLat, Scene } from '@antv/l7';
+import { Feature } from '@turf/helpers';
+import { DrawEvent } from '../util/constant';
 import { IDrawFeatureOption } from './draw_feature';
-import DrawFeature, { IDrawOption } from './draw_mode';
+import DrawMode from './draw_mode';
+
 const InitFeature = {
   type: 'FeatureCollection',
   features: [],
 };
-export default class DrawSelect extends DrawFeature {
+export default class DrawSelect extends DrawMode {
   private center: ILngLat;
   private dragStartPoint: ILngLat;
   // 绘制完成之后显示
@@ -30,10 +20,10 @@ export default class DrawSelect extends DrawFeature {
     this.currentFeature = feature;
   }
 
-  protected onDragStart = (e: IInteractionTarget) => {
+  protected onDragStart(e: IInteractionTarget) {
     this.scene.setMapStatus({ dragEnable: false });
     this.dragStartPoint = e.lngLat;
-  };
+  }
 
   protected getDefaultOptions(): Partial<IDrawFeatureOption> {
     return {
@@ -43,7 +33,7 @@ export default class DrawSelect extends DrawFeature {
     };
   }
 
-  protected onDragging = (e: IInteractionTarget) => {
+  protected onDragging(e: IInteractionTarget) {
     const delta = {
       lng: e.lngLat.lng - this.dragStartPoint.lng,
       lat: e.lngLat.lat - this.dragStartPoint.lat,
@@ -52,12 +42,12 @@ export default class DrawSelect extends DrawFeature {
     this.dragStartPoint = e.lngLat;
 
     return;
-  };
+  }
 
-  protected onDragEnd = () => {
+  protected onDragEnd() {
     this.emit(DrawEvent.UPDATE, this.currentFeature);
-  };
-  protected onClick = () => {
+  }
+  protected onClick() {
     return null;
-  };
+  }
 }
