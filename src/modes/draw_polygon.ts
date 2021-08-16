@@ -1,32 +1,39 @@
 import { bindAll, IInteractionTarget, ILayer, ILngLat, Scene } from '@antv/l7';
 import {
   Feature,
-  FeatureCollection,
   featureCollection,
   Geometries,
-  point,
+  Geometry,
+  GeometryCollection,
   Position,
   Properties,
 } from '@turf/helpers';
-import CheckableTag from 'antd/lib/tag/CheckableTag';
+
 import DrawMidVertex from '../render/draw_mid_vertex';
+import BaseRenderLayer from '../render/base_render';
+import DrawRulerLayer from '../render/draw_ruler';
 import { DrawEvent, DrawModes, unitsType } from '../util/constant';
 import { createPoint, createPolygon } from '../util/create_geometry';
 import moveFeatures from '../util/move_features';
 import DrawFeature, { IDrawFeatureOption } from './draw_feature';
+import { IMeasureable } from './IMeasureable';
 export interface IDrawRectOption extends IDrawFeatureOption {
   units: unitsType;
   steps: number;
 }
-export default class DrawPolygon extends DrawFeature {
+export default class DrawPolygon extends DrawFeature implements IMeasureable {
   protected startPoint: ILngLat;
   protected endPoint: ILngLat;
   protected points: ILngLat[] = [];
   protected pointFeatures: Feature[];
   protected drawMidVertexLayer: DrawMidVertex;
 
+  drawRulerLayer: BaseRenderLayer;
+
   constructor(scene: Scene, options: Partial<IDrawRectOption> = {}) {
     super(scene, options);
+    bindAll(['onMouseMove', 'onDblClick', 'onMeasure'], this);
+
     this.type = 'polygon';
     this.setDrawMode(DrawModes.DRAW_POLYGON);
     // 编辑态中心点图层
@@ -34,7 +41,19 @@ export default class DrawPolygon extends DrawFeature {
     this.on(DrawEvent.MODE_CHANGE, this.addMidLayerEvent);
     this.on(DrawEvent.MODE_CHANGE, this.addDistanceLayerEvent);
 
-    bindAll(['onMouseMove', 'onDblClick'], this);
+    this.drawRulerLayer = new DrawRulerLayer(this);
+
+    // this.enableMeasure();
+  }
+
+  onMeasure(feature: Feature<Geometry | GeometryCollection, Properties>): void {
+    this.drawRulerLayer.update(featureCollection([feature]));
+  }
+  enableMeasure(): void {
+    this.measureMode.on(DrawEvent.MEASURE, this.onMeasure);
+  }
+  disableMeasure(): void {
+    this.measureMode.off(DrawEvent.MEASURE, this.onMeasure);
   }
 
   private addDistanceLayerEvent(mode: DrawModes[any]) {

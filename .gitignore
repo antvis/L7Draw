@@ -19,6 +19,6 @@
 .umi-production
 .umi-test
 .env.local
-
+.history
 /es
 /lib

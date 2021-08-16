@@ -1,6 +1,6 @@
-import { IInteractionTarget, ILngLat, Scene } from '@antv/l7';
-import { Feature, featureCollection, point } from '@turf/helpers';
-import { DrawEvent, DrawModes } from '../util/constant';
+import { IInteractionTarget, Scene } from '@antv/l7';
+import { Feature } from '@turf/helpers';
+import { DrawEvent } from '../util/constant';
 import { IDrawFeatureOption } from './draw_feature';
 import DrawMode from './draw_mode';
 

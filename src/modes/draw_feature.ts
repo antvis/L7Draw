@@ -1,4 +1,4 @@
-import { bindAll, IInteractionTarget, ILngLat, Popup, Scene } from '@antv/l7';
+import { IInteractionTarget, ILngLat, Popup, Scene } from '@antv/l7';
 import {
   Feature,
   FeatureCollection,
@@ -18,7 +18,7 @@ import DrawSelected from './draw_selected';
 import merge from 'lodash/merge';
 import BaseRenderLayer from '../render/base_render';
 import DrawEmptyLayer from '../render/draw_empty';
-import DrawRuler from './draw_ruler';
+
 import DrawMeasure from './draw_measure';
 
 export interface IDrawFeatureOption extends IDrawOption {

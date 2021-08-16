@@ -15,6 +15,9 @@ export default () => {
       drawTool.removeLatestVertex();
     }
   };
+  const startDraw = () => {
+    drawTool.enable();
+  };
   React.useEffect(() => {
     const scene = new Scene({
       id: 'map',
@@ -38,7 +41,6 @@ export default () => {
           //   const stepString = coord.route.paths[0].steps
           //     .map(item => item.polyline)
           //     .join(';');
-
           //   const res = stepString.split(';').map(item => {
           //     const [lng, lat] = item.split(',');
           //     return {
@@ -46,10 +48,8 @@ export default () => {
           //       lat: lat * 1,
           //     };
           //   });
-
           //   return res;
           // }
-
           // return [end];
           return [];
         },
@@ -60,7 +60,6 @@ export default () => {
           return lng > 116.304907;
         },
       });
-      draw.enable();
 
       draw.on('draw.create', e => {
         console.log('draw.create', e);
@@ -81,6 +80,9 @@ export default () => {
   return (
     <div>
       <div style={{ marginBottom: '20px' }}>
+        <Button type="Default" onClick={startDraw}>
+          开始绘制
+        </Button>
         <Button type="Default" onClick={clearAllData}>
           清除
         </Button>

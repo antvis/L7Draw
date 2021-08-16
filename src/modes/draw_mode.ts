@@ -55,21 +55,10 @@ abstract class DrawMode extends EventEmitter {
     this.options = merge(this.options, this.getDefaultOptions(), options);
     this.title = this.getOption('title');
 
-    bindAll(['onDragStart', 'onDragging', 'onDragEnd', 'onClick'], this);
-    if (this.getOption('checkDrawable')) {
-      scene.on('mousemove', ({ lnglat }) => {
-        const checkDrawable = this.getOption('checkDrawable');
-        if (this.drawStatus === 'Drawing' && checkDrawable) {
-          if (checkDrawable(lnglat, this)) {
-            this.setCursor(this.getOption('cursor'));
-            this.drawable = true;
-          } else {
-            this.setCursor('not-allowed');
-            this.drawable = false;
-          }
-        }
-      });
-    }
+    bindAll(
+      ['onDragStart', 'onDragging', 'onDragEnd', 'onClick', 'onCheckDrawable'],
+      this,
+    );
   }
 
   public getDrawMode(): DrawModes[keyof DrawModes] {
@@ -89,6 +78,7 @@ abstract class DrawMode extends EventEmitter {
     this.scene.on('dragging', this.onDragging);
     this.scene.on('dragend', this.onDragEnd);
     this.scene.on('click', this.onClick);
+    this.scene.on('mousemove', this.onCheckDrawable);
     this.setCursor(this.getOption('cursor'));
     this.isEnable = true;
   }
@@ -104,6 +94,7 @@ abstract class DrawMode extends EventEmitter {
     this.scene.off('dragging', this.onDragging);
     this.scene.off('dragend', this.onDragEnd);
     this.scene.off('click', this.onClick);
+    this.scene.off('mousemove', this.onCheckDrawable);
     this.resetCursor();
     // @ts-ignore
     this.scene.setMapStatus({
@@ -112,6 +103,22 @@ abstract class DrawMode extends EventEmitter {
     this.isEnable = false;
     this.drawStatus = 'DrawFinish';
   }
+
+  public onCheckDrawable({ lnglat }: any) {
+    const checkDrawable = this.getOption('checkDrawable');
+    if (checkDrawable) {
+      if (this.drawStatus === 'Drawing') {
+        if (checkDrawable(lnglat, this)) {
+          this.setCursor(this.getOption('cursor'));
+          this.drawable = true;
+        } else {
+          this.setCursor('not-allowed');
+          this.drawable = false;
+        }
+      }
+    }
+  }
+
   public setCurrentFeature(feature: Feature) {
     this.currentFeature = feature;
     this.source.setFeatureActive(feature);

@@ -6,6 +6,7 @@ import DrawMode from './draw_mode';
 import DrawPoint from './draw_point';
 import DrawPolygon from './draw_polygon';
 import DrawRect from './draw_rect';
+import DrawRuler from './draw_ruler';
 export {
   DrawCircle,
   DrawFeature,
@@ -15,4 +16,5 @@ export {
   DrawLine,
   DrawMode,
   DrawDelete,
+  DrawRuler,
 };

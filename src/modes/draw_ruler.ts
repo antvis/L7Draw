@@ -1,5 +1,3 @@
-import DrawRulerLayer from '@/render/draw_ruler';
-import { isLineString } from '@/util/typeguards';
 import { ILngLat, Popup, Scene } from '@antv/l7';
 import { Feature, featureCollection } from '@turf/helpers';
 import { DrawEvent, DrawModes, unitsType } from '../util/constant';
@@ -9,8 +7,8 @@ import {
   createPolygon,
 } from '../util/create_geometry';
 import { getDistance } from '../util/measurements';
-import moveFeatures from '../util/move_features';
 import { IDrawFeatureOption } from './draw_feature';
+import DrawRulerLayer from '../render/draw_ruler';
 import DrawPolygon from './draw_polygon';
 
 export interface IDrawRectOption extends IDrawFeatureOption {
@@ -20,8 +18,6 @@ export interface IDrawRectOption extends IDrawFeatureOption {
 export default class DrawRuler extends DrawPolygon {
   protected infoPopup: Popup;
   protected isAreaClosed: boolean = false; // 当闭合时测量面积，否则测量距离
-
-  protected drawRulerLayer: DrawRulerLayer;
 
   constructor(scene: Scene, options: Partial<IDrawRectOption> = {}) {
     super(scene, options);
@@ -45,9 +41,21 @@ export default class DrawRuler extends DrawPolygon {
     this.drawMidVertexLayer.styleVariant = 'ruler';
     this.drawDistanceLayer.styleVariant = 'ruler';
 
-    this.measureMode.on(DrawEvent.MEASURE, (feature: Feature) => {
-      this.drawRulerLayer.update(featureCollection([feature]));
-    });
+    this.enableMeasure();
+  }
+
+  public enable() {
+    this.drawRulerLayer.destroy();
+    this.drawMidVertexLayer.destroy();
+    this.drawDistanceLayer.destroy();
+    this.drawLayer.destroy();
+    this.drawVertexLayer.destroy();
+
+    super.enable();
+  }
+
+  public resetDraw() {
+    super.resetDraw();
   }
 
   protected getDefaultOptions(): Partial<IDrawFeatureOption> {
@@ -131,13 +139,7 @@ export default class DrawRuler extends DrawPolygon {
   }
 
   protected moveFeature(delta: ILngLat): Feature {
-    const newFeature = moveFeatures([this.currentFeature as Feature], delta);
-    const newPointFeture = moveFeatures(this.pointFeatures, delta);
-    this.drawLayer.updateData(featureCollection(newFeature));
-    this.drawVertexLayer.updateData(featureCollection(newPointFeture));
-    this.currentFeature = newFeature[0];
-    this.pointFeatures = newPointFeture;
-    return this.currentFeature;
+    return this.currentFeature as Feature;
   }
   // 构造线Feature
   protected createFeature(
@@ -169,24 +171,5 @@ export default class DrawRuler extends DrawPolygon {
 
       return feature;
     }
-  }
-  protected initData(): boolean {
-    console.log('initdata');
-    const features: Feature[] = [];
-    this.source.data.features.forEach(feature => {
-      if (isLineString(feature)) {
-        const points = feature.geometry.coordinates.map(coord => {
-          return {
-            lng: coord[0],
-            lat: coord[1],
-          };
-        });
-        features.push(
-          this.createFeature(points, feature?.properties?.id, false),
-        );
-      }
-    });
-    this.source.data.features = features;
-    return true;
   }
 }
