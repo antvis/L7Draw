@@ -1,4 +1,4 @@
-import { IInteractionTarget, ILngLat, Popup, Scene } from '@antv/l7';
+import { bindAll, IInteractionTarget, ILngLat, Popup, Scene } from '@antv/l7';
 import {
   Feature,
   FeatureCollection,
@@ -18,6 +18,9 @@ import DrawSelected from './draw_selected';
 import merge from 'lodash/merge';
 import BaseRenderLayer from '../render/base_render';
 import DrawEmptyLayer from '../render/draw_empty';
+import DrawRuler from './draw_ruler';
+import DrawMeasure from './draw_measure';
+
 export interface IDrawFeatureOption extends IDrawOption {
   units: Units;
   steps: number;
@@ -32,6 +35,7 @@ export default abstract class DrawFeature extends DrawMode {
   // 绘制完成之后显示
   public selectMode: DrawSelected;
   public editMode: DrawEdit;
+  public measureMode: DrawMeasure;
   public deleteMode: DrawDelete;
   public editEnable: boolean;
   public showDistance: boolean;
@@ -50,6 +54,8 @@ export default abstract class DrawFeature extends DrawMode {
     this.editEnable = this.getOption('editEnable');
     this.showDistance = this.getOption('showDistance');
 
+    // TODO：做DI改造
+
     // 绘制图层
     this.drawLayer = new DrawRender(this);
 
@@ -67,6 +73,7 @@ export default abstract class DrawFeature extends DrawMode {
     this.selectMode = new DrawSelected(this.scene, {});
     this.editMode = new DrawEdit(this.scene, {});
     this.deleteMode = new DrawDelete(this.scene, {});
+    this.measureMode = new DrawMeasure(this.scene, {});
 
     this.selectMode.on(DrawEvent.UPDATE, this.onDrawUpdate);
     this.selectMode.on(DrawEvent.Move, this.onDrawMove);
@@ -146,6 +153,7 @@ export default abstract class DrawFeature extends DrawMode {
     this.destroy();
     this.selectMode.destroy();
     this.editMode.destroy();
+    this.measureMode.destroy();
     this.source.destroy();
     this.drawLayer.destroy();
     this.drawVertexLayer.destroy();
@@ -227,6 +235,10 @@ export default abstract class DrawFeature extends DrawMode {
         }
         this.selectMode.setSelectedFeature(this.currentFeature as Feature);
         this.selectMode.enable();
+
+        this.measureMode.setSelectedFeature(this.currentFeature as Feature);
+        this.measureMode.enable();
+
         this.drawLayer.updateData(
           // TODO:导入数据不能正常使用
           featureCollection([this.currentFeature as Feature]),
@@ -249,6 +261,8 @@ export default abstract class DrawFeature extends DrawMode {
         this.source.updateFeature(this.currentFeature as Feature);
         this.selectMode.disable();
         this.editMode.disable();
+        this.measureMode.disable();
+
         this.source.clearFeatureActive();
         this.drawVertexLayer.hide();
         this.drawDistanceLayer.hide();

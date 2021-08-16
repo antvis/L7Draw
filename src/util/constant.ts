@@ -12,6 +12,7 @@ export enum DrawEvent {
   COMBINE_FEATURES = 'draw.combine',
   UNCOMBINE_FEATURES = 'draw.uncombine',
   ADD_POINT = 'draw.addpoint',
+  MEASURE = 'draw.measure',
 }
 
 export enum DrawModes {
@@ -23,6 +24,7 @@ export enum DrawModes {
   SIMPLE_SELECT = 'simple_select',
   DIRECT_SELECT = 'direct_select',
   STATIC = 'static',
+  RULER = 'ruler',
 }
 
 export type unitsType = 'degrees' | 'radians' | 'miles' | 'kilometers';

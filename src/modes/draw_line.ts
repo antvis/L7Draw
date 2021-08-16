@@ -1,8 +1,9 @@
+import { isLineString } from '@/util/typeguards';
 import { ILngLat, Scene } from '@antv/l7';
 import { Feature, featureCollection } from '@turf/helpers';
 import { DrawModes, unitsType } from '../util/constant';
 import { createLine, createPoint } from '../util/create_geometry';
-import moveFeatures from '../util/move_featrues';
+import moveFeatures from '../util/move_features';
 import { IDrawFeatureOption } from './draw_feature';
 import DrawPolygon from './draw_polygon';
 export interface IDrawRectOption extends IDrawFeatureOption {
@@ -51,8 +52,7 @@ export default class DrawLine extends DrawPolygon {
   protected initData(): boolean {
     const features: Feature[] = [];
     this.source.data.features.forEach(feature => {
-      if (feature.geometry.type === 'LineString') {
-        // @ts-ignore
+      if (isLineString(feature)) {
         const points = feature.geometry.coordinates.map(coord => {
           return {
             lng: coord[0],

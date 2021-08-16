@@ -1,4 +1,4 @@
-import { IInteractionTarget, IPopup, Scene, ILngLat } from '@antv/l7';
+import { IInteractionTarget, IPopup, Scene, ILngLat, bindAll } from '@antv/l7';
 import { Feature, FeatureCollection } from '@turf/helpers';
 import { EventEmitter } from 'eventemitter3';
 // tslint:disable-next-line:no-submodule-imports
@@ -28,7 +28,7 @@ export type DrawStatus =
 
 let DrawFeatureId = 0;
 
-export default abstract class DrawMode extends EventEmitter {
+abstract class DrawMode extends EventEmitter {
   public source: DrawSource;
   public scene: Scene;
   public type: string;
@@ -55,6 +55,7 @@ export default abstract class DrawMode extends EventEmitter {
     this.options = merge(this.options, this.getDefaultOptions(), options);
     this.title = this.getOption('title');
 
+    bindAll(['onDragStart', 'onDragging', 'onDragEnd', 'onClick'], this);
     if (this.getOption('checkDrawable')) {
       scene.on('mousemove', ({ lnglat }) => {
         const checkDrawable = this.getOption('checkDrawable');
@@ -195,3 +196,5 @@ export default abstract class DrawMode extends EventEmitter {
     return null;
   }
 }
+
+export default DrawMode;

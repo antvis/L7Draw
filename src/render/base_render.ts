@@ -7,12 +7,17 @@ type CallBack = (...args: any[]) => any;
 import { FeatureCollection } from '@turf/helpers';
 import Draw from '../modes/draw_feature';
 import { DrawEvent, DrawModes } from '../util/constant';
-import { renderFeature } from './renderFeature';
+
+const rf = RenderFeature.defaultRenderer();
+
+import RenderFeature from './renderFeature';
 export default class BaseRenderLayer {
   public drawLayers: ILayer[] = [];
   protected draw: Draw;
   protected isEnableDrag: boolean;
   protected isEnableEdit: boolean;
+  public styleVariant: string = 'normal'; // 用哪种style渲染
+
   constructor(draw: Draw) {
     this.draw = draw;
   }
@@ -21,8 +26,10 @@ export default class BaseRenderLayer {
     //   this.updateData(feature);
     // }
     this.removeLayers();
-    const style = this.draw.getStyle('normal');
-    this.drawLayers = renderFeature(feature, style);
+    this.drawLayers = rf.renderFeature(
+      feature,
+      this.draw.getStyle(this.styleVariant),
+    );
     this.addLayers();
   }
   public on(type: any, handler: CallBack) {

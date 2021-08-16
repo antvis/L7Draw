@@ -1,7 +1,7 @@
 import { IInteractionTarget, ILayer, ILngLat, Scene } from '@antv/l7';
 import { Feature, featureCollection, point } from '@turf/helpers';
 import { DrawEvent, DrawModes, unitsType } from '../util/constant';
-import moveFeatures from '../util/move_featrues';
+import moveFeatures from '../util/move_features';
 import DrawFeature, { IDrawFeatureOption } from './draw_feature';
 export default class DrawPoint extends DrawFeature {
   protected pointFeatures: Feature[];
@@ -28,18 +28,18 @@ export default class DrawPoint extends DrawFeature {
     };
   }
 
-  protected onDragStart = (e: IInteractionTarget) => {
+  protected onDragStart(e: IInteractionTarget) {
     return null;
-  };
-  protected onDragging = (e: IInteractionTarget) => {
+  }
+  protected onDragging(e: IInteractionTarget) {
     return null;
-  };
+  }
 
-  protected onDragEnd = () => {
+  protected onDragEnd() {
     return null;
-  };
+  }
 
-  protected onClick = (e: any) => {
+  protected onClick(e: any) {
     if (!this.getDrawable()) {
       return;
     }
@@ -51,7 +51,7 @@ export default class DrawPoint extends DrawFeature {
     this.drawLayer.update(featureCollection([feature]));
     this.drawVertexLayer.update(featureCollection([feature]));
     this.drawFinish();
-  };
+  }
 
   protected moveFeature(delta: ILngLat): Feature {
     const newFeature = moveFeatures([this.currentFeature as Feature], delta);

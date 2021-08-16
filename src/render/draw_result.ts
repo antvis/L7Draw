@@ -1,16 +1,28 @@
+import { bindAll } from '@antv/l7';
 import { Feature, FeatureCollection } from '@turf/helpers';
 import { DrawEvent, DrawModes } from '../util/constant';
 import BaseRender from './base_render';
-import { renderFeature } from './renderFeature';
+import RenderFeature from './renderFeature';
+import Draw from '../modes/draw_feature';
+
+const rf = RenderFeature.defaultRenderer();
+
 export default class DrawResultLayer extends BaseRender {
+  public styleVariant = 'normal';
+
+  constructor(draw: Draw) {
+    super(draw);
+    bindAll(['onDeleteClick', 'onClick'], this);
+  }
+
   public update(feature: FeatureCollection) {
     if (this.drawLayers.length > 0) {
       this.updateData(feature);
       return;
     }
     this.removeLayers();
-    const style = this.draw.getStyle('normal');
-    this.drawLayers = renderFeature(feature, style);
+    const style = this.draw.getStyle(this.styleVariant);
+    this.drawLayers = rf.renderFeature(feature, style);
     this.addFilter();
     this.addLayers();
   }
@@ -50,10 +62,12 @@ export default class DrawResultLayer extends BaseRender {
       }),
     );
   }
-  private onClick = (e: any) => {
+
+  private onClick(e: any) {
     if (!this.draw.getDrawable()) {
       return;
     }
+
     this.draw.source.setFeatureUnActive(
       this.draw.getCurrentFeature() as Feature,
     );
@@ -61,10 +75,10 @@ export default class DrawResultLayer extends BaseRender {
     this.draw.source.setFeatureActive(e.feature as Feature);
     this.updateData(this.draw.source.data);
     this.draw.emit(DrawEvent.MODE_CHANGE, DrawModes.SIMPLE_SELECT);
-  };
+  }
 
-  private onDeleteClick = (e: any) => {
+  private onDeleteClick(e: any) {
     this.draw.source.removeFeature(e.feature);
     this.updateData(this.draw.source.data);
-  };
+  }
 }

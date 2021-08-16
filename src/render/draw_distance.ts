@@ -6,16 +6,13 @@ import {
   Geometries,
 } from '@turf/helpers';
 
-// @ts-ignore
-import turfDistance from '@turf/distance';
-import { DrawEvent, DrawModes } from '../util/constant';
 import BaseRender from './base_render';
 import midPoint from '@turf/midpoint';
-import { renderFeature } from './renderFeature';
+import RenderFeature from './renderFeature';
+import { isLineString } from '../util/typeguards';
+import { getDistance } from '../util/measurements';
 
-const isLineString = (feature: Feature): feature is Feature<LineString> => {
-  return feature.geometry.type === 'LineString';
-};
+const rf = RenderFeature.defaultRenderer();
 
 export default class DrawDistanceLayer extends BaseRender {
   public update(fc: FeatureCollection) {
@@ -26,14 +23,12 @@ export default class DrawDistanceLayer extends BaseRender {
 
     this.removeLayers();
 
-    const distanceFeatures = fc.features.map((feature: Feature) => {
-      const x = (feature?.geometry as Geometries)?.coordinates[0];
-      const y = (feature?.geometry as Geometries)?.coordinates[1];
+    const distanceFeatures = fc.features.map((feature: Feature<LineString>) => {
+      const x = feature?.geometry?.coordinates[0];
+      const y = feature?.geometry?.coordinates[1];
 
-      const distance =
-        turfDistance(x, y, { units: 'kilometers' }).toFixed(2) + 'km';
+      const distance = getDistance(x, y);
 
-      // @ts-ignore
       const mid = midPoint(x, y);
 
       //@ts-ignore
@@ -42,10 +37,9 @@ export default class DrawDistanceLayer extends BaseRender {
     });
 
     const style = this.draw.getStyle('active');
-    this.drawLayers = renderFeature(
-      featureCollection(distanceFeatures as any[]),
-      style,
-    ).concat(renderFeature(fc, style));
+    this.drawLayers = rf
+      .renderFeature(featureCollection(distanceFeatures as any[]), style)
+      .concat(rf.renderFeature(fc, style));
 
     this.addLayers();
   }

@@ -2,8 +2,9 @@ import { IInteractionTarget, ILngLat, Scene } from '@antv/l7';
 import { Feature } from '@turf/helpers';
 import { DrawEvent } from '../util/constant';
 import { IDrawFeatureOption } from './draw_feature';
-import DrawFeature, { IDrawOption } from './draw_mode';
-export default class DrawEdit extends DrawFeature {
+import DrawMode, { IDrawOption } from './draw_mode';
+
+export default class DrawEdit extends DrawMode {
   private endPoint: ILngLat;
   // 绘制完成之后显示
   constructor(scene: Scene, options: Partial<IDrawFeatureOption> = {}) {

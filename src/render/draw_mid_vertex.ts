@@ -1,3 +1,4 @@
+import { bindAll } from '@antv/l7';
 import {
   feature,
   Feature,
@@ -7,14 +8,24 @@ import {
   Properties,
 } from '@turf/helpers';
 import midPoint from '@turf/midpoint';
+import Draw from '../modes/draw_feature';
 import BaseRender from './base_render';
-import { renderFeature } from './renderFeature';
+import RenderFeature from './renderFeature';
+
+const rf = RenderFeature.defaultRenderer();
 export default class DrawVertexLayer extends BaseRender {
+  public styleVariant = 'mid_point';
+
+  constructor(draw: Draw) {
+    super(draw);
+    bindAll(['onMouseEnter', 'onClick', 'onMouseOut'], this);
+  }
+
   public update(pointFeatures: FeatureCollection) {
     this.removeLayers();
     const midFeatures = this.calcMidPointData(pointFeatures);
-    const style = this.draw.getStyle('mid_point');
-    this.drawLayers = renderFeature(midFeatures, style);
+    const style = this.draw.getStyle(this.styleVariant);
+    this.drawLayers = rf.renderFeature(midFeatures, style);
     this.addLayers();
     this.enableEdit();
   }
@@ -36,19 +47,19 @@ export default class DrawVertexLayer extends BaseRender {
     layer.off('click', this.onClick);
   }
 
-  private onMouseEnter = (e: any) => {
+  private onMouseEnter(e: any) {
     this.draw.setCursor('pointer');
-  };
-  private onMouseOut = (e: any) => {
+  }
+  private onMouseOut(e: any) {
     this.draw.resetCursor();
-  };
-  private onClick = (e: any) => {
+  }
+  private onClick(e: any) {
     if (!this.draw.getDrawable()) {
       return;
     }
     this.draw.addVertex(e.feature);
     // 添加一个顶点 1.更新顶点 2.更新重点
-  };
+  }
 
   private calcMidPointData(fe: FeatureCollection) {
     const midFeatures: Feature[] = [];
