@@ -13,6 +13,7 @@ export enum DrawEvent {
   UNCOMBINE_FEATURES = 'draw.uncombine',
   ADD_POINT = 'draw.addpoint',
   MEASURE = 'draw.measure',
+  MULTI_SELECT = 'draw.multiselect',
 }
 
 export enum DrawModes {
