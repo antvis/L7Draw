@@ -18,7 +18,7 @@ export default class DrawDistanceLayer extends BaseRender {
   /**
    * 是否单独画指示线段
    */
-  showLine: true;
+  public showLine = true;
 
   public update(fc: FeatureCollection) {
     if (!fc.features.every(isLineString))
@@ -47,6 +47,8 @@ export default class DrawDistanceLayer extends BaseRender {
       featureCollection(distanceFeatures as any[]),
       style,
     );
+
+    console.log(this.showLine);
 
     if (this.showLine) {
       this.drawLayers.push(...rf.renderFeature(fc, style));
