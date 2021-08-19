@@ -3,25 +3,6 @@ title: Draw UI Component
 order: 2
 ---
 
-地图绘制组件，支持点、线、面， 圆、矩形、的绘制编辑。
-
-# 使用
-
-**using modules**
-
-```javascript
-import { DrawControl } from '@antv/l7-draw';
-```
-
-**CDN 版本引用**
-
-```html
-<head>
-  <! --引入最新版的L7-Draw -->
-  <script src="https://unpkg.com/@antv/l7-draw"></script>
-</head>
-```
-
 ### 参数
 
 ```javascript
@@ -35,7 +16,7 @@ const control = new L7.Draw.DrawControl(scene, option);
 
 #### scene
 
-scene 对象, 绘制控件需要传入 scene 实例
+scene 对象
 
 #### options
 
@@ -81,7 +62,9 @@ UI 组件配置项
     },
     polygon: true,
     rect: true,
-    circle: true,
+    circle: {
+      showDistance: true
+    },
     delete: false
 ```
 
@@ -99,7 +82,9 @@ scene.removeControl(control);
 
 ## 方法
 
-### getDraw()
+### getDraw(type)
+
+获取 draw 实例
 
 参数： type 绘制实例 `point|line|polygon|rect| circle`
 
@@ -115,9 +100,17 @@ const pointDraw = drawcontrol.get('point');
 
 ```javascript
 {
-  point: [];
+  point: []; // geojson数据格式
   line: [];
 }
+```
+
+### removeAllData()
+
+移除绘制的的所有数据
+
+```javascript
+drawcontrol.removeAllData();
 ```
 
 ### 事件
