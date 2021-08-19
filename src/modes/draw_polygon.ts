@@ -1,4 +1,3 @@
-import { isPolygon } from '@/util/typeguards';
 import { bindAll, IInteractionTarget, ILayer, ILngLat, Scene } from '@antv/l7';
 import {
   Feature,
@@ -11,6 +10,7 @@ import {
   Properties,
 } from '@turf/helpers';
 
+import { isPolygon } from '../util/typeguards';
 import DrawMidVertex from '../render/draw_mid_vertex';
 import BaseRenderLayer from '../render/base_render';
 import DrawRulerLayer from '../render/draw_ruler';
