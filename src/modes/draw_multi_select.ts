@@ -45,6 +45,12 @@ export default class DrawMultiSelect extends DrawFeature {
     this.drawLayer.update(featureCollection([]));
 
     // this.emit(DrawEvent.MODE_CHANGE, DrawModes.SIMPLE_SELECT);
+
+    this.emit(DrawEvent.MULTI_SELECT, {
+      startPoint: this.startPoint,
+      endPoint: this.endPoint,
+    });
+
     this.disable();
   }
 

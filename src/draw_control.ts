@@ -161,16 +161,19 @@ export class DrawControl extends Control {
   private addControlEvent() {
     for (const draw in this.draw) {
       if (this.draw[draw]) {
-        ['draw.create', 'draw.update', 'draw.delete'].forEach(
-          (type: string) => {
-            this.draw[draw].on(type, feature => {
-              this.emit(type, {
-                drawType: draw,
-                feature,
-              });
+        [
+          DrawEvent.CREATE,
+          DrawEvent.UPDATE,
+          DrawEvent.DELETE,
+          DrawEvent.MULTI_SELECT,
+        ].forEach((type: string) => {
+          this.draw[draw].on(type, feature => {
+            this.emit(type, {
+              drawType: draw,
+              feature,
             });
-          },
-        );
+          });
+        });
       }
     }
   }
