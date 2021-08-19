@@ -1,7 +1,7 @@
-import DrawEmptyLayer from '@/render/draw_empty';
-import { DrawEvent, DrawModes } from '@/util/constant';
-import { createRect } from '@/util/create_geometry';
 import { IInteractionTarget, ILngLat, Scene } from '@antv/l7';
+import DrawEmptyLayer from '../render/draw_empty';
+import { DrawEvent, DrawModes } from '../util/constant';
+import { createRect } from '../util/create_geometry';
 import {
   Feature,
   featureCollection,
