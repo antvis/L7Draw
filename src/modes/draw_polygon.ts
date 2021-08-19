@@ -102,7 +102,7 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
 
   public drawFinish(e?: any) {
     // debugger
-    this.points = this.points.reverse();
+    // this.points = this.points.reverse();
     const feature = this.createFeature([...this.points]);
     const properties = feature.properties as { pointFeatures: Feature[] };
     this.drawLayer.update(featureCollection([feature]));

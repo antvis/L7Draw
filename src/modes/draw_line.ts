@@ -1,4 +1,4 @@
-import { isLineString } from '@/util/typeguards';
+import { isLineString } from '../util/typeguards';
 import { ILngLat, Scene } from '@antv/l7';
 import { Feature, featureCollection } from '@turf/helpers';
 import { DrawModes, unitsType } from '../util/constant';

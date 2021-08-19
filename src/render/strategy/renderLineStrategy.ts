@@ -1,7 +1,7 @@
 import { LineLayer } from '@antv/l7';
 import { FeatureCollection } from '@turf/helpers';
 import { IRenderStrategy } from '.';
-import { Singleton } from '@/util/singleton';
+import { Singleton } from '../../util/singleton';
 
 export default class RenderLineStrategy extends Singleton
   implements IRenderStrategy {
