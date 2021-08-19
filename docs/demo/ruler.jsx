@@ -77,22 +77,7 @@ export default () => {
         position: 'topright',
         layout: 'horizontal', // horizontal vertical
         controls: {
-          polygon: {
-            selectEnable: true,
-            showFeature: true,
-          },
-          circle: {
-            selectEnable: true,
-            showFeature: true,
-            showDistance: true,
-          },
-          line: true,
-          rect: true,
-          point: true,
-
-          multiSelect: true,
           ruler: true,
-          delete: false,
         },
       });
 
