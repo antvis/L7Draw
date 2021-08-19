@@ -2,7 +2,7 @@
 
 # API
 
-[API](./docs/api.zh.md)
+[API](./api)
 
 ## Getting Started
 
