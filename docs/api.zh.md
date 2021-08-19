@@ -120,7 +120,7 @@ drawPoint.enable();
 - selectEnable `boolean` 是否允许选中
 - data `geojson` 传入数据
 - showFeature `boolean` 绘制完成是否显绘制结果
-- showDistance `boolean` 是否显示绘制距离
+- showDistance `boolean` 是否显示绘制距离 默认关闭
 
 ### 属性
 
