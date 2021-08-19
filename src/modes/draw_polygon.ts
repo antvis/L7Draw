@@ -45,6 +45,8 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
 
     this.drawRulerLayer = new DrawRulerLayer(this);
 
+    //@ts-ignore
+    this.drawDistanceLayer.showLine = false;
     // this.enableMeasure();
   }
 
@@ -334,6 +336,7 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
       this.pointFeatures[id].geometry.coordinates = [vertex.lng, vertex.lat];
       this.drawVertexLayer.updateData(featureCollection(this.pointFeatures));
       this.drawMidVertexLayer.updateData(featureCollection(this.pointFeatures));
+      this.drawDistanceLayer.update(this.getDistanceLineString());
       this.editPolygonVertex(id, vertex);
       this.drawLayer.updateData(
         featureCollection([this.currentFeature as Feature]),
