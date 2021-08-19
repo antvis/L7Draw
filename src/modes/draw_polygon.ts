@@ -3,12 +3,14 @@ import {
   Feature,
   featureCollection,
   Geometries,
+  lineString,
   Geometry,
   GeometryCollection,
   Position,
   Properties,
 } from '@turf/helpers';
 
+import { isPolygon } from '../util/typeguards';
 import DrawMidVertex from '../render/draw_mid_vertex';
 import BaseRenderLayer from '../render/base_render';
 import DrawRulerLayer from '../render/draw_ruler';
@@ -43,6 +45,8 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
 
     this.drawRulerLayer = new DrawRulerLayer(this);
 
+    //@ts-ignore
+    this.drawDistanceLayer.showLine = false;
     // this.enableMeasure();
   }
 
@@ -69,7 +73,20 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
   }
 
   private getDistanceLineString() {
-    return featureCollection([]);
+    let lineStrings: any[] = [];
+    if (this.currentFeature && isPolygon(this.currentFeature)) {
+      const feature = this.currentFeature;
+      const coords = feature.geometry.coordinates[0];
+
+      lineStrings = coords
+        .map((coord, index) => {
+          if (!coords[index + 1]) return;
+          return lineString([coord, coords[index + 1]]);
+        })
+        .filter(Boolean);
+    }
+
+    return featureCollection(lineStrings);
   }
 
   public enable() {
@@ -277,6 +294,8 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
     const newFeature = moveFeatures([this.currentFeature as Feature], delta);
     const newPointFeture = moveFeatures(this.pointFeatures, delta);
     this.drawLayer.updateData(featureCollection(newFeature));
+
+    this.drawDistanceLayer.update(this.getDistanceLineString());
     this.drawVertexLayer.updateData(featureCollection(newPointFeture));
     newFeature[0].properties = {
       ...newFeature[0].properties,
@@ -317,6 +336,7 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
       this.pointFeatures[id].geometry.coordinates = [vertex.lng, vertex.lat];
       this.drawVertexLayer.updateData(featureCollection(this.pointFeatures));
       this.drawMidVertexLayer.updateData(featureCollection(this.pointFeatures));
+      this.drawDistanceLayer.update(this.getDistanceLineString());
       this.editPolygonVertex(id, vertex);
       this.drawLayer.updateData(
         featureCollection([this.currentFeature as Feature]),
