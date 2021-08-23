@@ -1,5 +1,5 @@
 import { IInteractionTarget, ILngLat, Scene } from '@antv/l7';
-import { Feature } from '@turf/helpers';
+import { Feature, Units } from '@turf/helpers';
 import { DrawEvent } from '../util/constant';
 import { IDrawFeatureOption } from './draw_feature';
 import DrawMode from './draw_mode';
@@ -19,11 +19,10 @@ export default class DrawEdit extends DrawMode {
     // @ts-ignore
   };
 
-  // @ts-ignore
   protected getDefaultOptions() {
     return {
       steps: 64,
-      units: 'kilometres',
+      units: 'kilometers' as Units,
       cursor: 'move',
     };
   }

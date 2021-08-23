@@ -1,6 +1,6 @@
 {
   "name": "@antv/l7-draw",
-  "version": "2.4.14",
+  "version": "2.4.15",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
