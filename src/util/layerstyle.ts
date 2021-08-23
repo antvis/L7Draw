@@ -1,4 +1,18 @@
 const LayerStyles = {
+  multiSelect: {
+    polygon: {
+      shape: 'fill',
+      color: '#black',
+      style: {
+        stroke: 'black',
+        strokeWidth: 1,
+        strokeOpacity: 1,
+        lineType: 'dash',
+        dashArray: [1, 1],
+      },
+    },
+  },
+
   active: {
     point: {
       type: 'PointLayer',

@@ -15,6 +15,11 @@ import { getDistance } from '../util/measurements';
 const rf = RenderFeature.defaultRenderer();
 
 export default class DrawDistanceLayer extends BaseRender {
+  /**
+   * 是否单独画指示线段
+   */
+  public showLine = true;
+
   public update(fc: FeatureCollection) {
     if (!fc.features.every(isLineString))
       throw new Error(
@@ -33,13 +38,21 @@ export default class DrawDistanceLayer extends BaseRender {
 
       //@ts-ignore
       mid.properties.value = distance;
+
       return mid;
     });
 
     const style = this.draw.getStyle('active');
-    this.drawLayers = rf
-      .renderFeature(featureCollection(distanceFeatures as any[]), style)
-      .concat(rf.renderFeature(fc, style));
+    this.drawLayers = rf.renderFeature(
+      featureCollection(distanceFeatures as any[]),
+      style,
+    );
+
+    console.log(this.showLine);
+
+    if (this.showLine) {
+      this.drawLayers.push(...rf.renderFeature(fc, style));
+    }
 
     this.addLayers();
   }

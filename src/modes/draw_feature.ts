@@ -167,7 +167,6 @@ export default abstract class DrawFeature extends DrawMode {
       cursor: 'crosshair',
       editEnable: true,
       selectEnable: true,
-      showDistance: true,
       showFeature: true,
       enableCustomDraw: true,
     };

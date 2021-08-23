@@ -1,26 +1,7 @@
 ---
-title: Draw Component
+title: API
 order: 3
 ---
-
-地图绘制组件，支持点、线、面， 圆、矩形、的绘制编辑。
-
-# 使用
-
-**using modules**
-
-```javascript
-import { DrawControl } from '@antv/l7-draw';
-```
-
-**CDN 版本引用**
-
-```html
-<head>
-  <! --引入最新版的L7-Draw -->
-  <script src="https://unpkg.com/@antv/l7-draw"></script>
-</head>
-```
 
 ### 参数
 
@@ -52,10 +33,11 @@ UI 组件配置项
 - circle `boolean | drawOption` 绘制圆工具配置
 - rect `boolean | drawOption` 绘制矩形工具配置
 - delete `boolean | drawOption` 添加删除工具
+- ruler `boolean` 测距工具
 
 默认配置
 
-```
+```js
   {
     point: true,
     line: true,
@@ -64,20 +46,6 @@ UI 组件配置项
     circle: true,
     delete: true
   }
-```
-
-示例
-
-```
-{
-    point: false,
-    line: {
-      editEnable: false,
-    },
-    polygon: true,
-    rect: true,
-    circle: true,
-    delete: false
 ```
 
 ### 添加到地图
@@ -148,8 +116,17 @@ drawPoint.enable();
 
 ### 配置项 DrawOption
 
-- editEnable boolean 是否允许编辑
-- selectEnable boolean 是否允许选中
+- editEnable `boolean` 是否允许编辑
+- selectEnable `boolean` 是否允许选中
+- data `geojson` 传入数据
+- showFeature `boolean` 绘制完成是否显绘制结果
+- showDistance `boolean` 是否显示绘制距离 默认关闭
+
+### 属性
+
+#### drawStatus
+
+绘制状态的状态
 
 ### 方法
 
@@ -157,19 +134,28 @@ drawPoint.enable();
 
 开始编辑，绘制完成之后会自动结束。
 
-```javascript
-draw.enable();
-```
-
 #### disable
 
 结束编辑
 
-```javascript
-draw.enable();
-```
+#### removeLatestVertex
+
+移除最新绘制的点
+目前绘制线和面支持
+
+#### resetDraw
+
+重置绘制 Draw,清除已有绘制，并重新绘制
 
 ### 事件
+
+### draw.modechange
+
+绘制状态变化事件
+
+- static 显示太
+- simple_select 选中太
+- direct_select 编辑态
 
 #### draw.create
 
@@ -182,101 +168,3 @@ draw.enable();
 #### draw.update
 
 图形更新时触发该事件，图形的平移，顶点的编辑
-
-### style
-
-- active 绘制过程中高亮颜色
-- normal 正常显示状态
-
-```javascript
-const style = {
-  active: {
-    point: {
-      type: 'PointLayer',
-      shape: 'circle',
-      color: '#fbb03b',
-      size: 5,
-      style: {
-        stroke: '#fff',
-        strokeWidth: 2,
-      },
-    },
-    line: {
-      type: 'LineLayer',
-      shape: 'line',
-      color: '#fbb03b',
-      size: 1,
-      style: {
-        opacity: 1,
-        lineType: 'dash',
-        dashArray: [2, 2],
-      },
-    },
-    polygon: {
-      shape: 'fill',
-      color: '#fbb03b',
-      style: {
-        opacity: 0.1,
-        stroke: '#fbb03b',
-        strokeWidth: 1,
-        strokeOpacity: 1,
-        lineType: 'dash',
-        dashArray: [2, 2],
-      },
-    },
-  },
-  normal: {
-    polygon: {
-      type: 'PolygonLayer',
-      shape: 'fill',
-      color: '#3bb2d0',
-      style: {
-        opacity: 0.1,
-        stroke: '#3bb2d0',
-        strokeWidth: 1,
-        strokeOpacity: 1,
-        lineType: 'solid',
-        dashArray: [2, 2],
-      },
-    },
-    line: {
-      type: 'LineLayer',
-      shape: 'line',
-      size: 1,
-      color: '#3bb2d0',
-      style: {
-        opacity: 1,
-      },
-    },
-    point: {
-      type: 'PointLayer',
-      shape: 'circle',
-      color: '#3bb2d0',
-      size: 3,
-      style: {
-        stroke: '#fff',
-        strokeWidth: 2,
-      },
-    },
-  },
-  normal_point: {
-    type: 'PointLayer',
-    shape: 'circle',
-    color: '#3bb2d0',
-    size: 3,
-    style: {
-      stroke: '#fff',
-      strokeWidth: 2,
-    },
-  },
-  mid_point: {
-    point: {
-      type: 'PointLayer',
-      shape: 'circle',
-      color: '#fbb03b',
-      size: 3,
-      style: {},
-    },
-  },
-};
-```
