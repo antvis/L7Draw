@@ -197,6 +197,7 @@ export default class DrawCircle extends DrawFeature implements IMeasureable {
   }
 
   protected showOtherLayer() {
+    this.drawDistanceLayer.show();
     this.centerLayer.setData([this.currentFeature?.properties?.startPoint]);
     this.centerLayer.show();
   }
@@ -204,6 +205,7 @@ export default class DrawCircle extends DrawFeature implements IMeasureable {
   protected hideOtherLayer() {
     if (this.currentFeature) {
       this.centerLayer.hide();
+      this.drawDistanceLayer.hide();
     }
   }
 

@@ -5,7 +5,7 @@ import {
   featureCollection,
   Units,
 } from '@turf/helpers';
-import RenderLayer from '../render/draw_result';
+import DrawResultLayer from '../render/draw_result';
 import DrawRender from '../render/draw';
 import DrawVertexLayer from '../render/draw_vertex';
 import DrawDistanceLayer from '../render/draw_distance';
@@ -42,7 +42,7 @@ export default abstract class DrawFeature extends DrawMode {
 
   public selectEnable: boolean;
 
-  protected normalLayer: RenderLayer;
+  protected normalLayer: DrawResultLayer;
   protected drawLayer: DrawRender;
   protected drawVertexLayer: DrawVertexLayer;
   protected drawDistanceLayer: BaseRenderLayer;
@@ -67,7 +67,7 @@ export default abstract class DrawFeature extends DrawMode {
     else this.drawDistanceLayer = new DrawEmptyLayer(this);
 
     // 显示态图层
-    this.normalLayer = new RenderLayer(this);
+    this.normalLayer = new DrawResultLayer(this);
 
     // this.editLayer = new EditLayer(this);
     this.selectMode = new DrawSelected(this.scene, {});
@@ -114,21 +114,17 @@ export default abstract class DrawFeature extends DrawMode {
     return this.source.getData();
   }
 
-  public resetData(data: FeatureCollection) {
+  public resetData(data?: FeatureCollection) {
     this.source = new DrawSource(data);
     this.options = merge(this.options, this.getDefaultOptions(), { data });
     this.initData();
     this.normalLayer.update(this.source.data);
     this.normalLayer.enableSelect();
+    this.normalLayer.show();
   }
 
   public removeAllData(): void {
-    this.source.removeAllFeatures();
-    this.currentFeature = null;
-    this.drawLayer.hide();
-    this.drawVertexLayer.hide();
-    this.normalLayer.hide();
-    this.hideOtherLayer();
+    this.resetData();
   }
 
   public clear() {
