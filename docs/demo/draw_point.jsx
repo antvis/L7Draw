@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Scene } from '@antv/l7';
-import { DrawPolygon } from '@antv/l7-draw';
+import { DrawPolygon, DrawPoint } from '@antv/l7-draw';
 import { GaodeMap } from '@antv/l7-maps';
 import { Button } from 'antd';
 
 export default () => {
-  const [drawPolygon, setDrawPolygon] = useState(null);
+  const [drawPoint, setDrawPoint] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const scene = new Scene({
       id: 'map',
       map: new GaodeMap({
@@ -18,25 +18,27 @@ export default () => {
       }),
     });
     scene.on('loaded', () => {
-      const draw = new DrawPolygon(scene, {
-        showArea: false,
-      });
-      draw.enable();
+      const draw = new DrawPoint(scene);
 
       draw.on('draw.create', e => {
-        console.log(e);
+        if (draw.getData().features.length < 2) {
+          draw.drawLayer.onUnClick();
+          setTimeout(() => {
+            draw.enable();
+          }, 200);
+        }
       });
       draw.on('draw.update', e => {
         console.log('update', e);
       });
 
-      setDrawPolygon(draw);
+      setDrawPoint(draw);
     });
   }, []);
 
   return (
     <div>
-      <Button onClick={() => drawPolygon.enable()}>开始绘制</Button>
+      <Button onClick={() => drawPoint?.enable()}>开始绘制</Button>
       <div
         style={{
           height: '400px',

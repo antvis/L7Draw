@@ -19,6 +19,7 @@ import { createPoint, createPolygon } from '../util/create_geometry';
 import moveFeatures from '../util/move_features';
 import DrawFeature, { IDrawFeatureOption } from './draw_feature';
 import { IMeasureable } from './IMeasureable';
+import { coordAll, Polygon, polygon } from '@turf/turf';
 export interface IDrawRectOption extends IDrawFeatureOption {
   units: unitsType;
   steps: number;
@@ -42,11 +43,14 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
     this.drawMidVertexLayer = new DrawMidVertex(this);
     this.on(DrawEvent.MODE_CHANGE, this.addMidLayerEvent);
     this.on(DrawEvent.MODE_CHANGE, this.addDistanceLayerEvent);
+    this.on(DrawEvent.MODE_CHANGE, this.addAreaLayerEvent);
 
     this.drawRulerLayer = new DrawRulerLayer(this);
 
     //@ts-ignore
     this.drawDistanceLayer.showLine = false;
+    //@ts-ignore
+    this.drawAreaLayer.showLine = false;
     // this.enableMeasure();
   }
 
@@ -72,6 +76,18 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
     }
   }
 
+  public addAreaLayerEvent(mode: DrawModes[any]) {
+    switch (mode) {
+      case DrawModes.SIMPLE_SELECT:
+        this.drawAreaLayer.update(this.getDisplayPolygon());
+        this.drawAreaLayer.show();
+        break;
+      case DrawModes.STATIC:
+        this.drawAreaLayer.hide();
+        break;
+    }
+  }
+
   private getDistanceLineString() {
     let lineStrings: any[] = [];
     if (this.currentFeature && isPolygon(this.currentFeature)) {
@@ -87,6 +103,17 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
     }
 
     return featureCollection(lineStrings);
+  }
+
+  private getDisplayPolygon() {
+    const polygonList = [];
+    if (this.pointFeatures.length > 2) {
+      const pointList = coordAll(featureCollection(this.pointFeatures));
+      polygonList.push(
+        polygon([[...pointList, pointList[0]]]) as Feature<Polygon>,
+      );
+    }
+    return featureCollection(polygonList);
   }
 
   public enable() {
@@ -276,7 +303,14 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
     const tmpPoints = this.points.slice();
     tmpPoints.push(lngLat);
     const feature = this.createFeature(tmpPoints);
+
     this.drawLayer.update(featureCollection([feature]));
+
+    if (this.getOption('showArea')) {
+      this.drawAreaLayer.update(this.getDisplayPolygon());
+    } else {
+      this.drawAreaLayer.update(featureCollection([]));
+    }
   }
 
   protected onDblClick(e: any) {
@@ -425,6 +459,7 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
     this.drawLayer.updateData(
       featureCollection([this.currentFeature as Feature]),
     );
+    this.drawAreaLayer.update(this.getDisplayPolygon());
   }
 }
 /**
