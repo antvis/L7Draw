@@ -1,6 +1,6 @@
 {
   "name": "@antv/l7-draw",
-  "version": "2.4.11",
+  "version": "2.4.15",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.7.7",
+    "@mapbox/geojson-rewind": "^0.5.1",
     "@turf/circle": "^6.0.1",
     "@turf/distance": "^6.0.1",
     "@turf/helpers": "^6.1.4",

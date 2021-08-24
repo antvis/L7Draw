@@ -1,10 +1,11 @@
 import { Feature, FeatureCollection } from '@turf/helpers';
+import rewind from '@mapbox/geojson-rewind';
 // tslint:disable-next-line:no-submodule-imports
 import cloneDeep from 'lodash/cloneDeep';
 export default class DrawSource {
   public data: FeatureCollection;
   constructor(data?: FeatureCollection) {
-    this.data = data || this.getDefaultData();
+    this.data = rewind(data || this.getDefaultData(), true);
   }
 
   public addFeature(feature: any) {

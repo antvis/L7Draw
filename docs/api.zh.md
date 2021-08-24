@@ -1,7 +1,64 @@
 ---
-title: Draw 实例
+title: API
 order: 3
 ---
+
+### 参数
+
+```javascript
+const control = new DrawControl(scene, option);
+```
+
+#### scene
+
+scene 对象
+
+#### options
+
+control 配置项
+
+| name     | Type                                          | Default    | Description                     |
+| -------- | --------------------------------------------- | ---------- | ------------------------------- |
+| position | `bottomright、topright、 bottomleft’ topleft` | `topright` | 组件位置                        |
+| layout   | `horizontal、 vertical`                       | `vertical` | 组件布局 支持水平和垂直两种布局 |
+| controls | `controlOptions`                              |            | 设置 UI 组件添加哪些绘制工具    |
+| style    |                                               |            | 地图绘制样式                    |
+
+**controlOptions**
+UI 组件配置项
+
+- point `boolean | drawOption` 绘制点工具配置
+- line `boolean | drawOption` 绘制线工具配置
+- polygon `boolean | drawOption` 绘制面工具配置
+- circle `boolean | drawOption` 绘制圆工具配置
+- rect `boolean | drawOption` 绘制矩形工具配置
+- delete `boolean | drawOption` 添加删除工具
+- ruler `boolean` 测距工具
+
+默认配置
+
+```js
+  {
+    point: true,
+    line: true,
+    polygon: true,
+    rect: true,
+    circle: true,
+    delete: true
+  }
+```
+
+### 添加到地图
+
+```javascript
+scene.addControl(control);
+```
+
+### 从地图中移除
+
+```javascript
+scene.removeControl(control);
+```
 
 ### Draw Type
 
@@ -63,7 +120,7 @@ drawPoint.enable();
 - selectEnable `boolean` 是否允许选中
 - data `geojson` 传入数据
 - showFeature `boolean` 绘制完成是否显绘制结果
-- showDistance `boolean` 是否显示绘制距离，目前只有圆支持显示半径
+- showDistance `boolean` 是否显示绘制距离 默认关闭
 
 ### 属性
 
