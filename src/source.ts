@@ -1,4 +1,5 @@
 import { Feature, FeatureCollection } from '@turf/helpers';
+// @ts-ignore
 import rewind from '@mapbox/geojson-rewind';
 // tslint:disable-next-line:no-submodule-imports
 import cloneDeep from 'lodash/cloneDeep';

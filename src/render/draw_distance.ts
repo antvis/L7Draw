@@ -48,8 +48,6 @@ export default class DrawDistanceLayer extends BaseRender {
       style,
     );
 
-    console.log(this.showLine);
-
     if (this.showLine) {
       this.drawLayers.push(...rf.renderFeature(fc, style));
     }
