@@ -31,6 +31,9 @@
     ],
     "*.ts?(x)": [
       "prettier --parser=typescript --write"
+    ],
+    "build": [
+      "npm run build"
     ]
   },
   "dependencies": {
