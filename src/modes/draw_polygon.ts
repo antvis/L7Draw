@@ -15,7 +15,11 @@ import DrawMidVertex from '../render/draw_mid_vertex';
 import BaseRenderLayer from '../render/base_render';
 import DrawRulerLayer from '../render/draw_ruler';
 import { DrawEvent, DrawModes, unitsType } from '../util/constant';
-import { createPoint, createPolygon } from '../util/create_geometry';
+import {
+  createPoint,
+  createPolygon,
+  isClockwise,
+} from '../util/create_geometry';
 import moveFeatures from '../util/move_features';
 import DrawFeature, { IDrawFeatureOption } from './draw_feature';
 import { IMeasureable } from './IMeasureable';
@@ -130,11 +134,15 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
   }
 
   public drawFinish(e?: any) {
-    // debugger
-    // this.points = this.points.reverse();
+    // 如果多边形为逆时针需要翻转
+    if (!isClockwise(this.points)) {
+      this.points = this.points.reverse();
+    }
     const feature = this.createFeature([...this.points]);
     const properties = feature.properties as { pointFeatures: Feature[] };
+    // 更新绘制图层
     this.drawLayer.update(featureCollection([feature]));
+    // 更新顶点图层
     this.drawVertexLayer.update(featureCollection(properties.pointFeatures));
     // @ts-ignore
     this.emit(DrawEvent.CREATE, this.currentFeature);
@@ -174,8 +182,11 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
     }
     const pointfeatures = createPoint(points);
     this.pointFeatures = pointfeatures.features;
+    // 更新数据显示
     this.drawLayer.updateData(featureCollection([feature]));
+    // 更新顶点
     this.drawVertexLayer.updateData(pointfeatures);
+    // 更新中心点
     this.drawMidVertexLayer.updateData(featureCollection(this.pointFeatures));
     // @ts-ignore
     feature.properties.pointFeatures = pointfeatures.features;
@@ -366,7 +377,7 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
       const id = selectVertexed.properties.id * 1;
       // @ts-ignore
       selectVertexed.geometry.coordinates = [vertex.lng, vertex.lat];
-      // @ts-ignore
+      // @ts-ignore // 修改顶点位置
       this.pointFeatures[id].geometry.coordinates = [vertex.lng, vertex.lat];
       this.drawVertexLayer.updateData(featureCollection(this.pointFeatures));
       this.drawMidVertexLayer.updateData(featureCollection(this.pointFeatures));

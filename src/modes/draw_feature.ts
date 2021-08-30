@@ -5,6 +5,8 @@ import {
   featureCollection,
   Units,
 } from '@turf/helpers';
+// @ts-ignore
+import rewind from '@mapbox/geojson-rewind';
 import DrawResultLayer from '../render/draw_result';
 import DrawRender from '../render/draw';
 import DrawVertexLayer from '../render/draw_vertex';

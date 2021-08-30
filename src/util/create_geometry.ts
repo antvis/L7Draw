@@ -135,3 +135,21 @@ export function createPoint(
   );
   return featureCollection(features);
 }
+
+export function isClockwise(
+  points: Array<{
+    lat: number;
+    lng: number;
+  }>,
+  wise: boolean = true,
+) {
+  var area = 0,
+    err = 0;
+  for (var i = 0, len = points.length, j = len - 1; i < len; j = i++) {
+    var k = (points[i].lng - points[j].lng) * (points[j].lat + points[i].lat);
+    var m = area + k;
+    err += Math.abs(area) >= Math.abs(k) ? area - m + k : k - m + area;
+    area = m;
+  }
+  return area + err >= 0 !== !wise;
+}
