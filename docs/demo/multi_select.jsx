@@ -1,6 +1,5 @@
 import React from 'react';
 import { Scene } from '@antv/l7';
-import { DrawPolygon } from '@antv/l7-draw';
 import { GaodeMap } from '@antv/l7-maps';
 import { DrawControl } from '@antv/l7-draw';
 
@@ -25,13 +24,14 @@ export default () => {
       });
 
       scene.addControl(drawControl);
-      const draw = new DrawPolygon(scene, {});
+      const draw = drawControl.getDraw('multiSelect');
 
+      draw.enable();
       draw.on('draw.create', e => {
         console.log(e);
       });
-      draw.on('draw.update', e => {
-        console.log('update', e);
+      draw.on('draw.multiselect', e => {
+        console.log('draw.multiselect', e);
       });
     });
   }, []);
