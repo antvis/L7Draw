@@ -11,7 +11,6 @@ import DrawResultLayer from '../render/draw_result';
 import DrawRender from '../render/draw';
 import DrawVertexLayer from '../render/draw_vertex';
 import DrawDistanceLayer from '../render/draw_distance';
-import DrawAreaLayer from '../render/draw_area';
 import { DrawEvent, DrawModes } from '../util/constant';
 import DrawDelete from './draw_delete';
 import DrawEdit from './draw_edit';
@@ -32,7 +31,6 @@ export interface IDrawFeatureOption extends IDrawOption {
   editEnable: boolean;
   selectEnable: boolean;
   showDistance: boolean;
-  showArea: boolean;
   cursor: string;
 }
 export default abstract class DrawFeature extends DrawMode {
@@ -43,7 +41,6 @@ export default abstract class DrawFeature extends DrawMode {
   public deleteMode: DrawDelete;
   public editEnable: boolean;
   public showDistance: boolean;
-  public showArea: boolean;
 
   public selectEnable: boolean;
 
@@ -51,7 +48,6 @@ export default abstract class DrawFeature extends DrawMode {
   protected drawLayer: DrawRender;
   protected drawVertexLayer: DrawVertexLayer;
   protected drawDistanceLayer: BaseRenderLayer;
-  protected drawAreaLayer: BaseRenderLayer;
 
   constructor(scene: Scene, options: Partial<IDrawFeatureOption> = {}) {
     super(scene, options);
@@ -59,7 +55,6 @@ export default abstract class DrawFeature extends DrawMode {
     this.selectEnable = this.getOption('selectEnable');
     this.editEnable = this.getOption('editEnable');
     this.showDistance = this.getOption('showDistance');
-    this.showArea = this.getOption('showArea');
 
     // TODO：做DI改造
 
@@ -72,12 +67,6 @@ export default abstract class DrawFeature extends DrawMode {
     // 距离指示图层
     if (this.showDistance) this.drawDistanceLayer = new DrawDistanceLayer(this);
     else this.drawDistanceLayer = new DrawEmptyLayer(this);
-
-    if (this.showArea) {
-      this.drawAreaLayer = new DrawAreaLayer(this);
-    } else {
-      this.drawAreaLayer = new DrawEmptyLayer(this);
-    }
 
     // 显示态图层
     this.normalLayer = new DrawResultLayer(this);
