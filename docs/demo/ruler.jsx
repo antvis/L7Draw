@@ -82,16 +82,7 @@ export default () => {
       });
 
       scene.addControl(drawControl);
-      const draw = new DrawPolygon(scene, {
-        data: polygon,
-      });
-
-      draw.on('draw.create', e => {
-        console.log(e);
-      });
-      draw.on('draw.update', e => {
-        console.log('update', e);
-      });
+      drawControl.getDraw('ruler').enable();
     });
   }, []);
 
