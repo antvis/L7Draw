@@ -15,7 +15,7 @@ export default () => {
       }),
     });
     scene.on('loaded', () => {
-      const draw = new DrawCircle(scene);
+      const draw = new DrawCircle(scene, { showDistance: true });
       draw.enable();
 
       draw.on('draw.create', e => {

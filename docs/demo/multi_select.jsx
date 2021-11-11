@@ -1,6 +1,5 @@
 import React from 'react';
 import { Scene } from '@antv/l7';
-import { DrawPolygon } from '@antv/l7-draw';
 import { GaodeMap } from '@antv/l7-maps';
 import { DrawControl } from '@antv/l7-draw';
 
