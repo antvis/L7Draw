@@ -1,8 +1,6 @@
-# draw
+# l7-draw-2
 
-# API
-
-[API 文档](./api)
+## TODO_LIST
 
 ## Getting Started
 
@@ -22,6 +20,12 @@ Build documentation,
 
 ```bash
 $ npm run docs:build
+```
+
+Run test,
+
+```bash
+$ npm test
 ```
 
 Build library via `father-build`,

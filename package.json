@@ -1,6 +1,6 @@
 {
-  "name": "@antv/l7-draw",
-  "version": "2.4.20",
+  "name": "@anv/l7-draw",
+  "version": "3.0.0",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
@@ -10,7 +10,8 @@
     "release": "npm run build && npm publish",
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
     "test": "umi-test",
-    "test:coverage": "umi-test --coverage"
+    "test:coverage": "umi-test --coverage",
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "dist",
@@ -20,10 +21,9 @@
   ],
   "main": "lib/index.js",
   "module": "es/index.js",
-  "unpkg": "dist/l7-draw.js",
-  "typings": "lib/index.d.ts",
+  "typings": "es/index.d.ts",
   "gitHooks": {
-    "pre-commit": "npm run build && lint-staged"
+    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.{js,jsx,less,md,json}": [
@@ -34,40 +34,29 @@
     ]
   },
   "dependencies": {
-    "@babel/runtime": "^7.7.7",
-    "@mapbox/geojson-rewind": "^0.5.1",
-    "@turf/circle": "^6.0.1",
-    "@turf/distance": "^6.0.1",
-    "@turf/helpers": "^6.1.4",
-    "@turf/midpoint": "^5.1.5",
-    "@turf/turf": "^5.1.6",
-    "@types/mapbox-gl": "^1.11.2",
-
-    "eventemitter3": "^4.0.0",
-    "load-styles": "^2.0.0",
-    "lodash": "^4.6.2"
-
+    "@turf/turf": "^6.5.0",
+    "antd": "^4.17.3",
+    "eventemitter3": "^4.0.7",
+    "lodash": "^4.17.21",
+    "react": "^16.12.0 || ^17.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "react": "^16.12.0",
-    "@antv/l7": "^2.3.0",
-    "@antv/l7-maps": "^2.3.0",
-    "@rollup/plugin-commonjs": "11.0.2",
-    "@rollup/plugin-url": "^5.0.1",
-    "@types/lodash": "^4.14.171",
-    "@umijs/preset-react": "1.x",
+    "@testing-library/jest-dom": "^5.15.1",
+    "@testing-library/react": "^12.1.2",
+    "@types/jest": "^27.0.3",
+    "@types/lodash": "^4.14.177",
+    "@types/uuid": "^8.3.3",
+    "@umijs/fabric": "^2.8.1",
     "@umijs/test": "^3.0.5",
-    "dumi": "^1.0.9",
+    "dumi": "^1.1.0",
     "father-build": "^1.17.2",
     "gh-pages": "^3.0.0",
     "lint-staged": "^10.0.7",
-    "prettier": "^1.19.1",
-    "antd": "^4.16.8",
-    "rollup-plugin-svg": "^2.0.0",
+    "prettier": "^2.2.1",
     "yorkie": "^2.0.0"
   },
   "peerDependencies": {
-    "@antv/l7": "^2.3.0",
-    "@antv/l7-maps": "^2.3.0"
+    "@antv/l7": "^2.3.0"
   }
 }

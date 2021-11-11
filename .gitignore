@@ -8,18 +8,20 @@
 /package-lock.json
 
 # production
-/dist
+/es
 /docs-dist
 
 # misc
 .DS_Store
+/coverage
 
 # umi
 .umi
 .umi-production
 .umi-test
 .env.local
-.history
-/es
-/lib
-.idea
+
+# ide
+/.vscode
+/.idea
+/.history
