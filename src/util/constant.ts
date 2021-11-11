@@ -14,6 +14,7 @@ export enum DrawEvent {
   ADD_POINT = 'draw.addpoint',
   MEASURE = 'draw.measure',
   MULTI_SELECT = 'draw.multiselect',
+  BOX_SELECT = 'draw.boxselect',
 }
 
 export enum DrawModes {

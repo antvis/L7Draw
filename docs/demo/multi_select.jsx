@@ -20,17 +20,12 @@ export default () => {
         position: 'topright',
         layout: 'horizontal', // horizontal vertical
         controls: {
-          multiSelect: true,
+          boxSelect: true,
         },
       });
 
       scene.addControl(drawControl);
-      const draw = new DrawPolygon(scene, {});
-
-      draw.on('draw.create', e => {
-        console.log(e);
-      });
-      draw.on('draw.update', e => {
+      drawControl.on('draw.boxselect', e => {
         console.log('update', e);
       });
     });
