@@ -198,6 +198,9 @@ export default class DrawCircle extends DrawFeature implements IMeasureable {
 
   protected showOtherLayer() {
     this.drawDistanceLayer.show();
+    if (!this.centerLayer) {
+      this.initCenterLayer();
+    }
     this.centerLayer.setData([this.currentFeature?.properties?.startPoint]);
     this.centerLayer.show();
   }
@@ -209,7 +212,7 @@ export default class DrawCircle extends DrawFeature implements IMeasureable {
     }
   }
 
-  private initCenterLayer() {
+  protected initCenterLayer() {
     const centerStyle = this.getStyle('active').point;
     const layer = new PointLayer()
       .source([this.startPoint], {
@@ -224,6 +227,7 @@ export default class DrawCircle extends DrawFeature implements IMeasureable {
       .size(centerStyle.size)
       .style(centerStyle.style);
     this.scene.addLayer(layer);
+
     this.centerLayer = layer;
   }
 }
