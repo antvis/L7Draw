@@ -14,7 +14,7 @@ import DrawDistanceLayer from '../render/draw_distance';
 import { DrawEvent, DrawModes } from '../util/constant';
 import DrawDelete from './draw_delete';
 import DrawEdit from './draw_edit';
-import DrawSource from '../source';
+import DrawSource, { IData } from '../source';
 import DrawMode, { IDrawOption } from './draw_mode';
 import DrawSelected from './draw_selected';
 import merge from 'lodash/merge';
@@ -116,7 +116,7 @@ export default abstract class DrawFeature extends DrawMode {
     return this.source.getData();
   }
 
-  public resetData(data?: FeatureCollection) {
+  public resetData(data?: IData) {
     this.source = new DrawSource(data);
     this.options = merge(this.options, this.getDefaultOptions(), { data });
     this.initData();

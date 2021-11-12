@@ -40,7 +40,6 @@ export default class DrawSelect extends DrawMode {
     };
     this.emit(DrawEvent.Move, delta);
     this.dragStartPoint = e.lngLat;
-
     return;
   }
 

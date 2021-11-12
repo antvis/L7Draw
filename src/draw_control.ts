@@ -26,11 +26,12 @@ const DrawType: {
   circle: DrawCircle,
   rect: DrawRect,
   ruler: DrawRuler,
-  multiSelect: DrawMultiSelect,
+  multiSelect: BoxSelect,
+  boxSelect: BoxSelect,
 };
 import { isObject, polygon } from '@turf/helpers';
 import { DrawEvent, DrawModes } from './util/constant';
-import DrawMultiSelect from './modes/draw_multi_select';
+import BoxSelect from './modes/draw_box_select';
 
 export type ControlKeys =
   | 'polygon'
@@ -165,6 +166,7 @@ export class DrawControl extends Control {
           DrawEvent.CREATE,
           DrawEvent.UPDATE,
           DrawEvent.DELETE,
+          DrawEvent.BOX_SELECT,
           DrawEvent.MULTI_SELECT,
         ].forEach((type: string) => {
           this.draw[draw].on(type, feature => {

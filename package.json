@@ -1,6 +1,6 @@
 {
   "name": "@antv/l7-draw",
-  "version": "2.4.17",
+  "version": "2.4.18",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
@@ -23,7 +23,7 @@
   "unpkg": "dist/l7-draw.js",
   "typings": "lib/index.d.ts",
   "gitHooks": {
-    "pre-commit": "lint-staged"
+    "pre-commit": "npm run build && lint-staged"
   },
   "lint-staged": {
     "*.{js,jsx,less,md,json}": [

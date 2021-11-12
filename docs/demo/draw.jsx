@@ -78,9 +78,6 @@ export default () => {
       draw.on('draw.create', e => {
         console.log(e);
       });
-      draw.on('draw.update', e => {
-        console.log('update', e);
-      });
     });
   }, []);
 

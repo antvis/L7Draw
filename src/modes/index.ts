@@ -7,6 +7,7 @@ import DrawPoint from './draw_point';
 import DrawPolygon from './draw_polygon';
 import DrawRect from './draw_rect';
 import DrawRuler from './draw_ruler';
+import DrawBoxSelect from './draw_box_select';
 export {
   DrawCircle,
   DrawFeature,
@@ -17,4 +18,5 @@ export {
   DrawMode,
   DrawDelete,
   DrawRuler,
+  DrawBoxSelect,
 };

@@ -13,6 +13,26 @@ export default class DrawRect extends DrawCircle {
   public drawFinish() {
     return null;
   }
+  protected initData() {
+    if (this.source?.initData?.type === 'rect') {
+      const feature = this.source.initData.features;
+      this.startPoint = {
+        lng: feature[0][0],
+        lat: feature[0][1],
+      };
+      this.endPoint = {
+        lng: feature[1][0],
+        lat: feature[1][1],
+      };
+
+      this.source.data = {
+        features: [this.createFeature('0', false)],
+        type: 'FeatureCollection',
+      };
+      return true;
+    }
+    return false;
+  }
   protected getDefaultOptions(): Partial<IDrawFeatureOption> {
     return {
       ...super.getDefaultOptions(),
@@ -20,13 +40,15 @@ export default class DrawRect extends DrawCircle {
     };
   }
 
-  protected createFeature(id: string = '0'): Feature {
-    const points = createPoint([this.endPoint]);
+  protected createFeature(id: string = '0', active: boolean = true): Feature {
+    const points = createPoint([this.startPoint, this.endPoint]);
+
     const feature = createRect(
       [this.startPoint.lng, this.startPoint.lat],
       [this.endPoint.lng, this.endPoint.lat],
       {
         id,
+        active,
         pointFeatures: points.features,
       },
     );
