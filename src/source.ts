@@ -13,9 +13,11 @@ export default class DrawSource {
   constructor(data?: IData) {
     if (data?.type === 'FeatureCollection') {
       this.data = rewind(data || this.getDefaultData(), true);
+      return;
     } else if (data) {
       this.initData = data;
     }
+    this.data = this.getDefaultData();
   }
 
   public addFeature(feature: any) {
