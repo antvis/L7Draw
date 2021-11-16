@@ -14,6 +14,7 @@ export default class DrawRect extends DrawCircle {
     return null;
   }
   protected initData() {
+    console.log('初始化', this.source?.initData);
     if (this.source?.initData?.type === 'rect') {
       const feature = this.source.initData.features;
       this.startPoint = {
