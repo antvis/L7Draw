@@ -2,7 +2,7 @@
 
 # API
 
-[API](./api)
+[API 文档](./api)
 
 ## Getting Started
 

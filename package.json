@@ -49,6 +49,9 @@
    
   },
   "devDependencies": {
+    "react": "^16.12.0",
+    "@antv/l7": "^2.3.0",
+    "@antv/l7-maps": "^2.3.0",
     "@rollup/plugin-commonjs": "11.0.2",
     "@rollup/plugin-url": "^5.0.1",
     "@types/lodash": "^4.14.171",
@@ -65,7 +68,6 @@
   },
   "peerDependencies": {
     "@antv/l7": "^2.3.0",
-    "react": "^16.12.0",
     "@antv/l7-maps": "^2.3.0"
   }
 }
