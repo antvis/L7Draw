@@ -1,5 +1,5 @@
 const LayerStyles = {
-  multiSelect: {
+  boxSelect: {
     polygon: {
       shape: 'fill',
       color: '#black',

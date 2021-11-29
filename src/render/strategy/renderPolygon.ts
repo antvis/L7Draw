@@ -9,7 +9,6 @@ export default class RenderPolygonStrategy extends Singleton
 
   execute(fe: FeatureCollection, styles: any) {
     const style = styles[this.styleVariant];
-
     const fill = new PolygonLayer()
       .source(fe)
       .shape('fill')

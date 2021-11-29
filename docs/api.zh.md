@@ -1,66 +1,9 @@
 ---
-title: API
+title: 绘制工具实例
 order: 3
 ---
 
-### 参数
-
-```javascript
-const control = new DrawControl(scene, option);
-```
-
-#### scene
-
-scene 对象
-
-#### options
-
-control 配置项
-
-| name     | Type                                           | Default    | Description                     |
-| -------- | ---------------------------------------------- | ---------- | ------------------------------- |
-| position | `bottomright、topright、 bottomleft、 topleft` | `topright` | 组件位置                        |
-| layout   | `horizontal、 vertical`                        | `vertical` | 组件布局 支持水平和垂直两种布局 |
-| controls | `controlOptions`                               |            | 设置 UI 组件添加哪些绘制工具    |
-| style    |                                                |            | 地图绘制样式                    |
-
-**controlOptions**
-
-UI 组件配置项
-
-- point `boolean` | [drawOption](#配置项-drawoption) 绘制点工具配置
-- line `boolean` | [drawOption](#配置项-drawoption) 绘制线工具配置
-- polygon `boolean` | [drawOption](#配置项-drawoption) 绘制面工具配置
-- circle `boolean` | [drawOption](#配置项-drawoption) 绘制圆工具配置
-- rect `boolean` | [drawOption](#配置项-drawoption) 绘制矩形工具配置
-- delete `boolean` 删除工具
-- ruler `boolean` 测距工具
-- multiSelect `boolean` 框选工具
-
-默认配置
-
-```json
-{
-  "point": true,
-  "line": true,
-  "polygon": true,
-  "rect": true,
-  "circle": true,
-  "delete": true
-}
-```
-
-### 添加到地图
-
-```javascript
-scene.addControl(control);
-```
-
-### 从地图中移除
-
-```javascript
-scene.removeControl(control);
-```
+使用中不需要 UI 组件，或者需要自定义组件可以单独调用绘制工具进行实例化
 
 ### Draw Type
 
@@ -116,11 +59,45 @@ const drawPoint = new DrawPolygon(scene);
 drawPoint.enable();
 ```
 
+#### DrawRuler
+
+测距工具
+
+```javascript
+import { DrawRuler } from '@antv/l7-draw';
+const drawPoint = new DrawPolygon(scene);
+drawPoint.enable();
+```
+
+### DrawBoxSelect 框选工具
+
+```js
+const drawbox = new DrawBoxSelect(scene);
+drawbox.enable();
+drawbox.on('draw.boxselect', e => {
+  console.log('select', e);
+});
+```
+
 ### 配置项 DrawOption
 
 - editEnable `boolean` 是否允许编辑
 - selectEnable `boolean` 是否允许选中
-- data `geojson` 传入数据
+- data `geojson` 传入数据，对已有数据进行编辑
+
+  - 绘制 polygon 和 line 支持数据为 geojon 传入
+  - 绘制矩形支持传入 最大最小的两个坐标
+
+  ```ts
+  data = {
+    type: 'rect',
+    features: [
+      [127.61718749999999, 54.97761367069628],
+      [117.42187500000001, 23.241346102386135],
+    ],
+  };
+  ```
+
 - showFeature `boolean` 绘制完成是否显绘制结果
 - showDistance `boolean` 是否显示绘制距离 默认关闭
 
@@ -144,6 +121,21 @@ drawPoint.enable();
 
 移除最新绘制的点
 目前绘制线和面支持
+
+### restData
+
+- data
+  重置数据 可以传入新的数据
+
+```ts
+draw.resetData({
+  type: 'rect',
+  features: [
+    [127.61718749999999, 54.97761367069628],
+    [117.42187500000001, 23.241346102386135],
+  ],
+});
+```
 
 #### resetDraw
 
@@ -170,3 +162,11 @@ drawPoint.enable();
 #### draw.update
 
 图形更新时触发该事件，图形的平移，顶点的编辑
+
+#### draw.boxselect
+
+框选结束时触发，返回开始和结束的顶点信息
+
+```javascript
+drawControl.on('draw.boxselect', e => {});
+```

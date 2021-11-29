@@ -3,10 +3,21 @@ import { Feature, FeatureCollection } from '@turf/helpers';
 import rewind from '@mapbox/geojson-rewind';
 // tslint:disable-next-line:no-submodule-imports
 import cloneDeep from 'lodash/cloneDeep';
+export type IData = {
+  type: 'rect' | 'polygon' | 'line' | 'FeatureCollection';
+  features: Array<[number, number]>;
+};
 export default class DrawSource {
   public data: FeatureCollection;
-  constructor(data?: FeatureCollection) {
-    this.data = rewind(data || this.getDefaultData(), true);
+  public initData: IData;
+  constructor(data?: IData) {
+    if (data?.type === 'FeatureCollection') {
+      this.data = rewind(data || this.getDefaultData(), true);
+      return;
+    } else if (data) {
+      this.initData = data;
+    }
+    this.data = this.getDefaultData();
   }
 
   public addFeature(feature: any) {
@@ -22,7 +33,7 @@ export default class DrawSource {
   }
 
   public getFeature(id: string): Feature | undefined {
-    const result = this.data.features.find((fe: Feature) => {
+    const result = this.data?.features.find((fe: Feature) => {
       return fe?.properties?.id === id;
     });
 

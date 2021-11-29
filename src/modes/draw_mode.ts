@@ -3,13 +3,13 @@ import { Feature, FeatureCollection } from '@turf/helpers';
 import { EventEmitter } from 'eventemitter3';
 // tslint:disable-next-line:no-submodule-imports
 import merge from 'lodash/merge';
-import DrawSource from '../source';
+import DrawSource, { IData } from '../source';
 import { DrawModes } from '../util/constant';
 import LayerStyles from '../util/layerstyle';
 import { IDrawFeatureOption } from './draw_feature';
 
 export interface IDrawOption {
-  data: FeatureCollection;
+  data: IData;
   title: string;
   style: any;
   enableCustomDraw: boolean;

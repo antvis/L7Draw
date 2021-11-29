@@ -10,7 +10,7 @@ import {
 } from '@turf/helpers';
 import DrawFeature, { IDrawFeatureOption } from './draw_feature';
 
-export default class DrawMultiSelect extends DrawFeature {
+export default class DrawBoxSelect extends DrawFeature {
   protected startPoint: ILngLat;
   protected endPoint: ILngLat;
 
@@ -23,7 +23,7 @@ export default class DrawMultiSelect extends DrawFeature {
   constructor(scene: Scene, options: Partial<IDrawFeatureOption> = {}) {
     super(scene, options);
     this.drawDistanceLayer = new DrawEmptyLayer(this);
-    this.drawLayer.styleVariant = 'multiSelect';
+    this.drawLayer.styleVariant = 'boxSelect';
   }
 
   protected onDragStart(e: IInteractionTarget) {
@@ -46,7 +46,7 @@ export default class DrawMultiSelect extends DrawFeature {
 
     // this.emit(DrawEvent.MODE_CHANGE, DrawModes.SIMPLE_SELECT);
 
-    this.emit(DrawEvent.MULTI_SELECT, {
+    this.emit(DrawEvent.BOX_SELECT, {
       startPoint: this.startPoint,
       endPoint: this.endPoint,
     });

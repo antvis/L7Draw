@@ -19,19 +19,13 @@ export default () => {
         position: 'topright',
         layout: 'horizontal', // horizontal vertical
         controls: {
-          multiSelect: true,
+          boxSelect: true,
         },
       });
 
       scene.addControl(drawControl);
-      const draw = drawControl.getDraw('multiSelect');
-
-      draw.enable();
-      draw.on('draw.create', e => {
-        console.log(e);
-      });
-      draw.on('draw.multiselect', e => {
-        console.log('draw.multiselect', e);
+      drawControl.on('draw.boxselect', e => {
+        console.log('update', e);
       });
     });
   }, []);
