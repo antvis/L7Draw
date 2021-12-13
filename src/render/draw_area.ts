@@ -1,14 +1,11 @@
-import {
-  Feature,
-  FeatureCollection,
-  featureCollection,
-} from '@turf/helpers';
+import { Feature, FeatureCollection, featureCollection } from '@turf/helpers';
 
 import BaseRender from './base_render';
 import RenderFeature from './renderFeature';
 import { isPolygon } from '../util/typeguards';
 import { getArea } from '../util/measurements';
-import { Polygon, centerOfMass } from '@turf/turf';
+import { Polygon } from '@turf/turf';
+import centerOfMass from '@turf/center-of-mass';
 
 const rf = RenderFeature.defaultRenderer();
 
