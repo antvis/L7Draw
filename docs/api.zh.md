@@ -100,6 +100,7 @@ drawbox.on('draw.boxselect', e => {
 
 - showFeature `boolean` 绘制完成是否显绘制结果
 - showDistance `boolean` 是否显示绘制距离 默认关闭
+- showArea `boolean` 是否显示绘制面积 默认关闭
 
 ### 属性
 

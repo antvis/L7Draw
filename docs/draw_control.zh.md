@@ -63,7 +63,8 @@ UI 组件配置项
     polygon: true,
     rect: true,
     circle: {
-      showDistance: true
+      showDistance: true,
+      showArea: true
     },
     delete: false
 ```

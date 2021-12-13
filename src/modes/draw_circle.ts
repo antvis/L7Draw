@@ -35,6 +35,7 @@ export default class DrawCircle extends DrawFeature implements IMeasureable {
 
     this.type = 'circle';
     this.on(DrawEvent.MODE_CHANGE, this.addDistanceLayerEvent);
+    this.on(DrawEvent.MODE_CHANGE, this.addAreaLayerEvent);
     this.setDrawMode(DrawModes.DRAW_Circle);
 
     this.drawRulerLayer = new DrawRulerLayer(this);
@@ -74,6 +75,22 @@ export default class DrawCircle extends DrawFeature implements IMeasureable {
         [this.endPoint.lng, this.endPoint.lat],
       ]),
     ]);
+  }
+
+  private addAreaLayerEvent(mode: DrawModes[any]) {
+    switch (mode) {
+      case DrawModes.SIMPLE_SELECT:
+        this.drawAreaLayer.update(this.getAreaPolygon());
+        this.drawAreaLayer.show();
+        break;
+      case DrawModes.STATIC:
+        this.drawAreaLayer.hide();
+        break;
+    }
+  }
+
+  private getAreaPolygon() {
+    return this.source.data || featureCollection([]);
   }
 
   public setCurrentFeature(feature: Feature) {
@@ -116,6 +133,7 @@ export default class DrawCircle extends DrawFeature implements IMeasureable {
     this.drawLayer.update(featureCollection([feature]));
     this.drawVertexLayer.update(featureCollection(properties.pointFeatures));
     this.drawDistanceLayer.update(this.getDistanceLineString());
+    this.drawAreaLayer.update(this.getAreaPolygon());
   }
 
   protected onDragEnd() {
@@ -124,6 +142,7 @@ export default class DrawCircle extends DrawFeature implements IMeasureable {
     this.drawLayer.update(featureCollection([feature]));
     this.drawVertexLayer.update(featureCollection(properties.pointFeatures));
     this.drawDistanceLayer.update(this.getDistanceLineString());
+    this.drawAreaLayer.update(this.getAreaPolygon());
 
     this.emit(DrawEvent.CREATE, this.currentFeature);
     this.emit(DrawEvent.MODE_CHANGE, DrawModes.SIMPLE_SELECT);
@@ -136,6 +155,7 @@ export default class DrawCircle extends DrawFeature implements IMeasureable {
     this.drawLayer.updateData(featureCollection(newFeature));
     this.drawVertexLayer.updateData(featureCollection(newPointFeture));
     this.drawDistanceLayer.update(this.getDistanceLineString());
+    this.drawAreaLayer.update(this.getAreaPolygon());
     const newStartPoint = movePoint(
       [this.startPoint.lng, this.startPoint.lat],
       delta,

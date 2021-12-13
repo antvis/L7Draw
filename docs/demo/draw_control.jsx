@@ -35,6 +35,7 @@ export default () => {
             selectEnable: true,
             showFeature: true,
             showDistance: true,
+            showArea: true,
           },
           rect: false,
           delete: false,
