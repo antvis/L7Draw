@@ -15,7 +15,7 @@ export default () => {
       }),
     });
     scene.on('loaded', () => {
-      const draw = new DrawPolygon(scene, { showDistance: true });
+      const draw = new DrawPolygon(scene, { showDistance: true, showArea: true, });
       draw.enable();
 
       draw.on('draw.create', e => {

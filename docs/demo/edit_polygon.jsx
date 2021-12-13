@@ -52,6 +52,8 @@ export default () => {
     scene.on('loaded', () => {
       new DrawPolygon(scene, {
         data: polygon,
+        showDistance: true,
+        showArea: true,
       });
     });
   }, []);

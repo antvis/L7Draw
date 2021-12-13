@@ -46,11 +46,14 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
     this.drawMidVertexLayer = new DrawMidVertex(this);
     this.on(DrawEvent.MODE_CHANGE, this.addMidLayerEvent);
     this.on(DrawEvent.MODE_CHANGE, this.addDistanceLayerEvent);
+    this.on(DrawEvent.MODE_CHANGE, this.addAreaLayerEvent);
 
     this.drawRulerLayer = new DrawRulerLayer(this);
 
     //@ts-ignore
     this.drawDistanceLayer.showLine = false;
+    //@ts-ignore
+    this.drawAreaLayer.showArea = false;
     // this.enableMeasure();
   }
 
@@ -91,6 +94,25 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
     }
 
     return featureCollection(lineStrings);
+  }
+
+  private addAreaLayerEvent(mode: DrawModes[any]) {
+    switch (mode) {
+      case DrawModes.SIMPLE_SELECT:
+        this.drawAreaLayer.update(this.getAreaPolygon());
+        this.drawAreaLayer.show();
+        break;
+      case DrawModes.STATIC:
+        this.drawAreaLayer.hide();
+        break;
+    }
+  }
+
+  private getAreaPolygon() {
+    if (this.currentFeature && isPolygon(this.currentFeature)) {
+      return featureCollection([this.currentFeature]);
+    }
+    return featureCollection([]);
   }
 
   public enable() {
@@ -307,6 +329,7 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
     this.drawLayer.updateData(featureCollection(newFeature));
 
     this.drawDistanceLayer.update(this.getDistanceLineString());
+    this.drawAreaLayer.update(this.getAreaPolygon());
     this.drawVertexLayer.updateData(featureCollection(newPointFeture));
     newFeature[0].properties = {
       ...newFeature[0].properties,
@@ -348,6 +371,7 @@ export default class DrawPolygon extends DrawFeature implements IMeasureable {
       this.drawVertexLayer.updateData(featureCollection(this.pointFeatures));
       this.drawMidVertexLayer.updateData(featureCollection(this.pointFeatures));
       this.drawDistanceLayer.update(this.getDistanceLineString());
+      this.drawAreaLayer.update(this.getAreaPolygon());
       this.editPolygonVertex(id, vertex);
       this.drawLayer.updateData(
         featureCollection([this.currentFeature as Feature]),
