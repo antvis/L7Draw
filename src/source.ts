@@ -3,10 +3,12 @@ import { Feature, FeatureCollection } from '@turf/helpers';
 import rewind from '@mapbox/geojson-rewind';
 // tslint:disable-next-line:no-submodule-imports
 import cloneDeep from 'lodash/cloneDeep';
-export type IData = {
-  type: 'rect' | 'polygon' | 'line' | 'FeatureCollection';
-  features: Array<[number, number]>;
-};
+export type IData =
+  | {
+      type: 'rect' | 'polygon' | 'line';
+      features: Array<[number, number]>;
+    }
+  | FeatureCollection;
 export default class DrawSource {
   public data: FeatureCollection;
   public initData: IData;
