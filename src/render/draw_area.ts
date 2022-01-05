@@ -24,7 +24,9 @@ export default class DrawAreaLayer extends BaseRender {
 
     const areaFeatures = fc.features.map((feature: Feature<Polygon>) => {
       return centerOfMass(feature, {
-        value: getArea(feature.geometry),
+        properties: {
+          value: getArea(feature.geometry),
+        },
       });
     });
 

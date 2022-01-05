@@ -246,6 +246,8 @@ export default class DrawCircle extends DrawFeature implements IMeasureable {
       .color(centerStyle.color)
       .size(centerStyle.size)
       .style(centerStyle.style);
+
+    layer.zIndex = centerStyle.zIndex;
     this.scene.addLayer(layer);
 
     this.centerLayer = layer;

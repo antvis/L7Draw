@@ -37,6 +37,7 @@ export default class RenderLayer {
       .active(true)
       .color(style.color)
       .style(style.style);
+    this.polygonLayer.zIndex = style.zIndex;
 
     this.lineLayer = new LineLayer({
       zIndex: 1,
@@ -49,6 +50,8 @@ export default class RenderLayer {
       .size(linestyle.size)
       .color(linestyle.color)
       .style(linestyle.style);
+
+    this.lineLayer.zIndex = linestyle.zIndex;
     this.draw.scene.addLayer(this.polygonLayer);
     this.draw.scene.addLayer(this.lineLayer);
     this.addLayerEvent();

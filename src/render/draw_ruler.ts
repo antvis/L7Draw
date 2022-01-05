@@ -31,6 +31,8 @@ class CustomRenderPolygonStrategy extends Singleton implements IRenderStrategy {
       })
       .active(style.active);
 
+    fill.zIndex = style.zIndex;
+
     const feature = fe.features[0];
 
     let lineStrings: any = [];
@@ -60,6 +62,8 @@ class CustomRenderPolygonStrategy extends Singleton implements IRenderStrategy {
         dashArray: lineStyle.style.dashArray,
       })
       .active(lineStyle.active);
+
+    line.zIndex = lineStyle.zIndex;
 
     line.setBlend('max');
     return [fill, line];
@@ -98,6 +102,7 @@ class CustomRenderLineStrategy extends Singleton implements IRenderStrategy {
       })
       .active(style.active);
 
+    line.zIndex = style.zIndex;
     line.setBlend('max');
 
     return [line];

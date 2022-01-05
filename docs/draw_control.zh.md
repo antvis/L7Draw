@@ -165,6 +165,7 @@ const style = {
         stroke: '#fff',
         strokeWidth: 2,
       },
+      zIndex: 0,
     },
     line: {
       type: 'LineLayer',
@@ -176,6 +177,7 @@ const style = {
         lineType: 'dash',
         dashArray: [2, 2],
       },
+      zIndex: 0,
     },
     polygon: {
       shape: 'fill',
@@ -188,6 +190,7 @@ const style = {
         lineType: 'dash',
         dashArray: [2, 2],
       },
+      zIndex: 0,
     },
   },
   normal: {
@@ -203,6 +206,7 @@ const style = {
         lineType: 'solid',
         dashArray: [2, 2],
       },
+      zIndex: 0,
     },
     line: {
       type: 'LineLayer',
@@ -212,6 +216,7 @@ const style = {
       style: {
         opacity: 1,
       },
+      zIndex: 0,
     },
     point: {
       type: 'PointLayer',
@@ -222,6 +227,7 @@ const style = {
         stroke: '#fff',
         strokeWidth: 2,
       },
+      zIndex: 0,
     },
   },
   normal_point: {
@@ -233,6 +239,7 @@ const style = {
       stroke: '#fff',
       strokeWidth: 2,
     },
+    zIndex: 0,
   },
   mid_point: {
     point: {
@@ -241,6 +248,7 @@ const style = {
       color: '#fbb03b',
       size: 3,
       style: {},
+      zIndex: 0,
     },
   },
 };

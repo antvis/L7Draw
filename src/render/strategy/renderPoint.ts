@@ -22,6 +22,8 @@ export default class RenderPointStrategy extends Singleton
       .color(style.color)
       .size(style.size)
       .style(style.style);
+
+    layer.zIndex = style.zIndex;
     return [layer];
   }
 }
