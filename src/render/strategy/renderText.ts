@@ -23,6 +23,8 @@ export default class RenderTextStrategy extends Singleton
       .size(14)
       .color(style.color);
 
+    layer.zIndex = style.zIndex;
+
     return [layer];
   }
 }

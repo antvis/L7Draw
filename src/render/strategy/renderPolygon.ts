@@ -33,6 +33,8 @@ export default class RenderPolygonStrategy extends Singleton
 
     if (style.active) line.active(style.active);
 
+    fill.zIndex = line.zIndex = style.zIndex;
+
     return [fill, line];
   }
 }

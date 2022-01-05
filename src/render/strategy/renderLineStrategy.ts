@@ -19,6 +19,8 @@ export default class RenderLineStrategy extends Singleton
       .size(style.size)
       .style(style.style);
 
+    layer.zIndex = style.zIndex;
+
     return [layer];
   }
 }
