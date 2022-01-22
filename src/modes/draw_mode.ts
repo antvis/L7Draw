@@ -4,7 +4,7 @@ import { EventEmitter } from 'eventemitter3';
 // tslint:disable-next-line:no-submodule-imports
 import merge from 'lodash/merge';
 import DrawSource, { IData } from '../source';
-import { DrawModes } from '../util/constant';
+import { DrawEvent, DrawModes } from '../util/constant';
 import LayerStyles from '../util/layerstyle';
 import { IDrawFeatureOption } from './draw_feature';
 
@@ -81,6 +81,7 @@ abstract class DrawMode extends EventEmitter {
     this.scene.on('mousemove', this.onCheckDrawable);
     this.setCursor(this.getOption('cursor'));
     this.isEnable = true;
+    this.emit(DrawEvent.ENABLE, this);
   }
 
   // 重置绘制组件
@@ -102,6 +103,7 @@ abstract class DrawMode extends EventEmitter {
     });
     this.isEnable = false;
     this.drawStatus = 'DrawFinish';
+    this.emit(DrawEvent.DISABLE, this);
   }
 
   public onCheckDrawable({ lnglat }: any) {

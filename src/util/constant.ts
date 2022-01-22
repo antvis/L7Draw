@@ -15,6 +15,8 @@ export enum DrawEvent {
   MEASURE = 'draw.measure',
   MULTI_SELECT = 'draw.multiselect',
   BOX_SELECT = 'draw.boxselect',
+  ENABLE = 'draw.enable',
+  DISABLE = 'draw.disable',
 }
 
 export enum DrawModes {

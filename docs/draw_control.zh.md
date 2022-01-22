@@ -145,6 +145,22 @@ drawControl.on('draw.update', e => {});
 drawControl.on('draw.boxselct', e => {});
 ```
 
+#### draw.enable
+
+激活 drawControl 时的事件
+
+```javascript
+drawControl.on('draw.enable', e => {});
+```
+
+#### draw.disable
+
+禁用 drawControl 时的事件
+
+```javascript
+drawControl.on('draw.disable', e => {});
+```
+
 ### style
 
 style 配置项可以按需配置，内部会和默认值进行 merge
