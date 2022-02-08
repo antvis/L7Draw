@@ -1,1 +1,2 @@
-export { default as BaseDrawer } from './BaseDrawer';
+export * from './BaseDrawer';
+export * from './PointDrawer';
