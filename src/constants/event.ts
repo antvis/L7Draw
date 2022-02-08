@@ -4,3 +4,7 @@ export enum DrawerEvent {
   enable = 'enable',
   disable = 'disable',
 }
+
+export enum SourceEvent {
+  change = 'change',
+}

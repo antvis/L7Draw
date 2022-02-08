@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import {
   DeepPartial,
-  IDrawerCursorType,
+  ICursorType,
   IDrawerOptions,
   ISceneMouseEvent,
 } from '../typings';
@@ -16,17 +16,19 @@ import { Scene } from '@antv/l7';
 export abstract class BaseDrawer<
   T extends IDrawerOptions,
 > extends EventEmitter<DrawerEvent> {
+  scene: Scene;
+
+  options: T;
+
   // 当前是否开启编辑
   protected isEnable = false;
-
-  scene: Scene;
-  options: T;
 
   constructor(scene: Scene, options?: DeepPartial<T>) {
     super();
 
     this.scene = scene;
     this.options = merge({}, this.getDefaultOptions(), options ?? {});
+    this.bindCallback();
     this.emit(DrawerEvent.init);
   }
 
@@ -39,7 +41,11 @@ export abstract class BaseDrawer<
 
   abstract onClick(e: ISceneMouseEvent): void;
 
-  setCursor(type: IDrawerCursorType | null) {
+  /**
+   * 设置地图上光标样式类型
+   * @param type
+   */
+  setCursor(type: ICursorType | null) {
     if (!this.container) {
       return;
     }
@@ -78,5 +84,12 @@ export abstract class BaseDrawer<
     this.isEnable = false;
     this.scene.off('click', this.onClick);
     this.emit(DrawerEvent.disable);
+  }
+
+  /**
+   * 将当前所有的回调函数与this进行绑定
+   */
+  bindCallback() {
+    this.onClick = this.onClick.bind(this);
   }
 }

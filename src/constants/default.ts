@@ -1,8 +1,8 @@
-import { IDrawerCursor, IDrawerStyle } from '../typings';
+import { ICursor, IStyle } from '../typings';
 
 export const DEFAULT_COLOR = '#1990FF';
 
-export const DEFAULT_DRAWER_STYLE: IDrawerStyle = {
+export const DEFAULT_DRAWER_STYLE: IStyle = {
   point: {
     color: DEFAULT_COLOR,
     size: 6,
@@ -19,7 +19,7 @@ export const DEFAULT_DRAWER_STYLE: IDrawerStyle = {
   },
 };
 
-export const DEFAULT_CURSOR_MAP: IDrawerCursor = {
+export const DEFAULT_CURSOR_MAP: ICursor = {
   draw: 'crosshair',
   move: 'move',
 };

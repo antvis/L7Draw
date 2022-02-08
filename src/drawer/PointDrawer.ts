@@ -11,6 +11,6 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
   }
 
   onClick(e: ISceneMouseEvent) {
-    console.log('click', e);
+    const { lng, lat } = e.lnglat;
   }
 }
