@@ -10,7 +10,7 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
     };
   }
 
-  onMouseDown(e: ISceneMouseEvent) {
-    console.log(e);
+  onClick(e: ISceneMouseEvent) {
+    console.log('click', e);
   }
 }

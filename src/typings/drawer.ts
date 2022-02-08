@@ -1,10 +1,33 @@
-export type IDrawerStyleType = 'point' | 'line' | 'polygon';
+export interface IPointStyle {
+  size: number;
+  color: string;
+  innerSize: number;
+  innerColor: string;
+}
 
-export type IDrawerStyle = Record<IDrawerStyleType, any>;
+export interface ILineStyle {
+  size: number;
+  color: string;
+  dashed: boolean;
+}
 
-export type ICursorType = 'draw' | 'move';
+export interface IPolygonStyle {
+  color: string;
+}
 
-export type IDrawerCursor = Record<ICursorType, string>;
+export interface ITextStyle {}
+
+export type IDrawerStyle = {
+  point: IPointStyle;
+  line: ILineStyle;
+  polygon: IPolygonStyle;
+};
+
+export type IDrawerStyleType = keyof IDrawerStyle;
+
+export type IDrawerCursorType = 'draw' | 'move';
+
+export type IDrawerCursor = Record<IDrawerCursorType, string>;
 
 export interface IDrawerOptions {
   style: IDrawerStyle;

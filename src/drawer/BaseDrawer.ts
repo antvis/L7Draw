@@ -1,5 +1,10 @@
 import EventEmitter from 'eventemitter3';
-import { DeepPartial, IDrawerOptions, ISceneMouseEvent } from '../typings';
+import {
+  DeepPartial,
+  IDrawerCursorType,
+  IDrawerOptions,
+  ISceneMouseEvent,
+} from '../typings';
 import {
   DEFAULT_CURSOR_MAP,
   DEFAULT_DRAWER_STYLE,
@@ -7,7 +12,6 @@ import {
 } from '../constants';
 import { merge } from 'lodash';
 import { Scene } from '@antv/l7';
-import { IPointDrawerOptions } from './PointDrawer';
 
 export abstract class BaseDrawer<
   T extends IDrawerOptions,
@@ -26,8 +30,29 @@ export abstract class BaseDrawer<
     this.emit(DrawerEvent.init);
   }
 
+  get container() {
+    return (this.scene.getContainer()?.querySelector('.amap-maps') ??
+      null) as HTMLDivElement | null;
+  }
+
   abstract getDefaultOptions(): T;
 
+  abstract onClick(e: ISceneMouseEvent): void;
+
+  setCursor(type: IDrawerCursorType | null) {
+    if (!this.container) {
+      return;
+    }
+    if (type) {
+      this.container.style.cursor = this.options.cursor[type];
+    } else {
+      this.container.style.cursor = '';
+    }
+  }
+
+  /**
+   * 获取默认通用options配置项
+   */
   getCommonOptions(): IDrawerOptions {
     return {
       activeStyle: DEFAULT_DRAWER_STYLE,
@@ -36,17 +61,22 @@ export abstract class BaseDrawer<
     };
   }
 
-  abstract onMouseDown(e: ISceneMouseEvent): void;
-
+  /**
+   * 启用编辑
+   */
   enable() {
     this.isEnable = true;
-    this.scene.on('mousedown', this.onMouseDown);
+    this.scene.on('click', this.onClick);
+    this.setCursor('draw');
     this.emit(DrawerEvent.enable);
   }
 
+  /**
+   * 禁用编辑
+   */
   disable() {
     this.isEnable = false;
-    this.scene.off('mousedown', this.onMouseDown);
+    this.scene.off('click', this.onClick);
     this.emit(DrawerEvent.disable);
   }
 }
