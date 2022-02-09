@@ -45,7 +45,7 @@ export interface IStyle {
 
 export interface IBaseProperties {
   id: string;
-  isEdit: boolean;
+  isActive: boolean;
 }
 
 export type IBaseFeature<
@@ -79,6 +79,5 @@ export type IPolygonFeature<P extends IBaseProperties = IBaseProperties> =
 // ------------
 
 export interface IRenderOptions<D extends IBaseFeature, S extends IStyleItem> {
-  data?: D[];
   style: S;
 }

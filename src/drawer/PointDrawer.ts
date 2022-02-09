@@ -1,5 +1,7 @@
-import { IDrawerOptions, ISceneMouseEvent } from '../typings';
+import { point } from '@turf/turf';
+import { IDrawerOptions, IPointFeature, ISceneMouseEvent } from '../typings';
 import { BaseDrawer } from './BaseDrawer';
+import { getUuid } from '../utils';
 
 export interface IPointDrawerOptions extends IDrawerOptions {}
 
@@ -12,5 +14,12 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
 
   onClick(e: ISceneMouseEvent) {
     const { lng, lat } = e.lnglat;
+    const newPoint: IPointFeature = point([lng, lat], {
+      id: getUuid('point'),
+      isActive: true,
+    });
+    this.source.setData({
+      point: [...this.source.data.point, newPoint],
+    });
   }
 }

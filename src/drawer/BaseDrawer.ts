@@ -12,11 +12,14 @@ import {
 } from '../constants';
 import { merge } from 'lodash';
 import { Scene } from '@antv/l7';
+import { Source } from '../source';
 
 export abstract class BaseDrawer<
   T extends IDrawerOptions,
 > extends EventEmitter<DrawerEvent> {
   scene: Scene;
+
+  source: Source;
 
   options: T;
 
@@ -28,6 +31,12 @@ export abstract class BaseDrawer<
 
     this.scene = scene;
     this.options = merge({}, this.getDefaultOptions(), options ?? {});
+    this.source = new Source(scene, {
+      style: this.options.style,
+      render: {
+        point: true,
+      },
+    });
     this.bindCallback();
     this.emit(DrawerEvent.init);
   }

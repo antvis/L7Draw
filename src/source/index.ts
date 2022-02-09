@@ -9,6 +9,7 @@ import {
 } from '../typings';
 import { BaseRender } from '../render';
 import { Scene } from '@antv/l7';
+import { PointRender } from '../render/PointRender';
 
 export class Source extends EventEmitter<SourceEvent> {
   scene: Scene;
@@ -33,9 +34,11 @@ export class Source extends EventEmitter<SourceEvent> {
   }
 
   initRender(render: ISourceRenderOptions, style: IStyle) {
-    // if (render.point) {
-    //   this.render.point = new BaseRender();
-    // }
+    if (render.point) {
+      this.render.point = new PointRender(this.scene, {
+        style: style.point,
+      });
+    }
     // if (render.line) {
     //   this.render.line = new BaseRender();
     // }
