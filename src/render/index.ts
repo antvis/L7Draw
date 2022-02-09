@@ -1,1 +1,1 @@
-export * from './PointRender';
+export * from './BaseRender';
