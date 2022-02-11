@@ -1,5 +1,5 @@
 {
-  "name": "@anv/l7-draw",
+  "name": "@antv/l7-draw",
   "version": "3.0.0",
   "scripts": {
     "start": "dumi dev",
@@ -39,6 +39,7 @@
     "antd": "^4.17.3",
     "eventemitter3": "^4.0.7",
     "lodash": "^4.17.21",
+    "next-tick": "^1.1.0",
     "react": "^16.12.0 || ^17.0.0",
     "uuid": "^8.3.2"
   },
@@ -47,6 +48,7 @@
     "@testing-library/react": "^12.1.2",
     "@types/jest": "^27.0.3",
     "@types/lodash": "^4.14.177",
+    "@types/next-tick": "^1.0.0",
     "@types/uuid": "^8.3.3",
     "@umijs/fabric": "^2.8.1",
     "@umijs/test": "^3.0.5",

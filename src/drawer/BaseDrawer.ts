@@ -1,6 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import {
   DeepPartial,
+  IBaseFeature,
   ICursorType,
   IDrawerOptions,
   ISceneMouseEvent,
@@ -9,10 +10,12 @@ import {
   DEFAULT_CURSOR_MAP,
   DEFAULT_DRAWER_STYLE,
   DrawerEvent,
+  SourceEvent,
 } from '../constants';
 import { merge } from 'lodash';
 import { Scene } from '@antv/l7';
 import { Source } from '../source';
+import nextTick from 'next-tick';
 
 export abstract class BaseDrawer<
   T extends IDrawerOptions,
@@ -28,6 +31,7 @@ export abstract class BaseDrawer<
 
   constructor(scene: Scene, options?: DeepPartial<T>) {
     super();
+    this.bindThis();
 
     this.scene = scene;
     this.options = merge({}, this.getDefaultOptions(), options ?? {});
@@ -37,7 +41,8 @@ export abstract class BaseDrawer<
         point: true,
       },
     });
-    this.bindCallback();
+    this.bindSourceEvent();
+
     this.emit(DrawerEvent.init);
   }
 
@@ -49,6 +54,8 @@ export abstract class BaseDrawer<
   abstract getDefaultOptions(): T;
 
   abstract onClick(e: ISceneMouseEvent): void;
+
+  abstract getData(): IBaseFeature[];
 
   /**
    * 设置地图上光标样式类型
@@ -92,13 +99,24 @@ export abstract class BaseDrawer<
   disable() {
     this.isEnable = false;
     this.scene.off('click', this.onClick);
+    this.setCursor(null);
     this.emit(DrawerEvent.disable);
   }
 
   /**
    * 将当前所有的回调函数与this进行绑定
    */
-  bindCallback() {
+  bindThis() {
     this.onClick = this.onClick.bind(this);
+    this.getData = this.getData.bind(this);
+  }
+
+  /**
+   * 绑定source相应事件
+   */
+  bindSourceEvent() {
+    this.source.on(SourceEvent.change, () => {
+      nextTick(() => this.emit(DrawerEvent.change, this.getData()));
+    });
   }
 }

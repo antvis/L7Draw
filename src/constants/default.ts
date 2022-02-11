@@ -6,15 +6,17 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
   point: {
     normal: {
       color: DEFAULT_COLOR,
-      size: 6,
-      innerColor: '#ffffff',
-      innerSize: 3,
+      shape: 'circle',
+      size: 4,
+      borderColor: '#ffffff',
+      borderWidth: 2,
     },
     active: {
       color: DEFAULT_COLOR,
+      shape: 'circle',
       size: 6,
-      innerColor: '#ffffff',
-      innerSize: 3,
+      borderColor: '#ffffff',
+      borderWidth: 2,
     },
   },
   line: {

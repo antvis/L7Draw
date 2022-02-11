@@ -3,6 +3,9 @@ export enum DrawerEvent {
   destroy = 'destroy',
   enable = 'enable',
   disable = 'disable',
+  add = 'add',
+  edit = 'edit',
+  change = 'change',
 }
 
 export enum SourceEvent {

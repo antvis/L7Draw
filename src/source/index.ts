@@ -1,6 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import { SourceEvent } from '../constants';
 import {
+  IBaseFeature,
   IRenderType,
   ISourceData,
   ISourceOptions,
@@ -72,5 +73,11 @@ export class Source extends EventEmitter<SourceEvent> {
 
       this.emit(SourceEvent.change, this.data);
     }
+  }
+
+  isEmptyData() {
+    return Object.values(this.data).every((value: IBaseFeature[]) => {
+      return !value.length;
+    });
   }
 }

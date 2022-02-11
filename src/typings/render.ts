@@ -13,29 +13,30 @@ export interface IBaseStyle {
   color: string;
 }
 
-export interface IStyleItem<P extends IBaseStyle = IBaseStyle> {
+export interface IBaseStyleItem<P extends IBaseStyle = IBaseStyle> {
   normal: P;
   active: P;
 }
 
 export interface IPointStyleItem extends IBaseStyle {
+  shape: string;
   size: number;
-  innerSize: number;
-  innerColor: string;
+  borderWidth: number;
+  borderColor: string;
 }
 
-export type IPointStyle = IStyleItem<IPointStyleItem>;
+export type IPointStyle = IBaseStyleItem<IPointStyleItem>;
 
 export interface ILineStyleItem extends IBaseStyle {
   size: number;
   dashed: boolean;
 }
 
-export type ILineStyle = IStyleItem<ILineStyleItem>;
+export type ILineStyle = IBaseStyleItem<ILineStyleItem>;
 
 export interface IPolygonStyleItem extends IBaseStyle {}
 
-export type IPolygonStyle = IStyleItem<IPolygonStyleItem>;
+export type IPolygonStyle = IBaseStyleItem<IPolygonStyleItem>;
 
 export interface IStyle {
   point: IPointStyle;
@@ -78,6 +79,9 @@ export type IPolygonFeature<P extends IBaseProperties = IBaseProperties> =
 
 // ------------
 
-export interface IRenderOptions<D extends IBaseFeature, S extends IStyleItem> {
+export interface IRenderOptions<
+  D extends IBaseFeature,
+  S extends IBaseStyleItem,
+> {
   style: S;
 }
