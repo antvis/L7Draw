@@ -5,47 +5,26 @@ import {
   IRenderType,
   ISourceData,
   ISourceOptions,
-  ISourceRenderOptions,
-  IStyle,
+  IRenderMap,
 } from '../typings';
-import { BaseRender } from '../render';
-import { Scene } from '@antv/l7';
-import { PointRender } from '../render/PointRender';
 
 export class Source extends EventEmitter<SourceEvent> {
-  scene: Scene;
-
   data: ISourceData = {
     point: [],
     line: [],
     polygon: [],
   };
 
-  render: Partial<Record<IRenderType, BaseRender>> = {};
+  render: IRenderMap = {};
 
-  constructor(scene: Scene, { data, render, style }: ISourceOptions) {
+  constructor({ data, render }: ISourceOptions) {
     super();
 
-    this.scene = scene;
-    this.initRender(render, style);
+    this.render = render;
 
     if (data) {
       this.setData(data);
     }
-  }
-
-  initRender(render: ISourceRenderOptions, style: IStyle) {
-    if (render.point) {
-      this.render.point = new PointRender(this.scene, {
-        style: style.point,
-      });
-    }
-    // if (render.line) {
-    //   this.render.line = new BaseRender();
-    // }
-    // if (render.polygon) {
-    //   this.render.polygon = new BaseRender();
-    // }
   }
 
   getRender(type: IRenderType) {

@@ -1,5 +1,10 @@
 import { point } from '@turf/turf';
-import { IDrawerOptions, IPointFeature, ISceneMouseEvent } from '../typings';
+import {
+  IDrawerOptions,
+  IPointFeature,
+  IRenderType,
+  ISceneMouseEvent,
+} from '../typings';
 import { BaseDrawer } from './BaseDrawer';
 import { getUuid } from '../utils';
 import { DrawerEvent } from '../constants';
@@ -7,6 +12,11 @@ import { DrawerEvent } from '../constants';
 export interface IPointDrawerOptions extends IDrawerOptions {}
 
 export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
+  getRenderList() {
+    const renderList: IRenderType[] = ['point'];
+    return renderList;
+  }
+
   getDefaultOptions(): IPointDrawerOptions {
     return {
       ...this.getCommonOptions(),

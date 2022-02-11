@@ -1,10 +1,5 @@
-import {
-  ILineFeature,
-  IPointFeature,
-  IPolygonFeature,
-  IRenderType,
-  IStyle,
-} from './render';
+import { ILineFeature, IPointFeature, IPolygonFeature, IStyle } from './render';
+import { PointRender, LineRender, PolygonRender } from '../render';
 
 export interface ISourceData {
   point: IPointFeature[];
@@ -12,10 +7,13 @@ export interface ISourceData {
   polygon: IPolygonFeature[];
 }
 
-export type ISourceRenderOptions = Partial<Record<IRenderType, boolean>>;
+export type IRenderMap = {
+  point?: PointRender;
+  line?: LineRender;
+  polygon?: PolygonRender;
+};
 
 export interface ISourceOptions {
   data?: Partial<ISourceData>;
-  style: IStyle;
-  render: ISourceRenderOptions;
+  render: IRenderMap;
 }

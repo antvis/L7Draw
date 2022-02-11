@@ -4,12 +4,15 @@ import {
   IBaseFeature,
   ICursorType,
   IDrawerOptions,
+  IRenderType,
   ISceneMouseEvent,
+  IRenderMap,
 } from '../typings';
 import {
   DEFAULT_CURSOR_MAP,
   DEFAULT_DRAWER_STYLE,
   DrawerEvent,
+  RENDER_TYPE_MAP,
   SourceEvent,
 } from '../constants';
 import { merge } from 'lodash';
@@ -24,6 +27,8 @@ export abstract class BaseDrawer<
 
   source: Source;
 
+  render: IRenderMap;
+
   options: T;
 
   // 当前是否开启编辑
@@ -35,11 +40,9 @@ export abstract class BaseDrawer<
 
     this.scene = scene;
     this.options = merge({}, this.getDefaultOptions(), options ?? {});
-    this.source = new Source(scene, {
-      style: this.options.style,
-      render: {
-        point: true,
-      },
+    this.render = this.getRender();
+    this.source = new Source({
+      render: this.render,
     });
     this.bindSourceEvent();
 
@@ -50,6 +53,8 @@ export abstract class BaseDrawer<
     return (this.scene.getContainer()?.querySelector('.amap-maps') ??
       null) as HTMLDivElement | null;
   }
+
+  abstract getRenderList(): IRenderType[];
 
   abstract getDefaultOptions(): T;
 
@@ -118,5 +123,19 @@ export abstract class BaseDrawer<
     this.source.on(SourceEvent.change, () => {
       nextTick(() => this.emit(DrawerEvent.change, this.getData()));
     });
+  }
+
+  /**
+   * 根据renderList实例化各个type的render
+   */
+  getRender() {
+    const render: IRenderMap = {};
+    this.getRenderList()?.forEach((key) => {
+      const Render = RENDER_TYPE_MAP[key];
+      const style = this.options.style[key];
+      // @ts-ignore
+      render[key] = new Render(this.scene, { style });
+    });
+    return render;
   }
 }
