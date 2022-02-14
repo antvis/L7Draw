@@ -20,15 +20,15 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new PointDrawer(scene);
+      const drawer = new PointDrawer(scene, {});
       setPointDrawer(drawer);
       drawer.enable();
-      drawer.on(DrawerEvent.add, (newPoint, pointList) => {
-        console.log('add', newPoint, pointList);
-      });
-      drawer.on(DrawerEvent.change, (pointList) => {
-        console.log('change', pointList);
-      });
+      // drawer.on(DrawerEvent.add, (newPoint, pointList) => {
+      //   console.log('add', newPoint, pointList);
+      // });
+      // drawer.on(DrawerEvent.change, (pointList) => {
+      //   console.log('change', pointList);
+      // });
     });
   }, []);
 

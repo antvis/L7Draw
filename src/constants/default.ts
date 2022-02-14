@@ -45,6 +45,7 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
 export const DEFAULT_CURSOR_MAP: ICursor = {
   draw: 'crosshair',
   move: 'move',
+  pointer: 'pointer',
 };
 
 export const RENDER_TYPE_MAP: Record<

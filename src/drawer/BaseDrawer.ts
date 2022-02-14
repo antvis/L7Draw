@@ -1,11 +1,14 @@
 import EventEmitter from 'eventemitter3';
+import { merge } from 'lodash';
+import { Scene } from '@antv/l7';
+import { Source } from '../source';
+import nextTick from 'next-tick';
 import {
   DeepPartial,
   IBaseFeature,
   ICursorType,
   IDrawerOptions,
   IRenderType,
-  ISceneMouseEvent,
   IRenderMap,
 } from '../typings';
 import {
@@ -15,10 +18,7 @@ import {
   RENDER_TYPE_MAP,
   SourceEvent,
 } from '../constants';
-import { merge } from 'lodash';
-import { Scene } from '@antv/l7';
-import { Source } from '../source';
-import nextTick from 'next-tick';
+import { Cursor } from '../utils';
 
 export abstract class BaseDrawer<
   T extends IDrawerOptions,
@@ -31,8 +31,10 @@ export abstract class BaseDrawer<
 
   options: T;
 
+  cursor: Cursor;
+
   // 当前是否开启编辑
-  protected isEnable = false;
+  isEnable = false;
 
   constructor(scene: Scene, options?: DeepPartial<T>) {
     super();
@@ -41,6 +43,7 @@ export abstract class BaseDrawer<
     this.scene = scene;
     this.options = merge({}, this.getDefaultOptions(), options ?? {});
     this.render = this.getRender();
+    this.cursor = new Cursor(scene, this.options.cursor);
     this.source = new Source({
       render: this.render,
     });
@@ -58,23 +61,18 @@ export abstract class BaseDrawer<
 
   abstract getDefaultOptions(): T;
 
-  abstract onClick(e: ISceneMouseEvent): void;
-
   abstract getData(): IBaseFeature[];
+
+  abstract bindEvent(): void;
+
+  abstract unbindEvent(): void;
 
   /**
    * 设置地图上光标样式类型
-   * @param type
+   * @param cursor
    */
-  setCursor(type: ICursorType | null) {
-    if (!this.container) {
-      return;
-    }
-    if (type) {
-      this.container.style.cursor = this.options.cursor[type];
-    } else {
-      this.container.style.cursor = '';
-    }
+  setCursor(cursor: ICursorType | null) {
+    this.cursor.setCursor(cursor);
   }
 
   /**
@@ -85,6 +83,7 @@ export abstract class BaseDrawer<
       activeStyle: DEFAULT_DRAWER_STYLE,
       style: DEFAULT_DRAWER_STYLE,
       cursor: DEFAULT_CURSOR_MAP,
+      editable: true,
     };
   }
 
@@ -93,8 +92,8 @@ export abstract class BaseDrawer<
    */
   enable() {
     this.isEnable = true;
-    this.scene.on('click', this.onClick);
     this.setCursor('draw');
+    this.bindEvent();
     this.emit(DrawerEvent.enable);
   }
 
@@ -103,8 +102,8 @@ export abstract class BaseDrawer<
    */
   disable() {
     this.isEnable = false;
-    this.scene.off('click', this.onClick);
     this.setCursor(null);
+    this.unbindEvent();
     this.emit(DrawerEvent.disable);
   }
 
@@ -112,7 +111,6 @@ export abstract class BaseDrawer<
    * 将当前所有的回调函数与this进行绑定
    */
   bindThis() {
-    this.onClick = this.onClick.bind(this);
     this.getData = this.getData.bind(this);
   }
 

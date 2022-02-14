@@ -1,7 +1,20 @@
+import { IBaseFeature } from './render';
+
+export interface ILngLat {
+  lng: number;
+  lat: number;
+}
+
 export interface ISceneMouseEvent {
   type: string;
-  lnglat: {
-    lng: number;
-    lat: number;
-  };
+  lnglat: ILngLat;
+}
+
+export interface ILayerMouseEvent<T = IBaseFeature> {
+  type: string;
+  feature?: T;
+  featureId?: number;
+  lngLat: ILngLat;
+  x: number;
+  y: number;
 }
