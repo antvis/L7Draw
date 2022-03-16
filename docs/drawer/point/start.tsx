@@ -27,7 +27,7 @@ const Demo: React.FC = () => {
 
   return (
     <div>
-      <div>
+      <div style={{ padding: 8 }}>
         <Button onClick={() => pointDrawer?.enable()}>启用</Button>
         <Button onClick={() => pointDrawer?.disable()}>禁用</Button>
       </div>

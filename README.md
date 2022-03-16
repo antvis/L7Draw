@@ -2,34 +2,5 @@
 
 ## TODO_LIST
 
-## Getting Started
-
-Install dependencies,
-
-```bash
-$ npm i
-```
-
-Start the dev server,
-
-```bash
-$ npm start
-```
-
-Build documentation,
-
-```bash
-$ npm run docs:build
-```
-
-Run test,
-
-```bash
-$ npm test
-```
-
-Build library via `father-build`,
-
-```bash
-$ npm run build
-```
+- [ ] 撤销/重做（ctrl + z / ctrl + shift + z）
+- [ ] 暴露 layer 给开发者自定义

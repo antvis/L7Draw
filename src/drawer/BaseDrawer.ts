@@ -80,7 +80,6 @@ export abstract class BaseDrawer<
    */
   getCommonOptions(): IDrawerOptions {
     return {
-      activeStyle: DEFAULT_DRAWER_STYLE,
       style: DEFAULT_DRAWER_STYLE,
       cursor: DEFAULT_CURSOR_MAP,
       editable: true,
