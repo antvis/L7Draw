@@ -15,6 +15,7 @@ export interface IBaseStyle {
 
 export interface IBaseStyleItem<P extends IBaseStyle = IBaseStyle> {
   normal: P;
+  hover: P;
   active: P;
 }
 
@@ -46,6 +47,7 @@ export interface IStyle {
 
 export interface IBaseProperties {
   id: string;
+  isHover: boolean;
   isActive: boolean;
 }
 

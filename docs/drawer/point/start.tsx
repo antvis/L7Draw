@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { Scene } from '@antv/l7';
 import { GaodeMap } from '@antv/l7-maps';
 import { useEffect } from 'react';
-import { PointDrawer } from '@antv/l7-draw';
 import { Button } from 'antd';
-import { DrawerEvent } from '../../src';
+import { PointDrawer } from '@antv/l7-draw';
 
 const Demo: React.FC = () => {
   const [pointDrawer, setPointDrawer] = useState<PointDrawer | null>(null);
@@ -23,12 +22,6 @@ const Demo: React.FC = () => {
       const drawer = new PointDrawer(scene, {});
       setPointDrawer(drawer);
       drawer.enable();
-      // drawer.on(DrawerEvent.add, (newPoint, pointList) => {
-      //   console.log('add', newPoint, pointList);
-      // });
-      // drawer.on(DrawerEvent.change, (pointList) => {
-      //   console.log('change', pointList);
-      // });
     });
   }, []);
 

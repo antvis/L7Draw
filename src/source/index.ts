@@ -33,7 +33,7 @@ export class Source extends EventEmitter<SourceEvent> {
     this.render = render;
 
     if (data) {
-      this.setData(data);
+      this.setData(data, true);
     }
   }
 
@@ -45,7 +45,7 @@ export class Source extends EventEmitter<SourceEvent> {
     return targetRender;
   }
 
-  setData(newData: Partial<ISourceData>) {
+  setData(newData: Partial<ISourceData>, store = false) {
     const renderTypes = Object.keys(newData) as IRenderType[];
     if (renderTypes.length) {
       this.data = {
@@ -62,14 +62,16 @@ export class Source extends EventEmitter<SourceEvent> {
 
       this.emit(SourceEvent.change, this.data);
 
-      setTimeout(() => {
-        const newDataHistory: ISourceDataHistory = {
-          data: cloneDeep(this.data),
-          time: Date.now(),
-        };
-        this.dataHistory.push(newDataHistory);
-        this.currentHistoryIndex = this.dataHistory.length - 1;
-      }, 0);
+      if (store) {
+        setTimeout(() => {
+          const newDataHistory: ISourceDataHistory = {
+            data: cloneDeep(this.data),
+            time: Date.now(),
+          };
+          this.dataHistory.push(newDataHistory);
+          this.currentHistoryIndex = this.dataHistory.length - 1;
+        }, 0);
+      }
     }
   }
 

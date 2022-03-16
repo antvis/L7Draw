@@ -15,6 +15,7 @@ export class Cursor {
   setCursor(cursor: ICursorType | null) {
     if (cursor !== this.cursor && this.container) {
       this.container.style.cursor = cursor ? this.options[cursor] : '';
+      this.cursor = cursor;
     }
   }
 }

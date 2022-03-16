@@ -5,28 +5,36 @@ import { featureCollection } from '@turf/turf';
 
 export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
   initLayers(): ILayer[] {
-    const { normal, active } = this.style;
+    const { normal, hover, active } = this.style;
     const layer = new PointLayer()
       .source(featureCollection([]))
-      .size('isActive', (isActive: boolean) =>
-        isActive ? active.size : normal.size,
+      .size('isHover*isActive', (isHover: boolean, isActive: boolean) =>
+        isActive ? active.size : isHover ? hover.size : normal.size,
       )
-      .color('isActive', (isActive: boolean) =>
-        isActive ? active.color : normal.color,
+      .color('isHover*isActive', (isHover: boolean, isActive: boolean) =>
+        isActive ? active.color : isHover ? hover.color : normal.color,
       )
-      .shape('isActive', (isActive: boolean) =>
-        isActive ? active.shape : normal.shape,
+      .shape('isHover*isActive', (isHover: boolean, isActive: boolean) =>
+        isActive ? active.shape : isHover ? hover.shape : normal.shape,
       )
       .style({
         stroke: [
-          'isActive',
-          (isActive: boolean) =>
-            isActive ? active.borderColor : normal.borderColor,
+          'isHover*isActive',
+          (isHover: boolean, isActive: boolean) =>
+            isActive
+              ? active.borderColor
+              : isHover
+              ? hover.borderColor
+              : normal.borderColor,
         ],
         strokeWidth: [
-          'isActive',
-          (isActive: boolean) =>
-            isActive ? active.borderWidth : normal.borderWidth,
+          'isHover*isActive',
+          (isHover: boolean, isActive: boolean) =>
+            isActive
+              ? active.borderWidth
+              : isHover
+              ? hover.borderWidth
+              : normal.borderWidth,
         ],
       });
 

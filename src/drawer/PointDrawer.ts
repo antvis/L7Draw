@@ -55,20 +55,38 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
 
   onMouseMove(e: ILayerMouseEvent<IPointFeature>) {
     if (this.dragPoint) {
-      return;
+      this.setCursor('move');
+    } else {
+      this.setCursor('pointer');
+
+      this.setPointData((data) =>
+        data.map((feature) => {
+          feature.properties.isHover = isSameFeature(feature, e.feature);
+          return feature;
+        }),
+      );
     }
-    this.setCursor('pointer');
   }
 
   onMouseOut(e: ILayerMouseEvent<IPointFeature>) {
     this.setCursor('draw');
+
+    if (!this.dragPoint) {
+      this.setPointData((data) =>
+        data.map((feature) => {
+          feature.properties.isHover = false;
+          return feature;
+        }),
+      );
+    }
   }
 
   onDragStart(e: ILayerMouseEvent<IPointFeature>) {
     const currentFeature = e.feature;
-    this.source.setData({
-      point: [
-        ...this.getData().map((feature) => {
+
+    this.setPointData(
+      (data) =>
+        data.map((feature) => {
           if (currentFeature) {
             feature.properties.isActive = isSameFeature(
               currentFeature,
@@ -77,8 +95,8 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
           }
           return feature;
         }),
-      ],
-    });
+      true,
+    );
     this.scene.setMapStatus({
       dragEnable: false,
     });
@@ -88,22 +106,31 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
 
   onDragging(e: ILayerMouseEvent<ISceneMouseEvent>) {
     if (this.dragPoint) {
-      this.source.setData({
-        point: [
-          ...this.getData().map((feature) => {
-            if (isSameFeature(this.dragPoint, feature)) {
-              const { lng, lat } = e.lngLat;
-              feature.geometry.coordinates = [lng, lat];
-            }
-            return feature;
-          }),
-        ],
-      });
+      this.setPointData((data) =>
+        data.map((feature) => {
+          if (isSameFeature(this.dragPoint, feature)) {
+            const { lng, lat } = e.lngLat;
+            feature.geometry.coordinates = [lng, lat];
+          }
+          return feature;
+        }),
+      );
       this.setCursor('move');
     }
   }
 
   onDragEnd(e: ILayerMouseEvent<ISceneMouseEvent>) {
+    this.setPointData(
+      (data) =>
+        data.map((feature) => {
+          if (isSameFeature(this.dragPoint, feature)) {
+            const { lng, lat } = e.lngLat;
+            feature.geometry.coordinates = [lng, lat];
+          }
+          return feature;
+        }),
+      true,
+    );
     this.scene.setMapStatus({
       dragEnable: true,
     });
@@ -114,21 +141,35 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
   }
 
   onUnClick(e: ILayerMouseEvent<IPointFeature>) {
+    console.log('unclick');
     const { lng, lat } = e.lngLat;
     const newPoint: IPointFeature = point([lng, lat], {
       id: getUuid('point'),
+      isHover: true,
       isActive: true,
     });
-    this.source.setData({
-      point: [
-        ...this.getData().map((feature) => {
+    this.setPointData(
+      (data) => [
+        ...data.map((feature) => {
           feature.properties.isActive = false;
+          feature.properties.isHover = false;
           return feature;
         }),
         newPoint,
       ],
-    });
+      true,
+    );
     this.emit(DrawerEvent.add, newPoint, this.getData());
+  }
+
+  setPointData(fn: (data: IPointFeature[]) => IPointFeature[], store = false) {
+    const newPointList = fn(this.getData());
+    this.source.setData(
+      {
+        point: newPointList,
+      },
+      store,
+    );
   }
 
   getData() {
@@ -137,11 +178,23 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
 
   bindThis() {
     super.bindThis();
+
     this.onUnClick = this.onUnClick.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseOut = this.onMouseOut.bind(this);
     this.onDragStart = this.onDragStart.bind(this);
-    this.onDragging = debounce(this.onDragging, 16, { maxWait: 16 }).bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.onDragging = debounce(this.onDragging, 16, { maxWait: 16 }).bind(this);
+  }
+
+  disable() {
+    super.disable();
+
+    this.setPointData((data) =>
+      data.map((feature) => {
+        feature.properties.isHover = feature.properties.isActive = false;
+        return feature;
+      }),
+    );
   }
 }
