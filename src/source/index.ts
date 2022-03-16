@@ -6,16 +6,26 @@ import {
   ISourceData,
   ISourceOptions,
   IRenderMap,
+  ISourceDataHistory,
 } from '../typings';
+import { cloneDeep } from 'lodash';
 
 export class Source extends EventEmitter<SourceEvent> {
+  // 数据
   data: ISourceData = {
     point: [],
     line: [],
     polygon: [],
   };
 
+  // 渲染器对象
   render: IRenderMap = {};
+
+  // 数据历史栈
+  dataHistory: ISourceDataHistory[] = [];
+
+  // 当前历史栈下标
+  currentHistoryIndex = -1;
 
   constructor({ data, render }: ISourceOptions) {
     super();
@@ -36,21 +46,30 @@ export class Source extends EventEmitter<SourceEvent> {
   }
 
   setData(newData: Partial<ISourceData>) {
-    const types = Object.keys(newData) as IRenderType[];
-    if (types.length) {
+    const renderTypes = Object.keys(newData) as IRenderType[];
+    if (renderTypes.length) {
       this.data = {
         ...this.data,
         ...newData,
       };
 
-      types.forEach((type) => {
-        const renderData = newData[type];
+      renderTypes.forEach((renderType) => {
+        const renderData = newData[renderType];
         if (Array.isArray(renderData)) {
-          this.getRender(type).setData(renderData);
+          this.getRender(renderType).setData(renderData);
         }
       });
 
       this.emit(SourceEvent.change, this.data);
+
+      setTimeout(() => {
+        const newDataHistory: ISourceDataHistory = {
+          data: cloneDeep(this.data),
+          time: Date.now(),
+        };
+        this.dataHistory.push(newDataHistory);
+        this.currentHistoryIndex = this.dataHistory.length - 1;
+      }, 0);
     }
   }
 
@@ -58,5 +77,9 @@ export class Source extends EventEmitter<SourceEvent> {
     return Object.values(this.data).every((value: IBaseFeature[]) => {
       return !value.length;
     });
+  }
+
+  isEmptyHistory() {
+    return !this.dataHistory.length;
   }
 }

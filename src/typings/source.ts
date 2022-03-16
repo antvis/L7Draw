@@ -1,4 +1,4 @@
-import { ILineFeature, IPointFeature, IPolygonFeature, IStyle } from './render';
+import { ILineFeature, IPointFeature, IPolygonFeature } from './render';
 import { PointRender, LineRender, PolygonRender } from '../render';
 
 export interface ISourceData {
@@ -16,4 +16,9 @@ export type IRenderMap = {
 export interface ISourceOptions {
   data?: Partial<ISourceData>;
   render: IRenderMap;
+}
+
+export interface ISourceDataHistory {
+  data: ISourceData;
+  time: number;
 }
