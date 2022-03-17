@@ -7,7 +7,7 @@ import {
   Position,
 } from '@turf/turf';
 
-export type IRenderType = 'point' | 'line' | 'polygon';
+export type IRenderType = 'point' | 'line' | 'polygon' | 'midPoint';
 
 export interface IBaseStyle {
   color: string;
@@ -39,10 +39,15 @@ export interface IPolygonStyleItem extends IBaseStyle {}
 
 export type IPolygonStyle = IBaseStyleItem<IPolygonStyleItem>;
 
+export interface IMidPointStyleItem extends IPointStyleItem {}
+
+export type IMidPointStyle = IBaseStyleItem<IMidPointStyleItem>;
+
 export interface IStyle {
   point: IPointStyle;
   line: ILineStyle;
   polygon: IPolygonStyle;
+  midPoint: IMidPointStyle;
 }
 
 export interface IBaseProperties {
@@ -65,7 +70,8 @@ export type IPointFeature = IBaseFeature<Point, IPointProperties>;
 // ------------
 
 export interface ILineProperties extends IBaseProperties {
-  nodes: Position[];
+  pointIds: string[];
+  isDrawing: boolean;
 }
 
 export type ILineFeature = IBaseFeature<LineString, ILineProperties>;
@@ -78,6 +84,9 @@ export interface IPolygonProperties extends IBaseProperties {
 
 export type IPolygonFeature<P extends IBaseProperties = IBaseProperties> =
   IBaseFeature<Polygon, P>;
+
+export type IMidPointFeature<P extends IBaseProperties = IBaseProperties> =
+  IBaseFeature<Point, P>;
 
 // ------------
 

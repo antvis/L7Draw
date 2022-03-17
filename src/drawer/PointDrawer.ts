@@ -13,7 +13,10 @@ import { debounce } from 'lodash';
 
 export interface IPointDrawerOptions extends IDrawerOptions {}
 
-export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
+export class PointDrawer extends BaseDrawer<
+  IPointDrawerOptions,
+  IPointFeature
+> {
   dragPoint?: IPointFeature | null;
 
   get layer() {
@@ -114,6 +117,7 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
           return feature;
         }),
       );
+      this.emit(DrawerEvent.dragging, this.dragPoint, this.getData());
       this.setCursor('move');
     }
   }
@@ -136,7 +140,7 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
     const editPoint = this.dragPoint;
     this.dragPoint = null;
     this.setCursor('pointer');
-    this.emit(DrawerEvent.edit, editPoint, this.getData());
+    this.emit(DrawerEvent.dragEnd, editPoint, this.getData());
   }
 
   onUnClick(e: ILayerMouseEvent<IPointFeature>) {
@@ -159,10 +163,14 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
     this.emit(DrawerEvent.add, newPoint, this.getData());
   }
 
+  getData() {
+    return this.source.data.point;
+  }
+
   setData(
-    updater: ((data: IPointFeature[]) => IPointFeature[]) | IPointFeature[],
-    store = false,
-  ) {
+    updater: IPointFeature[] | ((data: IPointFeature[]) => IPointFeature[]),
+    store: boolean = false,
+  ): void {
     const point =
       typeof updater === 'function' ? updater(this.getData()) : updater;
     this.source.setData(
@@ -171,10 +179,6 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
       },
       store,
     );
-  }
-
-  getData() {
-    return this.source.data.point;
   }
 
   bindThis() {

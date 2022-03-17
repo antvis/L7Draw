@@ -38,6 +38,8 @@ export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
         ],
       });
 
+    layer.setBlend('normal');
+
     return [layer];
   }
 }

@@ -1,5 +1,7 @@
 import {
   ICursor,
+  IMidPointStyle,
+  IMidPointStyleItem,
   IPointStyleItem,
   IRenderType,
   IStyle,
@@ -29,6 +31,14 @@ export const DEFAULT_POINT_ACTIVE_STYLE: IPointStyleItem = {
   color: ACTIVE_COLOR,
 };
 
+export const DEFAULT_MID_POINT_STYLE: IMidPointStyleItem = {
+  shape: 'circle',
+  size: 2,
+  color: '#ff0000',
+  borderColor: ACTIVE_COLOR,
+  borderWidth: 1,
+};
+
 export const DEFAULT_DRAWER_STYLE: IStyle = {
   point: {
     normal: DEFAULT_POINT_NORMAL_STYLE,
@@ -37,17 +47,17 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
   },
   line: {
     normal: {
-      color: DEFAULT_COLOR,
+      color: ACTIVE_COLOR,
       size: 2,
       dashed: false,
     },
     hover: {
-      color: DEFAULT_COLOR,
+      color: ACTIVE_COLOR,
       size: 2,
       dashed: false,
     },
     active: {
-      color: DEFAULT_COLOR,
+      color: ACTIVE_COLOR,
       size: 2,
       dashed: false,
     },
@@ -62,6 +72,11 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
     active: {
       color: DEFAULT_COLOR,
     },
+  },
+  midPoint: {
+    normal: DEFAULT_MID_POINT_STYLE,
+    hover: DEFAULT_MID_POINT_STYLE,
+    active: DEFAULT_MID_POINT_STYLE,
   },
 };
 
@@ -78,4 +93,5 @@ export const RENDER_TYPE_MAP: Record<
   point: PointRender,
   line: LineRender,
   polygon: PolygonRender,
+  midPoint: PointRender,
 };

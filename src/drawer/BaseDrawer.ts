@@ -22,6 +22,7 @@ import { Cursor } from '../utils';
 
 export abstract class BaseDrawer<
   T extends IDrawerOptions,
+  F extends IBaseFeature,
 > extends EventEmitter<DrawerEvent> {
   scene: Scene;
 
@@ -61,7 +62,9 @@ export abstract class BaseDrawer<
 
   abstract getDefaultOptions(): T;
 
-  abstract getData(): IBaseFeature[];
+  abstract setData(updater: F[] | ((_: F[]) => F[]), store?: boolean): void;
+
+  abstract getData(): F[];
 
   abstract bindEvent(): void;
 

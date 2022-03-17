@@ -16,6 +16,7 @@ export class Source extends EventEmitter<SourceEvent> {
     point: [],
     line: [],
     polygon: [],
+    midPoint: [],
   };
 
   // 渲染器对象
