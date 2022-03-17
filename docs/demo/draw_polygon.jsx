@@ -15,13 +15,17 @@ export default () => {
       }),
     });
     scene.on('loaded', () => {
-      const draw = new DrawPolygon(scene, { showDistance: true, showArea: true, });
+      const draw = new DrawPolygon(scene, {
+        showDistance: true,
+        showArea: true,
+        dragEnable: false,  // 控制Polygon是否可以拖拽
+      });
       draw.enable();
 
-      draw.on('draw.create', e => {
+      draw.on('draw.create', (e) => {
         console.log(e);
       });
-      draw.on('draw.update', e => {
+      draw.on('draw.update', (e) => {
         console.log('update', e);
       });
     });
