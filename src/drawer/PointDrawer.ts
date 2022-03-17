@@ -20,9 +20,8 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
     return this.render.point?.mainLayer;
   }
 
-  getRenderList() {
-    const renderList: IRenderType[] = ['point'];
-    return renderList;
+  getRenderList(): IRenderType[] {
+    return ['point'];
   }
 
   getDefaultOptions(): IPointDrawerOptions {
@@ -59,7 +58,7 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
     } else {
       this.setCursor('pointer');
 
-      this.setPointData((data) =>
+      this.setData((data) =>
         data.map((feature) => {
           feature.properties.isHover = isSameFeature(feature, e.feature);
           return feature;
@@ -72,7 +71,7 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
     this.setCursor('draw');
 
     if (!this.dragPoint) {
-      this.setPointData((data) =>
+      this.setData((data) =>
         data.map((feature) => {
           feature.properties.isHover = false;
           return feature;
@@ -84,7 +83,7 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
   onDragStart(e: ILayerMouseEvent<IPointFeature>) {
     const currentFeature = e.feature;
 
-    this.setPointData(
+    this.setData(
       (data) =>
         data.map((feature) => {
           if (currentFeature) {
@@ -106,7 +105,7 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
 
   onDragging(e: ILayerMouseEvent<ISceneMouseEvent>) {
     if (this.dragPoint) {
-      this.setPointData((data) =>
+      this.setData((data) =>
         data.map((feature) => {
           if (isSameFeature(this.dragPoint, feature)) {
             const { lng, lat } = e.lngLat;
@@ -120,7 +119,7 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
   }
 
   onDragEnd(e: ILayerMouseEvent<ISceneMouseEvent>) {
-    this.setPointData(
+    this.setData(
       (data) =>
         data.map((feature) => {
           if (isSameFeature(this.dragPoint, feature)) {
@@ -141,32 +140,34 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
   }
 
   onUnClick(e: ILayerMouseEvent<IPointFeature>) {
-    console.log('unclick');
     const { lng, lat } = e.lngLat;
     const newPoint: IPointFeature = point([lng, lat], {
       id: getUuid('point'),
       isHover: true,
       isActive: true,
     });
-    this.setPointData(
-      (data) => [
-        ...data.map((feature) => {
-          feature.properties.isActive = false;
-          feature.properties.isHover = false;
-          return feature;
-        }),
-        newPoint,
-      ],
-      true,
-    );
+    this.setData((data) => {
+      const newData = data.map((feature) => {
+        feature.properties.isActive = false;
+        feature.properties.isHover = false;
+        return feature;
+      });
+      newData.push(newPoint);
+      return newData;
+    }, true);
+    this.setCursor('pointer');
     this.emit(DrawerEvent.add, newPoint, this.getData());
   }
 
-  setPointData(fn: (data: IPointFeature[]) => IPointFeature[], store = false) {
-    const newPointList = fn(this.getData());
+  setData(
+    updater: ((data: IPointFeature[]) => IPointFeature[]) | IPointFeature[],
+    store = false,
+  ) {
+    const point =
+      typeof updater === 'function' ? updater(this.getData()) : updater;
     this.source.setData(
       {
-        point: newPointList,
+        point,
       },
       store,
     );
@@ -180,19 +181,24 @@ export class PointDrawer extends BaseDrawer<IPointDrawerOptions> {
     super.bindThis();
 
     this.onUnClick = this.onUnClick.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseOut = this.onMouseOut.bind(this);
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.onMouseMove = debounce(this.onMouseMove, 16, { maxWait: 16 }).bind(
+      this,
+    );
     this.onDragging = debounce(this.onDragging, 16, { maxWait: 16 }).bind(this);
   }
 
+  // 在基础disable的技术上，把所有点的状态取消
   disable() {
     super.disable();
 
-    this.setPointData((data) =>
+    this.dragPoint = null;
+    this.setData((data) =>
       data.map((feature) => {
-        feature.properties.isHover = feature.properties.isActive = false;
+        feature.properties.isHover = false;
+        feature.properties.isActive = false;
         return feature;
       }),
     );

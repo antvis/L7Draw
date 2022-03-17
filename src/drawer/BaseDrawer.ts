@@ -42,7 +42,7 @@ export abstract class BaseDrawer<
 
     this.scene = scene;
     this.options = merge({}, this.getDefaultOptions(), options ?? {});
-    this.render = this.getRender();
+    this.render = this.initRender();
     this.cursor = new Cursor(scene, this.options.cursor);
     this.source = new Source({
       render: this.render,
@@ -111,6 +111,7 @@ export abstract class BaseDrawer<
    */
   bindThis() {
     this.getData = this.getData.bind(this);
+    this.initRender = this.initRender.bind(this);
   }
 
   /**
@@ -125,7 +126,7 @@ export abstract class BaseDrawer<
   /**
    * 根据renderList实例化各个type的render
    */
-  getRender() {
+  initRender() {
     const render: IRenderMap = {};
     this.getRenderList()?.forEach((key) => {
       const Render = RENDER_TYPE_MAP[key];
