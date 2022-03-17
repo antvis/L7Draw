@@ -34,6 +34,7 @@ export interface IDrawFeatureOption extends IDrawOption {
   showDistance: boolean;
   showArea: boolean;
   cursor: string;
+  dragEnable: boolean;
 }
 export default abstract class DrawFeature extends DrawMode {
   // 绘制完成之后显示
@@ -44,6 +45,7 @@ export default abstract class DrawFeature extends DrawMode {
   public editEnable: boolean;
   public showDistance: boolean;
   public showArea: boolean;
+  public dragEnable: boolean;
 
   public selectEnable: boolean;
 
@@ -60,6 +62,7 @@ export default abstract class DrawFeature extends DrawMode {
     this.editEnable = this.getOption('editEnable');
     this.showDistance = this.getOption('showDistance');
     this.showArea = this.getOption('showArea');
+    this.dragEnable = this.getOption('dragEnable');
 
     // TODO：做DI改造
 
@@ -182,6 +185,7 @@ export default abstract class DrawFeature extends DrawMode {
       selectEnable: true,
       showFeature: true,
       enableCustomDraw: true,
+      dragEnable: true,
     };
   }
   protected abstract onDragStart(e: IInteractionTarget): void;
@@ -301,8 +305,9 @@ export default abstract class DrawFeature extends DrawMode {
 
   private onDrawMove = (delta: ILngLat) => {
     if (
-      this.drawStatus === 'DrawSelected' ||
-      this.drawStatus === 'DrawFinish'
+      (this.drawStatus === 'DrawSelected' ||
+        this.drawStatus === 'DrawFinish') &&
+      this.dragEnable
     ) {
       this.moveFeature(delta);
     }
