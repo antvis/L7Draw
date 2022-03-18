@@ -6,7 +6,7 @@ import {
   IRenderType,
   ISceneMouseEvent,
 } from '../typings';
-import { BaseDrawer } from './BaseDrawer';
+import { BaseDrawer } from './common/BaseDrawer';
 import { getUuid, isSameFeature } from '../utils';
 import { DrawerEvent } from '../constants';
 import { debounce } from 'lodash';
@@ -159,7 +159,6 @@ export class PointDrawer extends BaseDrawer<
       newData.push(newPoint);
       return newData;
     }, true);
-    this.setCursor('pointer');
     this.emit(DrawerEvent.add, newPoint, this.getData());
   }
 

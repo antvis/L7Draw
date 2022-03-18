@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import { merge } from 'lodash';
 import { Scene } from '@antv/l7';
-import { Source } from '../source';
+import { Source } from '../../source';
 import nextTick from 'next-tick';
 import {
   DeepPartial,
@@ -10,15 +10,15 @@ import {
   IDrawerOptions,
   IRenderType,
   IRenderMap,
-} from '../typings';
+} from '../../typings';
 import {
   DEFAULT_CURSOR_MAP,
   DEFAULT_DRAWER_STYLE,
   DrawerEvent,
   RENDER_TYPE_MAP,
   SourceEvent,
-} from '../constants';
-import { Cursor } from '../utils';
+} from '../../constants';
+import { Cursor } from '../../utils';
 
 export abstract class BaseDrawer<
   T extends IDrawerOptions,

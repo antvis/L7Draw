@@ -4,13 +4,13 @@ import {
   ILineFeature,
   IRenderType,
 } from '../typings';
-import { BaseDrawer } from './BaseDrawer';
+import { BaseDrawer } from './common/BaseDrawer';
 import { Scene } from '@antv/l7';
 import { PointDrawer } from './PointDrawer';
 
 export interface ILineDrawerOptions extends IDrawerOptions {}
 
-export class LineDrawer extends BaseDrawer<ILineDrawerOptions> {
+export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
   pointDrawer: PointDrawer;
   // midPointDrawer: PointDrawer;
 
@@ -18,7 +18,6 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions> {
     super(scene, options);
 
     this.pointDrawer = new PointDrawer(scene, options);
-    // this.midPointDrawer = new PointDrawer(scene, options);
   }
 
   getData(): ILineFeature[] {
@@ -39,17 +38,20 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions> {
     super.enable();
 
     this.pointDrawer.enable();
-    // this.midPointDrawer.enable();
   }
 
   disable() {
     super.disable();
 
     this.pointDrawer.disable();
-    // this.midPointDrawer.disable();
   }
 
   bindEvent() {}
 
   unbindEvent() {}
+
+  setData(
+    updater: ILineFeature[] | ((_: ILineFeature[]) => ILineFeature[]),
+    store = false,
+  ) {}
 }
