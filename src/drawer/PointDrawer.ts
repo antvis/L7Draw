@@ -20,15 +20,7 @@ export class PointDrawer extends BaseDrawer<
   dragPoint?: IPointFeature | null;
 
   get normalLayer() {
-    return this.render.point?.normalLayer;
-  }
-
-  get hoverLayer() {
-    return this.render.point?.hoverLayer;
-  }
-
-  get activeLayer() {
-    return this.render.point?.activeLayer;
+    return this.source.render.point?.layers[0];
   }
 
   getRenderList(): IRenderType[] {
@@ -40,36 +32,22 @@ export class PointDrawer extends BaseDrawer<
   }
 
   bindEvent(): void {
-    this.activeLayer?.on('unclick', this.onUnClick);
-
-    [this.normalLayer, this.hoverLayer, this.activeLayer].forEach(layer => {
-      layer?.on('mousemove', this.onMouseMove);
-    });
-    [this.hoverLayer, this.activeLayer].forEach(layer => {
-      layer?.on('mouseout', this.onMouseOut);
-    });
+    this.normalLayer?.on('unclick', this.onUnClick);
+    this.normalLayer?.on('mousemove', this.onMouseMove);
+    this.normalLayer?.on('mouseout', this.onMouseOut);
     if (this.options.editable) {
-      [this.hoverLayer, this.activeLayer].forEach(layer => {
-        layer?.on('mousedown', this.onDragStart);
-      });
+      this.normalLayer?.on('mousedown', this.onDragStart);
       this.scene.on('dragging', this.onDragging);
       this.scene.on('dragend', this.onDragEnd);
     }
   }
 
   unbindEvent(): void {
-    this.activeLayer?.off('unclick', this.onUnClick);
-
-    [this.normalLayer, this.hoverLayer, this.activeLayer].forEach(layer => {
-      layer?.off('mousemove', this.onMouseMove);
-    });
-    [this.hoverLayer, this.activeLayer].forEach(layer => {
-      layer?.off('mouseout', this.onMouseOut);
-    });
+    this.normalLayer?.off('unclick', this.onUnClick);
+    this.normalLayer?.off('mousemove', this.onMouseMove);
+    this.normalLayer?.off('mouseout', this.onMouseOut);
     if (this.options.editable) {
-      [this.hoverLayer, this.activeLayer].forEach(layer => {
-        layer?.off('mousedown', this.onDragStart);
-      });
+      this.normalLayer?.off('mousedown', this.onDragStart);
       this.scene.off('dragging', this.onDragging);
       this.scene.off('dragend', this.onDragEnd);
     }
