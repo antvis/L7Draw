@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Scene } from '@antv/l7';
+import { ILayer, Scene } from '@antv/l7';
 import { GaodeMap } from '@antv/l7-maps';
 import { useEffect } from 'react';
 import { Button } from 'antd';
@@ -39,6 +39,9 @@ const Demo: React.FC = () => {
               ...overwriteStyle,
               size: 18,
               color: '#ffff00',
+            },
+            callback: (layers: ILayer[]) => {
+              console.log(layers);
             },
           },
         },

@@ -5,7 +5,7 @@ import { featureCollection } from '@turf/turf';
 
 export abstract class BaseRender<
   F extends IBaseFeature = IBaseFeature,
-  S extends IBaseStyleItem = IBaseStyleItem,
+  S extends IBaseStyleItem = IBaseStyleItem
 > extends EventEmitter {
   layers: ILayer[] = [];
   style: S;
@@ -20,15 +20,19 @@ export abstract class BaseRender<
     this.style = style;
     this.layers = this.initLayers();
 
-    this.layers.forEach((layer) => {
+    this.layers.forEach(layer => {
       this.scene.addLayer(layer);
     });
+
+    if (typeof style.callback === 'function') {
+      style.callback(this.layers);
+    }
   }
 
   abstract initLayers(): ILayer[];
 
   setData(features: IBaseFeature[]) {
-    this.layers.forEach((layer) => {
+    this.layers.forEach(layer => {
       layer.setData(featureCollection(features));
     });
   }

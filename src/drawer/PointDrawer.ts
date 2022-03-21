@@ -61,9 +61,11 @@ export class PointDrawer extends BaseDrawer<
     } else {
       this.setCursor('pointer');
 
-      this.setData((data) =>
-        data.map((feature) => {
-          feature.properties.isHover = isSameFeature(feature, e.feature);
+      this.setData(data =>
+        data.map(feature => {
+          if (feature.properties) {
+            feature.properties.isHover = isSameFeature(feature, e.feature);
+          }
           return feature;
         }),
       );
@@ -74,9 +76,11 @@ export class PointDrawer extends BaseDrawer<
     this.setCursor('draw');
 
     if (!this.dragPoint) {
-      this.setData((data) =>
-        data.map((feature) => {
-          feature.properties.isHover = false;
+      this.setData(data =>
+        data.map(feature => {
+          if (feature.properties) {
+            feature.properties.isHover = false;
+          }
           return feature;
         }),
       );
@@ -87,13 +91,15 @@ export class PointDrawer extends BaseDrawer<
     const currentFeature = e.feature;
 
     this.setData(
-      (data) =>
-        data.map((feature) => {
+      data =>
+        data.map(feature => {
           if (currentFeature) {
-            feature.properties.isActive = isSameFeature(
-              currentFeature,
-              feature,
-            );
+            if (feature.properties) {
+              feature.properties.isActive = isSameFeature(
+                currentFeature,
+                feature,
+              );
+            }
           }
           return feature;
         }),
@@ -108,11 +114,13 @@ export class PointDrawer extends BaseDrawer<
 
   onDragging(e: ILayerMouseEvent<ISceneMouseEvent>) {
     if (this.dragPoint) {
-      this.setData((data) =>
-        data.map((feature) => {
+      this.setData(data =>
+        data.map(feature => {
           if (isSameFeature(this.dragPoint, feature)) {
             const { lng, lat } = e.lngLat;
-            feature.geometry.coordinates = [lng, lat];
+            if (feature.geometry) {
+              feature.geometry.coordinates = [lng, lat];
+            }
           }
           return feature;
         }),
@@ -124,11 +132,13 @@ export class PointDrawer extends BaseDrawer<
 
   onDragEnd(e: ILayerMouseEvent<ISceneMouseEvent>) {
     this.setData(
-      (data) =>
-        data.map((feature) => {
+      data =>
+        data.map(feature => {
           if (isSameFeature(this.dragPoint, feature)) {
             const { lng, lat } = e.lngLat;
-            feature.geometry.coordinates = [lng, lat];
+            if (feature.geometry) {
+              feature.geometry.coordinates = [lng, lat];
+            }
           }
           return feature;
         }),
@@ -150,10 +160,12 @@ export class PointDrawer extends BaseDrawer<
       isHover: true,
       isActive: true,
     });
-    this.setData((data) => {
-      const newData = data.map((feature) => {
-        feature.properties.isActive = false;
-        feature.properties.isHover = false;
+    this.setData(data => {
+      const newData = data.map(feature => {
+        if (feature.properties) {
+          feature.properties.isActive = false;
+          feature.properties.isHover = false;
+        }
         return feature;
       });
       newData.push(newPoint);
@@ -198,10 +210,12 @@ export class PointDrawer extends BaseDrawer<
     super.disable();
 
     this.dragPoint = null;
-    this.setData((data) =>
-      data.map((feature) => {
-        feature.properties.isHover = false;
-        feature.properties.isActive = false;
+    this.setData(data =>
+      data.map(feature => {
+        if (feature.properties) {
+          feature.properties.isHover = false;
+          feature.properties.isActive = false;
+        }
         return feature;
       }),
     );

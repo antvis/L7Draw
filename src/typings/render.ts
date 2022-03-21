@@ -6,6 +6,7 @@ import {
   GeometryObject,
   Position,
 } from '@turf/turf';
+import { ILayer } from '@antv/l7';
 
 export type IRenderType = 'point' | 'line' | 'polygon' | 'midPoint';
 
@@ -17,6 +18,8 @@ export interface IBaseStyleItem<P extends IBaseStyle = IBaseStyle> {
   normal: P;
   hover: P;
   active: P;
+
+  callback?: (layers: ILayer[]) => void; // 初始化图层之后的回调
 }
 
 export interface IPointStyleItem extends IBaseStyle {
@@ -58,7 +61,7 @@ export interface IBaseProperties {
 
 export type IBaseFeature<
   T extends GeometryObject = GeometryObject,
-  P extends IBaseProperties = IBaseProperties,
+  P extends IBaseProperties = IBaseProperties
 > = Feature<T, P>;
 
 // ------------
@@ -82,17 +85,19 @@ export interface IPolygonProperties extends IBaseProperties {
   nodes: Position[];
 }
 
-export type IPolygonFeature<P extends IBaseProperties = IBaseProperties> =
-  IBaseFeature<Polygon, P>;
+export type IPolygonFeature<
+  P extends IBaseProperties = IBaseProperties
+> = IBaseFeature<Polygon, P>;
 
-export type IMidPointFeature<P extends IBaseProperties = IBaseProperties> =
-  IBaseFeature<Point, P>;
+export type IMidPointFeature<
+  P extends IBaseProperties = IBaseProperties
+> = IBaseFeature<Point, P>;
 
 // ------------
 
 export interface IRenderOptions<
   D extends IBaseFeature,
-  S extends IBaseStyleItem,
+  S extends IBaseStyleItem
 > {
   style: S;
 }
