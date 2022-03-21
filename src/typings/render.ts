@@ -10,11 +10,11 @@ import { ILayer } from '@antv/l7';
 
 export type IRenderType = 'point' | 'line' | 'polygon' | 'midPoint';
 
-export interface IBaseStyle {
+export interface IBaseStyleItem {
   color: string;
 }
 
-export interface IBaseStyleItem<P extends IBaseStyle = IBaseStyle> {
+export interface IBaseStyle<P extends IBaseStyleItem = IBaseStyleItem> {
   normal: P;
   hover: P;
   active: P;
@@ -22,29 +22,30 @@ export interface IBaseStyleItem<P extends IBaseStyle = IBaseStyle> {
   callback?: (layers: ILayer[]) => void; // 初始化图层之后的回调
 }
 
-export interface IPointStyleItem extends IBaseStyle {
+export interface IPointStyleItem extends IBaseStyleItem {
   shape: string;
   size: number;
   borderWidth: number;
   borderColor: string;
 }
 
-export type IPointStyle = IBaseStyleItem<IPointStyleItem>;
+export type IPointStyle = IBaseStyle<IPointStyleItem>;
 
-export interface ILineStyleItem extends IBaseStyle {
+export interface ILineStyleItem extends IBaseStyleItem {
   size: number;
   dashed: boolean;
+  shape: string;
 }
 
-export type ILineStyle = IBaseStyleItem<ILineStyleItem>;
+export type ILineStyle = IBaseStyle<ILineStyleItem>;
 
-export interface IPolygonStyleItem extends IBaseStyle {}
+export interface IPolygonStyleItem extends IBaseStyleItem {}
 
-export type IPolygonStyle = IBaseStyleItem<IPolygonStyleItem>;
+export type IPolygonStyle = IBaseStyle<IPolygonStyleItem>;
 
 export interface IMidPointStyleItem extends IPointStyleItem {}
 
-export type IMidPointStyle = IBaseStyleItem<IMidPointStyleItem>;
+export type IMidPointStyle = IBaseStyle<IMidPointStyleItem>;
 
 export interface IStyle {
   point: IPointStyle;
@@ -97,7 +98,7 @@ export type IMidPointFeature<
 
 export interface IRenderOptions<
   D extends IBaseFeature,
-  S extends IBaseStyleItem
+  S extends IBaseStyle
 > {
   style: S;
 }

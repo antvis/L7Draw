@@ -30,6 +30,7 @@ const Demo: React.FC = () => {
       <div style={{ padding: 8 }}>
         <Button onClick={() => pointDrawer?.enable()}>启用</Button>
         <Button onClick={() => pointDrawer?.disable()}>禁用</Button>
+        <Button onClick={() => pointDrawer?.clear()}>清空</Button>
       </div>
       <div id="map" style={{ height: 400, position: 'relative' }} />
     </div>

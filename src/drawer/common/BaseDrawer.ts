@@ -110,6 +110,22 @@ export abstract class BaseDrawer<
   }
 
   /**
+   * 清空所有数据
+   */
+  clear(disable = false) {
+    this.source.setData({
+      point: [],
+      line: [],
+      polygon: [],
+      midPoint: [],
+    });
+
+    if (disable) {
+      this.disable();
+    }
+  }
+
+  /**
    * 将当前所有的回调函数与this进行绑定
    */
   bindThis() {

@@ -1,18 +1,25 @@
 import EventEmitter from 'eventemitter3';
-import { IBaseFeature, IRenderOptions, IBaseStyleItem } from '../typings';
+import {
+  IBaseFeature,
+  IRenderOptions,
+  IBaseStyle,
+  IBaseStyleItem,
+} from '../typings';
 import { ILayer, Scene } from '@antv/l7';
-import { featureCollection } from '@turf/turf';
+import { feature, featureCollection } from '@turf/turf';
+import { groupBy } from 'lodash';
 
 export abstract class BaseRender<
   F extends IBaseFeature = IBaseFeature,
-  S extends IBaseStyleItem = IBaseStyleItem
+  S extends IBaseStyle = IBaseStyle
 > extends EventEmitter {
   layers: ILayer[] = [];
   style: S;
   scene: Scene;
-  get mainLayer() {
-    return this.layers[0] ?? null;
-  }
+
+  normalLayer!: ILayer;
+  hoverLayer!: ILayer;
+  activeLayer!: ILayer;
 
   constructor(scene: Scene, { style }: IRenderOptions<F, S>) {
     super();
@@ -29,11 +36,26 @@ export abstract class BaseRender<
     }
   }
 
-  abstract initLayers(): ILayer[];
+  initLayers() {
+    const { normal, hover, active } = this.style;
+    this.normalLayer = this.initLayer(normal);
+    this.hoverLayer = this.initLayer(hover);
+    this.activeLayer = this.initLayer(active);
+    return [this.normalLayer, this.hoverLayer, this.activeLayer];
+  }
+
+  abstract initLayer(style: IBaseStyleItem): ILayer;
 
   setData(features: IBaseFeature[]) {
-    this.layers.forEach(layer => {
-      layer.setData(featureCollection(features));
-    });
+    const { normal = [], hover = [], active = [] } = groupBy(
+      features,
+      feature => {
+        const { isHover = false, isActive = false } = feature.properties ?? {};
+        return isActive ? 'active' : isHover ? 'hover' : 'normal';
+      },
+    );
+    this.normalLayer.setData(featureCollection(normal));
+    this.hoverLayer.setData(featureCollection(hover));
+    this.activeLayer.setData(featureCollection(active));
   }
 }

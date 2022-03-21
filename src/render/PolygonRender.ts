@@ -1,10 +1,10 @@
 import { BaseRender } from './BaseRender';
-import { IPolygonFeature, IPolygonStyle } from '../typings';
-import { ILayer } from '@antv/l7';
-import { featureCollection } from '@turf/turf';
+import { IPolygonFeature, IPolygonStyle, IPolygonStyleItem } from '../typings';
+import { ILayer, PolygonLayer } from '@antv/l7';
 
 export class PolygonRender extends BaseRender<IPolygonFeature, IPolygonStyle> {
-  initLayers(): ILayer[] {
-    return [];
+  initLayer(style: IPolygonStyleItem): ILayer {
+    const polygonLayer = new PolygonLayer();
+    return polygonLayer;
   }
 }

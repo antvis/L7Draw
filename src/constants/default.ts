@@ -49,16 +49,19 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
     normal: {
       color: ACTIVE_COLOR,
       size: 2,
+      shape: 'line',
       dashed: false,
     },
     hover: {
       color: ACTIVE_COLOR,
       size: 2,
+      shape: 'line',
       dashed: false,
     },
     active: {
       color: ACTIVE_COLOR,
       size: 2,
+      shape: 'line',
       dashed: false,
     },
   },
@@ -88,7 +91,10 @@ export const DEFAULT_CURSOR_MAP: ICursor = {
 
 export const RENDER_TYPE_MAP: Record<
   IRenderType,
-  typeof PolygonRender | typeof LineRender | typeof PointRender
+  | typeof PolygonRender
+  | typeof LineRender
+  | typeof PointRender
+  | typeof PointRender
 > = {
   point: PointRender,
   line: LineRender,
