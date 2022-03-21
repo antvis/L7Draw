@@ -28,9 +28,7 @@ export class PointDrawer extends BaseDrawer<
   }
 
   getDefaultOptions(): IPointDrawerOptions {
-    return {
-      ...this.getCommonOptions(),
-    };
+    return this.getCommonOptions();
   }
 
   bindEvent(): void {

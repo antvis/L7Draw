@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3';
-import { merge } from 'lodash';
+import { cloneDeep, merge } from 'lodash';
 import { Scene } from '@antv/l7';
 import { Source } from '../../source';
 import nextTick from 'next-tick';
@@ -22,7 +22,7 @@ import { Cursor } from '../../utils';
 
 export abstract class BaseDrawer<
   T extends IDrawerOptions,
-  F extends IBaseFeature,
+  F extends IBaseFeature
 > extends EventEmitter<DrawerEvent> {
   scene: Scene;
 
@@ -82,11 +82,11 @@ export abstract class BaseDrawer<
    * 获取默认通用options配置项
    */
   getCommonOptions(): IDrawerOptions {
-    return {
+    return cloneDeep({
       style: DEFAULT_DRAWER_STYLE,
       cursor: DEFAULT_CURSOR_MAP,
       editable: true,
-    };
+    });
   }
 
   /**
@@ -131,7 +131,7 @@ export abstract class BaseDrawer<
    */
   initRender() {
     const render: IRenderMap = {};
-    this.getRenderList()?.forEach((key) => {
+    this.getRenderList()?.forEach(key => {
       const Render = RENDER_TYPE_MAP[key];
       const style = this.options.style[key];
       // @ts-ignore
