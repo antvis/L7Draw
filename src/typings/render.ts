@@ -58,6 +58,7 @@ export interface IBaseProperties {
   id: string;
   isHover: boolean;
   isActive: boolean;
+  isDrag: boolean;
 }
 
 export type IBaseFeature<

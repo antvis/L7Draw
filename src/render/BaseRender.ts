@@ -3,11 +3,9 @@ import {
   IBaseFeature,
   IRenderOptions,
   IBaseStyle,
-  IBaseStyleItem,
 } from '../typings';
 import { ILayer, Scene } from '@antv/l7';
-import { feature, featureCollection } from '@turf/turf';
-import { groupBy } from 'lodash';
+import { featureCollection } from '@turf/turf';
 
 export abstract class BaseRender<
   F extends IBaseFeature = IBaseFeature,
@@ -16,6 +14,7 @@ export abstract class BaseRender<
   layers: ILayer[] = [];
   style: S;
   scene: Scene;
+  data: F[] = [];
 
   constructor(scene: Scene, { style }: IRenderOptions<F, S>) {
     super();
@@ -34,7 +33,8 @@ export abstract class BaseRender<
 
   abstract initLayers(): ILayer[];
 
-  setData(features: IBaseFeature[]) {
+  setData(features: F[]) {
+    this.data = features;
     const newData = featureCollection(features);
     this.layers.forEach(layer => {
       layer.setData(newData);

@@ -17,7 +17,24 @@ export class PointDrawer extends BaseDrawer<
   IPointDrawerOptions,
   IPointFeature
 > {
-  dragPoint?: IPointFeature | null;
+  get dragPoint() {
+    const pointFeatures = this.source.render.point?.data as
+      | IPointFeature[]
+      | null;
+    return pointFeatures?.find(feature => feature.properties?.isDrag) ?? null;
+  }
+
+  set dragPoint(dragFeature: IPointFeature | null) {
+    const pointRender = this.source.render.point;
+    pointRender?.setData(
+      pointRender?.data.map(feature => {
+        if (feature.properties) {
+          feature.properties.isDrag = isSameFeature(feature, dragFeature);
+        }
+        return feature;
+      }) ?? [],
+    );
+  }
 
   get normalLayer() {
     return this.source.render.point?.layers[0];
@@ -86,7 +103,7 @@ export class PointDrawer extends BaseDrawer<
   }
 
   onDragStart(e: ILayerMouseEvent<IPointFeature>) {
-    const currentFeature = e.feature;
+    const currentFeature = e.feature ?? null;
 
     this.setData(
       data =>
@@ -157,6 +174,7 @@ export class PointDrawer extends BaseDrawer<
       id: getUuid('point'),
       isHover: true,
       isActive: true,
+      isDrag: false,
     });
     this.setData(data => {
       const newData = data.map(feature => {
