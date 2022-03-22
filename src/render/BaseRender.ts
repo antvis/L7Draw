@@ -17,10 +17,6 @@ export abstract class BaseRender<
   style: S;
   scene: Scene;
 
-  normalLayer!: ILayer;
-  hoverLayer!: ILayer;
-  activeLayer!: ILayer;
-
   constructor(scene: Scene, { style }: IRenderOptions<F, S>) {
     super();
     this.scene = scene;
@@ -36,26 +32,12 @@ export abstract class BaseRender<
     }
   }
 
-  initLayers() {
-    const { normal, hover, active } = this.style;
-    this.normalLayer = this.initLayer(normal);
-    this.hoverLayer = this.initLayer(hover);
-    this.activeLayer = this.initLayer(active);
-    return [this.normalLayer, this.hoverLayer, this.activeLayer];
-  }
-
-  abstract initLayer(style: IBaseStyleItem): ILayer;
+  abstract initLayers(): ILayer[];
 
   setData(features: IBaseFeature[]) {
-    const { normal = [], hover = [], active = [] } = groupBy(
-      features,
-      feature => {
-        const { isHover = false, isActive = false } = feature.properties ?? {};
-        return isActive ? 'active' : isHover ? 'hover' : 'normal';
-      },
-    );
-    this.normalLayer.setData(featureCollection(normal));
-    this.hoverLayer.setData(featureCollection(hover));
-    this.activeLayer.setData(featureCollection(active));
+    const newData = featureCollection(features);
+    this.layers.forEach(layer => {
+      layer.setData(newData);
+    });
   }
 }
