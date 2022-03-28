@@ -7,12 +7,12 @@ import {
   ISceneMouseEvent,
 } from '../typings';
 import { BaseDrawer } from './BaseDrawer';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, debounce, last } from 'lodash';
 import { DEFAULT_NODE_STYLE, DrawerEvent } from '../constants';
 import { Scene } from '@antv/l7';
 import { NodeDrawer } from './NodeDrawer';
-import { getUuid, isSameFeature } from '../utils';
-import { coordAll, lineString } from '@turf/turf';
+import { getUuid, isSameFeature, lineString } from '../utils';
+import { coordAll, Position } from '@turf/turf';
 
 export interface ILineDrawerOptions extends IDrawerOptions {}
 
@@ -83,14 +83,16 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
   }
 
   onMouseMove(e: ISceneMouseEvent) {
-    // if (!this.nodes.length) {
-    //   return;
-    // }
-    // console.log(this);
+    if (this.editLine?.geometry?.coordinates.length) {
+      const lastPoint = last(this.editLine?.geometry?.coordinates) as Position;
+      const { lng, lat } = e.lnglat;
+      this.source.setData({
+        dashLine: [lineString([[lng, lat], lastPoint])],
+      });
+    }
   }
 
   onNodeCreate(e: IPointFeature) {
-    console.log(coordAll(e));
     // 首次创建节点，创建线路
     if (this.nodes.length === 1) {
       const newLine: ILineFeature = lineString(coordAll(e), {
@@ -101,6 +103,13 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
       });
       this.setData(data => [...data, newLine]);
       this.emit(DrawerEvent.add, newLine, this.getData());
+    } else {
+      const editLine = this.editLine;
+      if (editLine?.geometry && e.geometry) {
+        editLine.geometry.coordinates.push(e.geometry.coordinates);
+        this.setData(data => data);
+        this.emit(DrawerEvent.change, editLine, this.getData());
+      }
     }
   }
 
@@ -116,7 +125,9 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
 
   bindThis() {
     super.bindThis();
-    this.onMouseMove = this.onMouseMove.bind(this);
+    this.onMouseMove = debounce(this.onMouseMove, 16, { maxWait: 16 }).bind(
+      this,
+    );
     this.onNodeCreate = this.onNodeCreate.bind(this);
   }
 

@@ -38,10 +38,11 @@ export type IPointStyle = IBaseStyle<IPointStyleItem>;
 
 export interface ILineStyleItem extends IBaseStyleItem {
   size: number;
-  dash: boolean;
 }
 
-export type ILineStyle = IBaseStyle<ILineStyleItem>;
+export type ILineStyle = IBaseStyle<ILineStyleItem> & {
+  dash: boolean;
+};
 
 export interface IPolygonStyleItem extends IBaseStyleItem {}
 
