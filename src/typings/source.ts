@@ -11,6 +11,7 @@ export interface ISourceData {
   line: ILineFeature[];
   polygon: IPolygonFeature[];
   midPoint: IMidPointFeature[];
+  dashLine: ILineFeature[];
 }
 
 export type IRenderMap = {
@@ -18,6 +19,7 @@ export type IRenderMap = {
   line?: LineRender;
   polygon?: PolygonRender;
   midPoint?: PointRender;
+  dashLine?: LineRender;
 };
 
 export interface ISourceOptions {

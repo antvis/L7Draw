@@ -17,6 +17,7 @@ export class Source extends EventEmitter<SourceEvent> {
     line: [],
     polygon: [],
     midPoint: [],
+    dashLine: [],
   };
 
   // 渲染器对象
@@ -54,9 +55,10 @@ export class Source extends EventEmitter<SourceEvent> {
         ...newData,
       };
 
-      renderTypes.forEach((renderType) => {
+      renderTypes.forEach(renderType => {
         const renderData = newData[renderType];
         if (Array.isArray(renderData)) {
+          // @ts-ignore
           this.getRender(renderType).setData(renderData);
         }
       });

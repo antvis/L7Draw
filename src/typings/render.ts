@@ -8,7 +8,12 @@ import {
 } from '@turf/turf';
 import { ILayer } from '@antv/l7';
 
-export type IRenderType = 'point' | 'line' | 'polygon' | 'midPoint';
+export type IRenderType =
+  | 'point'
+  | 'line'
+  | 'polygon'
+  | 'midPoint'
+  | 'dashLine';
 
 export interface IBaseStyleItem {
   color: string;
@@ -33,8 +38,7 @@ export type IPointStyle = IBaseStyle<IPointStyleItem>;
 
 export interface ILineStyleItem extends IBaseStyleItem {
   size: number;
-  dashed: boolean;
-  shape: string;
+  dash: boolean;
 }
 
 export type ILineStyle = IBaseStyle<ILineStyleItem>;
@@ -52,6 +56,7 @@ export interface IStyle {
   line: ILineStyle;
   polygon: IPolygonStyle;
   midPoint: IMidPointStyle;
+  dashLine: ILineStyle;
 }
 
 export interface IBaseProperties {
@@ -74,10 +79,7 @@ export type IPointFeature = IBaseFeature<Point, IPointProperties>;
 
 // ------------
 
-export interface ILineProperties extends IBaseProperties {
-  pointIds: string[];
-  isDrawing: boolean;
-}
+export interface ILineProperties extends IBaseProperties {}
 
 export type ILineFeature = IBaseFeature<LineString, ILineProperties>;
 
@@ -97,9 +99,6 @@ export type IMidPointFeature<
 
 // ------------
 
-export interface IRenderOptions<
-  D extends IBaseFeature,
-  S extends IBaseStyle
-> {
+export interface IRenderOptions<D extends IBaseFeature, S extends IBaseStyle> {
   style: S;
 }

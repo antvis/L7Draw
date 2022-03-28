@@ -1,7 +1,7 @@
 import {
   ICursor,
-  IMidPointStyle,
   IMidPointStyleItem,
+  IPointStyle,
   IPointStyleItem,
   IRenderType,
   IStyle,
@@ -39,6 +39,15 @@ export const DEFAULT_MID_POINT_STYLE: IMidPointStyleItem = {
   borderWidth: 1,
 };
 
+export const DEFAULT_NODE_STYLE: IPointStyle = {
+  normal: {
+    ...DEFAULT_POINT_NORMAL_STYLE,
+    color: ACTIVE_COLOR,
+  },
+  hover: DEFAULT_POINT_HOVER_STYLE,
+  active: DEFAULT_POINT_ACTIVE_STYLE,
+};
+
 export const DEFAULT_DRAWER_STYLE: IStyle = {
   point: {
     normal: DEFAULT_POINT_NORMAL_STYLE,
@@ -47,22 +56,19 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
   },
   line: {
     normal: {
-      color: ACTIVE_COLOR,
+      color: DEFAULT_COLOR,
       size: 2,
-      shape: 'line',
-      dashed: false,
+      dash: false,
     },
     hover: {
-      color: ACTIVE_COLOR,
+      color: DEFAULT_COLOR,
       size: 2,
-      shape: 'line',
-      dashed: false,
+      dash: false,
     },
     active: {
       color: ACTIVE_COLOR,
       size: 2,
-      shape: 'line',
-      dashed: false,
+      dash: false,
     },
   },
   polygon: {
@@ -81,6 +87,23 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
     hover: DEFAULT_MID_POINT_STYLE,
     active: DEFAULT_MID_POINT_STYLE,
   },
+  dashLine: {
+    normal: {
+      color: ACTIVE_COLOR,
+      size: 2,
+      dash: true,
+    },
+    hover: {
+      color: ACTIVE_COLOR,
+      size: 2,
+      dash: false,
+    },
+    active: {
+      color: ACTIVE_COLOR,
+      size: 2,
+      dash: false,
+    },
+  },
 };
 
 export const DEFAULT_CURSOR_MAP: ICursor = {
@@ -91,13 +114,11 @@ export const DEFAULT_CURSOR_MAP: ICursor = {
 
 export const RENDER_TYPE_MAP: Record<
   IRenderType,
-  | typeof PolygonRender
-  | typeof LineRender
-  | typeof PointRender
-  | typeof PointRender
+  typeof PolygonRender | typeof LineRender | typeof PointRender
 > = {
   point: PointRender,
   line: LineRender,
   polygon: PolygonRender,
   midPoint: PointRender,
+  dashLine: LineRender,
 };
