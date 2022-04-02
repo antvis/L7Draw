@@ -52,26 +52,22 @@ export class NodeDrawer<
     this.normalLayer?.on('unclick', this.onUnClick);
     this.normalLayer?.on('mousemove', this.onMouseMove);
     this.normalLayer?.on('mouseout', this.onMouseOut);
-    if (this.options.editable) {
-      this.normalLayer?.on('mousedown', this.onDragStart);
-      this.scene.on('dragging', this.onDragging);
-      this.scene.on('dragend', this.onDragEnd);
-    }
+    this.normalLayer?.on('mousedown', this.onDragStart);
+    this.scene.on('dragging', this.onDragging);
+    this.scene.on('dragend', this.onDragEnd);
   }
 
   unbindEvent(): void {
     this.normalLayer?.off('unclick', this.onUnClick);
     this.normalLayer?.off('mousemove', this.onMouseMove);
     this.normalLayer?.off('mouseout', this.onMouseOut);
-    if (this.options.editable) {
-      this.normalLayer?.off('mousedown', this.onDragStart);
-      this.scene.off('dragging', this.onDragging);
-      this.scene.off('dragend', this.onDragEnd);
-    }
+    this.normalLayer?.off('mousedown', this.onDragStart);
+    this.scene.off('dragging', this.onDragging);
+    this.scene.off('dragend', this.onDragEnd);
   }
 
   onMouseMove(e: ILayerMouseEvent<IPointFeature>) {
-    if (this.dragPoint) {
+    if (this.dragPoint && this.options.editable) {
       this.setCursor('move');
     } else {
       this.setCursor('pointer');
@@ -120,15 +116,20 @@ export class NodeDrawer<
         }),
       true,
     );
-    this.scene.setMapStatus({
-      dragEnable: false,
-    });
-    this.dragPoint = currentFeature;
-    this.setCursor('move');
+
+    if (this.options.editable) {
+      this.scene.setMapStatus({
+        dragEnable: false,
+      });
+      this.dragPoint = currentFeature;
+      this.setCursor('move');
+    }
+
+    this.emit(DrawerEvent.click, currentFeature, this.getData());
   }
 
   onDragging(e: ILayerMouseEvent<ISceneMouseEvent>) {
-    if (this.dragPoint) {
+    if (this.dragPoint && this.options.editable) {
       this.setData(data =>
         data.map(feature => {
           if (isSameFeature(this.dragPoint, feature)) {
@@ -146,26 +147,28 @@ export class NodeDrawer<
   }
 
   onDragEnd(e: ILayerMouseEvent<ISceneMouseEvent>) {
-    this.setData(
-      data =>
-        data.map(feature => {
-          if (isSameFeature(this.dragPoint, feature)) {
-            const { lng, lat } = e.lngLat;
-            if (feature.geometry) {
-              feature.geometry.coordinates = [lng, lat];
+    if (this.options.editable) {
+      this.setData(
+        data =>
+          data.map(feature => {
+            if (isSameFeature(this.dragPoint, feature)) {
+              const { lng, lat } = e.lngLat;
+              if (feature.geometry) {
+                feature.geometry.coordinates = [lng, lat];
+              }
             }
-          }
-          return feature;
-        }),
-      true,
-    );
-    this.scene.setMapStatus({
-      dragEnable: true,
-    });
-    const editPoint = this.dragPoint;
-    this.dragPoint = null;
-    this.setCursor('pointer');
-    this.emit(DrawerEvent.dragEnd, editPoint, this.getData());
+            return feature;
+          }),
+        true,
+      );
+      this.scene.setMapStatus({
+        dragEnable: true,
+      });
+      const editPoint = this.dragPoint;
+      this.dragPoint = null;
+      this.setCursor('pointer');
+      this.emit(DrawerEvent.dragEnd, editPoint, this.getData());
+    }
   }
 
   onUnClick(e: ILayerMouseEvent<IPointFeature>) {
@@ -216,7 +219,9 @@ export class NodeDrawer<
     this.onMouseOut = this.onMouseOut.bind(this);
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
+    this.onMouseMove = debounce(this.onMouseMove, 16, { maxWait: 16 }).bind(
+      this,
+    );
     this.onDragging = debounce(this.onDragging, 16, { maxWait: 16 }).bind(this);
   }
 

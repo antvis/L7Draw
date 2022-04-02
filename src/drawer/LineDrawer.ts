@@ -1,6 +1,7 @@
 import {
   DeepPartial,
   IDrawerOptions,
+  ILayerMouseEvent,
   ILineFeature,
   IPointFeature,
   IRenderType,
@@ -111,16 +112,25 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
         this.emit(DrawerEvent.change, editLine, this.getData());
       }
     }
+    this.nodeDrawer.options.editable = false;
+  }
+
+  onNodeClick(nodeFeature: IPointFeature) {
+    if (isSameFeature(last(this.nodes), nodeFeature)) {
+    } else {
+    }
   }
 
   bindEvent() {
     this.scene.on('mousemove', this.onMouseMove);
     this.nodeDrawer.on(DrawerEvent.add, this.onNodeCreate);
+    this.nodeDrawer?.on(DrawerEvent.click, this.onNodeClick);
   }
 
   unbindEvent() {
     this.scene.off('mousemove', this.onMouseMove);
     this.nodeDrawer.off(DrawerEvent.add, this.onNodeCreate);
+    this.nodeDrawer?.off(DrawerEvent.click, this.onNodeClick);
   }
 
   bindThis() {
@@ -129,6 +139,7 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
       this,
     );
     this.onNodeCreate = this.onNodeCreate.bind(this);
+    this.onNodeClick = this.onNodeClick.bind(this);
   }
 
   enable() {

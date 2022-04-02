@@ -7,6 +7,7 @@ export enum DrawerEvent {
   dragging = 'dragging',
   dragEnd = 'dragEnd',
   change = 'change',
+  click = 'click',
 }
 
 export enum SourceEvent {

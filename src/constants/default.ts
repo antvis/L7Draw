@@ -45,10 +45,13 @@ export const DEFAULT_NODE_STYLE: IPointStyle = {
     color: ACTIVE_COLOR,
   },
   hover: {
-    ...DEFAULT_POINT_HOVER_STYLE,
+    ...DEFAULT_POINT_NORMAL_STYLE,
     color: ACTIVE_COLOR,
   },
-  active: DEFAULT_POINT_ACTIVE_STYLE,
+  active: {
+    ...DEFAULT_POINT_NORMAL_STYLE,
+    color: ACTIVE_COLOR,
+  },
 };
 
 export const DEFAULT_DRAWER_STYLE: IStyle = {
@@ -60,17 +63,17 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
   line: {
     normal: {
       color: DEFAULT_COLOR,
-      size: 2,
+      size: 1,
     },
     hover: {
       color: DEFAULT_COLOR,
-      size: 2,
+      size: 1,
     },
     active: {
       color: ACTIVE_COLOR,
-      size: 2,
+      size: 1,
     },
-    dash: false,
+    style: {},
   },
   polygon: {
     normal: {
@@ -91,17 +94,20 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
   dashLine: {
     normal: {
       color: ACTIVE_COLOR,
-      size: 2,
+      size: 1,
     },
     hover: {
       color: ACTIVE_COLOR,
-      size: 2,
+      size: 1,
     },
     active: {
       color: ACTIVE_COLOR,
-      size: 2,
+      size: 1,
     },
-    dash: true,
+    style: {
+      lineType: 'dash',
+      dashArray: [2, 1],
+    },
   },
 };
 

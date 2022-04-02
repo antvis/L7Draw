@@ -21,3 +21,7 @@ order: 1
 ### 自定义图标
 
 <code src="./drawer/point/image.tsx" compact="true"></code>
+
+### 禁用编辑
+
+<code src="./drawer/point/editable.tsx" compact="true"></code>

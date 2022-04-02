@@ -41,7 +41,7 @@ export interface ILineStyleItem extends IBaseStyleItem {
 }
 
 export type ILineStyle = IBaseStyle<ILineStyleItem> & {
-  dash: boolean;
+  style: any;
 };
 
 export interface IPolygonStyleItem extends IBaseStyleItem {}
