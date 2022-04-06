@@ -19,7 +19,9 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new LineDrawer(scene, {});
+      const drawer = new LineDrawer(scene, {
+        // autoFocus: false,
+      });
       setPointDrawer(drawer);
       drawer.enable();
     });

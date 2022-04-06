@@ -1,10 +1,12 @@
 import {
   DeepPartial,
   IDrawerOptions,
+  ILayerMouseEvent,
   ILineFeature,
   IPointFeature,
   IRenderType,
   ISceneMouseEvent,
+  ISourceData,
 } from '../typings';
 import { BaseDrawer } from './BaseDrawer';
 import { cloneDeep, debounce, last } from 'lodash';
@@ -59,7 +61,7 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
     // TODO: 将line参数转换到nodeDrawerOptions中
     this.nodeDrawer = new NodeDrawer(scene, this.options);
 
-    // this.normalLayer?.on('mousemove', )
+    this.normalLayer?.on('unclick', this.onUnClick);
   }
 
   getData(): ILineFeature[] {
@@ -90,13 +92,44 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
     return ['line', 'dashLine'];
   }
 
-  onMouseMove(e: ISceneMouseEvent) {
-    if (this.editLine?.geometry?.coordinates.length) {
+  onSceneMouseMove(e: ISceneMouseEvent) {
+    if (
+      this.editLine?.geometry?.coordinates.length &&
+      this.status === DRAWER_STATUS.DRAW
+    ) {
       const lastPoint = last(this.editLine?.geometry?.coordinates) as Position;
       const { lng, lat } = e.lnglat;
       this.source.setData({
         dashLine: [lineString([[lng, lat], lastPoint])],
       });
+    }
+  }
+
+  onMouseMove({ feature }: ILayerMouseEvent) {
+    if (this.status === DRAWER_STATUS.NORMAL) {
+      this.setCursor('pointer');
+      this.setData(data =>
+        data.map(item => {
+          if (isSameFeature(item, feature) && item.properties) {
+            item.properties.isHover = true;
+          }
+          return item;
+        }),
+      );
+    }
+  }
+
+  onMouseOut({ feature }: ILayerMouseEvent) {
+    if (this.status === DRAWER_STATUS.NORMAL) {
+      this.setCursor(null);
+      this.setData(data =>
+        data.map(item => {
+          if (isSameFeature(item, feature) && item.properties) {
+            item.properties.isHover = false;
+          }
+          return item;
+        }),
+      );
     }
   }
 
@@ -124,36 +157,71 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
 
   onNodeClick(e: IPointFeature) {
     if (isSameFeature(last(this.nodes), e)) {
-      this.disable();
+      this.drawFinish();
     } else {
       this.onNodeCreate(e);
     }
   }
 
+  onClick({ feature }: ILayerMouseEvent) {
+    if (this.status === DRAWER_STATUS.NORMAL) {
+      this.setCursor('pointer');
+      this.setData(data =>
+        data.map(item => {
+          if (isSameFeature(item, feature) && item.properties) {
+            item.properties.isActive = true;
+          }
+          return item;
+        }),
+      );
+    }
+  }
+
+  onUnClick() {
+    if (this.status === DRAWER_STATUS.EDIT) {
+      this.editLine = null;
+      this.setData(data => data);
+      this.nodes = [];
+      this.status = DRAWER_STATUS.NORMAL;
+    }
+  }
+
   bindEvent() {
-    this.scene.on('mousemove', this.onMouseMove);
+    this.scene.on('mousemove', this.onSceneMouseMove);
     this.nodeDrawer.on(DrawerEvent.add, this.onNodeCreate);
     this.nodeDrawer?.on(DrawerEvent.click, this.onNodeClick);
+    this.normalLayer?.on('mousemove', this.onMouseMove);
+    this.normalLayer?.on('mouseout', this.onMouseOut);
+    this.normalLayer?.on('click', this.onClick);
   }
 
   unbindEvent() {
-    this.scene.off('mousemove', this.onMouseMove);
+    this.scene.off('mousemove', this.onSceneMouseMove);
     this.nodeDrawer.off(DrawerEvent.add, this.onNodeCreate);
     this.nodeDrawer?.off(DrawerEvent.click, this.onNodeClick);
+    this.normalLayer?.off('mousemove', this.onMouseMove);
+    this.normalLayer?.off('mouseout', this.onMouseOut);
+    this.normalLayer?.off('click', this.onClick);
   }
 
   drawFinish() {
     this.nodeDrawer.disable();
-    this.status = DRAWER_STATUS.NORMAL;
-
-    if (this.editLine?.properties) {
-      this.editLine.properties.isHover = this.editLine.properties.isActive = false;
-      this.source.setData({
-        line: this.source.data.line,
-        dashLine: [],
-      });
+    const editLine = this.editLine;
+    const newData: Partial<ISourceData> = {
+      dashLine: [],
+    };
+    if (!this.options.autoFocus) {
+      if (this.editLine?.properties) {
+        this.editLine.properties.isHover = this.editLine.properties.isActive = false;
+        newData.line = this.source.data.line;
+      }
+      this.nodes = [];
+      this.status = DRAWER_STATUS.NORMAL;
+    } else {
+      this.status = DRAWER_STATUS.EDIT;
     }
-    this.nodes = [];
+    this.source.setData(newData);
+    this.emit(DrawerEvent.add, editLine, this.getData());
   }
 
   enable() {
@@ -169,10 +237,14 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
 
   bindThis() {
     super.bindThis();
-    this.onMouseMove = debounce(this.onMouseMove, 16, { maxWait: 16 }).bind(
-      this,
-    );
+    this.onSceneMouseMove = debounce(this.onSceneMouseMove, 16, {
+      maxWait: 16,
+    }).bind(this);
     this.onNodeCreate = this.onNodeCreate.bind(this);
     this.onNodeClick = this.onNodeClick.bind(this);
+    this.onUnClick = this.onUnClick.bind(this);
+    this.onMouseMove = this.onMouseMove.bind(this);
+    this.onMouseOut = this.onMouseOut.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 }

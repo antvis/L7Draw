@@ -63,15 +63,15 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
   line: {
     normal: {
       color: DEFAULT_COLOR,
-      size: 1,
+      size: 1.5,
     },
     hover: {
       color: DEFAULT_COLOR,
-      size: 1,
+      size: 1.5,
     },
     active: {
       color: ACTIVE_COLOR,
-      size: 1,
+      size: 1.5,
     },
     style: {},
   },
@@ -94,15 +94,15 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
   dashLine: {
     normal: {
       color: ACTIVE_COLOR,
-      size: 1,
+      size: 1.5,
     },
     hover: {
       color: ACTIVE_COLOR,
-      size: 1,
+      size: 1.5,
     },
     active: {
       color: ACTIVE_COLOR,
-      size: 1,
+      size: 1.5,
     },
     style: {
       lineType: 'dash',
