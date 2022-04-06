@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Scene } from '@antv/l7';
 import { GaodeMap } from '@antv/l7-maps';
 import { useEffect } from 'react';
-import { Button } from 'antd';
 import { PointDrawer } from '@antv/l7-draw';
 
 const Demo: React.FC = () => {
@@ -20,7 +19,8 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new PointDrawer(scene, {
-        editable: false,
+        editable: false, // 禁用编辑
+        autoFocus: false, // 新增后是否自动选中
       });
       setPointDrawer(drawer);
       drawer.enable();

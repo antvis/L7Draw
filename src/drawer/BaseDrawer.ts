@@ -86,6 +86,7 @@ export abstract class BaseDrawer<
       style: DEFAULT_DRAWER_STYLE,
       cursor: DEFAULT_CURSOR_MAP,
       editable: true,
+      autoFocus: true,
     });
   }
 

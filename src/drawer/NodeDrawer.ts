@@ -173,10 +173,11 @@ export class NodeDrawer<
 
   onUnClick(e: ILayerMouseEvent<IPointFeature>) {
     const { lng, lat } = e.lngLat;
+    const autoFocus = this.options.autoFocus;
     const newPoint: IPointFeature = point([lng, lat], {
       id: getUuid('point'),
-      isHover: true,
-      isActive: true,
+      isHover: autoFocus,
+      isActive: autoFocus,
       isDrag: false,
     });
     this.setData(data => {

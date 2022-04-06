@@ -6,6 +6,7 @@ import { featureCollection } from '@turf/turf';
 export class LineRender extends BaseRender<ILineFeature, ILineStyle> {
   initLayers(): ILayer[] {
     const { normal, hover, active, style } = this.style;
+
     const layer = new LineLayer()
       .source(featureCollection([]))
       .size('isHover*isActive', (isHover: boolean, isActive: boolean) => {

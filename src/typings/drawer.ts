@@ -8,4 +8,5 @@ export interface IDrawerOptions {
   style: IStyle;
   cursor: ICursor;
   editable: boolean;
+  autoFocus: boolean;
 }

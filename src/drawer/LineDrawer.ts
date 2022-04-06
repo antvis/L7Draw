@@ -1,7 +1,6 @@
 import {
   DeepPartial,
   IDrawerOptions,
-  ILayerMouseEvent,
   ILineFeature,
   IPointFeature,
   IRenderType,
@@ -9,7 +8,7 @@ import {
 } from '../typings';
 import { BaseDrawer } from './BaseDrawer';
 import { cloneDeep, debounce, last } from 'lodash';
-import { DEFAULT_NODE_STYLE, DrawerEvent } from '../constants';
+import { DEFAULT_NODE_STYLE, DRAWER_STATUS, DrawerEvent } from '../constants';
 import { Scene } from '@antv/l7';
 import { NodeDrawer } from './NodeDrawer';
 import { getUuid, isSameFeature, lineString } from '../utils';
@@ -19,6 +18,8 @@ export interface ILineDrawerOptions extends IDrawerOptions {}
 
 export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
   nodeDrawer: NodeDrawer;
+
+  status = DRAWER_STATUS.NORMAL;
 
   get nodes() {
     return this.nodeDrawer.getData();
@@ -49,10 +50,16 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
     );
   }
 
+  get normalLayer() {
+    return this.render.line?.layers[0];
+  }
+
   constructor(scene: Scene, options: DeepPartial<ILineDrawerOptions>) {
     super(scene, options);
     // TODO: 将line参数转换到nodeDrawerOptions中
     this.nodeDrawer = new NodeDrawer(scene, this.options);
+
+    // this.normalLayer?.on('mousemove', )
   }
 
   getData(): ILineFeature[] {
@@ -115,9 +122,11 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
     this.nodeDrawer.options.editable = false;
   }
 
-  onNodeClick(nodeFeature: IPointFeature) {
-    if (isSameFeature(last(this.nodes), nodeFeature)) {
+  onNodeClick(e: IPointFeature) {
+    if (isSameFeature(last(this.nodes), e)) {
+      this.disable();
     } else {
+      this.onNodeCreate(e);
     }
   }
 
@@ -133,6 +142,31 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
     this.nodeDrawer?.off(DrawerEvent.click, this.onNodeClick);
   }
 
+  drawFinish() {
+    this.nodeDrawer.disable();
+    this.status = DRAWER_STATUS.NORMAL;
+
+    if (this.editLine?.properties) {
+      this.editLine.properties.isHover = this.editLine.properties.isActive = false;
+      this.source.setData({
+        line: this.source.data.line,
+        dashLine: [],
+      });
+    }
+    this.nodes = [];
+  }
+
+  enable() {
+    super.enable();
+    this.nodeDrawer.enable();
+    this.status = DRAWER_STATUS.DRAW;
+  }
+
+  disable() {
+    super.disable();
+    this.drawFinish();
+  }
+
   bindThis() {
     super.bindThis();
     this.onMouseMove = debounce(this.onMouseMove, 16, { maxWait: 16 }).bind(
@@ -140,15 +174,5 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
     );
     this.onNodeCreate = this.onNodeCreate.bind(this);
     this.onNodeClick = this.onNodeClick.bind(this);
-  }
-
-  enable() {
-    super.enable();
-    this.nodeDrawer.enable();
-  }
-
-  disable() {
-    super.disable();
-    this.nodeDrawer.disable();
   }
 }
