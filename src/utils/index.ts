@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 import { IBaseFeature } from '../typings';
-import { lineString as turfLineString } from '@turf/turf';
+import { Feature, lineString as turfLineString, Point } from '@turf/turf';
 import { Position, Properties } from '@turf/turf';
 
 export const getUuid = (prefix = '') => {
@@ -32,5 +32,11 @@ export const lineString = <P = Properties>(
   }
   return feature;
 };
+
+export const midPoint = <P>(
+  point1: Feature<Point>,
+  point2: Feature<Point>,
+  properties: P | null = null,
+) => {};
 
 export * from './cursor';

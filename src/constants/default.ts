@@ -33,8 +33,8 @@ export const DEFAULT_POINT_ACTIVE_STYLE: IPointStyleItem = {
 
 export const DEFAULT_MID_POINT_STYLE: IMidPointStyleItem = {
   shape: 'circle',
-  size: 2,
-  color: '#ff0000',
+  size: 4,
+  color: '#ffffff',
   borderColor: ACTIVE_COLOR,
   borderWidth: 1,
 };

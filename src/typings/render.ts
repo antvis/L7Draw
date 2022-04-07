@@ -80,7 +80,9 @@ export type IPointFeature = IBaseFeature<Point, IPointProperties>;
 
 // ------------
 
-export interface ILineProperties extends IBaseProperties {}
+export interface ILineProperties extends IBaseProperties {
+  nodes: IPointFeature[];
+}
 
 export type ILineFeature = IBaseFeature<LineString, ILineProperties>;
 
@@ -94,9 +96,12 @@ export type IPolygonFeature<
   P extends IBaseProperties = IBaseProperties
 > = IBaseFeature<Polygon, P>;
 
-export type IMidPointFeature<
-  P extends IBaseProperties = IBaseProperties
-> = IBaseFeature<Point, P>;
+export interface IMidPointProperties extends IBaseProperties {
+  startId: string;
+  endId: string;
+}
+
+export type IMidPointFeature = IBaseFeature<Point, IMidPointProperties>;
 
 // ------------
 

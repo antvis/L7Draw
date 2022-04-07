@@ -22,16 +22,15 @@ export class NodeDrawer<
   }
 
   set dragPoint(dragFeature: IPointFeature | null) {
-    const pointRender = this.source.render.point;
-    pointRender?.setData(
-      pointRender?.data.map(feature => {
+    this.setData(data =>
+      data.map(feature => {
         if (feature.properties) {
           feature.properties.isDrag = dragFeature
             ? isSameFeature(feature, dragFeature)
             : false;
         }
         return feature;
-      }) ?? [],
+      }),
     );
   }
 
@@ -48,8 +47,7 @@ export class NodeDrawer<
     return this.getCommonOptions();
   }
 
-  bindEvent(): void {
-    this.normalLayer?.on('unclick', this.onUnClick);
+  bindEditEvent() {
     this.normalLayer?.on('mousemove', this.onMouseMove);
     this.normalLayer?.on('mouseout', this.onMouseOut);
     this.normalLayer?.on('mousedown', this.onDragStart);
@@ -57,13 +55,22 @@ export class NodeDrawer<
     this.scene.on('dragend', this.onDragEnd);
   }
 
-  unbindEvent(): void {
-    this.normalLayer?.off('unclick', this.onUnClick);
+  unbindEditEvent() {
     this.normalLayer?.off('mousemove', this.onMouseMove);
     this.normalLayer?.off('mouseout', this.onMouseOut);
     this.normalLayer?.off('mousedown', this.onDragStart);
     this.scene.off('dragging', this.onDragging);
     this.scene.off('dragend', this.onDragEnd);
+  }
+
+  bindEvent(): void {
+    this.normalLayer?.on('unclick', this.onUnClick);
+    this.bindEditEvent();
+  }
+
+  unbindEvent(): void {
+    this.normalLayer?.off('unclick', this.onUnClick);
+    this.unbindEditEvent();
   }
 
   onMouseMove(e: ILayerMouseEvent<IPointFeature>) {
@@ -84,7 +91,7 @@ export class NodeDrawer<
   }
 
   onMouseOut(e: ILayerMouseEvent<IPointFeature>) {
-    this.setCursor('draw');
+    this.setCursor(this.isEnable ? 'draw' : null);
 
     if (!this.dragPoint) {
       this.setData(data =>
@@ -123,6 +130,7 @@ export class NodeDrawer<
       });
       this.dragPoint = currentFeature;
       this.setCursor('move');
+      this.emit(DrawerEvent.dragStart, currentFeature, this.getData());
     }
 
     this.emit(DrawerEvent.click, currentFeature, this.getData());

@@ -14,7 +14,7 @@ const Demo: React.FC = () => {
         center: [105.732421875, 32.24997445586331],
         pitch: 0,
         style: 'dark',
-        zoom: 2,
+        zoom: 10,
       }),
     });
     scene.on('loaded', () => {
