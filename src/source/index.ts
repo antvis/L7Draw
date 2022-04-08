@@ -8,7 +8,7 @@ import {
   IRenderMap,
   ISourceDataHistory,
 } from '../typings';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, fromPairs } from 'lodash';
 
 export class Source extends EventEmitter<SourceEvent> {
   // 数据
@@ -76,6 +76,12 @@ export class Source extends EventEmitter<SourceEvent> {
         }, 0);
       }
     }
+  }
+
+  clear() {
+    this.setData(
+      fromPairs(Object.keys(this.render).map(renderType => [renderType, []])),
+    );
   }
 
   isEmptyData() {

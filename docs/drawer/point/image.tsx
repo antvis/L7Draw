@@ -27,7 +27,7 @@ const Demo: React.FC = () => {
         style: {
           point: {
             normal: { shape: 'dingwei', size: 10 },
-            hover: { shape: 'dingwei', size: 20 },
+            hover: { shape: 'dingwei', size: 20, color: '#1990FF' },
             active: { shape: 'dingwei', size: 20 },
           },
         },

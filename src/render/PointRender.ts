@@ -44,4 +44,6 @@ export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
 
     return [layer];
   }
+
+  bindAddEvent() {}
 }

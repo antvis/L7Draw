@@ -15,15 +15,15 @@ export const ACTIVE_COLOR = '#ED9D48';
 export const DEFAULT_POINT_NORMAL_STYLE: IPointStyleItem = {
   color: DEFAULT_COLOR,
   shape: 'circle',
-  size: 5,
+  size: 8,
   borderColor: '#ffffff',
-  borderWidth: 1,
+  borderWidth: 2,
 };
 
 export const DEFAULT_POINT_HOVER_STYLE: IPointStyleItem = {
   ...DEFAULT_POINT_NORMAL_STYLE,
-  size: 7,
-  borderWidth: 2,
+  size: 10,
+  borderWidth: 4,
 };
 
 export const DEFAULT_POINT_ACTIVE_STYLE: IPointStyleItem = {
@@ -33,10 +33,10 @@ export const DEFAULT_POINT_ACTIVE_STYLE: IPointStyleItem = {
 
 export const DEFAULT_MID_POINT_STYLE: IMidPointStyleItem = {
   shape: 'circle',
-  size: 4,
-  color: '#ffffff',
-  borderColor: ACTIVE_COLOR,
-  borderWidth: 1,
+  size: 6,
+  color: ACTIVE_COLOR,
+  borderColor: '#ffffff',
+  borderWidth: 0,
 };
 
 export const DEFAULT_NODE_STYLE: IPointStyle = {
@@ -63,15 +63,15 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
   line: {
     normal: {
       color: DEFAULT_COLOR,
-      size: 1.5,
+      size: 2,
     },
     hover: {
       color: DEFAULT_COLOR,
-      size: 1.5,
+      size: 2,
     },
     active: {
       color: ACTIVE_COLOR,
-      size: 1.5,
+      size: 2,
     },
     style: {},
   },
@@ -94,19 +94,19 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
   dashLine: {
     normal: {
       color: ACTIVE_COLOR,
-      size: 1.5,
+      size: 2,
     },
     hover: {
       color: ACTIVE_COLOR,
-      size: 1.5,
+      size: 2,
     },
     active: {
       color: ACTIVE_COLOR,
-      size: 1.5,
+      size: 2,
     },
     style: {
       lineType: 'dash',
-      dashArray: [2, 1],
+      dashArray: [6, 6],
     },
   },
 };

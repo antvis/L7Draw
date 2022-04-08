@@ -3,6 +3,7 @@ import {
   IDrawerOptions,
   ILayerMouseEvent,
   ILineFeature,
+  ILngLat,
   IMidPointFeature,
   IPointFeature,
   IRenderType,
@@ -14,12 +15,17 @@ import { cloneDeep, debounce, last } from 'lodash';
 import { DEFAULT_NODE_STYLE, DRAWER_STATUS, DrawerEvent } from '../constants';
 import { Scene } from '@antv/l7';
 import { NodeDrawer } from './NodeDrawer';
-import { getUuid, isSameFeature, lineString } from '../utils';
+import {
+  getUuid,
+  isSameFeature,
+  lineString,
+  moveFeature,
+  moveFeatureList,
+} from '../utils';
 import {
   center,
   coordAll,
   featureCollection,
-  midpoint,
   point,
   Position,
 } from '@turf/turf';
@@ -27,6 +33,11 @@ import {
 export interface ILineDrawerOptions extends IDrawerOptions {}
 
 export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
+  protected _previousLngLat: ILngLat = {
+    lng: 0,
+    lat: 0,
+  };
+
   protected nodeDrawer: NodeDrawer;
 
   protected _status = DRAWER_STATUS.NORMAL;
@@ -62,35 +73,11 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
   set nodes(newNodes) {
     this.nodeDrawer.setData(newNodes);
 
-    const midPointList: IMidPointFeature[] = [];
-    if (this.status === DRAWER_STATUS.EDIT && newNodes.length > 1) {
-      for (let i = 0; i < newNodes.length - 1; i++) {
-        const newPoint: IMidPointFeature = Object.assign(
-          center(featureCollection([newNodes[i], newNodes[i + 1]])),
-          {
-            properties: {
-              id: getUuid('midPoint'),
-              isHover: false,
-              isActive: false,
-              isDrag: false,
-              startId: newNodes[i].properties?.id ?? '',
-              endId: newNodes[i + 1].properties?.id ?? '',
-            },
-          },
-        );
-        midPointList.push(newPoint);
-      }
-    }
-    this.source.setData({
-      midPoint: midPointList,
-    });
+    this.refreshMidPoint();
   }
 
   get editLine() {
-    return (
-      this.source.data.line.find(feature => feature.properties?.isActive) ??
-      null
-    );
+    return this.getData().find(feature => feature.properties?.isActive) ?? null;
   }
 
   set editLine(newData: ILineFeature | null) {
@@ -101,6 +88,25 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
           feature.properties.isActive = newData
             ? isSameFeature(feature, newData)
             : false;
+        }
+        return feature;
+      }) ?? [],
+    );
+  }
+
+  get dragLine() {
+    return this.getData().find(feature => feature.properties?.isDrag) ?? null;
+  }
+
+  set dragLine(newData: ILineFeature | null) {
+    const lineRender = this.source.render.line;
+    lineRender?.setData(
+      lineRender?.data.map(feature => {
+        if (feature.properties) {
+          feature.properties.isDrag = newData
+            ? isSameFeature(feature, newData)
+            : false;
+          return newData ?? feature;
         }
         return feature;
       }) ?? [],
@@ -119,9 +125,12 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
     this.normalLayer?.on('unclick', this.onUnClick);
     this.normalLayer?.on('mousemove', this.onMouseMove);
     this.normalLayer?.on('mouseout', this.onMouseOut);
-    this.normalLayer?.on('click', this.onClick);
+    this.normalLayer?.on('mousedown', this.onMouseDown);
     this.nodeDrawer.on(DrawerEvent.dragging, this.onNodeDrag);
     this.nodeDrawer.on(DrawerEvent.dragEnd, this.onNodeDrag);
+    this.scene?.on('mousemove', this.onSceneMouseMove);
+    this.scene?.on('dragging', this.onDragging);
+    this.scene?.on('mouseup', this.onMouseUp);
     this.render.midPoint?.layers[0]?.on('click', this.onMidPointClick);
   }
 
@@ -151,31 +160,6 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
 
   getRenderList(): IRenderType[] {
     return ['line', 'dashLine', 'midPoint'];
-  }
-
-  onSceneMouseMove(e: ISceneMouseEvent) {
-    if (
-      this.editLine?.geometry?.coordinates.length &&
-      this.status === DRAWER_STATUS.DRAW
-    ) {
-      const lastPoint = last(this.editLine?.geometry?.coordinates) as Position;
-      const { lng, lat } = e.lnglat;
-      this.source.setData({
-        dashLine: [lineString([[lng, lat], lastPoint])],
-      });
-    }
-  }
-
-  onMouseMove({ feature }: ILayerMouseEvent) {
-    this.setCursor('pointer');
-    this.setData(data =>
-      data.map(item => {
-        if (isSameFeature(item, feature) && item.properties) {
-          item.properties.isHover = true;
-        }
-        return item;
-      }),
-    );
   }
 
   onMouseOut({ feature }: ILayerMouseEvent) {
@@ -232,6 +216,7 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
 
   onMidPointClick({ feature }: ILayerMouseEvent<IMidPointFeature>) {
     const nodes = [...this.nodes];
+    const editLine = this.editLine;
     const { startId, endId } = feature?.properties ?? {};
     const startIndex = nodes.findIndex(
       feature => feature.properties?.id === startId,
@@ -243,7 +228,8 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
       startIndex > -1 &&
       endIndex > -1 &&
       feature?.geometry &&
-      this.editLine?.geometry
+      editLine?.properties &&
+      editLine?.geometry
     ) {
       nodes.splice(
         endIndex,
@@ -256,14 +242,16 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
         }),
       );
       this.nodes = nodes;
+      editLine.properties.nodes = nodes;
       // @ts-ignore
-      this.editLine.geometry.coordinates = nodes.map(
+      editLine.geometry.coordinates = nodes.map(
         node => node.geometry?.coordinates,
       );
     }
   }
 
-  onClick({ feature }: ILayerMouseEvent<ILineFeature>) {
+  onMouseDown(e: ILayerMouseEvent<ILineFeature>) {
+    const { feature, lngLat } = e;
     if (this.status === DRAWER_STATUS.NORMAL) {
       this.setCursor('pointer');
       this.setData(data =>
@@ -276,6 +264,78 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
       );
       this.status = DRAWER_STATUS.EDIT;
       this.nodes = feature?.properties?.nodes ?? [];
+    }
+
+    if (this.status === DRAWER_STATUS.EDIT) {
+      this.dragLine = this.editLine;
+      this.scene.setMapStatus({
+        dragEnable: false,
+      });
+      this._previousLngLat = lngLat;
+    }
+  }
+
+  onSceneMouseMove({ lnglat }: ISceneMouseEvent) {
+    const { lng, lat } = lnglat;
+    if (
+      this.editLine?.geometry?.coordinates.length &&
+      this.status === DRAWER_STATUS.DRAW
+    ) {
+      const lastPoint = last(this.editLine?.geometry?.coordinates) as Position;
+      this.source.setData({
+        dashLine: [lineString([[lng, lat], lastPoint])],
+      });
+    }
+  }
+
+  onDragging({ lngLat }: ILayerMouseEvent) {
+    if (this.status === DRAWER_STATUS.EDIT && this.dragLine) {
+      this.setCursor('move');
+      const newDragLine = moveFeature(
+        this.dragLine,
+        this._previousLngLat,
+        lngLat,
+      );
+      if (newDragLine.properties) {
+        newDragLine.properties.nodes = moveFeatureList(
+          newDragLine.properties.nodes,
+          this._previousLngLat,
+          lngLat,
+        );
+        this.nodes = newDragLine.properties.nodes;
+        this.refreshMidPoint();
+      }
+      this.setData(features => {
+        return features.map(feature => {
+          if (isSameFeature(newDragLine, feature)) {
+            return newDragLine;
+          }
+          return feature;
+        });
+      });
+      this._previousLngLat = lngLat;
+    }
+  }
+
+  onMouseMove({ feature }: ILayerMouseEvent) {
+    this.setCursor('pointer');
+    this.setData(data =>
+      data.map(item => {
+        if (isSameFeature(item, feature) && item.properties) {
+          item.properties.isHover = true;
+        }
+        return item;
+      }),
+    );
+  }
+
+  onMouseUp(e: ISceneMouseEvent) {
+    if (this.dragLine) {
+      this.setCursor('pointer');
+      this.dragLine = null;
+      this.scene.setMapStatus({
+        dragEnable: true,
+      });
     }
   }
 
@@ -302,8 +362,35 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
           featureCollection(editLine.properties.nodes),
         );
         this.editLine = editLine;
+        this.refreshMidPoint();
       }
     }
+  }
+
+  refreshMidPoint() {
+    const nodes = this.nodes;
+    const midPointList: IMidPointFeature[] = [];
+    if (this.status === DRAWER_STATUS.EDIT && nodes.length > 1) {
+      for (let i = 0; i < nodes.length - 1; i++) {
+        const newPoint: IMidPointFeature = Object.assign(
+          center(featureCollection([nodes[i], nodes[i + 1]])),
+          {
+            properties: {
+              id: getUuid('midPoint'),
+              isHover: false,
+              isActive: false,
+              isDrag: false,
+              startId: nodes[i].properties?.id ?? '',
+              endId: nodes[i + 1].properties?.id ?? '',
+            },
+          },
+        );
+        midPointList.push(newPoint);
+      }
+    }
+    this.source.setData({
+      midPoint: midPointList,
+    });
   }
 
   bindEvent() {
@@ -324,10 +411,12 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
     const newData: Partial<ISourceData> = {
       dashLine: [],
     };
+    this.nodeDrawer.options.editable = true;
     if (!this.options.autoFocus) {
       this.status = DRAWER_STATUS.NORMAL;
     } else {
       this.status = DRAWER_STATUS.EDIT;
+      this.refreshMidPoint();
     }
     this.source.setData(newData);
     this.emit(DrawerEvent.add, editLine, this.getData());
@@ -337,6 +426,7 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
     super.enable();
     this.nodeDrawer.enable();
     this.status = DRAWER_STATUS.DRAW;
+    this.nodeDrawer.options.editable = false;
   }
 
   disable() {
@@ -349,12 +439,17 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
     this.onSceneMouseMove = debounce(this.onSceneMouseMove, 16, {
       maxWait: 16,
     }).bind(this);
+    this.onDragging = debounce(this.onDragging, 16, {
+      maxWait: 16,
+    }).bind(this);
     this.onNodeCreate = this.onNodeCreate.bind(this);
     this.onNodeClick = this.onNodeClick.bind(this);
     this.onUnClick = this.onUnClick.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
+    this.onDragging = this.onDragging.bind(this);
     this.onMouseOut = this.onMouseOut.bind(this);
-    this.onClick = this.onClick.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
+    this.onMouseUp = this.onMouseUp.bind(this);
     this.onNodeDrag = this.onNodeDrag.bind(this);
     this.onMidPointClick = this.onMidPointClick.bind(this);
   }

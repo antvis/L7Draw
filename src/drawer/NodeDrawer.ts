@@ -16,12 +16,12 @@ export interface INodeDrawerOptions extends IDrawerOptions {}
 export class NodeDrawer<
   T extends INodeDrawerOptions = INodeDrawerOptions
 > extends BaseDrawer<T, IPointFeature> {
-  get dragPoint() {
+  get editPoint() {
     const pointFeatures = this.source.render.point?.data ?? null;
     return pointFeatures?.find(feature => feature.properties?.isDrag) ?? null;
   }
 
-  set dragPoint(dragFeature: IPointFeature | null) {
+  set editPoint(dragFeature: IPointFeature | null) {
     this.setData(data =>
       data.map(feature => {
         if (feature.properties) {
@@ -74,7 +74,11 @@ export class NodeDrawer<
   }
 
   onMouseMove(e: ILayerMouseEvent<IPointFeature>) {
-    if (this.dragPoint && this.options.editable) {
+    if (
+      this.editPoint &&
+      isSameFeature(this.editPoint, e.feature) &&
+      this.options.editable
+    ) {
       this.setCursor('move');
     } else {
       this.setCursor('pointer');
@@ -93,7 +97,7 @@ export class NodeDrawer<
   onMouseOut(e: ILayerMouseEvent<IPointFeature>) {
     this.setCursor(this.isEnable ? 'draw' : null);
 
-    if (!this.dragPoint) {
+    if (!this.editPoint) {
       this.setData(data =>
         data.map(feature => {
           if (feature.properties) {
@@ -128,7 +132,7 @@ export class NodeDrawer<
       this.scene.setMapStatus({
         dragEnable: false,
       });
-      this.dragPoint = currentFeature;
+      this.editPoint = currentFeature;
       this.setCursor('move');
       this.emit(DrawerEvent.dragStart, currentFeature, this.getData());
     }
@@ -137,10 +141,10 @@ export class NodeDrawer<
   }
 
   onDragging(e: ILayerMouseEvent<ISceneMouseEvent>) {
-    if (this.dragPoint && this.options.editable) {
+    if (this.editPoint && this.options.editable) {
       this.setData(data =>
         data.map(feature => {
-          if (isSameFeature(this.dragPoint, feature)) {
+          if (isSameFeature(this.editPoint, feature)) {
             const { lng, lat } = e.lngLat;
             if (feature.geometry) {
               feature.geometry.coordinates = [lng, lat];
@@ -149,7 +153,7 @@ export class NodeDrawer<
           return feature;
         }),
       );
-      this.emit(DrawerEvent.dragging, this.dragPoint, this.getData());
+      this.emit(DrawerEvent.dragging, this.editPoint, this.getData());
       this.setCursor('move');
     }
   }
@@ -159,7 +163,7 @@ export class NodeDrawer<
       this.setData(
         data =>
           data.map(feature => {
-            if (isSameFeature(this.dragPoint, feature)) {
+            if (isSameFeature(this.editPoint, feature)) {
               const { lng, lat } = e.lngLat;
               if (feature.geometry) {
                 feature.geometry.coordinates = [lng, lat];
@@ -172,8 +176,8 @@ export class NodeDrawer<
       this.scene.setMapStatus({
         dragEnable: true,
       });
-      const editPoint = this.dragPoint;
-      this.dragPoint = null;
+      const editPoint = this.editPoint;
+      this.editPoint = null;
       this.setCursor('pointer');
       this.emit(DrawerEvent.dragEnd, editPoint, this.getData());
     }
@@ -238,7 +242,7 @@ export class NodeDrawer<
   disable() {
     super.disable();
 
-    this.dragPoint = null;
+    this.editPoint = null;
     this.setData(data =>
       data.map(feature => {
         if (feature.properties) {

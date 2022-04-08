@@ -1,6 +1,14 @@
 import { v4 } from 'uuid';
-import { IBaseFeature } from '../typings';
-import { Feature, lineString as turfLineString, Point } from '@turf/turf';
+import { IBaseFeature, ILngLat } from '../typings';
+import {
+  distance,
+  Feature,
+  lineString as turfLineString,
+  point,
+  Point,
+  rhumbBearing,
+  transformTranslate,
+} from '@turf/turf';
 import { Position, Properties } from '@turf/turf';
 
 export const getUuid = (prefix = '') => {
@@ -33,10 +41,35 @@ export const lineString = <P = Properties>(
   return feature;
 };
 
-export const midPoint = <P>(
-  point1: Feature<Point>,
-  point2: Feature<Point>,
-  properties: P | null = null,
-) => {};
+export const moveFeature = <F extends IBaseFeature>(
+  feature: F,
+  startLngLat: ILngLat,
+  endLngLat: ILngLat,
+) => {
+  const { lng: lng1, lat: lat1 } = startLngLat;
+  const { lng: lng2, lat: lat2 } = endLngLat;
+
+  const startPoint = point([lng1, lat1]);
+  const endPoint = point([lng2, lat2]);
+
+  const between = distance(startPoint, endPoint, {
+    units: 'meters',
+  });
+
+  const angle = rhumbBearing(startPoint, endPoint);
+
+  // @ts-ignore
+  return transformTranslate(feature, between, angle, {
+    units: 'meters',
+  }) as F;
+};
+
+export const moveFeatureList = <F extends IBaseFeature>(
+  features: F[],
+  startLngLat: ILngLat,
+  endLngLat: ILngLat,
+) => {
+  return features.map(feature => moveFeature(feature, startLngLat, endLngLat));
+};
 
 export * from './cursor';

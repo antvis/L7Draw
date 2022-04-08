@@ -114,12 +114,7 @@ export abstract class BaseDrawer<
    * 清空所有数据
    */
   clear(disable = false) {
-    this.source.setData({
-      point: [],
-      line: [],
-      polygon: [],
-      midPoint: [],
-    });
+    this.source.clear();
 
     if (disable) {
       this.disable();
