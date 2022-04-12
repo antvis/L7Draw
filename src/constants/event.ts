@@ -15,4 +15,6 @@ export enum SourceEvent {
   change = 'change',
 }
 
-export enum RenderEvent {}
+export enum RenderEvent {
+  add = 'add',
+}

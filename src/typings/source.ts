@@ -3,7 +3,7 @@ import {
   IMidPointFeature,
   IPointFeature,
   IPolygonFeature,
-} from './render';
+} from './feature';
 import { PointRender, LineRender, PolygonRender } from '../render';
 
 export interface ISourceData {

@@ -178,13 +178,13 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
   onNodeCreate(e: IPointFeature) {
     // 首次创建节点，创建线路
     if (this.nodes.length === 1) {
-      const newLine: ILineFeature = lineString(coordAll(e), {
+      const newLine = lineString(coordAll(e), {
         id: getUuid('line'),
         nodes: [e],
         isHover: true,
         isActive: true,
         isDrag: false,
-      });
+      }) as ILineFeature;
       this.source.setData({
         line: [...this.getData(), newLine],
         dashLine: [],
@@ -239,7 +239,7 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
           isHover: false,
           isActive: false,
           isDrag: false,
-        }),
+        }) as IPointFeature,
       );
       this.nodes = nodes;
       editLine.properties.nodes = nodes;
@@ -283,7 +283,7 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
     ) {
       const lastPoint = last(this.editLine?.geometry?.coordinates) as Position;
       this.source.setData({
-        dashLine: [lineString([[lng, lat], lastPoint])],
+        dashLine: [lineString([[lng, lat], lastPoint]) as ILineFeature],
       });
     }
   }

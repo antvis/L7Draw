@@ -7,6 +7,7 @@ import {
   Position,
 } from '@turf/turf';
 import { ILayer } from '@antv/l7';
+import { IBaseFeature } from './feature';
 
 export type IRenderType =
   | 'point'
@@ -15,95 +16,59 @@ export type IRenderType =
   | 'midPoint'
   | 'dashLine';
 
-export interface IBaseStyleItem {
-  color: string;
-}
-
-export interface IBaseStyle<P extends IBaseStyleItem = IBaseStyleItem> {
+export interface IBaseStyle<P = any> {
   normal: P;
-  hover: P;
-  active: P;
-
   callback?: (layers: ILayer[]) => void; // 初始化图层之后的回调
 }
 
-export interface IPointStyleItem extends IBaseStyleItem {
+export interface IPointStyleItem {
+  color: string;
   shape: string;
   size: number;
   borderWidth: number;
   borderColor: string;
 }
 
-export type IPointStyle = IBaseStyle<IPointStyleItem>;
+export type IPointStyle = IBaseStyle<IPointStyleItem> & {
+  hover: IPointStyleItem;
+  active: IPointStyleItem;
+};
 
-export interface ILineStyleItem extends IBaseStyleItem {
+export interface ILineStyleItem {
+  color: string;
   size: number;
 }
 
 export type ILineStyle = IBaseStyle<ILineStyleItem> & {
+  hover: ILineStyleItem;
+  active: ILineStyleItem;
   style: any;
 };
 
-export interface IPolygonStyleItem extends IBaseStyleItem {}
+export interface IPolygonStyleItem {
+  color: string;
+}
 
-export type IPolygonStyle = IBaseStyle<IPolygonStyleItem>;
+export type IPolygonStyle = IBaseStyle<IPolygonStyleItem> & {
+  hover: IPolygonStyleItem;
+  active: IPolygonStyleItem;
+};
 
-export interface IMidPointStyleItem extends IPointStyleItem {}
+export type IMidPointStyleItem = IPointStyleItem;
 
-export type IMidPointStyle = IBaseStyle<IMidPointStyleItem>;
+export type IMidPointStyle = IBaseStyle<IPointStyleItem>;
+
+export type IDashLineStyle = IBaseStyle<ILineStyleItem> & {
+  style: any;
+};
 
 export interface IStyle {
   point: IPointStyle;
   line: ILineStyle;
   polygon: IPolygonStyle;
   midPoint: IMidPointStyle;
-  dashLine: ILineStyle;
+  dashLine: IDashLineStyle;
 }
-
-export interface IBaseProperties {
-  id: string;
-  isHover: boolean;
-  isActive: boolean;
-  isDrag: boolean;
-}
-
-export type IBaseFeature<
-  T extends GeometryObject = GeometryObject,
-  P extends IBaseProperties = IBaseProperties
-> = Feature<T, P>;
-
-// ------------
-
-export interface IPointProperties extends IBaseProperties {}
-
-export type IPointFeature = IBaseFeature<Point, IPointProperties>;
-
-// ------------
-
-export interface ILineProperties extends IBaseProperties {
-  nodes: IPointFeature[];
-}
-
-export type ILineFeature = IBaseFeature<LineString, ILineProperties>;
-
-// ------------
-
-export interface IPolygonProperties extends IBaseProperties {
-  nodes: Position[];
-}
-
-export type IPolygonFeature<
-  P extends IBaseProperties = IBaseProperties
-> = IBaseFeature<Polygon, P>;
-
-export interface IMidPointProperties extends IBaseProperties {
-  startId: string;
-  endId: string;
-}
-
-export type IMidPointFeature = IBaseFeature<Point, IMidPointProperties>;
-
-// ------------
 
 export interface IRenderOptions<D extends IBaseFeature, S extends IBaseStyle> {
   style: S;

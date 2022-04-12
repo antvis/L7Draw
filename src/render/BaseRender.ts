@@ -1,16 +1,13 @@
 import EventEmitter from 'eventemitter3';
-import {
-  IBaseFeature,
-  IRenderOptions,
-  IBaseStyle,
-} from '../typings';
+import { IBaseFeature, IRenderOptions, IBaseStyle } from '../typings';
 import { ILayer, Scene } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
+import { RenderEvent } from '../constants';
 
 export abstract class BaseRender<
   F extends IBaseFeature = IBaseFeature,
   S extends IBaseStyle = IBaseStyle
-> extends EventEmitter {
+> extends EventEmitter<RenderEvent> {
   layers: ILayer[] = [];
   style: S;
   scene: Scene;

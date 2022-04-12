@@ -1,4 +1,4 @@
-import { IBaseFeature } from './render';
+import { IBaseFeature } from './feature';
 
 export interface ILngLat {
   lng: number;

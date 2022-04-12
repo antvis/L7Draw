@@ -5,11 +5,11 @@ import { Source } from '../source';
 import nextTick from 'next-tick';
 import {
   DeepPartial,
-  IBaseFeature,
   ICursorType,
   IDrawerOptions,
   IRenderType,
   IRenderMap,
+  IBaseFeature,
 } from '../typings';
 import {
   DEFAULT_CURSOR_MAP,

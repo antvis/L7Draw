@@ -1,7 +1,14 @@
 import { BaseRender } from './BaseRender';
-import { IPointFeature, IPointStyle, IPointStyleItem } from '../typings';
+import {
+  ILayerMouseEvent,
+  ILngLat,
+  IPointFeature,
+  IPointStyle,
+} from '../typings';
 import { ILayer, PointLayer } from '@antv/l7';
-import { featureCollection } from '@turf/turf';
+import { featureCollection, point } from '@turf/turf';
+import { RenderEvent } from '../constants';
+import { getUuid } from '../utils';
 
 export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
   initLayers(): ILayer[] {
@@ -45,5 +52,32 @@ export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
     return [layer];
   }
 
-  bindAddEvent() {}
+  onCreate = (e: ILayerMouseEvent) => {
+    const { lng, lat } = e.lngLat;
+    const pointFeature = point([lng, lat], {
+      id: getUuid('point'),
+      isHover: false,
+      isActive: false,
+      isDrag: false,
+    }) as IPointFeature;
+    this.emit(RenderEvent.add, pointFeature);
+  };
+
+  onHover = (e: ILayerMouseEvent) => {};
+
+  enableCreate() {
+    this.layers[0].on('unclick', this.onCreate);
+  }
+
+  disableCreate() {
+    this.layers[0].off('unclick', this.onCreate);
+  }
+
+  enableHover() {
+    this.layers[0].on('mousemove', this.onHover);
+  }
+
+  disableHover() {
+    this.layers[0].off('mousemove', this.onHover);
+  }
 }

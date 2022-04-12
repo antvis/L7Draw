@@ -1,6 +1,5 @@
 import {
   ICursor,
-  IMidPointStyleItem,
   IPointStyle,
   IPointStyleItem,
   IRenderType,
@@ -15,15 +14,14 @@ export const ACTIVE_COLOR = '#ED9D48';
 export const DEFAULT_POINT_NORMAL_STYLE: IPointStyleItem = {
   color: DEFAULT_COLOR,
   shape: 'circle',
-  size: 8,
+  size: 6,
   borderColor: '#ffffff',
   borderWidth: 2,
 };
 
 export const DEFAULT_POINT_HOVER_STYLE: IPointStyleItem = {
   ...DEFAULT_POINT_NORMAL_STYLE,
-  size: 10,
-  borderWidth: 4,
+  size: 8,
 };
 
 export const DEFAULT_POINT_ACTIVE_STYLE: IPointStyleItem = {
@@ -31,7 +29,7 @@ export const DEFAULT_POINT_ACTIVE_STYLE: IPointStyleItem = {
   color: ACTIVE_COLOR,
 };
 
-export const DEFAULT_MID_POINT_STYLE: IMidPointStyleItem = {
+export const DEFAULT_MID_POINT_STYLE: IPointStyleItem = {
   shape: 'circle',
   size: 6,
   color: ACTIVE_COLOR,
@@ -88,19 +86,9 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
   },
   midPoint: {
     normal: DEFAULT_MID_POINT_STYLE,
-    hover: DEFAULT_MID_POINT_STYLE,
-    active: DEFAULT_MID_POINT_STYLE,
   },
   dashLine: {
     normal: {
-      color: ACTIVE_COLOR,
-      size: 2,
-    },
-    hover: {
-      color: ACTIVE_COLOR,
-      size: 2,
-    },
-    active: {
       color: ACTIVE_COLOR,
       size: 2,
     },
