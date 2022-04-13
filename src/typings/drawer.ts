@@ -1,6 +1,13 @@
 import { IStyle } from './render';
 
-export type ICursorType = 'draw' | 'move' | 'pointer';
+export type ICursorType =
+  | 'draw'
+  | 'pointHover'
+  | 'pointDrag'
+  | 'lineHover'
+  | 'lineDrag'
+  | 'polygonHover'
+  | 'polygonDrag';
 
 export type ICursor = Record<ICursorType, string>;
 

@@ -6,17 +6,21 @@ import {
   Polygon,
   Position,
 } from '@turf/turf';
+import { GeoJSONObject } from '@turf/turf';
 
 export interface IBaseProperties {
   id: string;
 }
 
-export type IBaseFeature<
-  T extends GeometryObject = GeometryObject,
+// @ts-ignore
+export interface IBaseFeature<
+  G extends GeometryObject = GeometryObject,
   P extends IBaseProperties = IBaseProperties
-> = Feature<T, P> & {
+> extends Feature {
+  type: 'Feature';
+  geometry: G;
   properties: P;
-};
+}
 
 // ------------
 

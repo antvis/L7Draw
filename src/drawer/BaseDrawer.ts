@@ -62,7 +62,10 @@ export abstract class BaseDrawer<
 
   abstract getDefaultOptions(): T;
 
-  abstract setData(updater: F[] | ((_: F[]) => F[]), store?: boolean): void;
+  abstract setData(
+    updater: F[] | ((features: F[]) => F[]),
+    store?: boolean,
+  ): void;
 
   abstract getData(): F[];
 

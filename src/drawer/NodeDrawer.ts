@@ -79,9 +79,9 @@ export class NodeDrawer<
       isSameFeature(this.editPoint, e.feature) &&
       this.options.editable
     ) {
-      this.setCursor('move');
+      this.setCursor('pointDrag');
     } else {
-      this.setCursor('pointer');
+      this.setCursor('pointHover');
 
       this.setData(data =>
         data.map(feature => {
@@ -133,7 +133,7 @@ export class NodeDrawer<
         dragEnable: false,
       });
       this.editPoint = currentFeature;
-      this.setCursor('move');
+      this.setCursor('pointDrag');
       this.emit(DrawerEvent.dragStart, currentFeature, this.getData());
     }
 
@@ -154,7 +154,7 @@ export class NodeDrawer<
         }),
       );
       this.emit(DrawerEvent.dragging, this.editPoint, this.getData());
-      this.setCursor('move');
+      this.setCursor('pointDrag');
     }
   }
 
@@ -178,7 +178,7 @@ export class NodeDrawer<
       });
       const editPoint = this.editPoint;
       this.editPoint = null;
-      this.setCursor('pointer');
+      this.setCursor('pointHover');
       this.emit(DrawerEvent.dragEnd, editPoint, this.getData());
     }
   }

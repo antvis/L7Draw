@@ -101,8 +101,12 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
 
 export const DEFAULT_CURSOR_MAP: ICursor = {
   draw: 'crosshair',
-  move: 'move',
-  pointer: 'pointer',
+  pointHover: 'pointer',
+  pointDrag: 'move',
+  lineHover: 'pointer',
+  lineDrag: 'move',
+  polygonHover: 'pointer',
+  polygonDrag: 'move',
 };
 
 export const RENDER_TYPE_MAP: Record<

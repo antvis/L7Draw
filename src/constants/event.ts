@@ -16,5 +16,10 @@ export enum SourceEvent {
 }
 
 export enum RenderEvent {
-  add = 'add',
+  unclick = 'unclick',
+  mousedown = 'mousedown',
+  mousemove = 'mousemove',
+  mouseout = 'mouseout',
+  dragging = 'dragging',
+  dragend = 'dragend',
 }

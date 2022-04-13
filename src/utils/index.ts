@@ -10,6 +10,7 @@ import {
   transformTranslate,
 } from '@turf/turf';
 import { Position, Properties } from '@turf/turf';
+import { debounce } from 'lodash';
 
 export const getUuid = (prefix = '') => {
   return `${prefix}-${v4()}`;
@@ -70,6 +71,13 @@ export const moveFeatureList = <F extends IBaseFeature>(
   endLngLat: ILngLat,
 ) => {
   return features.map(feature => moveFeature(feature, startLngLat, endLngLat));
+};
+
+export const debounceMoveFn = (f: Function) => {
+  // @ts-ignore
+  return debounce(f, 16, {
+    maxWait: 16,
+  });
 };
 
 export * from './cursor';

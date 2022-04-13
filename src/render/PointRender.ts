@@ -1,9 +1,9 @@
 import { BaseRender } from './BaseRender';
 import {
   ILayerMouseEvent,
-  ILngLat,
   IPointFeature,
   IPointStyle,
+  ISceneMouseEvent,
 } from '../typings';
 import { ILayer, PointLayer } from '@antv/l7';
 import { featureCollection, point } from '@turf/turf';
@@ -54,16 +54,37 @@ export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
 
   onCreate = (e: ILayerMouseEvent) => {
     const { lng, lat } = e.lngLat;
-    const pointFeature = point([lng, lat], {
+    const feature = point([lng, lat], {
       id: getUuid('point'),
       isHover: false,
       isActive: false,
       isDrag: false,
     }) as IPointFeature;
-    this.emit(RenderEvent.add, pointFeature);
+    this.emit(RenderEvent.unclick, {
+      ...e,
+      feature,
+    });
   };
 
-  onHover = (e: ILayerMouseEvent) => {};
+  onMouseMove = (e: ILayerMouseEvent) => {
+    this.emit(RenderEvent.mousemove, e);
+  };
+
+  onMouseOut = (e: ILayerMouseEvent) => {
+    this.emit(RenderEvent.mouseout, e);
+  };
+
+  onMouseDown = (e: ILayerMouseEvent) => {
+    this.emit(RenderEvent.mousedown, e);
+  };
+
+  onDragging = (e: ISceneMouseEvent) => {
+    this.emit(RenderEvent.dragging, e);
+  };
+
+  onDragEnd = (e: ISceneMouseEvent) => {
+    this.emit(RenderEvent.dragend, e);
+  };
 
   enableCreate() {
     this.layers[0].on('unclick', this.onCreate);
@@ -74,10 +95,24 @@ export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
   }
 
   enableHover() {
-    this.layers[0].on('mousemove', this.onHover);
+    this.layers[0].on('mousemove', this.onMouseMove);
+    this.layers[0].on('mouseout', this.onMouseOut);
   }
 
   disableHover() {
-    this.layers[0].off('mousemove', this.onHover);
+    this.layers[0].off('mousemove', this.onMouseMove);
+    this.layers[0].off('mouseout', this.onMouseOut);
+  }
+
+  enableEdit() {
+    this.layers[0].on('mousedown', this.onMouseDown);
+    this.scene.on('dragging', this.onDragging);
+    this.scene.on('dragend', this.onDragEnd);
+  }
+
+  disableEdit() {
+    this.layers[0].off('mousedown', this.onMouseDown);
+    this.scene.off('dragging', this.onDragging);
+    this.scene.off('dragend', this.onDragEnd);
   }
 }

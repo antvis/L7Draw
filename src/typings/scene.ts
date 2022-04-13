@@ -8,6 +8,7 @@ export interface ILngLat {
 export interface ISceneMouseEvent {
   type: string;
   lnglat: ILngLat;
+  lngLat: ILngLat;
 }
 
 export interface ILayerMouseEvent<T = IBaseFeature> {

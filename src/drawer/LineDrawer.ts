@@ -253,7 +253,7 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
   onMouseDown(e: ILayerMouseEvent<ILineFeature>) {
     const { feature, lngLat } = e;
     if (this.status === DRAWER_STATUS.NORMAL) {
-      this.setCursor('pointer');
+      this.setCursor('lineHover');
       this.setData(data =>
         data.map(item => {
           if (isSameFeature(item, feature) && item.properties) {
@@ -290,7 +290,7 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
 
   onDragging({ lngLat }: ILayerMouseEvent) {
     if (this.status === DRAWER_STATUS.EDIT && this.dragLine) {
-      this.setCursor('move');
+      this.setCursor('lineDrag');
       const newDragLine = moveFeature(
         this.dragLine,
         this._previousLngLat,
@@ -318,7 +318,7 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
   }
 
   onMouseMove({ feature }: ILayerMouseEvent) {
-    this.setCursor('pointer');
+    this.setCursor('lineHover');
     this.setData(data =>
       data.map(item => {
         if (isSameFeature(item, feature) && item.properties) {
@@ -331,7 +331,7 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
 
   onMouseUp(e: ISceneMouseEvent) {
     if (this.dragLine) {
-      this.setCursor('pointer');
+      this.setCursor('lineHover');
       this.dragLine = null;
       this.scene.setMapStatus({
         dragEnable: true,
@@ -372,7 +372,7 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
     const midPointList: IMidPointFeature[] = [];
     if (this.status === DRAWER_STATUS.EDIT && nodes.length > 1) {
       for (let i = 0; i < nodes.length - 1; i++) {
-        const newPoint: IMidPointFeature = Object.assign(
+        const newPoint = Object.assign(
           center(featureCollection([nodes[i], nodes[i + 1]])),
           {
             properties: {
@@ -384,7 +384,7 @@ export class LineDrawer extends BaseDrawer<ILineDrawerOptions, ILineFeature> {
               endId: nodes[i + 1].properties?.id ?? '',
             },
           },
-        );
+        ) as IMidPointFeature;
         midPointList.push(newPoint);
       }
     }
