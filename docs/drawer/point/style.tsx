@@ -41,7 +41,7 @@ const Demo: React.FC = () => {
               color: '#ffff00',
             },
             callback: (layers: ILayer[]) => {
-              console.log(layers);
+              // 对layers进行函数式设置样式
             },
           },
         },

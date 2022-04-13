@@ -14,6 +14,10 @@ order: 1
 
 <code src="./drawer/point/start.tsx" compact="true"></code>
 
+### 初始化 Point 数据
+
+<code src="./drawer/point/initData.tsx" compact="true"></code>
+
 ### 覆盖默认样式
 
 <code src="./drawer/point/style.tsx" compact="true"></code>

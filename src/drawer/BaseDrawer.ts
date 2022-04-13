@@ -25,28 +25,22 @@ export abstract class BaseDrawer<
   F extends IBaseFeature
 > extends EventEmitter<DrawerEvent> {
   scene: Scene;
-
   source: Source;
-
   render: IRenderMap;
-
   options: T;
-
   cursor: Cursor;
-
-  // 当前是否开启编辑
-  isEnable = false;
+  isEnable = false; // 当前是否开启编辑
 
   constructor(scene: Scene, options?: DeepPartial<T>) {
     super();
     this.bindThis();
-
     this.scene = scene;
     this.options = merge({}, this.getDefaultOptions(), options ?? {});
     this.render = this.initRender();
     this.cursor = new Cursor(scene, this.options.cursor);
     this.source = new Source({
       render: this.render,
+      data: this.options.data,
     });
     this.bindSourceEvent();
 

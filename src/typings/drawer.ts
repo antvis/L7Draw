@@ -1,4 +1,5 @@
 import { IStyle } from './render';
+import { ISourceData } from './source';
 
 export type ICursorType =
   | 'draw'
@@ -14,6 +15,7 @@ export type ICursor = Record<ICursorType, string>;
 export interface IDrawerOptions {
   style: IStyle;
   cursor: ICursor;
+  data?: Partial<ISourceData>;
   editable: boolean;
   autoFocus: boolean;
 }
