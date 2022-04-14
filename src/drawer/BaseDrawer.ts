@@ -20,17 +20,15 @@ import {
 } from '../constants';
 import { Cursor } from '../utils';
 
-export abstract class BaseDrawer<
-  T extends IDrawerOptions,
-  F extends IBaseFeature
-> extends EventEmitter<DrawerEvent> {
+export abstract class BaseDrawer<T extends IDrawerOptions> extends EventEmitter<
+  DrawerEvent
+> {
   scene: Scene;
   source: Source;
   render: IRenderMap;
   options: T;
   cursor: Cursor;
   isEnable = false; // 当前是否开启编辑
-
   constructor(scene: Scene, options?: DeepPartial<T>) {
     super();
     this.bindThis();
@@ -42,8 +40,6 @@ export abstract class BaseDrawer<
       render: this.render,
       data: this.options.data,
     });
-    this.bindSourceEvent();
-
     this.emit(DrawerEvent.init);
   }
 
@@ -56,16 +52,30 @@ export abstract class BaseDrawer<
 
   abstract getDefaultOptions(): T;
 
-  abstract setData(
-    updater: F[] | ((features: F[]) => F[]),
-    store?: boolean,
-  ): void;
-
-  abstract getData(): F[];
-
   abstract bindEvent(): void;
 
   abstract unbindEvent(): void;
+
+  getTypeData = <F extends IBaseFeature>(renderType: IRenderType) => {
+    return (this.source.data[renderType] as unknown) as F[];
+  };
+
+  setTypeData = <F extends IBaseFeature>(
+    renderType: IRenderType,
+    updater: F[] | ((features: F[]) => F[]),
+    store = true,
+  ) => {
+    const data =
+      typeof updater === 'function'
+        ? updater(this.getTypeData(renderType))
+        : updater;
+    this.source.setData(
+      {
+        [renderType]: data,
+      },
+      store,
+    );
+  };
 
   /**
    * 设置地图上光标样式类型
@@ -122,17 +132,7 @@ export abstract class BaseDrawer<
    * 将当前所有的回调函数与this进行绑定
    */
   bindThis() {
-    this.getData = this.getData.bind(this);
     this.initRender = this.initRender.bind(this);
-  }
-
-  /**
-   * 绑定source相应事件
-   */
-  bindSourceEvent() {
-    this.source.on(SourceEvent.change, () => {
-      nextTick(() => this.emit(DrawerEvent.change, this.getData()));
-    });
   }
 
   /**

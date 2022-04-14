@@ -16,6 +16,8 @@ export interface INodeDrawerOptions extends IDrawerOptions {}
 export class NodeDrawer<
   T extends INodeDrawerOptions = INodeDrawerOptions
 > extends BaseDrawer<T, IPointFeature> {
+  renderType: IRenderType = 'point';
+
   get editPoint() {
     const pointFeatures = this.source.render.point?.data ?? null;
     return pointFeatures?.find(feature => feature.properties?.isDrag) ?? null;

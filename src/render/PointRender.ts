@@ -60,7 +60,7 @@ export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
       isActive: false,
       isDrag: false,
     }) as IPointFeature;
-    this.emit(RenderEvent.unclick, {
+    this.emit(RenderEvent.unClick, {
       ...e,
       feature,
     });
@@ -86,7 +86,12 @@ export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
     this.emit(RenderEvent.dragend, e);
   };
 
+  onClick = (e: ILayerMouseEvent) => {
+    this.emit(RenderEvent.click, e);
+  };
+
   enableCreate() {
+    this.disableCreate();
     this.layers[0].on('unclick', this.onCreate);
   }
 
@@ -95,6 +100,7 @@ export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
   }
 
   enableHover() {
+    this.disableHover();
     this.layers[0].on('mousemove', this.onMouseMove);
     this.layers[0].on('mouseout', this.onMouseOut);
   }
@@ -105,6 +111,7 @@ export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
   }
 
   enableEdit() {
+    this.disableEdit();
     this.layers[0].on('mousedown', this.onMouseDown);
     this.scene.on('dragging', this.onDragging);
     this.scene.on('dragend', this.onDragEnd);
@@ -114,5 +121,14 @@ export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
     this.layers[0].off('mousedown', this.onMouseDown);
     this.scene.off('dragging', this.onDragging);
     this.scene.off('dragend', this.onDragEnd);
+  }
+
+  enableClick() {
+    this.disableClick();
+    this.layers[0].on('click', this.onClick);
+  }
+
+  disableClick() {
+    this.layers[0].off('click', this.onClick);
   }
 }

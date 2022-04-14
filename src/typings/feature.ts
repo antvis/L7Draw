@@ -6,7 +6,6 @@ import {
   Polygon,
   Position,
 } from '@turf/turf';
-import { GeoJSONObject } from '@turf/turf';
 
 export interface IBaseProperties {
   id: string;
@@ -39,6 +38,7 @@ export interface ILineProperties extends IBaseProperties {
   isHover: boolean;
   isActive: boolean;
   isDrag: boolean;
+  isDraw: boolean;
 }
 
 export type ILineFeature = IBaseFeature<LineString, ILineProperties>;
@@ -60,4 +60,5 @@ export interface IMidPointProperties extends IBaseProperties {
 
 export type IMidPointFeature = IBaseFeature<Point, IMidPointProperties>;
 
+export type IDashLineFeature = IBaseFeature<LineString, any>;
 // ------------

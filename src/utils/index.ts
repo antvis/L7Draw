@@ -1,8 +1,15 @@
 import { v4 } from 'uuid';
-import { IBaseFeature, ILngLat } from '../typings';
 import {
+  IBaseFeature,
+  ILineFeature,
+  ILngLat,
+  IMidPointFeature,
+} from '../typings';
+import {
+  center,
   distance,
   Feature,
+  featureCollection,
   lineString as turfLineString,
   point,
   Point,
@@ -78,6 +85,25 @@ export const debounceMoveFn = (f: Function) => {
   return debounce(f, 16, {
     maxWait: 16,
   });
+};
+
+export const calcMidPointList = (feature: ILineFeature) => {
+  const { nodes } = feature.properties;
+  const midPointList: IMidPointFeature[] = [];
+  for (let index = 0; index < nodes.length - 1; index++) {
+    const newMidPoint = center(
+      featureCollection([nodes[index], nodes[index + 1]]),
+      {
+        properties: {
+          id: getUuid('midPoint'),
+          startId: nodes[index].properties?.id ?? '',
+          endId: nodes[index + 1].properties?.id ?? '',
+        },
+      },
+    ) as IMidPointFeature;
+    midPointList.push(newMidPoint);
+  }
+  return midPointList;
 };
 
 export * from './cursor';

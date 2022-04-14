@@ -12,7 +12,7 @@ export const DEFAULT_COLOR = '#1990FF';
 export const ACTIVE_COLOR = '#ED9D48';
 
 export const DEFAULT_POINT_NORMAL_STYLE: IPointStyleItem = {
-  color: DEFAULT_COLOR,
+  color: ACTIVE_COLOR,
   shape: 'circle',
   size: 6,
   borderColor: '#ffffff',

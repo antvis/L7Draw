@@ -9,6 +9,8 @@ export enum DrawerEvent {
   dragEnd = 'dragEnd',
   change = 'change',
   click = 'click',
+
+  addPoint = 'addPoint',
 }
 
 export enum SourceEvent {
@@ -16,7 +18,8 @@ export enum SourceEvent {
 }
 
 export enum RenderEvent {
-  unclick = 'unclick',
+  click = 'click',
+  unClick = 'unclick',
   mousedown = 'mousedown',
   mousemove = 'mousemove',
   mouseout = 'mouseout',

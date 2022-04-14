@@ -1,4 +1,5 @@
 import {
+  IDashLineFeature,
   ILineFeature,
   IMidPointFeature,
   IPointFeature,
@@ -11,7 +12,7 @@ export interface ISourceData {
   line: ILineFeature[];
   polygon: IPolygonFeature[];
   midPoint: IMidPointFeature[];
-  dashLine: ILineFeature[];
+  dashLine: IDashLineFeature[];
 }
 
 export type IRenderMap = {

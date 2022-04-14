@@ -10,7 +10,7 @@ const Demo: React.FC = () => {
 
   useEffect(() => {
     const scene = new Scene({
-      id: 'map',
+      id: 'map1',
       map: new GaodeMap({
         center: [105.732421875, 32.24997445586331],
         pitch: 0,
@@ -19,7 +19,10 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new LineDrawer(scene, {});
+      const drawer = new LineDrawer(scene, {
+        autoFocus: false,
+        editable: false,
+      });
       setPointDrawer(drawer);
       drawer.enable();
     });
@@ -27,12 +30,7 @@ const Demo: React.FC = () => {
 
   return (
     <div>
-      <div style={{ padding: 8 }}>
-        <Button onClick={() => pointDrawer?.enable()}>启用</Button>
-        <Button onClick={() => pointDrawer?.disable()}>禁用</Button>
-        <Button onClick={() => pointDrawer?.clear()}>清空</Button>
-      </div>
-      <div id="map" style={{ height: 400, position: 'relative' }} />
+      <div id="map1" style={{ height: 400, position: 'relative' }} />
     </div>
   );
 };
