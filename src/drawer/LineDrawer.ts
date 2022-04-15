@@ -11,7 +11,7 @@ import {
   ISourceData,
 } from '../typings';
 import { Scene } from '@antv/l7';
-import { BasePointDrawer } from './BasePointDrawer';
+import { NodeDrawer } from './NodeDrawer';
 import {
   calcMidPointList,
   debounceMoveFn,
@@ -19,17 +19,37 @@ import {
   isSameFeature,
   lineString,
 } from '../utils';
-import { coordAll, featureCollection, point } from '@turf/turf';
+import { coordAll, featureCollection, point, Position } from '@turf/turf';
 import { last } from 'lodash';
 import { RenderEvent } from '../constants';
 
 export interface ILineDrawerOptions extends IDrawerOptions {}
 
-export class LineDrawer extends BasePointDrawer<ILineDrawerOptions> {
+export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
+  constructor(scene: Scene, options?: DeepPartial<ILineDrawerOptions>) {
+    super(scene, options);
+
+    this.pointRender?.on(RenderEvent.click, this.onPointClick);
+    this.midPointRender?.on(RenderEvent.click, this.onMidPointClick);
+    this.midPointRender?.on(RenderEvent.mousemove, this.onMidPointMouseMove);
+    this.midPointRender?.on(RenderEvent.mouseout, this.onMidPointMouseOut);
+    this.lineRender?.on(RenderEvent.mousemove, this.onLineMouseMove);
+    this.lineRender?.on(RenderEvent.mouseout, this.onLineMouseOut);
+    this.lineRender?.on(RenderEvent.mousedown, this.onLineMouseDown);
+    this.lineRender?.on(RenderEvent.dragging, this.onLineDragging);
+    this.lineRender?.on(RenderEvent.dragend, this.onLineDragEnd);
+  }
+
   get editLine() {
     return this.source.data.line.find(feature => {
       const { isActive, isDraw } = feature.properties;
       return isActive && !isDraw;
+    });
+  }
+
+  get dragLine() {
+    return this.source.data.line.find(feature => {
+      return feature.properties.isDrag;
     });
   }
 
@@ -39,17 +59,12 @@ export class LineDrawer extends BasePointDrawer<ILineDrawerOptions> {
     );
   }
 
-  get midPointRender() {
-    return this.render.midPoint;
+  get lineRender() {
+    return this.render.line;
   }
 
-  constructor(scene: Scene, options?: DeepPartial<ILineDrawerOptions>) {
-    super(scene, options);
-
-    this.pointRender?.on(RenderEvent.click, this.onPointClick);
-    this.midPointRender?.on(RenderEvent.click, this.onMidPointClick);
-    this.midPointRender?.on(RenderEvent.mousemove, this.onMidPointMouseMove);
-    this.midPointRender?.on(RenderEvent.mouseout, this.onMidPointMouseOut);
+  get midPointRender() {
+    return this.render.midPoint;
   }
 
   getLineData() {
@@ -159,8 +174,7 @@ export class LineDrawer extends BasePointDrawer<ILineDrawerOptions> {
   setEditLine(editLine: ILineFeature | null) {
     if (editLine) {
       this.printEditLineData(editLine);
-      this.pointRender?.enableEdit();
-      this.pointRender?.enableEdit();
+      this.bindEditEvent();
     } else {
       this.source.setData({
         point: [],
@@ -169,7 +183,6 @@ export class LineDrawer extends BasePointDrawer<ILineDrawerOptions> {
             ...feature.properties,
             isDraw: false,
             isActive: false,
-            isDrag: false,
             isHover: false,
           };
           return feature;
@@ -177,8 +190,7 @@ export class LineDrawer extends BasePointDrawer<ILineDrawerOptions> {
         dashLine: [],
         midPoint: [],
       });
-      this.pointRender?.disableHover();
-      this.pointRender?.disableEdit();
+      this.unbindEditEvent();
     }
   }
 
@@ -248,6 +260,87 @@ export class LineDrawer extends BasePointDrawer<ILineDrawerOptions> {
     this.setCursor(null);
   }
 
+  onLineMouseMove(e: ILayerMouseEvent<ILineFeature>) {
+    if (this.dragLine) {
+      return;
+    }
+    this.setCursor('lineHover');
+    this.setLineData(features =>
+      features.map(feature => {
+        feature.properties.isHover = isSameFeature(e.feature, feature);
+        return feature;
+      }),
+    );
+  }
+
+  onLineMouseOut(e: ILayerMouseEvent<ILineFeature>) {
+    if (this.dragLine) {
+      return;
+    }
+    this.setCursor(this.drawLine ? 'draw' : null);
+    this.setLineData(features =>
+      features.map(feature => {
+        feature.properties.isHover = false;
+        return feature;
+      }),
+    );
+  }
+
+  onLineMouseDown(e: ILayerMouseEvent<ILineFeature>) {
+    const currentLine = e.feature ?? null;
+    if (!this.options.editable || !currentLine) {
+      return;
+    }
+
+    this.previousLngLat = e.lngLat;
+    this.setLineData(features =>
+      features.map(feature => {
+        const isSame = isSameFeature(currentLine, feature);
+        feature.properties.isActive = feature.properties.isDrag = isSame;
+        return feature;
+      }),
+    );
+    this.scene.setMapStatus({
+      dragEnable: false,
+    });
+    this.setCursor('lineDrag');
+  }
+
+  onLineDragging(e: ILayerMouseEvent<ILineFeature>) {
+    const dragLine = this.dragLine;
+    if (dragLine && this.options.editable) {
+      const { lng: newLng, lat: newLat } = e.lngLat;
+      const { lng: oldLng, lat: oldLat } = this.previousLngLat;
+      const diffLng = newLng - oldLng;
+      const diffLat = newLat - oldLat;
+      const nodes = dragLine.properties.nodes;
+      const pointList: Position[] = [];
+      nodes.forEach(node => {
+        const [lng, lat] = node.geometry.coordinates;
+        node.geometry.coordinates = [lng + diffLng, lat + diffLat];
+        pointList.push(node.geometry.coordinates);
+      });
+      dragLine.geometry.coordinates = pointList;
+      this.previousLngLat = e.lngLat;
+      this.setEditLine(dragLine);
+    }
+  }
+
+  onLineDragEnd(e: ILayerMouseEvent<ILineFeature>) {
+    const dragLine = this.dragLine;
+    if (dragLine && this.options.editable) {
+      this.setLineData(features =>
+        features.map(feature => {
+          feature.properties.isDrag = false;
+          return feature;
+        }),
+      );
+      this.scene.setMapStatus({
+        dragEnable: true,
+      });
+    }
+  }
+
   onMidPointClick(e: ILayerMouseEvent<IMidPointFeature>) {
     const feature = e.feature!;
     const editLine = this.editLine!;
@@ -272,45 +365,55 @@ export class LineDrawer extends BasePointDrawer<ILineDrawerOptions> {
     }
   }
 
-  disable() {
-    super.disable();
-
-    // const unNormalLineData = this.getLineData().filter(feature => {
-    //   const { isActive, isDrag, isDraw, isHover } = feature.properties;
-    //   return isActive || isDraw || isDrag || isHover;
-    // });
-    //
-    // if (unNormalLineData.length) {
-    //   unNormalLineData.forEach(feature => {
-    //     // if (feature)
-    //   })
-    // }
-  }
-
   bindEvent() {
     this.pointRender?.enableCreate();
     this.pointRender?.enableClick();
-    this.midPointRender?.enableClick();
-    this.midPointRender?.enableHover();
+    if (this.options.editable) {
+      this.lineRender?.enableHover();
+    }
     this.scene?.on('mousemove', this.onSceneMouseMove);
   }
 
   unbindEvent() {
     this.pointRender?.disableCreate();
     this.pointRender?.disableClick();
+    if (this.options.editable) {
+      this.lineRender?.disableHover();
+    }
+    this.scene?.off('mousemove', this.onSceneMouseMove);
+  }
+
+  bindEditEvent() {
+    this.pointRender?.enableDrag();
+    this.pointRender?.enableHover();
+    this.midPointRender?.enableClick();
+    this.midPointRender?.enableHover();
+    this.lineRender?.enableDrag();
+  }
+
+  unbindEditEvent() {
+    this.pointRender?.disableHover();
+    this.pointRender?.disableDrag();
     this.midPointRender?.disableClick();
     this.midPointRender?.disableHover();
-    this.scene?.off('mousemove', this.onSceneMouseMove);
+    this.lineRender?.disableDrag();
   }
 
   bindThis() {
     super.bindThis();
     this.onPointCreate = this.onPointCreate.bind(this);
-    this.onPointDragging = this.onPointDragging.bind(this);
+    this.onPointDragging = debounceMoveFn(this.onPointDragging).bind(this);
     this.onSceneMouseMove = debounceMoveFn(this.onSceneMouseMove).bind(this);
     this.onPointClick = this.onPointClick.bind(this);
     this.onMidPointClick = this.onMidPointClick.bind(this);
-    this.onMidPointMouseMove = this.onMidPointMouseMove.bind(this);
+    this.onMidPointMouseMove = debounceMoveFn(this.onMidPointMouseMove).bind(
+      this,
+    );
     this.onMidPointMouseOut = this.onMidPointMouseOut.bind(this);
+    this.onLineMouseMove = debounceMoveFn(this.onLineMouseMove).bind(this);
+    this.onLineMouseOut = this.onLineMouseOut.bind(this);
+    this.onLineMouseDown = this.onLineMouseDown.bind(this);
+    this.onLineDragging = debounceMoveFn(this.onLineDragging).bind(this);
+    this.onLineDragEnd = this.onLineDragEnd.bind(this);
   }
 }

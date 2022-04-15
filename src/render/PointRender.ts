@@ -110,14 +110,14 @@ export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
     this.layers[0].off('mouseout', this.onMouseOut);
   }
 
-  enableEdit() {
-    this.disableEdit();
+  enableDrag() {
+    this.disableDrag();
     this.layers[0].on('mousedown', this.onMouseDown);
     this.scene.on('dragging', this.onDragging);
     this.scene.on('dragend', this.onDragEnd);
   }
 
-  disableEdit() {
+  disableDrag() {
     this.layers[0].off('mousedown', this.onMouseDown);
     this.scene.off('dragging', this.onDragging);
     this.scene.off('dragend', this.onDragEnd);

@@ -1,258 +1,166 @@
-import { point } from '@turf/turf';
+import { BaseDrawer } from './BaseDrawer';
 import {
   IDrawerOptions,
+  IBaseFeature,
+  DeepPartial,
   ILayerMouseEvent,
   IPointFeature,
-  IRenderType,
   ISceneMouseEvent,
+  IRenderType,
+  ILngLat,
 } from '../typings';
-import { BaseDrawer } from './BaseDrawer';
-import { getUuid, isSameFeature } from '../utils';
-import { DrawerEvent } from '../constants';
-import { debounce } from 'lodash';
+import { Scene } from '@antv/l7';
+import { DrawerEvent, RenderEvent } from '../constants';
+import { debounceMoveFn, isSameFeature } from '../utils';
 
-export interface INodeDrawerOptions extends IDrawerOptions {}
-
-export class NodeDrawer<
-  T extends INodeDrawerOptions = INodeDrawerOptions
-> extends BaseDrawer<T, IPointFeature> {
-  renderType: IRenderType = 'point';
-
-  get editPoint() {
-    const pointFeatures = this.source.render.point?.data ?? null;
-    return pointFeatures?.find(feature => feature.properties?.isDrag) ?? null;
+export abstract class NodeDrawer<T extends IDrawerOptions> extends BaseDrawer<
+  T
+> {
+  get pointRender() {
+    return this.render.point;
   }
 
-  set editPoint(dragFeature: IPointFeature | null) {
-    this.setData(data =>
-      data.map(feature => {
-        if (feature.properties) {
-          feature.properties.isDrag = dragFeature
-            ? isSameFeature(feature, dragFeature)
-            : false;
-        }
-        return feature;
-      }),
+  get dragPoint() {
+    return (
+      this.source.data.point.find(feature => feature.properties.isDrag) ?? null
     );
   }
 
-  get normalLayer() {
-    return this.source.render.point?.layers[0];
+  previousLngLat: ILngLat = {
+    lng: 0,
+    lat: 0,
+  };
+
+  constructor(scene: Scene, options?: DeepPartial<T>) {
+    super(scene, options);
+
+    this.pointRender?.on(RenderEvent.unClick, this.onPointCreate);
+    this.pointRender?.on(RenderEvent.mousemove, this.onPointMouseMove);
+    this.pointRender?.on(RenderEvent.mouseout, this.onPointMouseOut);
+    this.pointRender?.on(RenderEvent.mousedown, this.onPointMouseDown);
+    this.pointRender?.on(RenderEvent.dragging, this.onPointDragging);
+    this.pointRender?.on(RenderEvent.dragend, this.onPointDragEnd);
   }
 
   getRenderList(): IRenderType[] {
     return ['point'];
   }
 
-  getDefaultOptions(): T {
-    // @ts-ignore
-    return this.getCommonOptions();
+  getPointData() {
+    return this.getTypeData<IPointFeature>('point');
   }
 
-  bindEditEvent() {
-    this.normalLayer?.on('mousemove', this.onMouseMove);
-    this.normalLayer?.on('mouseout', this.onMouseOut);
-    this.normalLayer?.on('mousedown', this.onDragStart);
-    this.scene.on('dragging', this.onDragging);
-    this.scene.on('dragend', this.onDragEnd);
+  setPointData(
+    updater: IPointFeature[] | ((features: IPointFeature[]) => IPointFeature[]),
+    store = true,
+  ) {
+    return this.setTypeData<IPointFeature>('point', updater, store);
   }
 
-  unbindEditEvent() {
-    this.normalLayer?.off('mousemove', this.onMouseMove);
-    this.normalLayer?.off('mouseout', this.onMouseOut);
-    this.normalLayer?.off('mousedown', this.onDragStart);
-    this.scene.off('dragging', this.onDragging);
-    this.scene.off('dragend', this.onDragEnd);
-  }
-
-  bindEvent(): void {
-    this.normalLayer?.on('unclick', this.onUnClick);
-    this.bindEditEvent();
-  }
-
-  unbindEvent(): void {
-    this.normalLayer?.off('unclick', this.onUnClick);
-    this.unbindEditEvent();
-  }
-
-  onMouseMove(e: ILayerMouseEvent<IPointFeature>) {
-    if (
-      this.editPoint &&
-      isSameFeature(this.editPoint, e.feature) &&
-      this.options.editable
-    ) {
-      this.setCursor('pointDrag');
-    } else {
-      this.setCursor('pointHover');
-
-      this.setData(data =>
-        data.map(feature => {
-          if (feature.properties) {
-            feature.properties.isHover = isSameFeature(feature, e.feature);
-          }
+  onPointCreate(e: ILayerMouseEvent<IPointFeature>) {
+    let feature = e.feature!;
+    const { editable, autoFocus } = this.options;
+    feature.properties.isHover = feature.properties.isActive =
+      editable && autoFocus;
+    this.setPointData(
+      features => [
+        ...features.map(feature => {
+          feature.properties.isActive = feature.properties.isHover = feature.properties.isDrag = false;
           return feature;
         }),
-      );
-    }
-  }
-
-  onMouseOut(e: ILayerMouseEvent<IPointFeature>) {
-    this.setCursor(this.isEnable ? 'draw' : null);
-
-    if (!this.editPoint) {
-      this.setData(data =>
-        data.map(feature => {
-          if (feature.properties) {
-            feature.properties.isHover = false;
-          }
-          return feature;
-        }),
-      );
-    }
-  }
-
-  onDragStart(e: ILayerMouseEvent<IPointFeature>) {
-    const currentFeature = e.feature ?? null;
-
-    this.setData(
-      data =>
-        data.map(feature => {
-          if (currentFeature) {
-            if (feature.properties) {
-              feature.properties.isActive = isSameFeature(
-                currentFeature,
-                feature,
-              );
-            }
-          }
-          return feature;
-        }),
+        feature,
+      ],
       true,
     );
-
-    if (this.options.editable) {
-      this.scene.setMapStatus({
-        dragEnable: false,
-      });
-      this.editPoint = currentFeature;
-      this.setCursor('pointDrag');
-      this.emit(DrawerEvent.dragStart, currentFeature, this.getData());
-    }
-
-    this.emit(DrawerEvent.click, currentFeature, this.getData());
   }
 
-  onDragging(e: ILayerMouseEvent<ISceneMouseEvent>) {
-    if (this.editPoint && this.options.editable) {
-      this.setData(data =>
-        data.map(feature => {
-          if (isSameFeature(this.editPoint, feature)) {
-            const { lng, lat } = e.lngLat;
-            if (feature.geometry) {
-              feature.geometry.coordinates = [lng, lat];
-            }
-          }
+  onPointMouseMove({ feature: pointFeature }: ILayerMouseEvent<IPointFeature>) {
+    if (this.options.editable && pointFeature && !this.dragPoint) {
+      this.setCursor('pointHover');
+      this.setPointData(
+        features =>
+          features.map(feature => {
+            feature.properties.isHover = isSameFeature(pointFeature, feature);
+            return feature;
+          }),
+        false,
+      );
+    }
+  }
+
+  onPointMouseOut() {
+    this.setCursor(this.isEnable ? 'draw' : null);
+    this.setPointData(
+      features =>
+        features.map(feature => {
+          feature.properties.isHover = false;
           return feature;
         }),
-      );
-      this.emit(DrawerEvent.dragging, this.editPoint, this.getData());
-      this.setCursor('pointDrag');
-    }
+      false,
+    );
   }
 
-  onDragEnd(e: ILayerMouseEvent<ISceneMouseEvent>) {
-    if (this.options.editable) {
-      this.setData(
+  onPointMouseDown(e: ILayerMouseEvent<IPointFeature>) {
+    const currentPoint = e.feature ?? null;
+    if (!this.options.editable || !currentPoint) {
+      return;
+    }
+
+    this.setPointData(features =>
+      features.map(feature => {
+        const isSame = isSameFeature(currentPoint, feature);
+        feature.properties.isActive = isSame;
+        feature.properties.isDrag = isSame;
+        return feature;
+      }),
+    );
+    this.scene.setMapStatus({
+      dragEnable: false,
+    });
+    this.setCursor('pointDrag');
+  }
+
+  onPointDragging(e: ISceneMouseEvent) {
+    if (this.dragPoint && this.options.editable) {
+      this.setPointData(
         data =>
           data.map(feature => {
-            if (isSameFeature(this.editPoint, feature)) {
+            if (isSameFeature(this.dragPoint, feature)) {
               const { lng, lat } = e.lngLat;
-              if (feature.geometry) {
-                feature.geometry.coordinates = [lng, lat];
-              }
+              feature.geometry.coordinates = [lng, lat];
             }
             return feature;
           }),
-        true,
+        false,
+      );
+      this.setCursor('pointDrag');
+    }
+  }
+
+  onPointDragEnd(e: ISceneMouseEvent) {
+    if (this.dragPoint && this.options.editable) {
+      this.setPointData(data =>
+        data.map(feature => {
+          if (isSameFeature(this.dragPoint, feature)) {
+            feature.properties.isDrag = false;
+          }
+          return feature;
+        }),
       );
       this.scene.setMapStatus({
         dragEnable: true,
       });
-      const editPoint = this.editPoint;
-      this.editPoint = null;
       this.setCursor('pointHover');
-      this.emit(DrawerEvent.dragEnd, editPoint, this.getData());
     }
-  }
-
-  onUnClick(e: ILayerMouseEvent<IPointFeature>) {
-    const { lng, lat } = e.lngLat;
-    const autoFocus = this.options.autoFocus;
-    const newPoint = point([lng, lat], {
-      id: getUuid('point'),
-      isHover: autoFocus,
-      isActive: autoFocus,
-      isDrag: false,
-    }) as IPointFeature;
-    this.setData(data => {
-      return [
-        ...data.map(feature => {
-          if (feature.properties) {
-            feature.properties.isHover = false;
-            feature.properties.isActive = false;
-          }
-          return feature;
-        }),
-        newPoint,
-      ];
-    }, true);
-    this.emit(DrawerEvent.add, newPoint, this.getData());
-  }
-
-  getData() {
-    return this.source.data.point;
-  }
-
-  setData(
-    updater: IPointFeature[] | ((data: IPointFeature[]) => IPointFeature[]),
-    store: boolean = false,
-  ): void {
-    const point =
-      typeof updater === 'function' ? updater(this.getData()) : updater;
-    this.source.setData(
-      {
-        point,
-      },
-      store,
-    );
   }
 
   bindThis() {
     super.bindThis();
-
-    this.onUnClick = this.onUnClick.bind(this);
-    this.onMouseOut = this.onMouseOut.bind(this);
-    this.onDragStart = this.onDragStart.bind(this);
-    this.onDragEnd = this.onDragEnd.bind(this);
-    this.onMouseMove = debounce(this.onMouseMove, 16, { maxWait: 16 }).bind(
-      this,
-    );
-    this.onDragging = debounce(this.onDragging, 16, { maxWait: 16 }).bind(this);
-  }
-
-  // 在基础disable的技术上，把所有点的状态取消
-  disable() {
-    super.disable();
-
-    this.editPoint = null;
-    this.setData(data =>
-      data.map(feature => {
-        if (feature.properties) {
-          feature.properties.isHover = false;
-          feature.properties.isActive = false;
-        }
-        return feature;
-      }),
-    );
+    this.onPointCreate = this.onPointCreate.bind(this);
+    this.onPointMouseMove = debounceMoveFn(this.onPointMouseMove).bind(this);
+    this.onPointMouseOut = this.onPointMouseOut.bind(this);
+    this.onPointMouseDown = this.onPointMouseDown.bind(this);
+    this.onPointDragging = debounceMoveFn(this.onPointDragging).bind(this);
+    this.onPointDragEnd = this.onPointDragEnd.bind(this);
   }
 }
