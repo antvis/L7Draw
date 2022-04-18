@@ -78,6 +78,10 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     return this.setTypeData<ILineFeature>('line', updater, store);
   }
 
+  getMidPointList(lineFeature: ILineFeature) {
+    return calcMidPointList(lineFeature);
+  }
+
   getDashLineData() {
     return this.getTypeData<IDashLineFeature>('dashLine');
   }
@@ -215,7 +219,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
         return feature;
       }),
       dashLine: [],
-      midPoint: calcMidPointList(editLine),
+      midPoint: this.getMidPointList(editLine),
     });
   }
 
@@ -248,8 +252,25 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
         }
         return feature;
       }),
-      midPoint: calcMidPointList(editLine),
+      midPoint: this.getMidPointList(editLine),
     });
+  }
+
+  onPointDragEnd(e: ISceneMouseEvent) {
+    if (this.dragPoint && this.options.editable) {
+      this.setPointData(data =>
+        data.map(feature => {
+          if (isSameFeature(this.dragPoint, feature)) {
+            feature.properties.isActive = feature.properties.isDrag = false;
+          }
+          return feature;
+        }),
+      );
+      this.scene.setMapStatus({
+        dragEnable: true,
+      });
+      this.setCursor('pointHover');
+    }
   }
 
   onMidPointMouseMove(e: ILayerMouseEvent<IMidPointFeature>) {
@@ -288,7 +309,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
 
   onLineMouseDown(e: ILayerMouseEvent<ILineFeature>) {
     const currentLine = e.feature ?? null;
-    if (!this.options.editable || !currentLine) {
+    if (!currentLine || !this.options.editable || this.dragPoint) {
       return;
     }
 
@@ -308,37 +329,39 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
 
   onLineDragging(e: ILayerMouseEvent<ILineFeature>) {
     const dragLine = this.dragLine;
-    if (dragLine && this.options.editable) {
-      const { lng: newLng, lat: newLat } = e.lngLat;
-      const { lng: oldLng, lat: oldLat } = this.previousLngLat;
-      const diffLng = newLng - oldLng;
-      const diffLat = newLat - oldLat;
-      const nodes = dragLine.properties.nodes;
-      const pointList: Position[] = [];
-      nodes.forEach(node => {
-        const [lng, lat] = node.geometry.coordinates;
-        node.geometry.coordinates = [lng + diffLng, lat + diffLat];
-        pointList.push(node.geometry.coordinates);
-      });
-      dragLine.geometry.coordinates = pointList;
-      this.previousLngLat = e.lngLat;
-      this.setEditLine(dragLine);
+    if (!dragLine || !this.options.editable || this.dragPoint) {
+      return;
     }
+    const { lng: newLng, lat: newLat } = e.lngLat;
+    const { lng: oldLng, lat: oldLat } = this.previousLngLat;
+    const diffLng = newLng - oldLng;
+    const diffLat = newLat - oldLat;
+    const nodes = dragLine.properties.nodes;
+    const pointList: Position[] = [];
+    nodes.forEach(node => {
+      const [lng, lat] = node.geometry.coordinates;
+      node.geometry.coordinates = [lng + diffLng, lat + diffLat];
+      pointList.push(node.geometry.coordinates);
+    });
+    dragLine.geometry.coordinates = pointList;
+    this.previousLngLat = e.lngLat;
+    this.setEditLine(dragLine);
   }
 
   onLineDragEnd(e: ILayerMouseEvent<ILineFeature>) {
     const dragLine = this.dragLine;
-    if (dragLine && this.options.editable) {
-      this.setLineData(features =>
-        features.map(feature => {
-          feature.properties.isDrag = false;
-          return feature;
-        }),
-      );
-      this.scene.setMapStatus({
-        dragEnable: true,
-      });
+    if (!dragLine || !this.options.editable || this.dragPoint) {
+      return;
     }
+    this.setLineData(features =>
+      features.map(feature => {
+        feature.properties.isDrag = false;
+        return feature;
+      }),
+    );
+    this.scene.setMapStatus({
+      dragEnable: true,
+    });
   }
 
   onMidPointClick(e: ILayerMouseEvent<IMidPointFeature>) {
@@ -415,5 +438,6 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     this.onLineMouseDown = this.onLineMouseDown.bind(this);
     this.onLineDragging = debounceMoveFn(this.onLineDragging).bind(this);
     this.onLineDragEnd = this.onLineDragEnd.bind(this);
+    this.onPointDragEnd = this.onPointDragEnd.bind(this);
   }
 }

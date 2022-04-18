@@ -62,3 +62,9 @@ export type IMidPointFeature = IBaseFeature<Point, IMidPointProperties>;
 
 export type IDashLineFeature = IBaseFeature<LineString, any>;
 // ------------
+
+export interface ITextProperties extends IBaseProperties {
+  text: string;
+}
+
+export type ITextFeature = IBaseFeature<Point, ITextProperties>;

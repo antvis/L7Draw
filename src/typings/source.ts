@@ -4,8 +4,10 @@ import {
   IMidPointFeature,
   IPointFeature,
   IPolygonFeature,
+  ITextFeature,
 } from './feature';
 import { PointRender, LineRender, PolygonRender } from '../render';
+import { TextRender } from '../render/TextRender';
 
 export interface ISourceData {
   point: IPointFeature[];
@@ -13,6 +15,7 @@ export interface ISourceData {
   polygon: IPolygonFeature[];
   midPoint: IMidPointFeature[];
   dashLine: IDashLineFeature[];
+  text: ITextFeature[];
 }
 
 export type IRenderMap = {
@@ -21,6 +24,7 @@ export type IRenderMap = {
   polygon?: PolygonRender;
   midPoint?: PointRender;
   dashLine?: LineRender;
+  text?: TextRender;
 };
 
 export interface ISourceOptions {

@@ -97,6 +97,14 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
       dashArray: [6, 6],
     },
   },
+  text: {
+    normal: {
+      color: ACTIVE_COLOR,
+      size: 14,
+      borderColor: '#ffffff',
+      borderWidth: 1,
+    },
+  },
 };
 
 export const DEFAULT_CURSOR_MAP: ICursor = {

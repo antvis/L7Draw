@@ -1,6 +1,7 @@
 import { BaseRender } from './BaseRender';
 import {
   ILayerMouseEvent,
+  IMidPointFeature,
   IPointFeature,
   IPointStyle,
   ISceneMouseEvent,
@@ -10,7 +11,10 @@ import { featureCollection, point } from '@turf/turf';
 import { RenderEvent } from '../constants';
 import { getUuid } from '../utils';
 
-export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
+export class PointRender extends BaseRender<
+  IPointFeature | IMidPointFeature,
+  IPointStyle
+> {
   initLayers(): ILayer[] {
     const { normal, hover, active } = this.style;
     const layer = new PointLayer()

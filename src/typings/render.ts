@@ -62,12 +62,22 @@ export type IDashLineStyle = IBaseStyle<ILineStyleItem> & {
   style: any;
 };
 
+export interface ITextStyleItem {
+  color: string;
+  size: number;
+  borderWidth: number;
+  borderColor: string;
+}
+
+export type ITextStyle = IBaseStyle<ITextStyleItem>;
+
 export interface IStyle {
   point: IPointStyle;
   line: ILineStyle;
   polygon: IPolygonStyle;
   midPoint: IMidPointStyle;
   dashLine: IDashLineStyle;
+  text: ITextStyle;
 }
 
 export interface IRenderOptions<D extends IBaseFeature, S extends IBaseStyle> {
