@@ -366,6 +366,9 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
 
   onMidPointClick(e: ILayerMouseEvent<IMidPointFeature>) {
     const feature = e.feature!;
+    if (!feature) {
+      return;
+    }
     const editLine = this.editLine!;
     const nodes = editLine.properties.nodes;
     const { startId, endId } = feature.properties;
