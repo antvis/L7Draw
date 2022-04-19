@@ -6,14 +6,16 @@ import { Button } from 'antd';
 import { PointDrawer, DrawerEvent } from '@antv/l7-draw';
 import { pointList } from './mock';
 
+const id = String(Math.random());
+
 const Demo: React.FC = () => {
   const [pointDrawer, setPointDrawer] = useState<PointDrawer | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
-      id: 'map7',
+      id,
       map: new GaodeMap({
-        center: [105.732421875, 32.24997445586331],
+        center: [120.13858795166014, 30.247204606534158],
         pitch: 0,
         style: 'dark',
         zoom: 10,
@@ -28,7 +30,7 @@ const Demo: React.FC = () => {
       setPointDrawer(drawer);
       drawer.enable();
 
-      drawer.on(DrawerEvent.add, e => {
+      drawer.on(DrawerEvent.add, (e) => {
         console.log(e);
       });
     });
@@ -36,7 +38,7 @@ const Demo: React.FC = () => {
 
   return (
     <div>
-      <div id="map7" style={{ height: 400, position: 'relative' }} />
+      <div id={id} style={{ height: 400, position: 'relative' }} />
     </div>
   );
 };

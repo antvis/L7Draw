@@ -5,14 +5,16 @@ import { useEffect } from 'react';
 import { Button } from 'antd';
 import { IPointStyleItem, PointDrawer } from '@antv/l7-draw';
 
+const id = String(Math.random());
+
 const Demo: React.FC = () => {
   const [pointDrawer, setPointDrawer] = useState<PointDrawer | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
-      id: 'map1',
+      id,
       map: new GaodeMap({
-        center: [105.732421875, 32.24997445586331],
+        center: [120.13858795166014, 30.247204606534158],
         pitch: 0,
         style: 'dark',
         zoom: 10,
@@ -53,7 +55,7 @@ const Demo: React.FC = () => {
 
   return (
     <div>
-      <div id="map1" style={{ height: 400, position: 'relative' }} />
+      <div id={id} style={{ height: 400, position: 'relative' }} />
     </div>
   );
 };
