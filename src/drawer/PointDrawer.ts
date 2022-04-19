@@ -10,6 +10,16 @@ export class PointDrawer extends NodeDrawer<IPointDrawerOptions> {
     };
   }
 
+  disable() {
+    super.disable();
+    this.setPointData(features =>
+      features.map(feature => {
+        feature.properties.isActive = feature.properties.isHover = feature.properties.isDrag = false;
+        return feature;
+      }),
+    );
+  }
+
   bindEvent(): void {
     this.pointRender?.enableCreate();
     this.pointRender?.enableHover();
