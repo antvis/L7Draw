@@ -44,6 +44,10 @@ export class LineRender extends BaseRender<ILineFeature, ILineStyle> {
     this.emit(RenderEvent.dragend, e);
   };
 
+  onUnClick = (e: ILayerMouseEvent<ILineFeature>) => {
+    this.emit(RenderEvent.unClick, e);
+  };
+
   enableHover = () => {
     this.layers[0]?.on('mousemove', this.onMouseMove);
     this.layers[0]?.on('mouseout', this.onMouseOut);
@@ -65,5 +69,14 @@ export class LineRender extends BaseRender<ILineFeature, ILineStyle> {
     this.layers[0].off('mousedown', this.onMouseDown);
     this.scene.off('dragging', this.onDragging);
     this.scene.off('dragend', this.onDragEnd);
+  }
+
+  enableUnClick() {
+    this.disableUnClick();
+    this.layers[0].on('unclick', this.onUnClick);
+  }
+
+  disableUnClick() {
+    this.layers[0].on('unclick', this.onUnClick);
   }
 }

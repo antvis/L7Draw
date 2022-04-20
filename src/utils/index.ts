@@ -77,7 +77,9 @@ export const moveFeatureList = <F extends IBaseFeature>(
   startLngLat: ILngLat,
   endLngLat: ILngLat,
 ) => {
-  return features.map(feature => moveFeature(feature, startLngLat, endLngLat));
+  return features.map((feature) =>
+    moveFeature(feature, startLngLat, endLngLat),
+  );
 };
 
 export const debounceMoveFn = (f: Function) => {

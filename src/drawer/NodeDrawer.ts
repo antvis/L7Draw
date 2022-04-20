@@ -13,16 +13,17 @@ import { Scene } from '@antv/l7';
 import { DrawerEvent, RenderEvent } from '../constants';
 import { debounceMoveFn, isSameFeature } from '../utils';
 
-export abstract class NodeDrawer<T extends IDrawerOptions> extends BaseDrawer<
-  T
-> {
+export abstract class NodeDrawer<
+  T extends IDrawerOptions,
+> extends BaseDrawer<T> {
   get pointRender() {
     return this.render.point;
   }
 
   get dragPoint() {
     return (
-      this.source.data.point.find(feature => feature.properties.isDrag) ?? null
+      this.source.data.point.find((feature) => feature.properties.isDrag) ??
+      null
     );
   }
 
@@ -34,7 +35,7 @@ export abstract class NodeDrawer<T extends IDrawerOptions> extends BaseDrawer<
   constructor(scene: Scene, options?: DeepPartial<T>) {
     super(scene, options);
 
-    this.pointRender?.on(RenderEvent.unClick, this.onPointCreate);
+    this.pointRender?.on(RenderEvent.unClick, this.onPointUnClick);
     this.pointRender?.on(RenderEvent.mousemove, this.onPointMouseMove);
     this.pointRender?.on(RenderEvent.mouseout, this.onPointMouseOut);
     this.pointRender?.on(RenderEvent.mousedown, this.onPointMouseDown);
@@ -57,15 +58,18 @@ export abstract class NodeDrawer<T extends IDrawerOptions> extends BaseDrawer<
     return this.setTypeData<IPointFeature>('point', updater, store);
   }
 
-  onPointCreate(e: ILayerMouseEvent<IPointFeature>) {
+  onPointUnClick(e: ILayerMouseEvent<IPointFeature>) {
     let feature = e.feature!;
     const { editable, autoFocus } = this.options;
     feature.properties.isHover = feature.properties.isActive =
       editable && autoFocus;
     this.setPointData(
-      features => [
-        ...features.map(feature => {
-          feature.properties.isActive = feature.properties.isHover = feature.properties.isDrag = false;
+      (features) => [
+        ...features.map((feature) => {
+          feature.properties.isActive =
+            feature.properties.isHover =
+            feature.properties.isDrag =
+              false;
           return feature;
         }),
         feature,
@@ -78,8 +82,8 @@ export abstract class NodeDrawer<T extends IDrawerOptions> extends BaseDrawer<
     if (this.options.editable && pointFeature && !this.dragPoint) {
       this.setCursor('pointHover');
       this.setPointData(
-        features =>
-          features.map(feature => {
+        (features) =>
+          features.map((feature) => {
             feature.properties.isHover = isSameFeature(pointFeature, feature);
             return feature;
           }),
@@ -91,8 +95,8 @@ export abstract class NodeDrawer<T extends IDrawerOptions> extends BaseDrawer<
   onPointMouseOut() {
     this.setCursor(this.isEnable ? 'draw' : null);
     this.setPointData(
-      features =>
-        features.map(feature => {
+      (features) =>
+        features.map((feature) => {
           feature.properties.isHover = false;
           return feature;
         }),
@@ -106,8 +110,8 @@ export abstract class NodeDrawer<T extends IDrawerOptions> extends BaseDrawer<
       return;
     }
 
-    this.setPointData(features =>
-      features.map(feature => {
+    this.setPointData((features) =>
+      features.map((feature) => {
         const isSame = isSameFeature(currentPoint, feature);
         feature.properties.isActive = isSame;
         feature.properties.isDrag = isSame;
@@ -123,8 +127,8 @@ export abstract class NodeDrawer<T extends IDrawerOptions> extends BaseDrawer<
   onPointDragging(e: ISceneMouseEvent) {
     if (this.dragPoint && this.options.editable) {
       this.setPointData(
-        data =>
-          data.map(feature => {
+        (data) =>
+          data.map((feature) => {
             if (isSameFeature(this.dragPoint, feature)) {
               const { lng, lat } = e.lngLat;
               feature.geometry.coordinates = [lng, lat];
@@ -139,8 +143,8 @@ export abstract class NodeDrawer<T extends IDrawerOptions> extends BaseDrawer<
 
   onPointDragEnd(e: ISceneMouseEvent) {
     if (this.dragPoint && this.options.editable) {
-      this.setPointData(data =>
-        data.map(feature => {
+      this.setPointData((data) =>
+        data.map((feature) => {
           if (isSameFeature(this.dragPoint, feature)) {
             feature.properties.isDrag = false;
           }
@@ -156,7 +160,7 @@ export abstract class NodeDrawer<T extends IDrawerOptions> extends BaseDrawer<
 
   bindThis() {
     super.bindThis();
-    this.onPointCreate = this.onPointCreate.bind(this);
+    this.onPointUnClick = this.onPointUnClick.bind(this);
     this.onPointMouseMove = debounceMoveFn(this.onPointMouseMove).bind(this);
     this.onPointMouseOut = this.onPointMouseOut.bind(this);
     this.onPointMouseDown = this.onPointMouseDown.bind(this);

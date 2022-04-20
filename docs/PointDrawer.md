@@ -26,6 +26,10 @@ order: 1
 
 <code src="./drawer/point/image.tsx" compact="true"></code>
 
+### 新建后失焦
+
+<code src="./drawer/point/autoFocus.tsx" compact="true"></code>
+
 ### 禁用编辑
 
 <code src="./drawer/point/editable.tsx" compact="true"></code>
