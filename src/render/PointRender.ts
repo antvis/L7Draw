@@ -17,7 +17,9 @@ export class PointRender extends BaseRender<
 > {
   initLayers(): ILayer[] {
     const { normal, hover, active } = this.style;
-    const layer = new PointLayer()
+    const layer = new PointLayer({
+      blend: 'normal',
+    })
       .source(featureCollection([]))
       .size('isHover*isActive', (isHover: boolean, isActive: boolean) => {
         return isActive ? active.size : isHover ? hover.size : normal.size;
@@ -50,8 +52,6 @@ export class PointRender extends BaseRender<
           },
         ],
       });
-
-    layer.setBlend('normal');
 
     return [layer];
   }

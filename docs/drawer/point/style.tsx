@@ -23,9 +23,9 @@ const Demo: React.FC = () => {
     scene.on('loaded', () => {
       const overwriteStyle: Partial<IPointStyleItem> = {
         color: '#ff0000',
-        size: 12,
+        size: 8,
         shape: 'square',
-        borderColor: '#ff00ff',
+        borderColor: '#ffff00',
         borderWidth: 3,
       };
 
@@ -35,12 +35,12 @@ const Demo: React.FC = () => {
             normal: overwriteStyle,
             hover: {
               ...overwriteStyle,
-              size: 18,
+              size: 12,
             },
             active: {
               ...overwriteStyle,
-              size: 18,
-              color: '#ffff00',
+              size: 12,
+              color: '#0000ff',
             },
             callback: (layers: ILayer[]) => {
               // 对layers进行函数式设置样式

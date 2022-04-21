@@ -455,9 +455,11 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     this.onMidPointMouseMove = debounceMoveFn(this.onMidPointMouseMove).bind(
       this,
     );
-    this.onMidPointMouseOut = this.onMidPointMouseOut.bind(this);
+    this.onMidPointMouseOut = debounceMoveFn(this.onMidPointMouseOut).bind(
+      this,
+    );
     this.onLineMouseMove = debounceMoveFn(this.onLineMouseMove).bind(this);
-    this.onLineMouseOut = this.onLineMouseOut.bind(this);
+    this.onLineMouseOut = debounceMoveFn(this.onLineMouseOut).bind(this);
     this.onLineMouseDown = this.onLineMouseDown.bind(this);
     this.onLineDragging = debounceMoveFn(this.onLineDragging).bind(this);
     this.onLineDragEnd = this.onLineDragEnd.bind(this);

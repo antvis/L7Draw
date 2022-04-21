@@ -61,8 +61,8 @@ export abstract class NodeDrawer<
   onPointUnClick(e: ILayerMouseEvent<IPointFeature>) {
     let feature = e.feature!;
     const { editable, autoFocus } = this.options;
-    feature.properties.isHover = feature.properties.isActive =
-      editable && autoFocus;
+    feature.properties.isHover = editable;
+    feature.properties.isActive = editable && autoFocus;
     this.setPointData(
       (features) => [
         ...features.map((feature) => {
@@ -162,7 +162,7 @@ export abstract class NodeDrawer<
     super.bindThis();
     this.onPointUnClick = this.onPointUnClick.bind(this);
     this.onPointMouseMove = debounceMoveFn(this.onPointMouseMove).bind(this);
-    this.onPointMouseOut = this.onPointMouseOut.bind(this);
+    this.onPointMouseOut = debounceMoveFn(this.onPointMouseOut).bind(this);
     this.onPointMouseDown = this.onPointMouseDown.bind(this);
     this.onPointDragging = debounceMoveFn(this.onPointDragging).bind(this);
     this.onPointDragEnd = this.onPointDragEnd.bind(this);

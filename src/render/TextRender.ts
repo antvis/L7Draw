@@ -6,7 +6,9 @@ import { featureCollection } from '@turf/turf';
 export class TextRender extends BaseRender<ITextFeature, ITextStyle> {
   initLayers(): ILayer[] {
     const { color, size, borderColor, borderWidth } = this.style.normal;
-    const layer = new PointLayer()
+    const layer = new PointLayer({
+      blend: 'normal',
+    })
       .source(featureCollection([]))
       .size(size)
       .color(color)

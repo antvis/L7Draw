@@ -8,7 +8,9 @@ export class LineRender extends BaseRender<ILineFeature, ILineStyle> {
   initLayers(): ILayer[] {
     const { normal, hover, active, style } = this.style;
 
-    const layer = new LineLayer()
+    const layer = new LineLayer({
+      blend: 'normal',
+    })
       .source(featureCollection([]))
       .size('isHover*isActive', (isHover: boolean, isActive: boolean) => {
         return isActive ? active.size : isHover ? hover.size : normal.size;
@@ -18,8 +20,6 @@ export class LineRender extends BaseRender<ILineFeature, ILineStyle> {
       })
       .shape('line')
       .style(style);
-
-    layer.setBlend('normal');
 
     return [layer];
   }
