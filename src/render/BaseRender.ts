@@ -1,12 +1,12 @@
 import EventEmitter from 'eventemitter3';
-import { IBaseFeature, IRenderOptions, IBaseStyle } from '../typings';
-import { ILayer, Scene } from '@antv/l7';
-import { featureCollection } from '@turf/turf';
-import { RenderEvent } from '../constants';
+import {IBaseFeature, IBaseStyle, IRenderOptions} from '../typings';
+import {ILayer, Scene} from '@antv/l7';
+import {featureCollection} from '@turf/turf';
+import {RenderEvent} from '../constants';
 
 export abstract class BaseRender<
   F extends IBaseFeature = IBaseFeature,
-  S extends IBaseStyle = IBaseStyle
+  S extends IBaseStyle = IBaseStyle,
 > extends EventEmitter<RenderEvent> {
   layers: ILayer[] = [];
   style: S;
@@ -19,7 +19,7 @@ export abstract class BaseRender<
     this.style = style;
     this.layers = this.initLayers();
 
-    this.layers.forEach(layer => {
+    this.layers.forEach((layer) => {
       this.scene.addLayer(layer);
     });
 
@@ -33,8 +33,14 @@ export abstract class BaseRender<
   setData(features: F[]) {
     this.data = features;
     const newData = featureCollection(features);
-    this.layers.forEach(layer => {
+    this.layers.forEach((layer) => {
       layer.setData(newData);
+    });
+  }
+
+  destroy() {
+    this.layers.forEach((layer) => {
+      this.scene.removeLayer(layer);
     });
   }
 }

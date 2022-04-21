@@ -12,6 +12,8 @@ order: 1
 
 ### 启用/禁用
 
+该示例主要展示了通过API控制 `PointDrawer` 的启用/禁用绘制以及清除数据的方法。 
+
 <code src="./drawer/point/start.tsx" compact="true"></code>
 
 ### 初始化 Point 数据
@@ -33,3 +35,7 @@ order: 1
 ### 禁用编辑
 
 <code src="./drawer/point/editable.tsx" compact="true"></code>
+
+### 监听事件
+
+<code src="./drawer/point/event.tsx" compact="true"></code>

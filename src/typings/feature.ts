@@ -1,11 +1,4 @@
-import {
-  Feature,
-  GeometryObject,
-  LineString,
-  Point,
-  Polygon,
-  Position,
-} from '@turf/turf';
+import {Feature, GeometryObject, LineString, Point, Polygon, Position,} from '@turf/turf';
 
 export interface IBaseProperties {
   id: string;
@@ -14,7 +7,7 @@ export interface IBaseProperties {
 // @ts-ignore
 export interface IBaseFeature<
   G extends GeometryObject = GeometryObject,
-  P extends IBaseProperties = IBaseProperties
+  P extends IBaseProperties = IBaseProperties,
 > extends Feature {
   type: 'Feature';
   geometry: G;
@@ -24,9 +17,9 @@ export interface IBaseFeature<
 // ------------
 
 export interface IPointProperties extends IBaseProperties {
-  isHover: boolean;
-  isActive: boolean;
-  isDrag: boolean;
+  isHover?: boolean;
+  isActive?: boolean;
+  isDrag?: boolean;
 }
 
 export type IPointFeature = IBaseFeature<Point, IPointProperties>;
@@ -35,10 +28,10 @@ export type IPointFeature = IBaseFeature<Point, IPointProperties>;
 
 export interface ILineProperties extends IBaseProperties {
   nodes: IPointFeature[];
-  isHover: boolean;
-  isActive: boolean;
-  isDrag: boolean;
-  isDraw: boolean;
+  isHover?: boolean;
+  isActive?: boolean;
+  isDrag?: boolean;
+  isDraw?: boolean;
 }
 
 export type ILineFeature = IBaseFeature<LineString, ILineProperties>;
@@ -49,9 +42,8 @@ export interface IPolygonProperties extends IBaseProperties {
   nodes: Position[];
 }
 
-export type IPolygonFeature<
-  P extends IBaseProperties = IBaseProperties
-> = IBaseFeature<Polygon, P>;
+export type IPolygonFeature<P extends IBaseProperties = IBaseProperties> =
+  IBaseFeature<Polygon, P>;
 
 export interface IMidPointProperties extends IBaseProperties {
   startId: string;

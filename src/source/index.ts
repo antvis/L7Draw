@@ -1,14 +1,7 @@
 import EventEmitter from 'eventemitter3';
-import { SourceEvent } from '../constants';
-import {
-  IBaseFeature,
-  IRenderType,
-  ISourceData,
-  ISourceOptions,
-  IRenderMap,
-  ISourceDataHistory,
-} from '../typings';
-import { cloneDeep, fromPairs } from 'lodash';
+import {SourceEvent} from '../constants';
+import {IBaseFeature, IRenderMap, IRenderType, ISourceData, ISourceDataHistory, ISourceOptions,} from '../typings';
+import {cloneDeep, fromPairs} from 'lodash';
 
 export class Source extends EventEmitter<SourceEvent> {
   // 数据
@@ -56,7 +49,7 @@ export class Source extends EventEmitter<SourceEvent> {
         ...newData,
       };
 
-      renderTypes.forEach(renderType => {
+      renderTypes.forEach((renderType) => {
         const renderData = newData[renderType];
         if (Array.isArray(renderData)) {
           // @ts-ignore
@@ -81,7 +74,7 @@ export class Source extends EventEmitter<SourceEvent> {
 
   clear() {
     this.setData(
-      fromPairs(Object.keys(this.render).map(renderType => [renderType, []])),
+      fromPairs(Object.keys(this.render).map((renderType) => [renderType, []])),
     );
   }
 

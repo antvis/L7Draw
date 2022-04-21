@@ -1,17 +1,16 @@
-import { BaseDrawer } from './BaseDrawer';
+import {BaseDrawer} from './BaseDrawer';
 import {
-  IDrawerOptions,
-  IBaseFeature,
   DeepPartial,
+  IDrawerOptions,
   ILayerMouseEvent,
-  IPointFeature,
-  ISceneMouseEvent,
-  IRenderType,
   ILngLat,
+  IPointFeature,
+  IRenderType,
+  ISceneMouseEvent,
 } from '../typings';
-import { Scene } from '@antv/l7';
-import { DrawerEvent, RenderEvent } from '../constants';
-import { debounceMoveFn, isSameFeature } from '../utils';
+import {Scene} from '@antv/l7';
+import {RenderEvent} from '../constants';
+import {debounceMoveFn, isSameFeature} from '../utils';
 
 export abstract class NodeDrawer<
   T extends IDrawerOptions,

@@ -4,13 +4,11 @@ export enum DrawerEvent {
   enable = 'enable',
   disable = 'disable',
   add = 'add',
+  edit = 'edit',
   dragStart = 'dragStart',
   dragging = 'dragging',
   dragEnd = 'dragEnd',
   change = 'change',
-  click = 'click',
-
-  addPoint = 'addPoint',
 }
 
 export enum SourceEvent {

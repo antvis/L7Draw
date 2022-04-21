@@ -1,28 +1,14 @@
 import EventEmitter from 'eventemitter3';
-import { cloneDeep, merge } from 'lodash';
-import { Scene } from '@antv/l7';
-import { Source } from '../source';
-import nextTick from 'next-tick';
-import {
-  DeepPartial,
-  ICursorType,
-  IDrawerOptions,
-  IRenderType,
-  IRenderMap,
-  IBaseFeature,
-} from '../typings';
-import {
-  DEFAULT_CURSOR_MAP,
-  DEFAULT_DRAWER_STYLE,
-  DrawerEvent,
-  RENDER_TYPE_MAP,
-  SourceEvent,
-} from '../constants';
-import { Cursor } from '../utils';
+import {cloneDeep, merge} from 'lodash';
+import {Scene} from '@antv/l7';
+import {Source} from '../source';
+import {DeepPartial, IBaseFeature, ICursorType, IDrawerOptions, IRenderMap, IRenderType,} from '../typings';
+import {DEFAULT_CURSOR_MAP, DEFAULT_DRAWER_STYLE, DrawerEvent, RENDER_TYPE_MAP,} from '../constants';
+import {Cursor} from '../utils';
 
-export abstract class BaseDrawer<T extends IDrawerOptions> extends EventEmitter<
-  DrawerEvent
-> {
+export abstract class BaseDrawer<
+  T extends IDrawerOptions,
+> extends EventEmitter<DrawerEvent> {
   scene: Scene;
   source: Source;
   render: IRenderMap;
@@ -57,7 +43,7 @@ export abstract class BaseDrawer<T extends IDrawerOptions> extends EventEmitter<
   abstract unbindEvent(): void;
 
   getTypeData = <F extends IBaseFeature>(renderType: IRenderType) => {
-    return (this.source.data[renderType] as unknown) as F[];
+    return this.source.data[renderType] as unknown as F[];
   };
 
   setTypeData = <F extends IBaseFeature>(
@@ -118,6 +104,17 @@ export abstract class BaseDrawer<T extends IDrawerOptions> extends EventEmitter<
   }
 
   /**
+   * 销毁Drawer
+   */
+  destroy() {
+    this.clear(true);
+    Object.values(this.render).forEach((render) => {
+      render.destroy();
+    });
+    this.emit(DrawerEvent.destroy);
+  }
+
+  /**
    * 清空所有数据
    */
   clear(disable = false) {
@@ -140,7 +137,7 @@ export abstract class BaseDrawer<T extends IDrawerOptions> extends EventEmitter<
    */
   initRender() {
     const render: IRenderMap = {};
-    this.getRenderList()?.forEach(key => {
+    this.getRenderList()?.forEach((key) => {
       const Render = RENDER_TYPE_MAP[key];
       const style = this.options.style[key];
       // @ts-ignore
