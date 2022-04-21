@@ -1,4 +1,4 @@
-import { IPointStyle, IPointStyleItem, IStyle } from '../typings';
+import {IPointStyle, IPointStyleItem, IStyle} from '../typings';
 
 export const NORMAL_COLOR = '#1990FF';
 
@@ -6,6 +6,14 @@ export const ACTIVE_COLOR = '#ED9D48';
 
 export const DEFAULT_POINT_NORMAL_STYLE: IPointStyleItem = {
   color: NORMAL_COLOR,
+  shape: 'circle',
+  size: 6,
+  borderColor: '#ffffff',
+  borderWidth: 2,
+};
+
+export const DEFAULT_NODE_NORMAL_STYLE: IPointStyleItem = {
+  color: ACTIVE_COLOR,
   shape: 'circle',
   size: 6,
   borderColor: '#ffffff',
@@ -34,17 +42,14 @@ export const DEFAULT_POINT_STYLE: IPointStyle = {
 };
 
 export const DEFAULT_NODE_STYLE: IPointStyle = {
-  normal: {
-    ...DEFAULT_POINT_NORMAL_STYLE,
-    color: ACTIVE_COLOR,
-  },
+  normal: DEFAULT_NODE_NORMAL_STYLE,
   hover: {
-    ...DEFAULT_POINT_NORMAL_STYLE,
-    color: ACTIVE_COLOR,
+    ...DEFAULT_NODE_NORMAL_STYLE,
+    size: 8,
   },
   active: {
-    ...DEFAULT_POINT_NORMAL_STYLE,
-    color: ACTIVE_COLOR,
+    ...DEFAULT_NODE_NORMAL_STYLE,
+    size: 8,
   },
 };
 
