@@ -11,18 +11,12 @@ import {
   ISceneMouseEvent,
   ISourceData,
 } from '../typings';
-import { Scene } from '@antv/l7';
-import { NodeDrawer } from './NodeDrawer';
-import {
-  calcMidPointList,
-  debounceMoveFn,
-  getUuid,
-  isSameFeature,
-  lineString,
-} from '../utils';
-import { coordAll, featureCollection, point, Position } from '@turf/turf';
-import { last } from 'lodash';
-import { RenderEvent } from '../constants';
+import {Scene} from '@antv/l7';
+import {NodeDrawer} from './NodeDrawer';
+import {calcMidPointList, debounceMoveFn, getUuid, isSameFeature, lineString,} from '../utils';
+import {coordAll, featureCollection, point, Position} from '@turf/turf';
+import {last} from 'lodash';
+import {RenderEvent} from '../constants';
 
 export interface ILineDrawerOptions extends IDrawerOptions {}
 
@@ -229,6 +223,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
   }
 
   onSceneMouseMove(e: ISceneMouseEvent) {
+    // 当前在绘制线路中，且含有nodes节点，则需要最后一个节点和鼠标之间用虚线连接
     if (this.drawLine?.properties.nodes.length) {
       const lastNode = last(this.drawLine.properties.nodes)!;
       const { lng, lat } = e.lnglat;
@@ -283,7 +278,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
   }
 
   onMidPointMouseOut(e: ILayerMouseEvent<IMidPointFeature>) {
-    this.setCursor(null);
+    this.setMouseOutCursor();
   }
 
   onLineMouseMove(e: ILayerMouseEvent<ILineFeature>) {
@@ -303,7 +298,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     if (this.dragLine) {
       return;
     }
-    this.setCursor(this.drawLine ? 'draw' : null);
+    this.setMouseOutCursor();
     this.setLineData((features) =>
       features.map((feature) => {
         feature.properties.isHover = false;
@@ -313,18 +308,13 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
   }
 
   onLineMouseDown(e: ILayerMouseEvent<ILineFeature>) {
-    const currentLine = e.feature ?? null;
-    if (
-      !currentLine ||
-      !this.options.editable ||
-      this.dragPoint ||
-      !e.feature
-    ) {
+    const currentLine = e.feature;
+    if (!currentLine || !this.options.editable || this.dragPoint) {
       return;
     }
 
     this.previousLngLat = e.lngLat;
-    this.setEditLine(e.feature);
+    this.setEditLine(currentLine);
     this.setLineData((features) =>
       features.map((feature) => {
         feature.properties.isDrag = isSameFeature(e.feature, feature);
@@ -377,7 +367,6 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
   onLineUnClick(e: ILayerMouseEvent<ILineFeature>) {
     if (this.editLine) {
       this.setEditLine(null);
-      this.setCursor('draw');
     }
   }
 
@@ -406,6 +395,10 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
       editLine.geometry.coordinates = coordAll(featureCollection(nodes));
       this.printEditLineData(editLine);
     }
+  }
+
+  setMouseOutCursor() {
+    this.setCursor('draw');
   }
 
   bindEvent() {
