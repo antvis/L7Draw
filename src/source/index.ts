@@ -38,7 +38,6 @@ export class Source extends EventEmitter<SourceEvent> {
   }
 
   setData(newData: Partial<ISourceData>, store = false) {
-    console.log(newData)
     const renderTypes = Object.keys(newData) as IRenderType[];
     if (renderTypes.length) {
       this.data = {
