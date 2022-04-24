@@ -181,7 +181,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
   drawFinish() {
     const drawLine = this.drawLine;
     if (drawLine) {
-      const {editable, autoFocus} = this.options;
+      const { editable, autoFocus } = this.options;
       const isActive = editable && autoFocus;
       this.setEditLine(isActive ? drawLine : null);
       this.emit(DrawerEvent.add, drawLine, this.getLineData());
@@ -301,7 +301,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
   }
 
   onLineMouseMove(e: ILayerMouseEvent<ILineFeature>) {
-    if (this.dragLine) {
+    if (this.dragLine || this.drawLine) {
       return;
     }
     this.setCursor('lineHover');
@@ -314,7 +314,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
   }
 
   onLineMouseOut(e: ILayerMouseEvent<ILineFeature>) {
-    if (this.dragLine) {
+    if (this.dragLine || this.drawLine) {
       return;
     }
     this.setMouseOutCursor();
@@ -328,7 +328,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
 
   onLineMouseDown(e: ILayerMouseEvent<ILineFeature>) {
     const currentLine = e.feature;
-    if (!currentLine || !this.options.editable) {
+    if (!currentLine || !this.options.editable || this.drawLine) {
       return;
     }
 

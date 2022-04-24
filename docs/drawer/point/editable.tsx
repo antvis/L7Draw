@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Scene } from '@antv/l7';
-import { GaodeMap } from '@antv/l7-maps';
-import { useEffect } from 'react';
-import { PointDrawer } from '@antv/l7-draw';
+import React, {useEffect, useState} from 'react';
+import {Scene} from '@antv/l7';
+import {GaodeMap} from '@antv/l7-maps';
+import {PointDrawer} from '@antv/l7-draw';
+import {pointList} from './mock';
 
 const id = String(Math.random());
 
@@ -22,7 +22,9 @@ const Demo: React.FC = () => {
     scene.on('loaded', () => {
       const drawer = new PointDrawer(scene, {
         editable: false, // 禁用编辑
-        autoFocus: false, // 新增后是否自动选中
+        initData: {
+          point: pointList,
+        },
       });
       setPointDrawer(drawer);
       drawer.enable();

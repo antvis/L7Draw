@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Scene} from '@antv/l7';
 import {GaodeMap} from '@antv/l7-maps';
 import {LineDrawer} from '@antv/l7-draw';
+import {lineList} from './mock';
 
 const id = String(Math.random());
 
@@ -21,7 +22,9 @@ const Demo: React.FC = () => {
     scene.on('loaded', () => {
       const drawer = new LineDrawer(scene, {
         editable: false, // 禁用编辑
-        autoFocus: false, // 新增后是否自动选中
+        initData: {
+          line: lineList,
+        },
       });
       setLineDrawer(drawer);
       drawer.enable();
