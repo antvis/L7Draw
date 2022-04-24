@@ -1,23 +1,28 @@
-import { v4 } from 'uuid';
+import {v4} from 'uuid';
 import {
   IBaseFeature,
   ILineFeature,
+  ILineProperties,
   ILngLat,
   IMidPointFeature,
+  IPointFeature,
+  IPointProperties,
 } from '../typings';
 import {
   center,
   distance,
   Feature,
   featureCollection,
+  LineString,
   lineString as turfLineString,
   point,
   Point,
+  Position,
+  Properties,
   rhumbBearing,
   transformTranslate,
 } from '@turf/turf';
-import { Position, Properties } from '@turf/turf';
-import { debounce } from 'lodash';
+import {debounce} from 'lodash';
 
 export const getUuid = (prefix = '') => {
   return `${prefix}-${v4()}`;
@@ -106,6 +111,47 @@ export const calcMidPointList = (feature: ILineFeature) => {
     midPointList.push(newMidPoint);
   }
   return midPointList;
+};
+
+export const transformPointFeature = (
+  feature: Feature<Point>,
+  useDefault = false,
+) => {
+  const defaultProperties: IPointProperties = {
+    id: getUuid('point'),
+    isHover: false,
+    isActive: false,
+    isDrag: false,
+  };
+  feature.properties = useDefault
+    ? defaultProperties
+    : Object.assign(defaultProperties, feature.properties);
+  return feature as IPointFeature;
+};
+
+export const transformLineFeature = (
+  feature: Feature<LineString>,
+  useDefault = false,
+) => {
+  const defaultProperties: ILineProperties = {
+    id: getUuid('line'),
+    isActive: false,
+    isDrag: false,
+    isDraw: false,
+    isHover: false,
+    nodes: [],
+  };
+  if (!feature.properties?.nodes?.length) {
+    defaultProperties.nodes = feature.geometry.coordinates.map(
+      (position: Position) => {
+        return transformPointFeature(point(position));
+      },
+    );
+  }
+  feature.properties = useDefault
+    ? defaultProperties
+    : Object.assign(defaultProperties, feature.properties);
+  return feature as ILineFeature;
 };
 
 export * from './cursor';

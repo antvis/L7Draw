@@ -33,9 +33,9 @@ export abstract class BaseDrawer<
     this.cursor = new Cursor(scene, this.options.cursor);
     this.source = new Source({
       render: this.render,
-      data: this.options.data ? this.initData(this.options.data) : undefined,
+      data: this.options.initData ? this.initData(this.options.initData) : undefined,
     });
-    this.emit(DrawerEvent.init);
+    this.emit(DrawerEvent.init, this);
   }
 
   get container() {
@@ -101,7 +101,7 @@ export abstract class BaseDrawer<
     this.isEnable = true;
     this.setCursor('draw');
     this.bindEvent();
-    this.emit(DrawerEvent.enable);
+    this.emit(DrawerEvent.enable, this);
   }
 
   /**
@@ -111,7 +111,7 @@ export abstract class BaseDrawer<
     this.isEnable = false;
     this.setCursor(null);
     this.unbindEvent();
-    this.emit(DrawerEvent.disable);
+    this.emit(DrawerEvent.disable, this);
   }
 
   /**
@@ -122,7 +122,7 @@ export abstract class BaseDrawer<
     Object.values(this.render).forEach((render) => {
       render.destroy();
     });
-    this.emit(DrawerEvent.destroy);
+    this.emit(DrawerEvent.destroy, this);
   }
 
   /**

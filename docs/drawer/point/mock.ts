@@ -14,14 +14,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.105376, 30.264431],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.105933, 30.264968],
     },
   },
@@ -70,14 +62,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.115454, 30.27008],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.116314, 30.270868],
     },
   },
@@ -111,30 +95,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.121922, 30.271103],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.122664, 30.270786],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.123413, 30.270215],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.124824, 30.269426],
     },
   },
   {
@@ -183,14 +143,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.133928, 30.263022],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.138622, 30.264727],
     },
   },
   {
@@ -262,14 +214,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.151814, 30.25937],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.151486, 30.259487],
     },
   },
@@ -318,22 +262,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.145296, 30.256633],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.144727, 30.256016],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.14431, 30.255721],
     },
   },
@@ -342,31 +270,7 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.14324, 30.255216],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.142083, 30.254838],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.141503, 30.254564],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.140719, 30.25374],
     },
   },
   {
@@ -398,14 +302,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.13476, 30.250931],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.134316, 30.250885],
     },
   },
@@ -415,14 +311,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.13199, 30.250194],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.134284, 30.249815],
     },
   },
   {
@@ -470,22 +358,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.133398, 30.247095],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.132919, 30.246905],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.132648, 30.246625],
     },
   },
@@ -494,23 +366,7 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.132572, 30.243648],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.132674, 30.242784],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.132974, 30.241666],
     },
   },
   {
@@ -550,14 +406,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.135891, 30.24068],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.136141, 30.240451],
     },
   },
@@ -590,14 +438,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.137197, 30.237358],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.137059, 30.23671],
     },
   },
@@ -607,14 +447,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.136924, 30.23641],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.136264, 30.236077],
     },
   },
   {
@@ -662,31 +494,7 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.136127, 30.233324],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.136254, 30.233209],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.136306, 30.232969],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.136534, 30.232846],
     },
   },
   {
@@ -718,23 +526,7 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.139271, 30.231883],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.139908, 30.232237],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.140667, 30.232298],
     },
   },
   {
@@ -790,14 +582,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.141174, 30.228267],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.141332, 30.227903],
     },
   },
@@ -830,14 +614,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.145158, 30.229515],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.146152, 30.229828],
     },
   },
@@ -847,14 +623,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.146611, 30.23043],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.145936, 30.231121],
     },
   },
   {
@@ -879,14 +647,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.146615, 30.232988],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.146997, 30.233202],
     },
   },
   {
@@ -998,14 +758,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.154335, 30.234539],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.154062, 30.235332],
     },
   },
@@ -1062,14 +814,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.154265, 30.239908],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.154539, 30.240837],
     },
   },
@@ -1078,31 +822,7 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.155199, 30.24167],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.155989, 30.242457],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.156559, 30.243241],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.157473, 30.243846],
     },
   },
   {
@@ -1174,22 +894,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.160085, 30.249524],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.160368, 30.249781],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.161313, 30.250233],
     },
   },
@@ -1215,14 +919,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.164158, 30.250249],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.164137, 30.249478],
     },
   },
   {
@@ -1262,14 +958,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.17219, 30.241024],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.17215, 30.239541],
     },
   },
@@ -1295,14 +983,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.170675, 30.233888],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.170499, 30.232639],
     },
   },
   {
@@ -1358,14 +1038,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.16992, 30.227516],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.169887, 30.227178],
     },
   },
@@ -1374,23 +1046,7 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.170224, 30.226593],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.17031, 30.226108],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.170636, 30.222696],
     },
   },
   {
@@ -1414,14 +1070,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.171748, 30.219073],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.172557, 30.217808],
     },
   },
@@ -1438,23 +1086,7 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.172533, 30.21633],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.170978, 30.214683],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.17066, 30.214448],
     },
   },
   {
@@ -1478,14 +1110,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.169144, 30.213482],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.168698, 30.212491],
     },
   },
@@ -1502,23 +1126,7 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.164201, 30.208868],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.162193, 30.207678],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.157709, 30.205323],
     },
   },
   {
@@ -1559,22 +1167,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.147995, 30.201122],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.147647, 30.200967],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.146007, 30.200746],
     },
   },
   {
@@ -1638,14 +1230,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.127148, 30.191521],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.126723, 30.191159],
     },
   },
@@ -1671,14 +1255,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.123214, 30.189158],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.12274, 30.18874],
     },
   },
   {
@@ -1734,14 +1310,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.114863, 30.182015],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.114596, 30.181617],
     },
   },
@@ -1759,14 +1327,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.109502, 30.177977],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.108724, 30.177419],
     },
   },
   {
@@ -1822,14 +1382,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.099461, 30.174011],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.097518, 30.173811],
     },
   },
@@ -1839,14 +1391,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.096415, 30.173851],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.095332, 30.173991],
     },
   },
   {
@@ -1894,14 +1438,6 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.080374, 30.182059],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.079852, 30.182782],
     },
   },
@@ -1911,14 +1447,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.078677, 30.1849],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.078216, 30.185963],
     },
   },
   {
@@ -1950,31 +1478,7 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.076264, 30.203244],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.076357, 30.206037],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.076297, 30.209189],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.075978, 30.211831],
     },
   },
   {
@@ -1999,14 +1503,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.075324, 30.218126],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.075504, 30.219549],
     },
   },
   {
@@ -2047,14 +1543,6 @@ export const pointList: Feature<Point>[] = [
     geometry: {
       type: 'Point',
       coordinates: [120.081396, 30.235031],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.082411, 30.236006],
     },
   },
   {
@@ -2126,23 +1614,7 @@ export const pointList: Feature<Point>[] = [
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [120.093853, 30.257391],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
       coordinates: [120.093604, 30.258118],
-    },
-  },
-  {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Point',
-      coordinates: [120.099028, 30.259403],
     },
   },
   {

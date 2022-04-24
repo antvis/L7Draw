@@ -14,6 +14,10 @@ order: 2
 
 <code src="./drawer/line/start.tsx" compact="true"></code>
 
+### 初始化 Line 数据
+
+<code src="./drawer/line/initData.tsx" compact="true"></code>
+
 ### 新建 Line 后失焦
 
 <code src="./drawer/line/autoFocus.tsx" compact="true"></code>
@@ -21,3 +25,7 @@ order: 2
 ### 禁用编辑
 
 <code src="./drawer/line/editable.tsx" compact="true"></code>
+
+### 监听事件
+
+<code src="./drawer/line/event.tsx" compact="true"></code>

@@ -21,7 +21,7 @@ export interface IDrawerOptionsData {
 export interface IDrawerOptions {
   style: IStyle;
   cursor: ICursor;
-  data?: IDrawerOptionsData;
+  initData?: IDrawerOptionsData;
   editable: boolean;
   autoFocus: boolean;
 }

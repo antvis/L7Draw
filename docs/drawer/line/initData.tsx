@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {Scene} from '@antv/l7';
 import {GaodeMap} from '@antv/l7-maps';
-import {DrawerEvent, PointDrawer} from '@antv/l7-draw';
-import {pointList} from './mock';
+import {DrawerEvent, LineDrawer} from '@antv/l7-draw';
+import {lineList} from './mock';
 
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [pointDrawer, setPointDrawer] = useState<PointDrawer | null>(null);
+  const [lineDrawer, setLineDrawer] = useState<LineDrawer | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -20,12 +20,12 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new PointDrawer(scene, {
+      const drawer = new LineDrawer(scene, {
         initData: {
-          point: pointList,
+          line: lineList,
         },
       });
-      setPointDrawer(drawer);
+      setLineDrawer(drawer);
       drawer.enable();
 
       drawer.on(DrawerEvent.add, (e) => {
@@ -36,7 +36,7 @@ const Demo: React.FC = () => {
 
   return (
     <div>
-      <div id={id} style={{ height: 400, position: 'relative' }} />
+      <div id={id} style={{height: 400, position: 'relative'}}/>
     </div>
   );
 };
