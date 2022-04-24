@@ -57,7 +57,7 @@ const Demo: React.FC = () => {
 
   return (
     <div>
-      <div id={id} style={{height: 400, position: 'relative'}}/>
+      <div id={id} style={{ height: 400, position: 'relative' }} />
     </div>
   );
 };

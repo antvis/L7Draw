@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {Scene} from '@antv/l7';
 import {GaodeMap} from '@antv/l7-maps';
-import {DrawerEvent, LineDrawer} from '@antv/l7-draw';
-import {lineList} from './mock';
+import {LineDrawer} from '@antv/l7-draw';
 
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [lineDrawer, setLineDrawer] = useState<LineDrawer | null>(null);
+  const [pointDrawer, setPointDrawer] = useState<LineDrawer | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -21,16 +20,10 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new LineDrawer(scene, {
-        initData: {
-          line: lineList,
-        },
+        allowOverlap: true,
       });
-      setLineDrawer(drawer);
+      setPointDrawer(drawer);
       drawer.enable();
-
-      drawer.on(DrawerEvent.add, (e) => {
-        console.log(e);
-      });
     });
   }, []);
 

@@ -12,7 +12,7 @@ order: 1
 
 ### 启用/禁用
 
-该示例主要展示了通过API控制 `PointDrawer` 的启用/禁用绘制以及清除数据的方法。 
+该示例主要展示了通过 API 控制 `PointDrawer` 的启用/禁用绘制以及清除数据的方法。
 
 <code src="./drawer/point/start.tsx" compact="true"></code>
 

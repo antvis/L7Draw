@@ -18,7 +18,9 @@ import {coordAll, featureCollection, point, Position} from '@turf/turf';
 import {last} from 'lodash';
 import {DrawerEvent, RenderEvent} from '../constants';
 
-export interface ILineDrawerOptions extends IDrawerOptions {}
+export interface ILineDrawerOptions extends IDrawerOptions {
+  allowOverlap: boolean;
+}
 
 export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
   constructor(scene: Scene, options?: DeepPartial<ILineDrawerOptions>) {
@@ -109,6 +111,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
   getDefaultOptions(): ILineDrawerOptions {
     return {
       ...this.getCommonOptions(),
+      allowOverlap: false,
     };
   }
 
@@ -172,7 +175,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
       );
       if (isLastPoint) {
         this.drawFinish();
-      } else {
+      } else if (this.options.allowOverlap) {
         this.onPointUnClick(e);
       }
     }

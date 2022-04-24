@@ -18,6 +18,10 @@ order: 2
 
 <code src="./drawer/line/initData.tsx" compact="true"></code>
 
+### 允许创建重叠的顶点
+
+<code src="./drawer/line/allowOverlap.tsx" compact="true"></code>
+
 ### 新建 Line 后失焦
 
 <code src="./drawer/line/autoFocus.tsx" compact="true"></code>
