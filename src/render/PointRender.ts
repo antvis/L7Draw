@@ -1,15 +1,9 @@
-import { BaseRender } from './BaseRender';
-import {
-  ILayerMouseEvent,
-  IMidPointFeature,
-  IPointFeature,
-  IPointStyle,
-  ISceneMouseEvent,
-} from '../typings';
-import { ILayer, PointLayer } from '@antv/l7';
-import { featureCollection, point } from '@turf/turf';
-import { RenderEvent } from '../constants';
-import { getUuid } from '../utils';
+import {BaseRender} from './BaseRender';
+import {ILayerMouseEvent, IMidPointFeature, IPointFeature, IPointStyle, ISceneMouseEvent,} from '../typings';
+import {ILayer, PointLayer} from '@antv/l7';
+import {featureCollection, point} from '@turf/turf';
+import {RenderEvent} from '../constants';
+import {getUuid} from '../utils';
 
 export class PointRender extends BaseRender<
   IPointFeature | IMidPointFeature,
@@ -118,13 +112,13 @@ export class PointRender extends BaseRender<
     this.disableDrag();
     this.layers[0].on('mousedown', this.onMouseDown);
     this.scene.on('dragging', this.onDragging);
-    this.scene.on('dragend', this.onDragEnd);
+    this.scene.on('mouseup', this.onDragEnd);
   }
 
   disableDrag() {
     this.layers[0].off('mousedown', this.onMouseDown);
     this.scene.off('dragging', this.onDragging);
-    this.scene.off('dragend', this.onDragEnd);
+    this.scene.off('mouseup', this.onDragEnd);
   }
 
   enableClick() {

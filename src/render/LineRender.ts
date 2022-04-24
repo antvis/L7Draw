@@ -1,8 +1,8 @@
-import { BaseRender } from './BaseRender';
-import { ILayerMouseEvent, ILineFeature, ILineStyle } from '../typings';
-import { ILayer, LineLayer } from '@antv/l7';
-import { featureCollection } from '@turf/turf';
-import { RenderEvent } from '../constants';
+import {BaseRender} from './BaseRender';
+import {ILayerMouseEvent, ILineFeature, ILineStyle} from '../typings';
+import {ILayer, LineLayer} from '@antv/l7';
+import {featureCollection} from '@turf/turf';
+import {RenderEvent} from '../constants';
 
 export class LineRender extends BaseRender<ILineFeature, ILineStyle> {
   initLayers(): ILayer[] {
@@ -62,13 +62,13 @@ export class LineRender extends BaseRender<ILineFeature, ILineStyle> {
     this.disableDrag();
     this.layers[0].on('mousedown', this.onMouseDown);
     this.scene.on('dragging', this.onDragging);
-    this.scene.on('dragend', this.onDragEnd);
+    this.scene.on('mouseup', this.onDragEnd);
   }
 
   disableDrag() {
     this.layers[0].off('mousedown', this.onMouseDown);
     this.scene.off('dragging', this.onDragging);
-    this.scene.off('dragend', this.onDragEnd);
+    this.scene.off('mouseup', this.onDragEnd);
   }
 
   enableUnClick() {

@@ -2,9 +2,9 @@ import {
   DeepPartial,
   IDashLineFeature,
   IDrawerOptions,
+  IDrawerOptionsData,
   ILayerMouseEvent,
   ILineFeature,
-  ILineProperties,
   IMidPointFeature,
   IPointFeature,
   IRenderType,
@@ -63,6 +63,10 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     return this.render.midPoint;
   }
 
+  initData(data: IDrawerOptionsData): Partial<ISourceData> | undefined {
+    return {};
+  }
+
   getLineData() {
     return this.getTypeData<ILineFeature>('line');
   }
@@ -102,7 +106,10 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
   }
 
   onPointUnClick(e: ILayerMouseEvent<IPointFeature>) {
-    if (this.editLine) {
+    if (
+      this.editLine ||
+      (this.scene.getPickedLayer() !== -1 && !this.drawLine)
+    ) {
       return;
     }
     super.onPointUnClick(e);
@@ -193,10 +200,18 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     }
   }
 
-  printEditLineData(
-    editLine: ILineFeature,
-    otherProperties: Partial<ILineProperties> = {},
-  ) {
+  printEditLineData(editLine: ILineFeature) {
+    const otherLines = this.getLineData()
+      .filter((feature) => !isSameFeature(feature, editLine))
+      .map((feature) => {
+        feature.properties.isActive = false;
+        return feature;
+      });
+    Object.assign(editLine.properties, {
+      isDraw: false,
+      isActive: true,
+      isHover: false,
+    });
     this.source.setData({
       point: editLine.properties.nodes.map((feature) => {
         feature.properties = {
@@ -206,17 +221,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
         };
         return feature;
       }),
-      line: this.getLineData().map((feature) => {
-        const isActive = isSameFeature(feature, editLine);
-        feature.properties = {
-          ...feature.properties,
-          isDraw: false,
-          isActive,
-          isHover: false,
-          ...otherProperties,
-        };
-        return feature;
-      }),
+      line: [...otherLines, editLine],
       dashLine: [],
       midPoint: this.getMidPointList(editLine),
     });
@@ -309,7 +314,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
 
   onLineMouseDown(e: ILayerMouseEvent<ILineFeature>) {
     const currentLine = e.feature;
-    if (!currentLine || !this.options.editable || this.dragPoint) {
+    if (!currentLine || !this.options.editable) {
       return;
     }
 
@@ -346,6 +351,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     dragLine.geometry.coordinates = pointList;
     this.previousLngLat = e.lngLat;
     this.setEditLine(dragLine);
+    this.setCursor('lineDrag');
   }
 
   onLineDragEnd(e: ILayerMouseEvent<ILineFeature>) {
@@ -362,6 +368,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     this.scene.setMapStatus({
       dragEnable: true,
     });
+    this.setCursor('lineHover');
   }
 
   onLineUnClick(e: ILayerMouseEvent<ILineFeature>) {
@@ -407,6 +414,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     this.lineRender?.enableUnClick();
     if (this.options.editable) {
       this.lineRender?.enableHover();
+      this.lineRender?.enableDrag();
     }
     this.scene?.on('mousemove', this.onSceneMouseMove);
   }
@@ -417,6 +425,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     this.lineRender?.disableUnClick();
     if (this.options.editable) {
       this.lineRender?.disableHover();
+      this.lineRender?.disableDrag();
     }
     this.scene?.off('mousemove', this.onSceneMouseMove);
   }
@@ -426,7 +435,6 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     this.pointRender?.enableHover();
     this.midPointRender?.enableClick();
     this.midPointRender?.enableHover();
-    this.lineRender?.enableDrag();
   }
 
   unbindEditEvent() {
@@ -434,7 +442,6 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     this.pointRender?.disableDrag();
     this.midPointRender?.disableClick();
     this.midPointRender?.disableHover();
-    this.lineRender?.disableDrag();
   }
 
   bindThis() {
@@ -455,7 +462,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     this.onLineMouseOut = debounceMoveFn(this.onLineMouseOut).bind(this);
     this.onLineMouseDown = this.onLineMouseDown.bind(this);
     this.onLineDragging = debounceMoveFn(this.onLineDragging).bind(this);
-    this.onLineDragEnd = this.onLineDragEnd.bind(this);
+    this.onLineDragEnd = debounceMoveFn(this.onLineDragEnd).bind(this);
     this.onLineUnClick = this.onLineUnClick.bind(this);
   }
 }

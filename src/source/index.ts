@@ -1,17 +1,12 @@
 import EventEmitter from 'eventemitter3';
-import {SourceEvent} from '../constants';
+import {DEFAULT_SOURCE_DATA, SourceEvent} from '../constants';
 import {IBaseFeature, IRenderMap, IRenderType, ISourceData, ISourceDataHistory, ISourceOptions,} from '../typings';
 import {cloneDeep, fromPairs} from 'lodash';
 
 export class Source extends EventEmitter<SourceEvent> {
   // 数据
   data: ISourceData = {
-    point: [],
-    line: [],
-    polygon: [],
-    midPoint: [],
-    dashLine: [],
-    text: [],
+    ...DEFAULT_SOURCE_DATA
   };
 
   // 渲染器对象
@@ -36,12 +31,14 @@ export class Source extends EventEmitter<SourceEvent> {
   getRender(type: IRenderType) {
     const targetRender = this.render[type];
     if (!targetRender) {
+      debugger;
       throw new Error('当前render并未初始化，请检查Source构造器传参');
     }
     return targetRender;
   }
 
   setData(newData: Partial<ISourceData>, store = false) {
+    console.log(newData)
     const renderTypes = Object.keys(newData) as IRenderType[];
     if (renderTypes.length) {
       this.data = {

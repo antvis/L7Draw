@@ -79,7 +79,6 @@ export abstract class NodeDrawer<
 
   onPointMouseMove({ feature: pointFeature }: ILayerMouseEvent<IPointFeature>) {
     if (this.options.editable && pointFeature && !this.dragPoint) {
-      this.setCursor('pointHover');
       this.setPointData(
         (features) =>
           features.map((feature) => {
@@ -88,6 +87,7 @@ export abstract class NodeDrawer<
           }),
         false,
       );
+      this.setCursor('pointHover');
     }
   }
 

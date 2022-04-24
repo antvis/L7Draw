@@ -17,3 +17,7 @@ order: 2
 ### 新建 Line 后失焦
 
 <code src="./drawer/line/autoFocus.tsx" compact="true"></code>
+
+### 禁用编辑
+
+<code src="./drawer/line/editable.tsx" compact="true"></code>

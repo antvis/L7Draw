@@ -1,11 +1,40 @@
-import {IDrawerOptions, ILayerMouseEvent, IPointFeature, ISceneMouseEvent,} from '../typings';
+import {
+  IDrawerOptions,
+  IDrawerOptionsData,
+  ILayerMouseEvent,
+  IPointFeature,
+  IPointProperties,
+  ISceneMouseEvent,
+  ISourceData,
+} from '../typings';
 import {NodeDrawer} from './NodeDrawer';
-import {DEFAULT_POINT_STYLE, DrawerEvent} from '../constants';
+import {DEFAULT_POINT_STYLE, DrawerEvent,} from '../constants';
 import {cloneDeep} from 'lodash';
+import {getUuid} from '../utils';
 
 export interface IPointDrawerOptions extends IDrawerOptions {}
 
 export class PointDrawer extends NodeDrawer<IPointDrawerOptions> {
+  initData(data: IDrawerOptionsData): Partial<ISourceData> | undefined {
+    if (data.point?.length) {
+      return {
+        point: data.point.map((item, index) => {
+          const defaultProperties: IPointProperties = {
+            id: getUuid('point'),
+            isHover: false,
+            isActive: false,
+            isDrag: false,
+          };
+          item.properties = Object.assign(
+            defaultProperties,
+            item.properties,
+          );
+          return item as IPointFeature;
+        }),
+      };
+    }
+  }
+
   getDefaultOptions(): IPointDrawerOptions {
     const options: IPointDrawerOptions = this.getCommonOptions();
     options.style.point = cloneDeep(DEFAULT_POINT_STYLE);

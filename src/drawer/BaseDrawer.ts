@@ -2,7 +2,16 @@ import EventEmitter from 'eventemitter3';
 import {cloneDeep, merge} from 'lodash';
 import {Scene} from '@antv/l7';
 import {Source} from '../source';
-import {DeepPartial, IBaseFeature, ICursorType, IDrawerOptions, IRenderMap, IRenderType,} from '../typings';
+import {
+  DeepPartial,
+  IBaseFeature,
+  ICursorType,
+  IDrawerOptions,
+  IDrawerOptionsData,
+  IRenderMap,
+  IRenderType,
+  ISourceData,
+} from '../typings';
 import {DEFAULT_CURSOR_MAP, DEFAULT_DRAWER_STYLE, DrawerEvent, RENDER_TYPE_MAP,} from '../constants';
 import {Cursor} from '../utils';
 
@@ -24,7 +33,7 @@ export abstract class BaseDrawer<
     this.cursor = new Cursor(scene, this.options.cursor);
     this.source = new Source({
       render: this.render,
-      data: this.options.data,
+      data: this.options.data ? this.initData(this.options.data) : undefined,
     });
     this.emit(DrawerEvent.init);
   }
@@ -33,6 +42,8 @@ export abstract class BaseDrawer<
     return (this.scene.getContainer()?.querySelector('.amap-maps') ??
       null) as HTMLDivElement | null;
   }
+
+  abstract initData(data: IDrawerOptionsData): Partial<ISourceData> | undefined;
 
   abstract getRenderList(): IRenderType[];
 

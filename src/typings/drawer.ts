@@ -1,5 +1,5 @@
-import { IStyle } from './render';
-import { ISourceData } from './source';
+import {IStyle} from './render';
+import {Feature, LineString, Point, Polygon} from '@turf/turf';
 
 export type ICursorType =
   | 'draw'
@@ -12,10 +12,16 @@ export type ICursorType =
 
 export type ICursor = Record<ICursorType, string>;
 
+export interface IDrawerOptionsData {
+  point?: Feature<Point>[];
+  line?: Feature<LineString>[];
+  polygon?: Feature<Polygon>[];
+}
+
 export interface IDrawerOptions {
   style: IStyle;
   cursor: ICursor;
-  data?: Partial<ISourceData>;
+  data?: IDrawerOptionsData;
   editable: boolean;
   autoFocus: boolean;
 }
