@@ -40,6 +40,10 @@ export type ILineFeature = IBaseFeature<LineString, ILineProperties>;
 
 export interface IPolygonProperties extends IBaseProperties {
   nodes: Position[];
+  isHover?: boolean;
+  isActive?: boolean;
+  isDrag?: boolean;
+  isDraw?: boolean;
 }
 
 export type IPolygonFeature<P extends IBaseProperties = IBaseProperties> =

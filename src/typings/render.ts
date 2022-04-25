@@ -1,11 +1,3 @@
-import {
-  Feature,
-  Point,
-  LineString,
-  Polygon,
-  GeometryObject,
-  Position,
-} from '@turf/turf';
 import { ILayer } from '@antv/l7';
 import { IBaseFeature } from './feature';
 
@@ -56,7 +48,7 @@ export type IPolygonStyle = IBaseStyle<IPolygonStyleItem> & {
 
 export type IMidPointStyleItem = IPointStyleItem;
 
-export type IMidPointStyle = IBaseStyle<IPointStyleItem>;
+export type IMidPointStyle = IBaseStyle<IMidPointStyleItem>;
 
 export type IDashLineStyle = IBaseStyle<ILineStyleItem> & {
   style: any;
