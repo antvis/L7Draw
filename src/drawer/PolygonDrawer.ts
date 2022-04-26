@@ -71,12 +71,13 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
       return;
     }
     super.onPointUnClick(e);
-    const feature = e.feature!;
+    const currentFeature = e.feature!;
     let newSourceData: Partial<ISourceData> = {};
     const drawPolygon = this.drawPolygon;
     if (drawPolygon) {
-      drawPolygon.properties.nodes.push(feature);
+      drawPolygon.properties.nodes.push(currentFeature);
       syncPolygonNodes(drawPolygon);
+      const firstNode = first(drawPolygon.properties.nodes)!;
       newSourceData = {
         polygon: this.getPolygonData().map((feature) => {
           if (isSameFeature(feature, drawPolygon)) {
@@ -84,11 +85,16 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
           }
           return feature;
         }),
+        dashLine: [
+          lineString(
+            coordAll(featureCollection([currentFeature, firstNode])),
+          ) as IDashLineFeature,
+        ],
       };
     } else {
-      const newPolygon = createPolygon(feature.geometry.coordinates, {
+      const newPolygon = createPolygon(currentFeature.geometry.coordinates, {
         id: getUuid('polygon'),
-        nodes: [feature],
+        nodes: [currentFeature],
         isHover: false,
         isActive: true,
         isDrag: false,
