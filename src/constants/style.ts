@@ -1,4 +1,4 @@
-import {IPointStyle, IPointStyleItem, IStyle} from '../typings';
+import { IPointStyle, IPointStyleItem, IStyle } from '../typings';
 
 export const NORMAL_COLOR = '#1990FF';
 
@@ -75,10 +75,13 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
       color: NORMAL_COLOR,
     },
     hover: {
-      color: NORMAL_COLOR,
+      color: ACTIVE_COLOR,
     },
     active: {
-      color: NORMAL_COLOR,
+      color: ACTIVE_COLOR,
+    },
+    style: {
+      opacity: 0.15,
     },
   },
   midPoint: {

@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
-import {cloneDeep, merge} from 'lodash';
-import {Scene} from '@antv/l7';
-import {Source} from '../source';
+import { cloneDeep, merge } from 'lodash';
+import { Scene } from '@antv/l7';
+import { Source } from '../../source';
 import {
   DeepPartial,
   IBaseFeature,
@@ -11,9 +11,14 @@ import {
   IRenderMap,
   IRenderType,
   ISourceData,
-} from '../typings';
-import {DEFAULT_CURSOR_MAP, DEFAULT_DRAWER_STYLE, DrawerEvent, RENDER_TYPE_MAP,} from '../constants';
-import {Cursor} from '../utils';
+} from '../../typings';
+import {
+  DEFAULT_CURSOR_MAP,
+  DEFAULT_DRAWER_STYLE,
+  DrawerEvent,
+  RENDER_TYPE_MAP,
+} from '../../constants';
+import { Cursor } from '../../utils';
 
 export abstract class BaseDrawer<
   T extends IDrawerOptions,
@@ -33,7 +38,9 @@ export abstract class BaseDrawer<
     this.cursor = new Cursor(scene, this.options.cursor);
     this.source = new Source({
       render: this.render,
-      data: this.options.initData ? this.initData(this.options.initData) : undefined,
+      data: this.options.initData
+        ? this.initData(this.options.initData)
+        : undefined,
     });
     this.emit(DrawerEvent.init, this);
   }
@@ -101,6 +108,9 @@ export abstract class BaseDrawer<
     this.isEnable = true;
     this.setCursor('draw');
     this.bindEvent();
+    this.scene.setMapStatus({
+      doubleClickZoom: false,
+    });
     this.emit(DrawerEvent.enable, this);
   }
 
@@ -111,6 +121,9 @@ export abstract class BaseDrawer<
     this.isEnable = false;
     this.setCursor(null);
     this.unbindEvent();
+    this.scene.setMapStatus({
+      doubleClickZoom: true,
+    });
     this.emit(DrawerEvent.disable, this);
   }
 

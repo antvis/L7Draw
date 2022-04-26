@@ -1,4 +1,4 @@
-import {v4} from 'uuid';
+import { v4 } from 'uuid';
 import {
   IBaseFeature,
   ILineFeature,
@@ -7,6 +7,8 @@ import {
   IMidPointFeature,
   IPointFeature,
   IPointProperties,
+  IPolygonFeature,
+  IPolygonProperties,
 } from '../typings';
 import {
   center,
@@ -14,7 +16,6 @@ import {
   Feature,
   featureCollection,
   LineString,
-  lineString as turfLineString,
   point,
   Point,
   Position,
@@ -22,7 +23,7 @@ import {
   rhumbBearing,
   transformTranslate,
 } from '@turf/turf';
-import {debounce} from 'lodash';
+import { debounce } from 'lodash';
 
 export const getUuid = (prefix = '') => {
   return `${prefix}-${v4()}`;
@@ -39,19 +40,32 @@ export const isSameFeature = (
   );
 };
 
-export const lineString = <P = Properties>(
-  coordinates: Position[],
-  properties?: P,
+export const createLineString = (
+  position: Position,
+  properties: ILineProperties,
 ) => {
-  const onlyOne = coordinates.length === 1;
-  if (onlyOne) {
-    coordinates.unshift([0, 0]);
-  }
-  const feature = turfLineString(coordinates, properties);
-  if (onlyOne) {
-    feature.geometry?.coordinates.shift();
-  }
-  return feature;
+  return {
+    type: 'Feature',
+    properties,
+    geometry: {
+      type: 'LineString',
+      coordinates: [position],
+    },
+  } as ILineFeature;
+};
+
+export const createPolygon = (
+  position: Position,
+  properties: IPolygonProperties,
+) => {
+  return {
+    type: 'Feature',
+    properties,
+    geometry: {
+      type: 'Polygon',
+      coordinates: [[position, position]],
+    },
+  } as IPolygonFeature;
 };
 
 export const moveFeature = <F extends IBaseFeature>(

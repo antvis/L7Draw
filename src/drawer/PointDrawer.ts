@@ -6,7 +6,7 @@ import {
   ISceneMouseEvent,
   ISourceData,
 } from '../typings';
-import {NodeDrawer} from './NodeDrawer';
+import {NodeDrawer} from './common/NodeDrawer';
 import {DEFAULT_POINT_STYLE, DrawerEvent} from '../constants';
 import {cloneDeep} from 'lodash';
 import {transformPointFeature} from '../utils';

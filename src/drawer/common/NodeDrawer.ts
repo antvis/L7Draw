@@ -7,10 +7,10 @@ import {
   IPointFeature,
   IRenderType,
   ISceneMouseEvent,
-} from '../typings';
+} from '../../typings';
 import {Scene} from '@antv/l7';
-import {RenderEvent} from '../constants';
-import {debounceMoveFn, isSameFeature} from '../utils';
+import {RenderEvent} from '../../constants';
+import {debounceMoveFn, isSameFeature} from '../../utils';
 
 export abstract class NodeDrawer<
   T extends IDrawerOptions,

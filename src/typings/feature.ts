@@ -1,4 +1,10 @@
-import {Feature, GeometryObject, LineString, Point, Polygon, Position,} from '@turf/turf';
+import {
+  Feature,
+  GeometryObject,
+  LineString,
+  Point,
+  Polygon,
+} from '@turf/turf';
 
 export interface IBaseProperties {
   id: string;
@@ -39,15 +45,15 @@ export type ILineFeature = IBaseFeature<LineString, ILineProperties>;
 // ------------
 
 export interface IPolygonProperties extends IBaseProperties {
-  nodes: Position[];
+  nodes: IPointFeature[];
+  line: ILineFeature;
   isHover?: boolean;
   isActive?: boolean;
   isDrag?: boolean;
   isDraw?: boolean;
 }
 
-export type IPolygonFeature<P extends IBaseProperties = IBaseProperties> =
-  IBaseFeature<Polygon, P>;
+export type IPolygonFeature = IBaseFeature<Polygon, IPolygonProperties>;
 
 export interface IMidPointProperties extends IBaseProperties {
   startId: string;

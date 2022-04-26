@@ -44,6 +44,7 @@ export interface IPolygonStyleItem {
 export type IPolygonStyle = IBaseStyle<IPolygonStyleItem> & {
   hover: IPolygonStyleItem;
   active: IPolygonStyleItem;
+  style: any;
 };
 
 export type IMidPointStyleItem = IPointStyleItem;

@@ -11,18 +11,33 @@ import {
   ISceneMouseEvent,
   ISourceData,
 } from '../typings';
-import {Scene} from '@antv/l7';
-import {NodeDrawer} from './NodeDrawer';
-import {calcMidPointList, debounceMoveFn, getUuid, isSameFeature, lineString, transformLineFeature,} from '../utils';
-import {coordAll, featureCollection, point, Position} from '@turf/turf';
-import {last} from 'lodash';
-import {DrawerEvent, RenderEvent} from '../constants';
+import { Scene } from '@antv/l7';
+import { NodeDrawer } from './common/NodeDrawer';
+import {
+  calcMidPointList,
+  debounceMoveFn,
+  getUuid,
+  isSameFeature,
+  createLineString,
+  transformLineFeature,
+} from '../utils';
+import {
+  coordAll,
+  featureCollection,
+  point,
+  Position,
+  lineString,
+} from '@turf/turf';
+import { last } from 'lodash';
+import { DrawerEvent, RenderEvent } from '../constants';
 
 export interface ILineDrawerOptions extends IDrawerOptions {
   allowOverlap: boolean;
 }
 
-export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
+export class LineDrawer<
+  T extends ILineDrawerOptions = ILineDrawerOptions,
+> extends NodeDrawer<T> {
   constructor(scene: Scene, options?: DeepPartial<ILineDrawerOptions>) {
     super(scene, options);
 
@@ -108,11 +123,11 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     return this.setTypeData<IDashLineFeature>('dashLine', updater, store);
   }
 
-  getDefaultOptions(): ILineDrawerOptions {
+  getDefaultOptions(): T {
     return {
       ...this.getCommonOptions(),
       allowOverlap: false,
-    };
+    } as T;
   }
 
   getRenderList(): IRenderType[] {
@@ -143,14 +158,14 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
         dashLine: [],
       };
     } else {
-      const newLine = lineString(coordAll(feature), {
+      const newLine = createLineString(feature.geometry.coordinates, {
         id: getUuid('line'),
         nodes: [feature],
         isHover: false,
         isActive: true,
         isDrag: false,
         isDraw: true,
-      }) as ILineFeature;
+      });
 
       newSourceData = {
         point: newLine.properties.nodes,
@@ -169,13 +184,14 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
 
   onPointClick(e: ILayerMouseEvent<IPointFeature>) {
     if (this.drawLine) {
-      const isLastPoint = isSameFeature(
+      const isLastNode = isSameFeature(
         e.feature,
         last(this.drawLine.properties.nodes),
       );
-      if (isLastPoint) {
+      if (isLastNode && this.drawLine.properties.nodes.length > 1) {
         this.drawFinish();
-      } else if (this.options.allowOverlap) {
+      } else if (this.options.allowOverlap && e.feature) {
+        e.feature.id = getUuid('point');
         this.onPointUnClick(e);
       }
     }
@@ -194,7 +210,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
 
   setEditLine(editLine: ILineFeature | null) {
     if (editLine) {
-      this.printEditLineData(editLine);
+      this.printEditLine(editLine);
       this.bindEditEvent();
     } else {
       this.source.setData({
@@ -216,7 +232,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
     }
   }
 
-  printEditLineData(editLine: ILineFeature) {
+  printEditLine(editLine: ILineFeature) {
     const otherLines = this.getLineData()
       .filter((feature) => !isSameFeature(feature, editLine))
       .map((feature) => {
@@ -422,7 +438,7 @@ export class LineDrawer extends NodeDrawer<ILineDrawerOptions> {
       }) as IPointFeature;
       nodes.splice(endIndex, 0, newNode);
       editLine.geometry.coordinates = coordAll(featureCollection(nodes));
-      this.printEditLineData(editLine);
+      this.printEditLine(editLine);
     }
   }
 
