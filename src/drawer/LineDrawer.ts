@@ -202,6 +202,7 @@ export class LineDrawer<
     if (drawLine) {
       const { editable, autoFocus } = this.options;
       const isActive = editable && autoFocus;
+      drawLine.properties.createTime = Date.now();
       this.setEditLine(isActive ? drawLine : null);
       this.emit(DrawerEvent.add, drawLine, this.getLineData());
       this.emit(DrawerEvent.change, this.getLineData());

@@ -13,14 +13,10 @@ import {
   debounceMoveFn,
   getUuid,
   isSameFeature,
+  syncPolygonNodes,
 } from '../utils';
 import { first, last } from 'lodash';
-import {
-  booleanClockwise,
-  coordAll,
-  featureCollection,
-  lineString,
-} from '@turf/turf';
+import { coordAll, featureCollection, lineString } from '@turf/turf';
 import { DrawerEvent } from '../constants';
 
 export interface IPolygonDrawerOptions extends ILineDrawerOptions {}
@@ -63,16 +59,6 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     return this.setTypeData<IPolygonFeature>('polygon', updater, store);
   }
 
-  getDashLineAfterCreatePoint(): IDashLineFeature[] {
-    const nodes = this.drawPolygon?.properties.nodes;
-    if (nodes?.length ?? 0 <= 1) {
-      return [];
-    }
-    const firstNode = first(nodes) as IPointFeature;
-    const lastNode = last(nodes) as IPointFeature;
-    return [lineString(coordAll(featureCollection([firstNode, lastNode])))];
-  }
-
   getRenderList(): IRenderType[] {
     return ['polygon', 'line', 'dashLine', 'midPoint', 'point'];
   }
@@ -87,13 +73,10 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     super.onPointUnClick(e);
     const feature = e.feature!;
     let newSourceData: Partial<ISourceData> = {};
-    if (this.drawPolygon) {
-      const drawPolygon = this.drawPolygon;
+    const drawPolygon = this.drawPolygon;
+    if (drawPolygon) {
       drawPolygon.properties.nodes.push(feature);
-      const positions = drawPolygon.geometry.coordinates[0];
-      positions.splice(positions.length - 1, 0, feature.geometry.coordinates);
-
-      // TODO: 逆时针处理
+      syncPolygonNodes(drawPolygon);
       newSourceData = {
         polygon: this.getPolygonData().map((feature) => {
           if (isSameFeature(feature, drawPolygon)) {
@@ -217,10 +200,14 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     if (nodesLength) {
       const { lng, lat } = e.lnglat;
       const lastNode = last(nodes) as IPointFeature;
-      dashLine.push(lineString([...coordAll(lastNode), [lng, lat]]));
+      dashLine.push(
+        lineString([...coordAll(lastNode), [lng, lat]]) as IDashLineFeature,
+      );
       if (nodesLength > 1) {
         const firstNode = first(nodes) as IPointFeature;
-        dashLine.push(lineString([...coordAll(firstNode), [lng, lat]]));
+        dashLine.push(
+          lineString([...coordAll(firstNode), [lng, lat]]) as IDashLineFeature,
+        );
       }
     }
     this.source.setData({

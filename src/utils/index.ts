@@ -11,10 +11,13 @@ import {
   IPolygonProperties,
 } from '../typings';
 import {
+  booleanClockwise,
   center,
+  coordAll,
   distance,
   Feature,
   featureCollection,
+  lineString,
   LineString,
   point,
   Point,
@@ -23,7 +26,7 @@ import {
   rhumbBearing,
   transformTranslate,
 } from '@turf/turf';
-import { debounce } from 'lodash';
+import { debounce, last } from 'lodash';
 
 export const getUuid = (prefix = '') => {
   return `${prefix}-${v4()}`;
@@ -66,6 +69,19 @@ export const createPolygon = (
       coordinates: [[position, position]],
     },
   } as IPolygonFeature;
+};
+
+/**
+ * 将polygonFeatures
+ * @param feature
+ */
+export const syncPolygonNodes = (feature: IPolygonFeature) => {
+  const nodes = feature.properties.nodes;
+  const positions = coordAll(featureCollection(nodes));
+  positions.push(last(positions)!);
+  feature.geometry.coordinates[0] = booleanClockwise(lineString(positions))
+    ? positions
+    : positions.reverse();
 };
 
 export const moveFeature = <F extends IBaseFeature>(
@@ -155,7 +171,7 @@ export const transformLineFeature = (
     isHover: false,
     nodes: [],
   };
-  if (!feature.properties?.nodes?.length) {
+  if (!feature.properties?.nodes?.length && feature.geometry) {
     defaultProperties.nodes = feature.geometry.coordinates.map(
       (position: Position) => {
         return transformPointFeature(point(position));

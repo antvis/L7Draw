@@ -1,9 +1,15 @@
-import {BaseRender} from './BaseRender';
-import {ILayerMouseEvent, IMidPointFeature, IPointFeature, IPointStyle, ISceneMouseEvent,} from '../typings';
-import {ILayer, PointLayer} from '@antv/l7';
-import {featureCollection, point} from '@turf/turf';
-import {RenderEvent} from '../constants';
-import {getUuid} from '../utils';
+import { BaseRender } from './BaseRender';
+import {
+  ILayerMouseEvent,
+  IMidPointFeature,
+  IPointFeature,
+  IPointStyle,
+  ISceneMouseEvent,
+} from '../typings';
+import { ILayer, PointLayer } from '@antv/l7';
+import { featureCollection, point } from '@turf/turf';
+import { RenderEvent } from '../constants';
+import { getUuid } from '../utils';
 
 export class PointRender extends BaseRender<
   IPointFeature | IMidPointFeature,
@@ -57,6 +63,7 @@ export class PointRender extends BaseRender<
       isHover: false,
       isActive: false,
       isDrag: false,
+      createTime: Date.now(),
     }) as IPointFeature;
     this.emit(RenderEvent.unClick, {
       ...e,

@@ -26,6 +26,7 @@ export interface IPointProperties extends IBaseProperties {
   isHover?: boolean;
   isActive?: boolean;
   isDrag?: boolean;
+  createTime?: number;
 }
 
 export type IPointFeature = IBaseFeature<Point, IPointProperties>;
@@ -38,6 +39,7 @@ export interface ILineProperties extends IBaseProperties {
   isActive?: boolean;
   isDrag?: boolean;
   isDraw?: boolean;
+  createTime?: number;
 }
 
 export type ILineFeature = IBaseFeature<LineString, ILineProperties>;
@@ -51,6 +53,7 @@ export interface IPolygonProperties extends IBaseProperties {
   isActive?: boolean;
   isDrag?: boolean;
   isDraw?: boolean;
+  createTime?: number;
 }
 
 export type IPolygonFeature = IBaseFeature<Polygon, IPolygonProperties>;
