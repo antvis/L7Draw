@@ -1,7 +1,10 @@
 import { ILineDrawerOptions, LineDrawer } from './LineDrawer';
 import {
+  DeepPartial,
   IDashLineFeature,
+  IDrawerOptionsData,
   ILayerMouseEvent,
+  IMidPointFeature,
   IPointFeature,
   IPolygonFeature,
   IRenderType,
@@ -14,14 +17,27 @@ import {
   getUuid,
   isSameFeature,
   syncPolygonNodes,
+  transformPolygonFeature,
 } from '../utils';
 import { first, last } from 'lodash';
 import { coordAll, featureCollection, lineString } from '@turf/turf';
-import { DrawerEvent } from '../constants';
+import { DrawerEvent, RenderEvent } from '../constants';
+import { Scene } from '@antv/l7';
 
 export interface IPolygonDrawerOptions extends ILineDrawerOptions {}
 
 export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
+  constructor(scene: Scene, options?: DeepPartial<IPolygonDrawerOptions>) {
+    super(scene, options);
+
+    this.polygonRender?.on(RenderEvent.mousemove, this.onPolygonMouseMove);
+    this.polygonRender?.on(RenderEvent.mouseout, this.onPolygonMouseOut);
+    this.polygonRender?.on(RenderEvent.mousedown, this.onPolygonMouseDown);
+    this.polygonRender?.on(RenderEvent.dragging, this.onPolygonDragging);
+    this.polygonRender?.on(RenderEvent.dragend, this.onPolygonDragEnd);
+    this.polygonRender?.on(RenderEvent.unClick, this.onPolygonUnClick);
+  }
+
   get editPolygon() {
     return this.source.data.polygon.find(feature => {
       const { isActive, isDraw } = feature.properties;
@@ -57,6 +73,23 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     store = true,
   ) {
     return this.setTypeData<IPolygonFeature>('polygon', updater, store);
+  }
+
+  initData(data: IDrawerOptionsData): Partial<ISourceData> | undefined {
+    if (data.polygon?.length) {
+      const sourceData: Partial<ISourceData> = {};
+      const polygon = data.polygon.map(feature =>
+        transformPolygonFeature(feature),
+      );
+      const editPolygon = polygon.find(feature => feature.properties.isActive);
+      if (editPolygon && this.options.editable && this.isEnable) {
+        setTimeout(() => {
+          this.setEditPolygon(editPolygon);
+        }, 0);
+      }
+      sourceData.polygon = polygon;
+      return sourceData;
+    }
   }
 
   getRenderList(): IRenderType[] {
@@ -175,8 +208,8 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
   }
 
   setEditPolygon(editPolygon: IPolygonFeature | null) {
-    this.setEditLine(editPolygon?.properties.line ?? null);
     if (editPolygon) {
+      this.setEditLine(editPolygon.properties.line);
       this.printEditPolygon(editPolygon);
       this.bindEditEvent();
     } else {
@@ -210,6 +243,24 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     });
     this.setPolygonData([...otherPolygon, editPolygon]);
     this.setEditLine(editPolygon.properties.line);
+  }
+
+  onMidPointClick(e: ILayerMouseEvent<IMidPointFeature>) {
+    super.onMidPointClick(e);
+    console.log(this.editLine);
+    // const editPolygon = this.editPolygon;
+    // if (editPolygon && this.editLine) {
+    //   editPolygon.properties.nodes = this.editLine.properties.nodes;
+    //   syncPolygonNodes(editPolygon);
+    //   this.setPolygonData(features =>
+    //     features.map(feature => {
+    //       if (isSameFeature(feature, editPolygon)) {
+    //         return editPolygon;
+    //       }
+    //       return feature;
+    //     }),
+    //   );
+    // }
   }
 
   drawFinish() {
@@ -248,6 +299,33 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     });
   }
 
+  onLineUnClick(e: ILayerMouseEvent) {}
+
+  onPolygonMouseMove(e: ILayerMouseEvent<IPolygonFeature>) {}
+  onPolygonMouseOut(e: ILayerMouseEvent<IPolygonFeature>) {}
+  onPolygonMouseDown(e: ILayerMouseEvent<IPolygonFeature>) {}
+  onPolygonDragging(e: ILayerMouseEvent<IPolygonFeature>) {}
+  onPolygonDragEnd(e: ILayerMouseEvent<IPolygonFeature>) {}
+  onPolygonUnClick(e: ILayerMouseEvent<IPolygonFeature>) {}
+
+  bindEvent() {
+    super.bindThis();
+    this.polygonRender?.enableUnClick();
+    if (this.options.editable) {
+      this.polygonRender?.enableHover();
+      this.polygonRender?.enableDrag();
+    }
+  }
+
+  unbindEvent() {
+    super.unbindEvent();
+    this.polygonRender?.disableUnClick();
+    if (this.options.editable) {
+      this.polygonRender?.disableHover();
+      this.polygonRender?.disableDrag();
+    }
+  }
+
   bindThis() {
     super.bindThis();
     this.onSceneMouseMove = debounceMoveFn(this.onSceneMouseMove).bind(this);
@@ -255,5 +333,15 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     this.onPointUnClick = this.onPointUnClick.bind(this);
     this.onPointDragging = debounceMoveFn(this.onPointDragging).bind(this);
     this.onPointDragEnd = this.onPointDragEnd.bind(this);
+    this.onMidPointClick = this.onMidPointClick.bind(this);
+    this.onLineUnClick = this.onLineUnClick.bind(this);
+    this.onPolygonMouseMove = debounceMoveFn(this.onPolygonMouseMove).bind(
+      this,
+    );
+    this.onPolygonMouseOut = this.onPolygonMouseOut.bind(this);
+    this.onPolygonMouseDown = this.onPolygonMouseDown.bind(this);
+    this.onPolygonDragging = debounceMoveFn(this.onPolygonDragging).bind(this);
+    this.onPolygonDragEnd = this.onPolygonDragEnd.bind(this);
+    this.onPolygonUnClick = this.onPolygonUnClick.bind(this);
   }
 }
