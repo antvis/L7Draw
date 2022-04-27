@@ -23,21 +23,21 @@ export interface IPolygonDrawerOptions extends ILineDrawerOptions {}
 
 export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
   get editPolygon() {
-    return this.source.data.polygon.find((feature) => {
+    return this.source.data.polygon.find(feature => {
       const { isActive, isDraw } = feature.properties;
       return isActive && !isDraw;
     });
   }
 
   get dragPolygon() {
-    return this.source.data.polygon.find((feature) => {
+    return this.source.data.polygon.find(feature => {
       return feature.properties.isDrag;
     });
   }
 
   get drawPolygon() {
     return (
-      this.source.data.polygon.find((feature) => feature.properties.isDraw) ??
+      this.source.data.polygon.find(feature => feature.properties.isDraw) ??
       null
     );
   }
@@ -79,7 +79,7 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
       syncPolygonNodes(drawPolygon);
       const firstNode = first(drawPolygon.properties.nodes)!;
       newSourceData = {
-        polygon: this.getPolygonData().map((feature) => {
+        polygon: this.getPolygonData().map(feature => {
           if (isSameFeature(feature, drawPolygon)) {
             return drawPolygon;
           }
@@ -104,7 +104,7 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
 
       newSourceData = {
         polygon: [
-          ...this.getPolygonData().map((feature) => {
+          ...this.getPolygonData().map(feature => {
             feature.properties.isActive = false;
             return feature;
           }),
@@ -122,6 +122,33 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     }
     super.onPointDragging(e);
     editPolygon.properties.nodes = this.editLine.properties.nodes;
+    syncPolygonNodes(editPolygon);
+    this.setPolygonData(features =>
+      features.map(feature => {
+        if (isSameFeature(feature, editPolygon)) {
+          return editPolygon;
+        }
+        return feature;
+      }),
+    );
+  }
+
+  onPointDragEnd(e: ISceneMouseEvent) {
+    if (this.dragPoint && this.options.editable) {
+      this.setPointData(data =>
+        data.map(feature => {
+          if (isSameFeature(this.dragPoint, feature)) {
+            feature.properties.isActive = feature.properties.isDrag = false;
+          }
+          return feature;
+        }),
+      );
+      this.scene.setMapStatus({
+        dragEnable: true,
+      });
+      this.setCursor('pointHover');
+      this.emit(DrawerEvent.edit, this.editPolygon, this.getPolygonData());
+    }
   }
 
   onPointClick(e: ILayerMouseEvent<IPointFeature>) {
@@ -153,8 +180,8 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
       this.printEditPolygon(editPolygon);
       this.bindEditEvent();
     } else {
-      this.setPolygonData((features) =>
-        features.map((feature) => {
+      this.setPolygonData(features =>
+        features.map(feature => {
           feature.properties = {
             ...feature.properties,
             isDrag: false,
@@ -171,8 +198,8 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
 
   printEditPolygon(editPolygon: IPolygonFeature) {
     const otherPolygon = this.getPolygonData()
-      .filter((feature) => !isSameFeature(feature, editPolygon))
-      .map((feature) => {
+      .filter(feature => !isSameFeature(feature, editPolygon))
+      .map(feature => {
         feature.properties.isActive = false;
         return feature;
       });
@@ -226,5 +253,7 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     this.onSceneMouseMove = debounceMoveFn(this.onSceneMouseMove).bind(this);
     this.onPointClick = this.onPointClick.bind(this);
     this.onPointUnClick = this.onPointUnClick.bind(this);
+    this.onPointDragging = debounceMoveFn(this.onPointDragging).bind(this);
+    this.onPointDragEnd = this.onPointDragEnd.bind(this);
   }
 }
