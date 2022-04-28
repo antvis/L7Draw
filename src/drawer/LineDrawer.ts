@@ -27,8 +27,9 @@ import {
   point,
   Position,
   lineString,
+  booleanEqual,
 } from '@turf/turf';
-import { last } from 'lodash';
+import { first, isEqual, last } from 'lodash';
 import { DrawerEvent, RenderEvent } from '../constants';
 
 export interface ILineDrawerOptions extends IDrawerOptions {
@@ -245,15 +246,18 @@ export class LineDrawer<
       isActive: true,
       isHover: false,
     });
+
+    const point = editLine.properties.nodes.map(feature => {
+      feature.properties = {
+        ...feature.properties,
+        isHover: false,
+        isActive: false,
+      };
+      return feature;
+    });
+
     this.source.setData({
-      point: editLine.properties.nodes.map(feature => {
-        feature.properties = {
-          ...feature.properties,
-          isHover: false,
-          isActive: false,
-        };
-        return feature;
-      }),
+      point,
       line: [...otherLines, editLine],
       dashLine: [],
       midPoint: this.getMidPointList(editLine),

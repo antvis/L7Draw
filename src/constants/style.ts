@@ -75,7 +75,7 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
       color: NORMAL_COLOR,
     },
     hover: {
-      color: ACTIVE_COLOR,
+      color: NORMAL_COLOR,
     },
     active: {
       color: ACTIVE_COLOR,

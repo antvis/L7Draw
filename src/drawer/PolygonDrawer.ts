@@ -19,7 +19,7 @@ import {
   syncPolygonNodes,
   transformPolygonFeature,
 } from '../utils';
-import { first, last } from 'lodash';
+import { cloneDeep, first, last } from 'lodash';
 import { coordAll, featureCollection, lineString } from '@turf/turf';
 import { DrawerEvent, RenderEvent } from '../constants';
 import { Scene } from '@antv/l7';
@@ -105,8 +105,8 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     }
     super.onPointUnClick(e);
     const currentFeature = e.feature!;
-    let newSourceData: Partial<ISourceData> = {};
     const drawPolygon = this.drawPolygon;
+    let newSourceData: Partial<ISourceData> = {};
     if (drawPolygon) {
       drawPolygon.properties.nodes.push(currentFeature);
       syncPolygonNodes(drawPolygon);
@@ -153,6 +153,7 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     if (!editPolygon || !this.editLine) {
       return;
     }
+    // TODO: 当拖拽初始点时，会出Bug
     super.onPointDragging(e);
     editPolygon.properties.nodes = this.editLine.properties.nodes;
     syncPolygonNodes(editPolygon);
@@ -197,7 +198,8 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
       );
       const drawLine = this.drawLine!;
       if (isFirstNode || isLastNode) {
-        const firstPoint = first(this.drawPolygon.properties.nodes)!;
+        const firstPoint = cloneDeep(first(this.drawPolygon.properties.nodes))!;
+        firstPoint.properties.id = getUuid('point');
         drawLine.properties.nodes.push(firstPoint);
         drawLine.geometry.coordinates.push(firstPoint.geometry.coordinates);
         this.drawFinish();
@@ -301,15 +303,49 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
 
   onLineUnClick(e: ILayerMouseEvent) {}
 
-  onPolygonMouseMove(e: ILayerMouseEvent<IPolygonFeature>) {}
-  onPolygonMouseOut(e: ILayerMouseEvent<IPolygonFeature>) {}
+  onPolygonMouseMove(e: ILayerMouseEvent<IPolygonFeature>) {
+    this.onLineMouseMove({
+      ...e,
+      feature: e.feature?.properties.line,
+    });
+    if (this.dragPolygon || this.drawPolygon) {
+      return;
+    }
+    this.setCursor('polygonHover');
+    this.setPolygonData(features =>
+      features.map(feature => {
+        feature.properties.isHover = isSameFeature(e.feature, feature);
+        return feature;
+      }),
+    );
+  }
+
+  onPolygonMouseOut(e: ILayerMouseEvent<IPolygonFeature>) {
+    this.onLineMouseOut({
+      ...e,
+      feature: e.feature?.properties.line,
+    })
+    if (this.dragPolygon || this.drawPolygon) {
+      return;
+    }
+    this.setPolygonData(features =>
+      features.map(feature => {
+        feature.properties.isHover = false;
+        return feature;
+      }),
+    );
+  }
   onPolygonMouseDown(e: ILayerMouseEvent<IPolygonFeature>) {}
   onPolygonDragging(e: ILayerMouseEvent<IPolygonFeature>) {}
   onPolygonDragEnd(e: ILayerMouseEvent<IPolygonFeature>) {}
-  onPolygonUnClick(e: ILayerMouseEvent<IPolygonFeature>) {}
+  onPolygonUnClick(e: ILayerMouseEvent<IPolygonFeature>) {
+    if (this.editPolygon) {
+      this.setEditPolygon(null);
+    }
+  }
 
   bindEvent() {
-    super.bindThis();
+    super.bindEvent();
     this.polygonRender?.enableUnClick();
     if (this.options.editable) {
       this.polygonRender?.enableHover();
@@ -328,12 +364,12 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
 
   bindThis() {
     super.bindThis();
-    this.onSceneMouseMove = debounceMoveFn(this.onSceneMouseMove).bind(this);
-    this.onPointClick = this.onPointClick.bind(this);
     this.onPointUnClick = this.onPointUnClick.bind(this);
     this.onPointDragging = debounceMoveFn(this.onPointDragging).bind(this);
     this.onPointDragEnd = this.onPointDragEnd.bind(this);
+    this.onPointClick = this.onPointClick.bind(this);
     this.onMidPointClick = this.onMidPointClick.bind(this);
+    this.onSceneMouseMove = debounceMoveFn(this.onSceneMouseMove).bind(this);
     this.onLineUnClick = this.onLineUnClick.bind(this);
     this.onPolygonMouseMove = debounceMoveFn(this.onPolygonMouseMove).bind(
       this,

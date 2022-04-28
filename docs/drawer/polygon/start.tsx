@@ -8,7 +8,7 @@ import { PolygonDrawer } from '@antv/l7-draw';
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [pointDrawer, setPointDrawer] = useState<PolygonDrawer | null>(null);
+  const [polygonDrawer, setPolygonDrawer] = useState<PolygonDrawer | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -22,7 +22,7 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new PolygonDrawer(scene, {});
-      setPointDrawer(drawer);
+      setPolygonDrawer(drawer);
       drawer.enable();
     });
   }, []);
@@ -30,9 +30,9 @@ const Demo: React.FC = () => {
   return (
     <div>
       <div style={{ padding: 8 }}>
-        <Button onClick={() => pointDrawer?.enable()}>启用</Button>
-        <Button onClick={() => pointDrawer?.disable()}>禁用</Button>
-        <Button onClick={() => pointDrawer?.clear()}>清空</Button>
+        <Button onClick={() => polygonDrawer?.enable()}>启用</Button>
+        <Button onClick={() => polygonDrawer?.disable()}>禁用</Button>
+        <Button onClick={() => polygonDrawer?.clear()}>清空</Button>
       </div>
       <div id={id} style={{ height: 400, position: 'relative' }} />
     </div>
