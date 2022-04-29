@@ -29,9 +29,14 @@ import {
 } from '@turf/turf';
 import { debounce, first, isEqual, last } from 'lodash';
 
-export const getUuid = (prefix = '') => {
-  return `${prefix}-${v4()}`;
-};
+export const getUuid = (() => {
+         let count = 1;
+         // @ts-ignore
+         const isDev = process.env.NODE_ENV === 'development';
+         return (prefix = '') => {
+           return `${prefix}-${isDev ? count++ : v4()}`;
+         };
+       })();
 
 export const isSameFeature = (
   feature1?: IBaseFeature | null,
