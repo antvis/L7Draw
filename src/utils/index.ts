@@ -120,9 +120,7 @@ export const moveFeatureList = <F extends IBaseFeature>(
 
 export const debounceMoveFn = (f: Function) => {
   // @ts-ignore
-  return debounce(f, 16, {
-    maxWait: 16,
-  });
+  return f;
 };
 
 export const calcMidPointList = (feature: ILineFeature) => {

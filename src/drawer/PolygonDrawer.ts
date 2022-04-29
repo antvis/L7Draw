@@ -23,10 +23,14 @@ import { cloneDeep, first, last } from 'lodash';
 import { coordAll, featureCollection, lineString } from '@turf/turf';
 import { DrawerEvent, RenderEvent } from '../constants';
 import { Scene } from '@antv/l7';
+import {
+  BaseLineDrawer,
+  IBaseLineDrawerOptions,
+} from './common/BaseLineDrawer';
 
-export interface IPolygonDrawerOptions extends ILineDrawerOptions {}
+export interface IPolygonDrawerOptions extends IBaseLineDrawerOptions {}
 
-export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
+export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   constructor(scene: Scene, options?: DeepPartial<IPolygonDrawerOptions>) {
     super(scene, options);
 
@@ -202,7 +206,7 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
         firstPoint.properties.id = getUuid('point');
         drawLine.properties.nodes.push(firstPoint);
         drawLine.geometry.coordinates.push(firstPoint.geometry.coordinates);
-        this.drawFinish();
+        this.drawLineFinish();
       } else if (this.options.allowOverlap) {
         this.onPointUnClick(e);
       }
@@ -265,7 +269,7 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     // }
   }
 
-  drawFinish() {
+  drawLineFinish() {
     const drawPolygon = this.drawPolygon;
     if (drawPolygon) {
       const { editable, autoFocus } = this.options;
@@ -324,7 +328,7 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     this.onLineMouseOut({
       ...e,
       feature: e.feature?.properties.line,
-    })
+    });
     if (this.dragPolygon || this.drawPolygon) {
       return;
     }
@@ -336,8 +340,11 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
     );
   }
   onPolygonMouseDown(e: ILayerMouseEvent<IPolygonFeature>) {}
+
   onPolygonDragging(e: ILayerMouseEvent<IPolygonFeature>) {}
+
   onPolygonDragEnd(e: ILayerMouseEvent<IPolygonFeature>) {}
+
   onPolygonUnClick(e: ILayerMouseEvent<IPolygonFeature>) {
     if (this.editPolygon) {
       this.setEditPolygon(null);
@@ -346,6 +353,7 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
 
   bindEvent() {
     super.bindEvent();
+
     this.polygonRender?.enableUnClick();
     if (this.options.editable) {
       this.polygonRender?.enableHover();
@@ -355,6 +363,7 @@ export class PolygonDrawer extends LineDrawer<IPolygonDrawerOptions> {
 
   unbindEvent() {
     super.unbindEvent();
+
     this.polygonRender?.disableUnClick();
     if (this.options.editable) {
       this.polygonRender?.disableHover();
