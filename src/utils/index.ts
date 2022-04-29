@@ -30,13 +30,13 @@ import {
 import { debounce, first, isEqual, last } from 'lodash';
 
 export const getUuid = (() => {
-         let count = 1;
-         // @ts-ignore
-         const isDev = process.env.NODE_ENV === 'development';
-         return (prefix = '') => {
-           return `${prefix}-${isDev ? count++ : v4()}`;
-         };
-       })();
+  let count = 1;
+  // @ts-ignore
+  const isDev = process.env.NODE_ENV === 'development';
+  return (prefix = '') => {
+    return `${prefix}-${isDev ? count++ : v4()}`;
+  };
+})();
 
 export const isSameFeature = (
   feature1?: IBaseFeature | null,
@@ -84,9 +84,21 @@ export const createPolygon = (
 export const syncPolygonNodes = (feature: IPolygonFeature) => {
   const nodes = feature.properties.nodes;
   const positions = coordAll(featureCollection(nodes));
-  if (!isEqual(first(positions), last(positions))) {
-    positions.push(first(positions)!);
+  if (!feature.properties.isDraw) {
+    const firstPosition = first(positions);
+    if (!isEqual(firstPosition, last(positions))) {
+      positions.push(firstPosition!);
+    }
+    const lineFeature = feature.properties.line;
+    const lineNodes = lineFeature.properties.nodes;
+    const firstLineNode = first(lineNodes);
+    const lastLineNode = last(lineNodes);
+    if (firstLineNode && lastLineNode && firstPosition) {
+      firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates = firstPosition;
+    }
+    lineFeature.geometry.coordinates = coordAll(featureCollection(lineNodes));
   }
+
   feature.geometry.coordinates[0] = booleanClockwise(lineString(positions))
     ? positions
     : positions.reverse();

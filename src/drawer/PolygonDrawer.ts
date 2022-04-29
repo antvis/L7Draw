@@ -1,9 +1,9 @@
-import { ILineDrawerOptions, LineDrawer } from './LineDrawer';
 import {
   DeepPartial,
   IDashLineFeature,
   IDrawerOptionsData,
   ILayerMouseEvent,
+  ILineFeature,
   IMidPointFeature,
   IPointFeature,
   IPolygonFeature,
@@ -92,6 +92,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
         }, 0);
       }
       sourceData.polygon = polygon;
+      sourceData.line = polygon.map(feature => feature.properties.line);
       return sourceData;
     }
   }
@@ -154,11 +155,25 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
 
   onPointDragging(e: ISceneMouseEvent) {
     const editPolygon = this.editPolygon;
-    if (!editPolygon || !this.editLine) {
+    const dragPoint = this.dragPoint;
+    if (!editPolygon || !this.editLine || !dragPoint) {
       return;
     }
     // TODO: 当拖拽初始点时，会出Bug
     super.onPointDragging(e);
+
+    const firstNode = first(this.editLine.properties.nodes);
+    const lastNode = last(this.editLine.properties.nodes);
+
+    if (
+      firstNode &&
+      lastNode &&
+      [firstNode, lastNode].find(node => isSameFeature(dragPoint, node))
+    ) {
+      firstNode.geometry.coordinates = lastNode.geometry.coordinates =
+        dragPoint.geometry.coordinates;
+    }
+
     editPolygon.properties.nodes = this.editLine.properties.nodes;
     syncPolygonNodes(editPolygon);
     this.setPolygonData(features =>
@@ -253,20 +268,6 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
 
   onMidPointClick(e: ILayerMouseEvent<IMidPointFeature>) {
     super.onMidPointClick(e);
-    console.log(this.editLine);
-    // const editPolygon = this.editPolygon;
-    // if (editPolygon && this.editLine) {
-    //   editPolygon.properties.nodes = this.editLine.properties.nodes;
-    //   syncPolygonNodes(editPolygon);
-    //   this.setPolygonData(features =>
-    //     features.map(feature => {
-    //       if (isSameFeature(feature, editPolygon)) {
-    //         return editPolygon;
-    //       }
-    //       return feature;
-    //     }),
-    //   );
-    // }
   }
 
   drawLineFinish() {
@@ -307,6 +308,42 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
 
   onLineUnClick(e: ILayerMouseEvent) {}
 
+  onLineMouseDown(e: ILayerMouseEvent<ILineFeature>) {
+    const targetPolygon = this.getPolygonData().find(feature =>
+      isSameFeature(feature.properties.line, e.feature),
+    );
+    if (targetPolygon) {
+      this.onPolygonMouseDown({
+        ...e,
+        feature: targetPolygon,
+      });
+    }
+  }
+
+  onLineDragging(e: ILayerMouseEvent<ILineFeature>) {
+    const targetPolygon = this.getPolygonData().find(feature =>
+      isSameFeature(feature.properties.line, e.feature),
+    );
+    if (targetPolygon) {
+      this.onPolygonDragging({
+        ...e,
+        feature: targetPolygon,
+      });
+    }
+  }
+
+  onLineDragEnd(e: ILayerMouseEvent<ILineFeature>) {
+    const targetPolygon = this.getPolygonData().find(feature =>
+      isSameFeature(feature.properties.line, e.feature),
+    );
+    if (targetPolygon) {
+      this.onPolygonDragEnd({
+        ...e,
+        feature: targetPolygon,
+      });
+    }
+  }
+
   onPolygonMouseMove(e: ILayerMouseEvent<IPolygonFeature>) {
     this.onLineMouseMove({
       ...e,
@@ -339,11 +376,67 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
       }),
     );
   }
-  onPolygonMouseDown(e: ILayerMouseEvent<IPolygonFeature>) {}
 
-  onPolygonDragging(e: ILayerMouseEvent<IPolygonFeature>) {}
+  onPolygonMouseDown(e: ILayerMouseEvent<IPolygonFeature>) {
+    const currentPolygon = e.feature;
+    if (!currentPolygon || !this.options.editable || this.drawPolygon) {
+      return;
+    }
 
-  onPolygonDragEnd(e: ILayerMouseEvent<IPolygonFeature>) {}
+    this.previousLngLat = e.lngLat;
+    this.setEditPolygon(currentPolygon);
+    this.setPolygonData(features =>
+      features.map(feature => {
+        feature.properties.isDrag = isSameFeature(e.feature, feature);
+        return feature;
+      }),
+    );
+    this.scene.setMapStatus({
+      dragEnable: false,
+    });
+    this.setCursor('polygonDrag');
+    this.emit(DrawerEvent.dragStart, currentPolygon, this.getPolygonData());
+  }
+
+  onPolygonDragging(e: ILayerMouseEvent<IPolygonFeature>) {
+    const dragPolygon = this.dragPolygon;
+    if (!dragPolygon || !this.options.editable || this.dragPoint) {
+      return;
+    }
+    const { lng: newLng, lat: newLat } = e.lngLat;
+    const { lng: oldLng, lat: oldLat } = this.previousLngLat;
+    const diffLng = newLng - oldLng;
+    const diffLat = newLat - oldLat;
+    dragPolygon.properties.nodes.forEach(node => {
+      const [lng, lat] = node.geometry.coordinates;
+      node.geometry.coordinates = [lng + diffLng, lat + diffLat];
+    });
+    syncPolygonNodes(dragPolygon);
+    this.previousLngLat = e.lngLat;
+    this.setEditPolygon(dragPolygon);
+    this.setCursor('polygonDrag');
+    this.emit(DrawerEvent.dragging, dragPolygon, this.getPolygonData());
+  }
+
+  onPolygonDragEnd(e: ILayerMouseEvent<IPolygonFeature>) {
+    const dragPolygon = this.dragPolygon;
+    if (!dragPolygon || !this.options.editable || this.dragPoint) {
+      return;
+    }
+    this.setPolygonData(features =>
+      features.map(feature => {
+        feature.properties.isDrag = false;
+        return feature;
+      }),
+    );
+    this.scene.setMapStatus({
+      dragEnable: true,
+    });
+    this.setCursor('polygonHover');
+    this.emit(DrawerEvent.dragEnd, dragPolygon, this.getPolygonData());
+    this.emit(DrawerEvent.edit, dragPolygon, this.getPolygonData());
+    this.emit(DrawerEvent.change, this.getPolygonData());
+  }
 
   onPolygonUnClick(e: ILayerMouseEvent<IPolygonFeature>) {
     if (this.editPolygon) {
@@ -373,13 +466,19 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
 
   bindThis() {
     super.bindThis();
+
     this.onPointUnClick = this.onPointUnClick.bind(this);
     this.onPointDragging = debounceMoveFn(this.onPointDragging).bind(this);
     this.onPointDragEnd = this.onPointDragEnd.bind(this);
     this.onPointClick = this.onPointClick.bind(this);
     this.onMidPointClick = this.onMidPointClick.bind(this);
     this.onSceneMouseMove = debounceMoveFn(this.onSceneMouseMove).bind(this);
+
     this.onLineUnClick = this.onLineUnClick.bind(this);
+    this.onLineMouseDown = this.onLineMouseDown.bind(this);
+    this.onLineDragging = this.onLineDragging.bind(this);
+    this.onLineDragEnd = this.onLineDragEnd.bind(this);
+
     this.onPolygonMouseMove = debounceMoveFn(this.onPolygonMouseMove).bind(
       this,
     );

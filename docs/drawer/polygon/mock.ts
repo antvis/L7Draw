@@ -2,6 +2,37 @@ import { Feature, Polygon } from '@turf/turf';
 
 export const polygonList: Feature<Polygon>[] = [
   {
+    "type": "Feature",
+    "properties": {},
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            120.16176223754884,
+            30.249280664359304
+          ],
+          [
+            120.18115997314453,
+            30.249280664359304
+          ],
+          [
+            120.18115997314453,
+            30.256324105064376
+          ],
+          [
+            120.16176223754884,
+            30.256324105064376
+          ],
+          [
+            120.16176223754884,
+            30.249280664359304
+          ]
+        ]
+      ]
+    }
+  },
+  {
     type: 'Feature',
     properties: {},
     geometry: {
