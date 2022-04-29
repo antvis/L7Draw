@@ -201,6 +201,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
       });
       this.setCursor('pointHover');
       this.emit(DrawerEvent.edit, this.editPolygon, this.getPolygonData());
+      this.emit(DrawerEvent.change, this.getPolygonData());
     }
   }
 
