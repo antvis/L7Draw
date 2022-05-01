@@ -104,6 +104,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   onPointUnClick(e: ILayerMouseEvent<IPointFeature>) {
     if (
       this.editPolygon ||
+      // @ts-ignore
       (this.scene.getPickedLayer() !== -1 && !this.drawPolygon)
     ) {
       return;

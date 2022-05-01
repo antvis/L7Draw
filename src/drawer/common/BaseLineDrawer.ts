@@ -137,6 +137,7 @@ export abstract class BaseLineDrawer<
   onPointUnClick(e: ILayerMouseEvent<IPointFeature>) {
     if (
       this.editLine ||
+      // @ts-ignore
       (this.scene.getPickedLayer() !== -1 && !this.drawLine)
     ) {
       return;
