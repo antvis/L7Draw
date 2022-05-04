@@ -1,4 +1,9 @@
-import { IPointStyle, IPointStyleItem, IStyle } from '../typings';
+import {
+  IPointStyle,
+  IPointStyleItem,
+  IStyle,
+  ITextStyleItem,
+} from '../typings';
 
 export const NORMAL_COLOR = '#1990FF';
 
@@ -53,6 +58,13 @@ export const DEFAULT_NODE_STYLE: IPointStyle = {
   },
 };
 
+export const DEFAULT_TEXT_NORMAL_STYLE: ITextStyleItem = {
+  color: NORMAL_COLOR,
+  size: 12,
+  borderColor: '#ffffff',
+  borderWidth: 1,
+};
+
 export const DEFAULT_DRAWER_STYLE: IStyle = {
   point: DEFAULT_NODE_STYLE,
   line: {
@@ -98,18 +110,13 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
     },
   },
   text: {
-    normal: {
-      color: NORMAL_COLOR,
-      size: 14,
-      borderColor: '#ffffff',
-      borderWidth: 1,
-    },
+    normal: DEFAULT_TEXT_NORMAL_STYLE,
     active: {
+      ...DEFAULT_TEXT_NORMAL_STYLE,
       color: ACTIVE_COLOR,
-      size: 14,
-      borderColor: '#ffffff',
-      borderWidth: 1,
     },
-    style: {},
+    style: {
+      textOffset: [0, DEFAULT_TEXT_NORMAL_STYLE.size + 2],
+    },
   },
 };
