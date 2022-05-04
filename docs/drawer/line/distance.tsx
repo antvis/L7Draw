@@ -22,7 +22,7 @@ const Demo: React.FC = () => {
     scene.on('loaded', () => {
       const drawer = new LineDrawer(scene, {
         lineDistance: {
-          total: false,
+          showOnDash: false,
         },
       });
       setLineDrawer(drawer);

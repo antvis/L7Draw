@@ -28,5 +28,6 @@ export interface IDrawerOptions {
 
 export interface IDistanceOptions {
   total: boolean;
+  showOnDash: boolean;
   format: (meter: number) => string;
 }

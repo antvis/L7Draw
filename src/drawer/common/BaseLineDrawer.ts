@@ -11,6 +11,7 @@ import {
   IRenderType,
   ISceneMouseEvent,
   ISourceData,
+  ITextFeature,
 } from '../../typings';
 import { Scene } from '@antv/l7';
 import { NodeDrawer } from './NodeDrawer';
@@ -41,6 +42,7 @@ export interface IBaseLineDrawerOptions extends IDrawerOptions {
 
 export const defaultDistanceOptions: IDistanceOptions = {
   total: false,
+  showOnDash: true,
   format: (meter) => {
     if (meter >= 1000) {
       return +(meter / 1000).toFixed(2) + 'km';
@@ -316,15 +318,22 @@ export abstract class BaseLineDrawer<
         [lng, lat],
       ]) as IDashLineFeature;
       this.setDashLineData([newDashLine]);
-      this.source.setData({
-        dashLine: [newDashLine],
-        text: [
-          ...this.getDistanceTextList(this.getLineData(), this.drawLine),
+
+      let text: ITextFeature[] = [];
+      text.push(...this.getDistanceTextList(this.getLineData(), this.drawLine));
+
+      if (this.options.lineDistance && this.options.lineDistance.showOnDash) {
+        text.push(
           ...this.getDistanceTextList([newDashLine], null).map((feature) => {
             feature.properties.isActive = true;
             return feature;
           }),
-        ],
+        );
+      }
+
+      this.source.setData({
+        dashLine: [newDashLine],
+        text,
       });
     }
   }

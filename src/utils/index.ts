@@ -28,6 +28,8 @@ import {
   Properties,
   rhumbBearing,
   transformTranslate,
+  length,
+  along,
 } from '@turf/turf';
 import { first, isEqual, last } from 'lodash';
 
@@ -164,6 +166,15 @@ export const calcMidPointList = (feature: ILineFeature) => {
   return midPointList;
 };
 
+export const getLineCenterPoint = (feature: Feature<LineString>) => {
+  const dis = length(feature, {
+    units: 'meters',
+  });
+  return along(feature, dis / 2, {
+    units: 'meters',
+  });
+};
+
 export const calcDistanceText = (
   feature: Feature<LineString>,
   options: IDistanceOptions,
@@ -172,6 +183,16 @@ export const calcDistanceText = (
   const { coordinates } = feature.geometry;
   const textList: ITextFeature[] = [];
   if (total) {
+    const text = getLineCenterPoint(feature) as ITextFeature;
+    text.properties = {
+      ...text.properties,
+      text: format(
+        length(feature, {
+          units: 'meters',
+        }),
+      ),
+    };
+    textList.push(text);
   } else {
     for (let index = 0; index < coordinates.length - 1; index++) {
       const currentPoint = point(coordinates[index]);
@@ -180,12 +201,12 @@ export const calcDistanceText = (
         units: 'meters',
       });
 
-      const feature = center(featureCollection([currentPoint, nextPoint]), {
+      const text = center(featureCollection([currentPoint, nextPoint]), {
         properties: {
           text: format(meters),
         },
       }) as ITextFeature;
-      textList.push(feature);
+      textList.push(text);
     }
   }
   return textList;
