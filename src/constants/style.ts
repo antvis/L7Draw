@@ -62,7 +62,7 @@ export const DEFAULT_TEXT_NORMAL_STYLE: ITextStyleItem = {
   color: NORMAL_COLOR,
   size: 12,
   borderColor: '#ffffff',
-  borderWidth: 1,
+  borderWidth: 0.5,
 };
 
 export const DEFAULT_DRAWER_STYLE: IStyle = {
@@ -116,6 +116,7 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
       color: ACTIVE_COLOR,
     },
     style: {
+      fontWeight: '800',
       textOffset: [0, DEFAULT_TEXT_NORMAL_STYLE.size + 2],
     },
   },
