@@ -43,21 +43,21 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   }
 
   get editPolygon() {
-    return this.source.data.polygon.find(feature => {
+    return this.source.data.polygon.find((feature) => {
       const { isActive, isDraw } = feature.properties;
       return isActive && !isDraw;
     });
   }
 
   get dragPolygon() {
-    return this.source.data.polygon.find(feature => {
+    return this.source.data.polygon.find((feature) => {
       return feature.properties.isDrag;
     });
   }
 
   get drawPolygon() {
     return (
-      this.source.data.polygon.find(feature => feature.properties.isDraw) ??
+      this.source.data.polygon.find((feature) => feature.properties.isDraw) ??
       null
     );
   }
@@ -82,17 +82,19 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   initData(data: IDrawerOptionsData): Partial<ISourceData> | undefined {
     if (data.polygon?.length) {
       const sourceData: Partial<ISourceData> = {};
-      const polygon = data.polygon.map(feature =>
+      const polygon = data.polygon.map((feature) =>
         transformPolygonFeature(feature),
       );
-      const editPolygon = polygon.find(feature => feature.properties.isActive);
+      const editPolygon = polygon.find(
+        (feature) => feature.properties.isActive,
+      );
       if (editPolygon && this.options.editable && this.isEnable) {
         setTimeout(() => {
           this.setEditPolygon(editPolygon);
         }, 0);
       }
       sourceData.polygon = polygon;
-      sourceData.line = polygon.map(feature => feature.properties.line);
+      sourceData.line = polygon.map((feature) => feature.properties.line);
       return sourceData;
     }
   }
@@ -104,7 +106,6 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   onPointUnClick(e: ILayerMouseEvent<IPointFeature>) {
     if (
       this.editPolygon ||
-      // @ts-ignore
       (this.scene.getPickedLayer() !== -1 && !this.drawPolygon)
     ) {
       return;
@@ -118,7 +119,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
       syncPolygonNodes(drawPolygon);
       const firstNode = first(drawPolygon.properties.nodes)!;
       newSourceData = {
-        polygon: this.getPolygonData().map(feature => {
+        polygon: this.getPolygonData().map((feature) => {
           if (isSameFeature(feature, drawPolygon)) {
             return drawPolygon;
           }
@@ -143,7 +144,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
 
       newSourceData = {
         polygon: [
-          ...this.getPolygonData().map(feature => {
+          ...this.getPolygonData().map((feature) => {
             feature.properties.isActive = false;
             return feature;
           }),
@@ -169,7 +170,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     if (
       firstNode &&
       lastNode &&
-      [firstNode, lastNode].find(node => isSameFeature(dragPoint, node))
+      [firstNode, lastNode].find((node) => isSameFeature(dragPoint, node))
     ) {
       firstNode.geometry.coordinates = lastNode.geometry.coordinates =
         dragPoint.geometry.coordinates;
@@ -177,8 +178,8 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
 
     editPolygon.properties.nodes = this.editLine.properties.nodes;
     syncPolygonNodes(editPolygon);
-    this.setPolygonData(features =>
-      features.map(feature => {
+    this.setPolygonData((features) =>
+      features.map((feature) => {
         if (isSameFeature(feature, editPolygon)) {
           return editPolygon;
         }
@@ -189,8 +190,8 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
 
   onPointDragEnd(e: ISceneMouseEvent) {
     if (this.dragPoint && this.options.editable) {
-      this.setPointData(data =>
-        data.map(feature => {
+      this.setPointData((data) =>
+        data.map((feature) => {
           if (isSameFeature(this.dragPoint, feature)) {
             feature.properties.isActive = feature.properties.isDrag = false;
           }
@@ -236,8 +237,8 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
       this.printEditPolygon(editPolygon);
       this.bindEditEvent();
     } else {
-      this.setPolygonData(features =>
-        features.map(feature => {
+      this.setPolygonData((features) =>
+        features.map((feature) => {
           feature.properties = {
             ...feature.properties,
             isDrag: false,
@@ -254,8 +255,8 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
 
   printEditPolygon(editPolygon: IPolygonFeature) {
     const otherPolygon = this.getPolygonData()
-      .filter(feature => !isSameFeature(feature, editPolygon))
-      .map(feature => {
+      .filter((feature) => !isSameFeature(feature, editPolygon))
+      .map((feature) => {
         feature.properties.isActive = false;
         return feature;
       });
@@ -311,7 +312,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   onLineUnClick(e: ILayerMouseEvent) {}
 
   onLineMouseDown(e: ILayerMouseEvent<ILineFeature>) {
-    const targetPolygon = this.getPolygonData().find(feature =>
+    const targetPolygon = this.getPolygonData().find((feature) =>
       isSameFeature(feature.properties.line, e.feature),
     );
     if (targetPolygon) {
@@ -323,7 +324,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   }
 
   onLineDragging(e: ILayerMouseEvent<ILineFeature>) {
-    const targetPolygon = this.getPolygonData().find(feature =>
+    const targetPolygon = this.getPolygonData().find((feature) =>
       isSameFeature(feature.properties.line, e.feature),
     );
     if (targetPolygon) {
@@ -335,7 +336,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   }
 
   onLineDragEnd(e: ILayerMouseEvent<ILineFeature>) {
-    const targetPolygon = this.getPolygonData().find(feature =>
+    const targetPolygon = this.getPolygonData().find((feature) =>
       isSameFeature(feature.properties.line, e.feature),
     );
     if (targetPolygon) {
@@ -355,8 +356,8 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
       return;
     }
     this.setCursor('polygonHover');
-    this.setPolygonData(features =>
-      features.map(feature => {
+    this.setPolygonData((features) =>
+      features.map((feature) => {
         feature.properties.isHover = isSameFeature(e.feature, feature);
         return feature;
       }),
@@ -371,8 +372,8 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     if (this.dragPolygon || this.drawPolygon) {
       return;
     }
-    this.setPolygonData(features =>
-      features.map(feature => {
+    this.setPolygonData((features) =>
+      features.map((feature) => {
         feature.properties.isHover = false;
         return feature;
       }),
@@ -387,8 +388,8 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
 
     this.previousLngLat = e.lngLat;
     this.setEditPolygon(currentPolygon);
-    this.setPolygonData(features =>
-      features.map(feature => {
+    this.setPolygonData((features) =>
+      features.map((feature) => {
         feature.properties.isDrag = isSameFeature(e.feature, feature);
         return feature;
       }),
@@ -409,7 +410,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     const { lng: oldLng, lat: oldLat } = this.previousLngLat;
     const diffLng = newLng - oldLng;
     const diffLat = newLat - oldLat;
-    dragPolygon.properties.nodes.forEach(node => {
+    dragPolygon.properties.nodes.forEach((node) => {
       const [lng, lat] = node.geometry.coordinates;
       node.geometry.coordinates = [lng + diffLng, lat + diffLat];
     });
@@ -425,8 +426,8 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     if (!dragPolygon || !this.options.editable || this.dragPoint) {
       return;
     }
-    this.setPolygonData(features =>
-      features.map(feature => {
+    this.setPolygonData((features) =>
+      features.map((feature) => {
         feature.properties.isDrag = false;
         return feature;
       }),

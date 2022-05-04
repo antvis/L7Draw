@@ -6,7 +6,8 @@ export type IRenderType =
   | 'line'
   | 'polygon'
   | 'midPoint'
-  | 'dashLine';
+  | 'dashLine'
+  | 'text';
 
 export interface IBaseStyle<P = any> {
   normal: P;
@@ -62,7 +63,10 @@ export interface ITextStyleItem {
   borderColor: string;
 }
 
-export type ITextStyle = IBaseStyle<ITextStyleItem>;
+export type ITextStyle = IBaseStyle<ITextStyleItem> & {
+  active: ITextStyleItem;
+  style: any;
+};
 
 export interface IStyle {
   point: IPointStyle;

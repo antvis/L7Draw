@@ -5,20 +5,33 @@ import { featureCollection } from '@turf/turf';
 
 export class TextRender extends BaseRender<ITextFeature, ITextStyle> {
   initLayers(): ILayer[] {
-    const { color, size, borderColor, borderWidth } = this.style.normal;
+    const { normal, active, style } = this.style;
     const layer = new PointLayer({
       blend: 'normal',
     })
       .source(featureCollection([]))
-      .size(size)
-      .color(color)
+      .size('isActive', (isActive: boolean) => {
+        return isActive ? active.size : normal.size;
+      })
+      .color('isActive', (isActive: boolean) => {
+        return isActive ? active.color : normal.color;
+      })
       .shape('text', 'text')
       .style({
-        stroke: borderColor,
-        strokeWidth: borderWidth,
+        stroke: [
+          'isActive',
+          (isActive: boolean) => {
+            return isActive ? active.borderColor : normal.borderColor;
+          },
+        ],
+        strokeWidth: [
+          'isActive',
+          (isActive: boolean) => {
+            return isActive ? active.borderWidth : normal.borderWidth;
+          },
+        ],
+        ...style,
       });
-
-    layer.setBlend('normal');
 
     return [layer];
   }

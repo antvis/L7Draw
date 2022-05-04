@@ -70,6 +70,7 @@ export type IDashLineFeature = IBaseFeature<LineString, any>;
 
 export interface ITextProperties extends IBaseProperties {
   text: string;
+  isActive: boolean;
 }
 
 export type ITextFeature = IBaseFeature<Point, ITextProperties>;

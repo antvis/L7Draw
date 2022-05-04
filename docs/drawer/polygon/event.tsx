@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Scene } from '@antv/l7';
-import { GaodeMap } from '@antv/l7-maps';
+import { GaodeMapV2 } from '@antv/l7-maps';
 import { DrawerEvent, PolygonDrawer } from '@antv/l7-draw';
 
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [polygonDrawer, setPolygonDrawer] = useState<PolygonDrawer | null>(null);
+  const [polygonDrawer, setPolygonDrawer] = useState<PolygonDrawer | null>(
+    null,
+  );
 
   useEffect(() => {
     const scene = new Scene({
       id,
-      map: new GaodeMap({
+      map: new GaodeMapV2({
         center: [120.13858795166014, 30.247204606534158],
         pitch: 0,
         style: 'dark',
@@ -34,7 +36,7 @@ const Demo: React.FC = () => {
       });
 
       // Polygon数据发生变更时触发，等价于同时监听add和edit事件
-      drawer.on(DrawerEvent.change, PolygonList => {
+      drawer.on(DrawerEvent.change, (PolygonList) => {
         console.log('change', PolygonList);
       });
 

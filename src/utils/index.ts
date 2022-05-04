@@ -1,6 +1,7 @@
 import { v4 } from 'uuid';
 import {
   IBaseFeature,
+  IDistanceOptions,
   ILineFeature,
   ILineProperties,
   ILngLat,
@@ -9,6 +10,7 @@ import {
   IPointProperties,
   IPolygonFeature,
   IPolygonProperties,
+  ITextFeature,
 } from '../typings';
 import {
   booleanClockwise,
@@ -27,7 +29,7 @@ import {
   rhumbBearing,
   transformTranslate,
 } from '@turf/turf';
-import { debounce, first, isEqual, last } from 'lodash';
+import { first, isEqual, last } from 'lodash';
 
 export const getUuid = (() => {
   let count = 1;
@@ -94,7 +96,8 @@ export const syncPolygonNodes = (feature: IPolygonFeature) => {
     const firstLineNode = first(lineNodes);
     const lastLineNode = last(lineNodes);
     if (firstLineNode && lastLineNode && firstPosition) {
-      firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates = firstPosition;
+      firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates =
+        firstPosition;
     }
     lineFeature.geometry.coordinates = coordAll(featureCollection(lineNodes));
   }
@@ -132,7 +135,9 @@ export const moveFeatureList = <F extends IBaseFeature>(
   startLngLat: ILngLat,
   endLngLat: ILngLat,
 ) => {
-  return features.map(feature => moveFeature(feature, startLngLat, endLngLat));
+  return features.map((feature) =>
+    moveFeature(feature, startLngLat, endLngLat),
+  );
 };
 
 export const debounceMoveFn = (f: Function) => {
@@ -157,6 +162,43 @@ export const calcMidPointList = (feature: ILineFeature) => {
     midPointList.push(newMidPoint);
   }
   return midPointList;
+};
+
+export const calcDistanceText = (
+  feature: Feature<LineString>,
+  options: IDistanceOptions,
+) => {
+  const { format, total } = options;
+  const { coordinates } = feature.geometry;
+  const textList: ITextFeature[] = [];
+  if (total) {
+  } else {
+    for (let index = 0; index < coordinates.length - 1; index++) {
+      const currentPoint = point(coordinates[index]);
+      const nextPoint = point(coordinates[index + 1]);
+      const meters = distance(currentPoint, nextPoint, {
+        units: 'meters',
+      });
+
+      let text = '';
+
+      if (format) {
+        text = format(meters);
+      } else if (meters >= 1000) {
+        text = +(meters / 1000).toFixed(2) + 'km';
+      } else {
+        text = +meters.toFixed(2) + 'm';
+      }
+
+      const feature = center(featureCollection([currentPoint, nextPoint]), {
+        properties: {
+          text,
+        },
+      }) as ITextFeature;
+      textList.push(feature);
+    }
+  }
+  return textList;
 };
 
 export const transformPointFeature = (

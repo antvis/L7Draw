@@ -1,5 +1,5 @@
-import {IStyle} from './render';
-import {Feature, LineString, Point, Polygon} from '@turf/turf';
+import { IStyle } from './render';
+import { Feature, LineString, Point, Polygon } from '@turf/turf';
 
 export type ICursorType =
   | 'draw'
@@ -24,4 +24,9 @@ export interface IDrawerOptions {
   initData?: IDrawerOptionsData;
   editable: boolean;
   autoFocus: boolean;
+}
+
+export interface IDistanceOptions {
+  total: boolean;
+  format?: (meter: number) => string;
 }

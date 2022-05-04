@@ -99,10 +99,17 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
   },
   text: {
     normal: {
+      color: NORMAL_COLOR,
+      size: 14,
+      borderColor: '#ffffff',
+      borderWidth: 1,
+    },
+    active: {
       color: ACTIVE_COLOR,
       size: 14,
       borderColor: '#ffffff',
       borderWidth: 1,
     },
+    style: {},
   },
 };

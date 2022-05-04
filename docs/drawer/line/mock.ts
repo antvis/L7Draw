@@ -1,4 +1,4 @@
-import {Feature, LineString} from '@turf/turf';
+import { Feature, LineString } from '@turf/turf';
 
 export const lineList: Feature<LineString>[] = [
   {
