@@ -180,19 +180,9 @@ export const calcDistanceText = (
         units: 'meters',
       });
 
-      let text = '';
-
-      if (format) {
-        text = format(meters);
-      } else if (meters >= 1000) {
-        text = +(meters / 1000).toFixed(2) + 'km';
-      } else {
-        text = +meters.toFixed(2) + 'm';
-      }
-
       const feature = center(featureCollection([currentPoint, nextPoint]), {
         properties: {
-          text,
+          text: format(meters),
         },
       }) as ITextFeature;
       textList.push(feature);

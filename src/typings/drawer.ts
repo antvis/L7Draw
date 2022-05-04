@@ -28,5 +28,5 @@ export interface IDrawerOptions {
 
 export interface IDistanceOptions {
   total: boolean;
-  format?: (meter: number) => string;
+  format: (meter: number) => string;
 }

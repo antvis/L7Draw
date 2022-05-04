@@ -39,6 +39,17 @@ export interface IBaseLineDrawerOptions extends IDrawerOptions {
   lineDistance: false | IDistanceOptions;
 }
 
+export const defaultDistanceOptions: IDistanceOptions = {
+  total: false,
+  format: (meter) => {
+    if (meter >= 1000) {
+      return +(meter / 1000).toFixed(2) + 'km';
+    } else {
+      return +meter.toFixed(2) + 'm';
+    }
+  },
+};
+
 export abstract class BaseLineDrawer<
   T extends IBaseLineDrawerOptions = IBaseLineDrawerOptions,
 > extends NodeDrawer<T> {
@@ -55,6 +66,13 @@ export abstract class BaseLineDrawer<
     this.lineRender?.on(RenderEvent.dragging, this.onLineDragging);
     this.lineRender?.on(RenderEvent.dragend, this.onLineDragEnd);
     this.lineRender?.on(RenderEvent.unClick, this.onLineUnClick);
+
+    if (this.options.lineDistance) {
+      this.options.lineDistance = {
+        ...defaultDistanceOptions,
+        ...this.options.lineDistance,
+      };
+    }
   }
 
   get editLine() {
