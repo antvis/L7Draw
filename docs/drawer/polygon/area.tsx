@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Scene } from '@antv/l7';
 import { GaodeMapV2 } from '@antv/l7-maps';
-import { LineDrawer } from '@antv/l7-draw';
-import { lineList } from './mock';
+import { useEffect } from 'react';
+import { Button } from 'antd';
+import { PolygonDrawer } from '@antv/l7-draw';
+import { polygonList } from './mock';
 
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [lineDrawer, setLineDrawer] = useState<LineDrawer | null>(null);
+  const [polygonDrawer, setPolygonDrawer] = useState<PolygonDrawer | null>(
+    null,
+  );
 
   useEffect(() => {
     const scene = new Scene({
@@ -20,10 +24,11 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new LineDrawer(scene, {
+      const drawer = new PolygonDrawer(scene, {
+        areaText: {},
         distanceText: {},
       });
-      setLineDrawer(drawer);
+      setPolygonDrawer(drawer);
       drawer.enable();
     });
   }, []);

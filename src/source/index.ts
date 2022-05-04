@@ -1,12 +1,19 @@
 import EventEmitter from 'eventemitter3';
-import {DEFAULT_SOURCE_DATA, SourceEvent} from '../constants';
-import {IBaseFeature, IRenderMap, IRenderType, ISourceData, ISourceDataHistory, ISourceOptions,} from '../typings';
-import {cloneDeep, fromPairs} from 'lodash';
+import { DEFAULT_SOURCE_DATA, SourceEvent } from '../constants';
+import {
+  IBaseFeature,
+  IRenderMap,
+  IRenderType,
+  ISourceData,
+  ISourceDataHistory,
+  ISourceOptions,
+} from '../typings';
+import { cloneDeep, fromPairs } from 'lodash';
 
 export class Source extends EventEmitter<SourceEvent> {
   // 数据
   data: ISourceData = {
-    ...DEFAULT_SOURCE_DATA
+    ...DEFAULT_SOURCE_DATA,
   };
 
   // 渲染器对象
@@ -31,7 +38,6 @@ export class Source extends EventEmitter<SourceEvent> {
   getRender(type: IRenderType) {
     const targetRender = this.render[type];
     if (!targetRender) {
-      debugger;
       throw new Error('当前render并未初始化，请检查Source构造器传参');
     }
     return targetRender;

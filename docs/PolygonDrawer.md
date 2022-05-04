@@ -16,6 +16,10 @@ order: 4
 
 <code src="./drawer/polygon/initData.tsx" compact="true"></code>
 
+## 显示面积
+
+<code src="./drawer/polygon/area.tsx" compact="true"></code>
+
 ## 允许创建重叠的顶点
 
 <code src="./drawer/polygon/allowOverlap.tsx" compact="true"></code>

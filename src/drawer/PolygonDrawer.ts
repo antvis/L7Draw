@@ -1,5 +1,6 @@
 import {
   DeepPartial,
+  IAreaOptions,
   IDashLineFeature,
   IDrawerOptionsData,
   ILayerMouseEvent,
@@ -12,6 +13,7 @@ import {
   ISourceData,
 } from '../typings';
 import {
+  calcAreaText,
   createPolygon,
   debounceMoveFn,
   getUuid,
@@ -28,7 +30,17 @@ import {
   IBaseLineDrawerOptions,
 } from './common/BaseLineDrawer';
 
-export interface IPolygonDrawerOptions extends IBaseLineDrawerOptions {}
+export const defaultAreaOptions: IAreaOptions = {
+  format: (n: number) => {
+    return n >= 1000000
+      ? `${+(n / 1000000).toFixed(2)}km²`
+      : `${+n.toFixed(2)}m²`;
+  },
+};
+
+export interface IPolygonDrawerOptions extends IBaseLineDrawerOptions {
+  areaText: IAreaOptions;
+}
 
 export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   constructor(scene: Scene, options?: DeepPartial<IPolygonDrawerOptions>) {
@@ -40,13 +52,20 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     this.polygonRender?.on(RenderEvent.dragging, this.onPolygonDragging);
     this.polygonRender?.on(RenderEvent.dragend, this.onPolygonDragEnd);
     this.polygonRender?.on(RenderEvent.unClick, this.onPolygonUnClick);
+
+    this.options.areaText = {
+      ...defaultAreaOptions,
+      ...this.options.areaText,
+    };
   }
 
   get editPolygon() {
-    return this.source.data.polygon.find((feature) => {
-      const { isActive, isDraw } = feature.properties;
-      return isActive && !isDraw;
-    });
+    return (
+      this.source.data.polygon.find((feature) => {
+        const { isActive, isDraw } = feature.properties;
+        return isActive && !isDraw;
+      }) ?? null
+    );
   }
 
   get dragPolygon() {
@@ -68,6 +87,20 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
 
   getPolygonData() {
     return this.getTypeData<IPolygonFeature>('polygon');
+  }
+
+  getAreaTextList(
+    features: IPolygonFeature[],
+    activeFeature: IPolygonFeature | null,
+  ) {
+    const { areaText } = this.options;
+    return areaText
+      ? features.map((feature) => {
+          const text = calcAreaText(feature, areaText);
+          text.properties.isActive = isSameFeature(activeFeature, feature);
+          return text;
+        })
+      : [];
   }
 
   setPolygonData(
@@ -100,7 +133,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   }
 
   getRenderList(): IRenderType[] {
-    return ['polygon', 'line', 'dashLine', 'midPoint', 'point'];
+    return ['polygon', 'line', 'dashLine', 'text', 'midPoint', 'point'];
   }
 
   onPointUnClick(e: ILayerMouseEvent<IPointFeature>) {
@@ -130,6 +163,10 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
             coordAll(featureCollection([currentFeature, firstNode])),
           ) as IDashLineFeature,
         ],
+        text: [
+          ...this.getAreaTextList(this.getPolygonData(), this.drawPolygon),
+          ...this.getDistanceTextList(this.getLineData(), this.drawLine),
+        ],
       };
     } else {
       const newPolygon = createPolygon(currentFeature.geometry.coordinates, {
@@ -150,6 +187,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
           }),
           newPolygon,
         ],
+        text: this.getAreaTextList(this.getPolygonData(), null),
       };
     }
     this.source.setData(newSourceData);

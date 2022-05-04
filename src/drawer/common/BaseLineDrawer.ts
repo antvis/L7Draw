@@ -37,7 +37,7 @@ import { RenderEvent } from '../../constants';
 export interface IBaseLineDrawerOptions extends IDrawerOptions {
   allowOverlap: boolean;
   enableMidPoint: boolean;
-  lineDistance: false | IDistanceOptions;
+  distanceText: false | IDistanceOptions;
 }
 
 export const defaultDistanceOptions: IDistanceOptions = {
@@ -69,10 +69,10 @@ export abstract class BaseLineDrawer<
     this.lineRender?.on(RenderEvent.dragend, this.onLineDragEnd);
     this.lineRender?.on(RenderEvent.unClick, this.onLineUnClick);
 
-    if (this.options.lineDistance) {
-      this.options.lineDistance = {
+    if (this.options.distanceText) {
+      this.options.distanceText = {
         ...defaultDistanceOptions,
-        ...this.options.lineDistance,
+        ...this.options.distanceText,
       };
     }
   }
@@ -138,12 +138,12 @@ export abstract class BaseLineDrawer<
     features: (ILineFeature | IDashLineFeature)[],
     activeFeature: ILineFeature | IDashLineFeature | null,
   ) {
-    const { lineDistance } = this.options;
-    return lineDistance
+    const { distanceText } = this.options;
+    return distanceText
       ? features
           .map((feature) => {
             const isActive = isSameFeature(feature, activeFeature);
-            return calcDistanceText(feature, lineDistance).map((feature) => {
+            return calcDistanceText(feature, distanceText).map((feature) => {
               feature.properties.isActive = isActive;
               return feature;
             });
@@ -169,7 +169,7 @@ export abstract class BaseLineDrawer<
     return {
       ...this.getCommonOptions(),
       allowOverlap: false,
-      lineDistance: false,
+      distanceText: false,
       enableMidPoint: true,
     } as T;
   }
@@ -322,7 +322,7 @@ export abstract class BaseLineDrawer<
       let text: ITextFeature[] = [];
       text.push(...this.getDistanceTextList(this.getLineData(), this.drawLine));
 
-      if (this.options.lineDistance && this.options.lineDistance.showOnDash) {
+      if (this.options.distanceText && this.options.distanceText.showOnDash) {
         text.push(
           ...this.getDistanceTextList([newDashLine], null).map((feature) => {
             feature.properties.isActive = true;
