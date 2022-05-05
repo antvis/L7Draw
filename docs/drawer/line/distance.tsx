@@ -21,7 +21,7 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new LineDrawer(scene, {
-        distanceText: {},
+        lineDistance: {},
       });
       setLineDrawer(drawer);
       drawer.enable();

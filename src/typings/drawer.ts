@@ -31,7 +31,3 @@ export interface IDistanceOptions {
   showOnDash: boolean;
   format: (meter: number) => string;
 }
-
-export interface IAreaOptions {
-  format: (meters: number) => string;
-}

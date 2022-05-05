@@ -1,6 +1,5 @@
 import { v4 } from 'uuid';
 import {
-  IAreaOptions,
   IBaseFeature,
   IDistanceOptions,
   ILineFeature,
@@ -31,8 +30,6 @@ import {
   transformTranslate,
   length,
   along,
-  centerOfMass,
-  area,
 } from '@turf/turf';
 import { first, isEqual, last } from 'lodash';
 
@@ -213,18 +210,6 @@ export const calcDistanceText = (
     }
   }
   return textList;
-};
-
-export const calcAreaText = (
-  feature: Feature<Polygon>,
-  options: IAreaOptions,
-) => {
-  const { format } = options;
-  return centerOfMass(feature, {
-    properties: {
-      text: format(area(feature)),
-    },
-  }) as ITextFeature;
 };
 
 export const transformPointFeature = (
