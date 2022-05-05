@@ -12,23 +12,17 @@ order: 2
 
 <code src="./drawer/line/start.tsx" compact="true"></code>
 
+## 初始数据
+
+<code src="./drawer/line/initData.tsx" compact="true"></code>
+
 ## 展现线段距离
 
 <code src="./drawer/line/distance.tsx" compact="true"></code>
 
-## 展示线段距离
-
-<code src="./drawer/line/distance.tsx" compact="true"></code>
-
-## 允许创建重叠的顶点
-
-<code src="./drawer/line/allowOverlap.tsx" compact="true"></code>
-
 ## 新建 Line 后失焦
 
 <code src="./drawer/line/autoFocus.tsx" compact="true"></code>
-
-
 
 ## 监听事件
 

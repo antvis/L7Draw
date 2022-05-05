@@ -33,7 +33,7 @@ export abstract class BaseDrawer<
     super();
     this.bindThis();
     this.scene = scene;
-    this.options = merge({}, this.getDefaultOptions(), options ?? {});
+    this.options = merge({}, this.getDefaultOptions(options ?? {}), options ?? {});
     this.render = this.initRender();
     this.cursor = new Cursor(scene, this.options.cursor);
     this.source = new Source({
@@ -54,7 +54,7 @@ export abstract class BaseDrawer<
 
   abstract getRenderList(): IRenderType[];
 
-  abstract getDefaultOptions(): T;
+  abstract getDefaultOptions(options: DeepPartial<T>): T;
 
   abstract bindEvent(): void;
 

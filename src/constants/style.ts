@@ -118,6 +118,7 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
     style: {
       fontWeight: '800',
       textOffset: [0, DEFAULT_TEXT_NORMAL_STYLE.size + 2],
+      textAllowOverlap: true,
     },
   },
 };

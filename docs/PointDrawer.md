@@ -14,7 +14,7 @@ order: 1
 
 <code src="./drawer/point/start.tsx" compact="true"></code>
 
-## 初始化 Point 数据
+## 初始数据
 
 <code src="./drawer/point/initData.tsx" compact="true"></code>
 

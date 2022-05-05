@@ -16,9 +16,9 @@ order: 4
 
 <code src="./drawer/polygon/initData.tsx" compact="true"></code>
 
-## 允许创建重叠的顶点
+## 展示线段距离
 
-<code src="./drawer/polygon/allowOverlap.tsx" compact="true"></code>
+<code src="./drawer/polygon/distance.tsx" compact="true"></code>
 
 ## 新建后失焦
 

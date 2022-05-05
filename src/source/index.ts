@@ -31,7 +31,6 @@ export class Source extends EventEmitter<SourceEvent> {
   getRender(type: IRenderType) {
     const targetRender = this.render[type];
     if (!targetRender) {
-      debugger;
       throw new Error('当前render并未初始化，请检查Source构造器传参');
     }
     return targetRender;
