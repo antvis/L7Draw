@@ -68,13 +68,6 @@ export abstract class BaseLineDrawer<
     this.lineRender?.on(RenderEvent.dragging, this.onLineDragging);
     this.lineRender?.on(RenderEvent.dragend, this.onLineDragEnd);
     this.lineRender?.on(RenderEvent.unClick, this.onLineUnClick);
-
-    if (this.options.distanceText) {
-      this.options.distanceText = {
-        ...defaultDistanceOptions,
-        ...this.options.distanceText,
-      };
-    }
   }
 
   get editLine() {
