@@ -98,8 +98,7 @@ export const syncPolygonNodes = (feature: IPolygonFeature) => {
     const firstLineNode = first(lineNodes);
     const lastLineNode = last(lineNodes);
     if (firstLineNode && lastLineNode && firstPosition) {
-      firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates =
-        firstPosition;
+      firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates = firstPosition;
     }
     lineFeature.geometry.coordinates = coordAll(featureCollection(lineNodes));
   }
@@ -137,9 +136,7 @@ export const moveFeatureList = <F extends IBaseFeature>(
   startLngLat: ILngLat,
   endLngLat: ILngLat,
 ) => {
-  return features.map((feature) =>
-    moveFeature(feature, startLngLat, endLngLat),
-  );
+  return features.map(feature => moveFeature(feature, startLngLat, endLngLat));
 };
 
 export const debounceMoveFn = (f: Function) => {
@@ -180,7 +177,6 @@ export const calcDistanceText = (
   options: IDistanceOptions,
 ) => {
   const { format, total } = options;
-  const { coordinates } = feature.geometry;
   const textList: ITextFeature[] = [];
   if (total) {
     const text = getLineCenterPoint(feature) as ITextFeature;
@@ -193,7 +189,8 @@ export const calcDistanceText = (
       ),
     };
     textList.push(text);
-  } else {
+  } else if (feature.geometry) {
+    const { coordinates } = feature.geometry;
     for (let index = 0; index < coordinates.length - 1; index++) {
       const currentPoint = point(coordinates[index]);
       const nextPoint = point(coordinates[index + 1]);
