@@ -153,6 +153,15 @@ export abstract class BaseLineDrawer<
       : [];
   }
 
+  getDashLineDistanceTextList(features: (ILineFeature | IDashLineFeature)[]) {
+    return this.options.distanceText && this.options.distanceText.showOnDash
+      ? this.getDistanceTextList(features, null).map(feature => {
+          feature.properties.isActive = true;
+          return feature;
+        })
+      : [];
+  }
+
   getDashLineData() {
     return this.getTypeData<IDashLineFeature>('dashLine');
   }
@@ -324,12 +333,7 @@ export abstract class BaseLineDrawer<
       text.push(...this.getDistanceTextList(this.getLineData(), this.drawLine));
 
       if (this.options.distanceText && this.options.distanceText.showOnDash) {
-        text.push(
-          ...this.getDistanceTextList([newDashLine], null).map(feature => {
-            feature.properties.isActive = true;
-            return feature;
-          }),
-        );
+        text.push(...this.getDashLineDistanceTextList([newDashLine]));
       }
 
       this.source.setData({

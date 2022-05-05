@@ -1,5 +1,6 @@
 import { v4 } from 'uuid';
 import {
+  IAreaOptions,
   IBaseFeature,
   IDistanceOptions,
   ILineFeature,
@@ -30,8 +31,10 @@ import {
   transformTranslate,
   length,
   along,
+  centerOfMass,
+  area,
 } from '@turf/turf';
-import { first, isEqual, last } from 'lodash';
+import { debounce, first, isEqual, last } from 'lodash';
 
 export const getUuid = (() => {
   let count = 1;
@@ -141,7 +144,9 @@ export const moveFeatureList = <F extends IBaseFeature>(
 
 export const debounceMoveFn = (f: Function) => {
   // @ts-ignore
-  return f;
+  return debounce(f, 10, {
+    maxWait: 10,
+  });
 };
 
 export const calcMidPointList = (feature: ILineFeature) => {
@@ -209,6 +214,16 @@ export const calcDistanceText = (
   return textList;
 };
 
+export const calcAreaText = (
+  feature: Feature<Polygon>,
+  options: IAreaOptions,
+) => {
+  const { format } = options;
+  return centerOfMass(feature, {
+    text: format(area(feature)),
+  }) as ITextFeature;
+};
+
 export const transformPointFeature = (
   feature: Feature<Point>,
   useDefault = false,
@@ -269,6 +284,7 @@ export const transformPolygonFeature = (
     defaultProperties.line = transformLineFeature(
       lineString(coordAll(feature)),
     );
+    defaultProperties.line.properties.isActive = !!feature.properties?.isActive;
   }
   if (!feature.properties?.nodes?.length) {
     defaultProperties.nodes = defaultProperties.line.properties.nodes ?? [];

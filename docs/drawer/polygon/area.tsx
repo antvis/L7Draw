@@ -23,6 +23,7 @@ const Demo: React.FC = () => {
     scene.on('loaded', () => {
       const drawer = new PolygonDrawer(scene, {
         distanceText: {},
+        areaText: {},
       });
       setPolygonDrawer(drawer);
       drawer.enable();

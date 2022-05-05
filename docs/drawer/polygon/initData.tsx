@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Scene } from '@antv/l7';
 import { GaodeMapV2 } from '@antv/l7-maps';
-import { DrawerEvent, PointDrawer, PolygonDrawer } from '@antv/l7-draw';
+import { DrawerEvent, PolygonDrawer } from '@antv/l7-draw';
 import { polygonList } from './mock';
 
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [polygonDrawer, setPolygonDrawer] = useState<PointDrawer | null>(null);
+  const [polygonDrawer, setPolygonDrawer] = useState<PolygonDrawer | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -28,7 +28,7 @@ const Demo: React.FC = () => {
       setPolygonDrawer(drawer);
       drawer.enable();
 
-      drawer.on(DrawerEvent.add, (e) => {
+      drawer.on(DrawerEvent.add, e => {
         console.log(e);
       });
     });

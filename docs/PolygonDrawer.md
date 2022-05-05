@@ -16,9 +16,9 @@ order: 4
 
 <code src="./drawer/polygon/initData.tsx" compact="true"></code>
 
-## 展示线段距离
+## 展示线段距离和面积
 
-<code src="./drawer/polygon/distance.tsx" compact="true"></code>
+<code src="./drawer/polygon/area.tsx" compact="true"></code>
 
 ## 新建后失焦
 
