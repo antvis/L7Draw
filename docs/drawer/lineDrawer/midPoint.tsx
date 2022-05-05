@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Scene } from '@antv/l7';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import { LineDrawer } from '@antv/l7-draw';
+import { lineList } from './mock';
+import { cloneDeep } from 'lodash';
 
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [pointDrawer, setPointDrawer] = useState<LineDrawer | null>(null);
+  const [lineDrawer, setLineDrawer] = useState<LineDrawer | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -18,11 +20,21 @@ const Demo: React.FC = () => {
         zoom: 10,
       }),
     });
+
+    const line = cloneDeep(lineList);
+
+    if (line[0].properties) {
+      line[0].properties.isActive = true;
+    }
+
     scene.on('loaded', () => {
       const drawer = new LineDrawer(scene, {
-        allowOverlap: true,
+        enableMidPoint: false,
+        initData: {
+          line,
+        },
       });
-      setPointDrawer(drawer);
+      setLineDrawer(drawer);
       drawer.enable();
     });
   }, []);

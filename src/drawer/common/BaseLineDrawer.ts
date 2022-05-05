@@ -109,13 +109,13 @@ export abstract class BaseLineDrawer<
       const sourceData: Partial<ISourceData> = {};
       const line = data.line.map(feature => transformLineFeature(feature));
       const editLine = line.find(feature => feature.properties.isActive);
-      if (editLine && this.options.editable && this.isEnable) {
-        setTimeout(() => {
-          this.setEditLine(editLine);
-        }, 0);
-      }
       sourceData.line = line;
       sourceData.text = this.getDistanceTextList(line, editLine ?? null);
+      setTimeout(() => {
+        if (editLine && this.options.editable && this.isEnable) {
+          this.setEditLine(editLine);
+        }
+      }, 0);
       return sourceData;
     }
   }
