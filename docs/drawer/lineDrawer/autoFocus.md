@@ -1,5 +1,5 @@
 ---
-title: 关闭自动聚焦
+title: 关闭自动激活
 order: 5
 group: 
   path: /LineDrawer
