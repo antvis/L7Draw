@@ -1,6 +1,6 @@
 {
   "name": "@antv/l7-draw",
-  "version": "3.0.0",
+  "version": "3.0.0-alpha.0",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
