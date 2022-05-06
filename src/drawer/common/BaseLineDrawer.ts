@@ -36,18 +36,18 @@ import { RenderEvent } from '../../constants';
 
 export interface IBaseLineDrawerOptions extends IDrawerOptions {
   allowOverlap: boolean;
-  enableMidPoint: boolean;
+  showMidPoint: boolean;
   distanceText: false | IDistanceOptions;
 }
 
 export const defaultDistanceOptions: IDistanceOptions = {
   total: false,
   showOnDash: true,
-  format: meter => {
-    if (meter >= 1000) {
-      return +(meter / 1000).toFixed(2) + 'km';
+  format: meters => {
+    if (meters >= 1000) {
+      return +(meters / 1000).toFixed(2) + 'km';
     } else {
-      return +meter.toFixed(2) + 'm';
+      return +meters.toFixed(2) + 'm';
     }
   },
 };
@@ -125,7 +125,7 @@ export abstract class BaseLineDrawer<
   }
 
   getMidPointList(lineFeature: ILineFeature) {
-    return this.options.enableMidPoint ? calcMidPointList(lineFeature) : [];
+    return this.options.showMidPoint ? calcMidPointList(lineFeature) : [];
   }
 
   getDistanceTextList(
@@ -173,7 +173,7 @@ export abstract class BaseLineDrawer<
       ...this.getCommonOptions(),
       allowOverlap: false,
       distanceText: options.distanceText ? defaultDistanceOptions : false,
-      enableMidPoint: true,
+      showMidPoint: true,
     } as T;
   }
 

@@ -44,6 +44,7 @@ export const DEFAULT_POINT_STYLE: IPointStyle = {
     size: 8,
     color: ACTIVE_COLOR,
   },
+  style: {},
 };
 
 export const DEFAULT_NODE_STYLE: IPointStyle = {
@@ -56,6 +57,7 @@ export const DEFAULT_NODE_STYLE: IPointStyle = {
     ...DEFAULT_NODE_NORMAL_STYLE,
     size: 8,
   },
+  style: {},
 };
 
 export const DEFAULT_TEXT_NORMAL_STYLE: ITextStyleItem = {

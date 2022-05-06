@@ -35,10 +35,10 @@ export interface IPolygonDrawerOptions extends IBaseLineDrawerOptions {
 }
 
 export const defaultAreaOptions: IAreaOptions = {
-  format: (meter: number) => {
-    return meter > 1000000
-      ? `${+(meter / 1000000).toFixed(2)}km²`
-      : `${+meter.toFixed(2)}m²`;
+  format: (squareMeters: number) => {
+    return squareMeters > 1000000
+      ? `${+(squareMeters / 1000000).toFixed(2)}km²`
+      : `${+squareMeters.toFixed(2)}m²`;
   },
 };
 
@@ -120,11 +120,11 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
         transformPolygonFeature(feature),
       );
       const editPolygon = polygon.find(feature => feature.properties.isActive);
-      if (editPolygon && this.options.editable && this.isEnable) {
-        setTimeout(() => {
+      setTimeout(() => {
+        if (editPolygon && this.options.editable && this.isEnable) {
           this.setEditPolygon(editPolygon);
-        }, 0);
-      }
+        }
+      }, 0);
       sourceData.polygon = polygon;
       sourceData.line = polygon.map(feature => feature.properties.line);
       sourceData.text = [

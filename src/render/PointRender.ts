@@ -16,7 +16,7 @@ export class PointRender extends BaseRender<
   IPointStyle
 > {
   initLayers(): ILayer[] {
-    const { normal, hover, active } = this.style;
+    const { normal, hover, active, style } = this.style;
     const layer = new PointLayer({
       blend: 'normal',
     })
@@ -51,6 +51,7 @@ export class PointRender extends BaseRender<
               : normal.borderWidth;
           },
         ],
+        ...style,
       });
 
     return [layer];

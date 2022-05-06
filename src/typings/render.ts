@@ -25,6 +25,7 @@ export interface IPointStyleItem {
 export type IPointStyle = IBaseStyle<IPointStyleItem> & {
   hover: IPointStyleItem;
   active: IPointStyleItem;
+  style: any;
 };
 
 export interface ILineStyleItem {

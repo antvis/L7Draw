@@ -24,6 +24,8 @@ const Demo: React.FC = () => {
       const drawer = new PointDrawer(scene, {});
       setPointDrawer(drawer);
       drawer.enable();
+
+      console.log(drawer);
     });
   }, []);
 
