@@ -101,7 +101,8 @@ export const syncPolygonNodes = (feature: IPolygonFeature) => {
     const firstLineNode = first(lineNodes);
     const lastLineNode = last(lineNodes);
     if (firstLineNode && lastLineNode && firstPosition) {
-      firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates = firstPosition;
+      firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates =
+        firstPosition;
     }
     lineFeature.geometry.coordinates = coordAll(featureCollection(lineNodes));
   }
@@ -139,7 +140,9 @@ export const moveFeatureList = <F extends IBaseFeature>(
   startLngLat: ILngLat,
   endLngLat: ILngLat,
 ) => {
-  return features.map(feature => moveFeature(feature, startLngLat, endLngLat));
+  return features.map((feature) =>
+    moveFeature(feature, startLngLat, endLngLat),
+  );
 };
 
 export const debounceMoveFn = (f: Function) => {
@@ -296,3 +299,4 @@ export const transformPolygonFeature = (
 };
 
 export * from './cursor';
+export * from './popup';

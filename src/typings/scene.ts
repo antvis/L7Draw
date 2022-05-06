@@ -9,6 +9,10 @@ export interface ISceneMouseEvent {
   type: string;
   lnglat: ILngLat;
   lngLat: ILngLat;
+  pixel: {
+    x: number;
+    y: number;
+  };
 }
 
 export interface ILayerMouseEvent<T = IBaseFeature> {
