@@ -28,7 +28,7 @@ export abstract class BaseDrawer<
   render: IRenderMap;
   options: T;
   cursor: Cursor;
-  popup: Popup;
+  // popup: Popup;
   isEnable = false; // 当前是否开启编辑
   constructor(scene: Scene, options?: DeepPartial<T>) {
     super();
@@ -39,7 +39,7 @@ export abstract class BaseDrawer<
       this.getDefaultOptions(options ?? {}),
       options ?? {},
     );
-    this.popup = getPopup(scene);
+    // this.popup = getPopup(scene);
     this.render = this.initRender();
     this.cursor = new Cursor(scene, this.options.cursor);
     this.source = new Source({

@@ -14,6 +14,7 @@ export class Popup {
     this.instance = tippy(container, {
       placement: 'top',
     });
+    this.instance.hide();
     scene.on('mousemove', this.onMouseMove);
   }
 
