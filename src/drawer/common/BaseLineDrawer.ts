@@ -1,6 +1,7 @@
 import {
   DeepPartial,
   IDashLineFeature,
+  IDistanceOptions,
   IDrawerOptions,
   IDrawerOptionsData,
   ILayerMouseEvent,
@@ -10,16 +11,18 @@ import {
   IRenderType,
   ISceneMouseEvent,
   ISourceData,
+  ITextFeature,
 } from '../../typings';
 import { Scene } from '@antv/l7';
 import { NodeDrawer } from './NodeDrawer';
 import {
   calcMidPointList,
-  debounceMoveFn,
+
   getUuid,
   isSameFeature,
   createLineString,
   transformLineFeature,
+  calcDistanceText,
 } from '../../utils';
 import {
   coordAll,
@@ -29,14 +32,28 @@ import {
   lineString,
 } from '@turf/turf';
 import { last } from 'lodash';
-import { DrawerEvent, RenderEvent } from '../../constants';
+import { RenderEvent } from '../../constants';
 
 export interface IBaseLineDrawerOptions extends IDrawerOptions {
   allowOverlap: boolean;
+  showMidPoint: boolean;
+  distanceText: false | IDistanceOptions;
 }
 
+export const defaultDistanceOptions: IDistanceOptions = {
+  total: false,
+  showOnDash: true,
+  format: (meters) => {
+    if (meters >= 1000) {
+      return +(meters / 1000).toFixed(2) + 'km';
+    } else {
+      return +meters.toFixed(2) + 'm';
+    }
+  },
+};
+
 export abstract class BaseLineDrawer<
-  T extends IBaseLineDrawerOptions = IBaseLineDrawerOptions
+  T extends IBaseLineDrawerOptions = IBaseLineDrawerOptions,
 > extends NodeDrawer<T> {
   constructor(scene: Scene, options?: DeepPartial<T>) {
     super(scene, options);
@@ -54,21 +71,21 @@ export abstract class BaseLineDrawer<
   }
 
   get editLine() {
-    return this.source.data.line.find(feature => {
+    return this.source.data.line.find((feature) => {
       const { isActive, isDraw } = feature.properties;
       return isActive && !isDraw;
     });
   }
 
   get dragLine() {
-    return this.source.data.line.find(feature => {
+    return this.source.data.line.find((feature) => {
       return feature.properties.isDrag;
     });
   }
 
   get drawLine() {
     return (
-      this.source.data.line.find(feature => feature.properties.isDraw) ?? null
+      this.source.data.line.find((feature) => feature.properties.isDraw) ?? null
     );
   }
 
@@ -83,14 +100,15 @@ export abstract class BaseLineDrawer<
   initData(data: IDrawerOptionsData): Partial<ISourceData> | undefined {
     if (data.line?.length) {
       const sourceData: Partial<ISourceData> = {};
-      const line = data.line.map(feature => transformLineFeature(feature));
-      const editLine = line.find(feature => feature.properties.isActive);
-      if (editLine && this.options.editable && this.isEnable) {
-        setTimeout(() => {
-          this.setEditLine(editLine);
-        }, 0);
-      }
+      const line = data.line.map((feature) => transformLineFeature(feature));
+      const editLine = line.find((feature) => feature.properties.isActive);
       sourceData.line = line;
+      sourceData.text = this.getDistanceTextList(line, editLine ?? null);
+      setTimeout(() => {
+        if (editLine && this.options.editable && this.isEnable) {
+          this.setEditLine(editLine);
+        }
+      }, 0);
       return sourceData;
     }
   }
@@ -107,7 +125,34 @@ export abstract class BaseLineDrawer<
   }
 
   getMidPointList(lineFeature: ILineFeature) {
-    return calcMidPointList(lineFeature);
+    return this.options.showMidPoint ? calcMidPointList(lineFeature) : [];
+  }
+
+  getDistanceTextList(
+    features: (ILineFeature | IDashLineFeature)[],
+    activeFeature: ILineFeature | IDashLineFeature | null,
+  ) {
+    const { distanceText } = this.options;
+    return distanceText
+      ? features
+          .map((feature) => {
+            const isActive = isSameFeature(feature, activeFeature);
+            return calcDistanceText(feature, distanceText).map((feature) => {
+              feature.properties.isActive = isActive;
+              return feature;
+            });
+          })
+          .flat()
+      : [];
+  }
+
+  getDashLineDistanceTextList(features: (ILineFeature | IDashLineFeature)[]) {
+    return this.options.distanceText && this.options.distanceText.showOnDash
+      ? this.getDistanceTextList(features, null).map((feature) => {
+          feature.properties.isActive = true;
+          return feature;
+        })
+      : [];
   }
 
   getDashLineData() {
@@ -123,15 +168,17 @@ export abstract class BaseLineDrawer<
     return this.setTypeData<IDashLineFeature>('dashLine', updater, store);
   }
 
-  getDefaultOptions(): T {
+  getDefaultOptions(options: DeepPartial<T>): T {
     return {
       ...this.getCommonOptions(),
       allowOverlap: false,
+      distanceText: options.distanceText ? defaultDistanceOptions : false,
+      showMidPoint: true,
     } as T;
   }
 
   getRenderList(): IRenderType[] {
-    return ['line', 'dashLine', 'midPoint', 'point'];
+    return ['line', 'dashLine', 'text', 'midPoint', 'point'];
   }
 
   onPointUnClick(e: ILayerMouseEvent<IPointFeature>) {
@@ -149,12 +196,13 @@ export abstract class BaseLineDrawer<
       drawLine.geometry.coordinates.push(feature.geometry.coordinates);
       drawLine.properties.nodes.push(feature);
       newSourceData = {
-        line: this.getLineData().map(feature => {
+        line: this.getLineData().map((feature) => {
           if (isSameFeature(feature, drawLine)) {
             return drawLine;
           }
           return feature;
         }),
+        text: this.getDistanceTextList(this.getLineData(), this.drawLine),
         dashLine: [],
       };
     } else {
@@ -170,7 +218,7 @@ export abstract class BaseLineDrawer<
       newSourceData = {
         point: newLine.properties.nodes,
         line: [
-          ...this.getLineData().map(feature => {
+          ...this.getLineData().map((feature) => {
             feature.properties.isActive = false;
             return feature;
           }),
@@ -214,7 +262,7 @@ export abstract class BaseLineDrawer<
     } else {
       this.source.setData({
         point: [],
-        line: this.getLineData().map(feature => {
+        line: this.getLineData().map((feature) => {
           feature.properties = {
             ...feature.properties,
             isDrag: false,
@@ -224,6 +272,7 @@ export abstract class BaseLineDrawer<
           };
           return feature;
         }),
+        text: this.getDistanceTextList(this.getLineData(), null),
         dashLine: [],
         midPoint: [],
       });
@@ -233,8 +282,8 @@ export abstract class BaseLineDrawer<
 
   printEditLine(editLine: ILineFeature) {
     const otherLines = this.getLineData()
-      .filter(feature => !isSameFeature(feature, editLine))
-      .map(feature => {
+      .filter((feature) => !isSameFeature(feature, editLine))
+      .map((feature) => {
         feature.properties.isActive = false;
         return feature;
       });
@@ -244,7 +293,7 @@ export abstract class BaseLineDrawer<
       isHover: false,
     });
 
-    const point = editLine.properties.nodes.map(feature => {
+    const point = editLine.properties.nodes.map((feature) => {
       feature.properties = {
         ...feature.properties,
         isHover: false,
@@ -258,6 +307,7 @@ export abstract class BaseLineDrawer<
       line: [...otherLines, editLine],
       dashLine: [],
       midPoint: this.getMidPointList(editLine),
+      text: this.getDistanceTextList(this.getLineData(), editLine),
     });
   }
 
@@ -271,6 +321,18 @@ export abstract class BaseLineDrawer<
         [lng, lat],
       ]) as IDashLineFeature;
       this.setDashLineData([newDashLine]);
+
+      let text: ITextFeature[] = [];
+      text.push(...this.getDistanceTextList(this.getLineData(), this.drawLine));
+
+      if (this.options.distanceText && this.options.distanceText.showOnDash) {
+        text.push(...this.getDashLineDistanceTextList([newDashLine]));
+      }
+
+      this.source.setData({
+        dashLine: [newDashLine],
+        text,
+      });
     }
   }
 
@@ -285,13 +347,14 @@ export abstract class BaseLineDrawer<
       featureCollection(editLine.properties.nodes),
     );
     this.source.setData({
-      line: this.getLineData().map(feature => {
+      line: this.getLineData().map((feature) => {
         if (isSameFeature(feature, editLine)) {
           return editLine;
         }
         return feature;
       }),
       midPoint: this.getMidPointList(editLine),
+      text: this.getDistanceTextList(this.getLineData(), editLine),
     });
   }
 
@@ -299,8 +362,8 @@ export abstract class BaseLineDrawer<
     if (!this.dragPoint || !this.options.editable) {
       return;
     }
-    this.setPointData(data =>
-      data.map(feature => {
+    this.setPointData((data) =>
+      data.map((feature) => {
         if (isSameFeature(this.dragPoint, feature)) {
           feature.properties.isActive = feature.properties.isDrag = false;
         }
@@ -326,8 +389,8 @@ export abstract class BaseLineDrawer<
       return;
     }
     this.setCursor('lineHover');
-    this.setLineData(features =>
-      features.map(feature => {
+    this.setLineData((features) =>
+      features.map((feature) => {
         feature.properties.isHover = isSameFeature(e.feature, feature);
         return feature;
       }),
@@ -339,8 +402,8 @@ export abstract class BaseLineDrawer<
       return;
     }
     this.setMouseOutCursor();
-    this.setLineData(features =>
-      features.map(feature => {
+    this.setLineData((features) =>
+      features.map((feature) => {
         feature.properties.isHover = false;
         return feature;
       }),
@@ -355,8 +418,8 @@ export abstract class BaseLineDrawer<
 
     this.previousLngLat = e.lngLat;
     this.setEditLine(currentLine);
-    this.setLineData(features =>
-      features.map(feature => {
+    this.setLineData((features) =>
+      features.map((feature) => {
         feature.properties.isDrag = isSameFeature(e.feature, feature);
         return feature;
       }),
@@ -378,7 +441,7 @@ export abstract class BaseLineDrawer<
     const diffLat = newLat - oldLat;
     const nodes = dragLine.properties.nodes;
     const pointList: Position[] = [];
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       const [lng, lat] = node.geometry.coordinates;
       node.geometry.coordinates = [lng + diffLng, lat + diffLat];
       pointList.push(node.geometry.coordinates);
@@ -394,8 +457,8 @@ export abstract class BaseLineDrawer<
     if (!dragLine || !this.options.editable || this.dragPoint) {
       return;
     }
-    this.setLineData(features =>
-      features.map(feature => {
+    this.setLineData((features) =>
+      features.map((feature) => {
         feature.properties.isDrag = false;
         return feature;
       }),
@@ -421,10 +484,10 @@ export abstract class BaseLineDrawer<
     const nodes = editLine.properties.nodes;
     const { startId, endId } = feature.properties;
     const startIndex = nodes.findIndex(
-      feature => feature.properties.id === startId,
+      (feature) => feature.properties.id === startId,
     );
     const endIndex = nodes.findIndex(
-      feature => feature.properties.id === endId,
+      (feature) => feature.properties.id === endId,
     );
     if (startIndex > -1 && endIndex > -1) {
       const newNode = point(feature.geometry.coordinates, {
@@ -440,6 +503,10 @@ export abstract class BaseLineDrawer<
     }
   }
 
+  onSceneDblClick(e: ISceneMouseEvent) {
+    this.drawLineFinish();
+  }
+
   setMouseOutCursor() {
     this.setCursor('draw');
   }
@@ -449,6 +516,7 @@ export abstract class BaseLineDrawer<
     this.pointRender?.enableClick();
     this.lineRender?.enableUnClick();
     this.scene?.on('mousemove', this.onSceneMouseMove);
+    this.scene?.on('dblclick', this.onSceneDblClick);
     if (this.options.editable) {
       this.lineRender?.enableHover();
       this.lineRender?.enableDrag();
@@ -460,6 +528,7 @@ export abstract class BaseLineDrawer<
     this.pointRender?.disableClick();
     this.lineRender?.disableUnClick();
     this.scene?.off('mousemove', this.onSceneMouseMove);
+    this.scene?.off('dblclick', this.onSceneDblClick);
     if (this.options.editable) {
       this.lineRender?.disableHover();
       this.lineRender?.disableDrag();
@@ -483,22 +552,23 @@ export abstract class BaseLineDrawer<
   bindThis() {
     super.bindThis();
     this.onPointUnClick = this.onPointUnClick.bind(this);
-    this.onPointDragging = debounceMoveFn(this.onPointDragging).bind(this);
-    this.onSceneMouseMove = debounceMoveFn(this.onSceneMouseMove).bind(this);
+    this.onPointDragging = this.onPointDragging.bind(this);
+    this.onSceneMouseMove = this.onSceneMouseMove.bind(this);
     this.onPointClick = this.onPointClick.bind(this);
     this.onPointDragEnd = this.onPointDragEnd.bind(this);
     this.onMidPointClick = this.onMidPointClick.bind(this);
-    this.onMidPointMouseMove = debounceMoveFn(this.onMidPointMouseMove).bind(
+    this.onMidPointMouseMove = this.onMidPointMouseMove.bind(
       this,
     );
-    this.onMidPointMouseOut = debounceMoveFn(this.onMidPointMouseOut).bind(
+    this.onMidPointMouseOut = this.onMidPointMouseOut.bind(
       this,
     );
-    this.onLineMouseMove = debounceMoveFn(this.onLineMouseMove).bind(this);
-    this.onLineMouseOut = debounceMoveFn(this.onLineMouseOut).bind(this);
+    this.onLineMouseMove = this.onLineMouseMove.bind(this);
+    this.onLineMouseOut = this.onLineMouseOut.bind(this);
     this.onLineMouseDown = this.onLineMouseDown.bind(this);
-    this.onLineDragging = debounceMoveFn(this.onLineDragging).bind(this);
-    this.onLineDragEnd = debounceMoveFn(this.onLineDragEnd).bind(this);
+    this.onLineDragging = this.onLineDragging.bind(this);
+    this.onLineDragEnd = this.onLineDragEnd.bind(this);
     this.onLineUnClick = this.onLineUnClick.bind(this);
+    this.onSceneDblClick = this.onSceneDblClick.bind(this);
   }
 }

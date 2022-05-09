@@ -18,7 +18,7 @@ import {
   DrawerEvent,
   RENDER_TYPE_MAP,
 } from '../../constants';
-import { Cursor } from '../../utils';
+import { Cursor, Popup, getPopup } from '../../interactive';
 
 export abstract class BaseDrawer<
   T extends IDrawerOptions,
@@ -28,12 +28,18 @@ export abstract class BaseDrawer<
   render: IRenderMap;
   options: T;
   cursor: Cursor;
+  // popup: Popup;
   isEnable = false; // 当前是否开启编辑
   constructor(scene: Scene, options?: DeepPartial<T>) {
     super();
     this.bindThis();
     this.scene = scene;
-    this.options = merge({}, this.getDefaultOptions(), options ?? {});
+    this.options = merge(
+      {},
+      this.getDefaultOptions(options ?? {}),
+      options ?? {},
+    );
+    // this.popup = getPopup(scene);
     this.render = this.initRender();
     this.cursor = new Cursor(scene, this.options.cursor);
     this.source = new Source({
@@ -54,7 +60,7 @@ export abstract class BaseDrawer<
 
   abstract getRenderList(): IRenderType[];
 
-  abstract getDefaultOptions(): T;
+  abstract getDefaultOptions(options: DeepPartial<T>): T;
 
   abstract bindEvent(): void;
 

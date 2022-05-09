@@ -1,5 +1,6 @@
 import {
   DeepPartial,
+  IAreaOptions,
   IDashLineFeature,
   IDrawerOptionsData,
   ILayerMouseEvent,
@@ -12,8 +13,8 @@ import {
   ISourceData,
 } from '../typings';
 import {
+  calcAreaText,
   createPolygon,
-  debounceMoveFn,
   getUuid,
   isSameFeature,
   syncPolygonNodes,
@@ -28,7 +29,17 @@ import {
   IBaseLineDrawerOptions,
 } from './common/BaseLineDrawer';
 
-export interface IPolygonDrawerOptions extends IBaseLineDrawerOptions {}
+export interface IPolygonDrawerOptions extends IBaseLineDrawerOptions {
+  areaText: false | IAreaOptions;
+}
+
+export const defaultAreaOptions: IAreaOptions = {
+  format: (squareMeters: number) => {
+    return squareMeters > 1000000
+      ? `${+(squareMeters / 1000000).toFixed(2)}km²`
+      : `${+squareMeters.toFixed(2)}m²`;
+  },
+};
 
 export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   constructor(scene: Scene, options?: DeepPartial<IPolygonDrawerOptions>) {
@@ -43,21 +54,25 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   }
 
   get editPolygon() {
-    return this.source.data.polygon.find(feature => {
-      const { isActive, isDraw } = feature.properties;
-      return isActive && !isDraw;
-    });
+    return (
+      this.source.data.polygon.find((feature) => {
+        const { isActive, isDraw } = feature.properties;
+        return isActive && !isDraw;
+      }) ?? null
+    );
   }
 
   get dragPolygon() {
-    return this.source.data.polygon.find(feature => {
-      return feature.properties.isDrag;
-    });
+    return (
+      this.source.data.polygon.find((feature) => {
+        return feature.properties.isDrag;
+      }) ?? null
+    );
   }
 
   get drawPolygon() {
     return (
-      this.source.data.polygon.find(feature => feature.properties.isDraw) ??
+      this.source.data.polygon.find((feature) => feature.properties.isDraw) ??
       null
     );
   }
@@ -79,26 +94,62 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     return this.setTypeData<IPolygonFeature>('polygon', updater, store);
   }
 
+  getAreaTextList(
+    features: IPolygonFeature[],
+    activeFeature: IPolygonFeature | null,
+  ) {
+    const { areaText } = this.options;
+    return areaText
+      ? features
+          .filter((feature) => feature.properties.nodes.length > 2)
+          .map((feature) => {
+            const isActive = isSameFeature(feature, activeFeature);
+            const area = calcAreaText(feature, areaText);
+            area.properties.isActive = isActive;
+            return area;
+          })
+          .flat()
+      : [];
+  }
+
   initData(data: IDrawerOptionsData): Partial<ISourceData> | undefined {
     if (data.polygon?.length) {
       const sourceData: Partial<ISourceData> = {};
-      const polygon = data.polygon.map(feature =>
+      const polygon = data.polygon.map((feature) =>
         transformPolygonFeature(feature),
       );
-      const editPolygon = polygon.find(feature => feature.properties.isActive);
-      if (editPolygon && this.options.editable && this.isEnable) {
-        setTimeout(() => {
+      const editPolygon = polygon.find(
+        (feature) => feature.properties.isActive,
+      );
+      setTimeout(() => {
+        if (editPolygon && this.options.editable && this.isEnable) {
           this.setEditPolygon(editPolygon);
-        }, 0);
-      }
+        }
+      }, 0);
       sourceData.polygon = polygon;
-      sourceData.line = polygon.map(feature => feature.properties.line);
+      sourceData.line = polygon.map((feature) => feature.properties.line);
+      sourceData.text = [
+        ...this.getDistanceTextList(
+          sourceData.line,
+          editPolygon?.properties.line ?? null,
+        ),
+        ...this.getAreaTextList(sourceData.polygon, editPolygon ?? null),
+      ];
       return sourceData;
     }
   }
 
+  getDefaultOptions(
+    options: DeepPartial<IPolygonDrawerOptions>,
+  ): IPolygonDrawerOptions {
+    return {
+      ...super.getDefaultOptions(options),
+      areaText: options.areaText ? defaultAreaOptions : false,
+    };
+  }
+
   getRenderList(): IRenderType[] {
-    return ['polygon', 'line', 'dashLine', 'midPoint', 'point'];
+    return ['polygon', 'line', 'dashLine', 'text', 'midPoint', 'point'];
   }
 
   onPointUnClick(e: ILayerMouseEvent<IPointFeature>) {
@@ -116,17 +167,23 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
       drawPolygon.properties.nodes.push(currentFeature);
       syncPolygonNodes(drawPolygon);
       const firstNode = first(drawPolygon.properties.nodes)!;
+      const dashLine = [
+        lineString(
+          coordAll(featureCollection([currentFeature, firstNode])),
+        ) as IDashLineFeature,
+      ];
       newSourceData = {
-        polygon: this.getPolygonData().map(feature => {
+        polygon: this.getPolygonData().map((feature) => {
           if (isSameFeature(feature, drawPolygon)) {
             return drawPolygon;
           }
           return feature;
         }),
-        dashLine: [
-          lineString(
-            coordAll(featureCollection([currentFeature, firstNode])),
-          ) as IDashLineFeature,
+        dashLine,
+        text: [
+          ...this.getDistanceTextList(this.getLineData(), this.drawLine),
+          ...this.getDashLineDistanceTextList(dashLine),
+          ...this.getAreaTextList(this.getPolygonData(), this.drawPolygon),
         ],
       };
     } else {
@@ -142,7 +199,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
 
       newSourceData = {
         polygon: [
-          ...this.getPolygonData().map(feature => {
+          ...this.getPolygonData().map((feature) => {
             feature.properties.isActive = false;
             return feature;
           }),
@@ -159,7 +216,6 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     if (!editPolygon || !this.editLine || !dragPoint) {
       return;
     }
-    // TODO: 当拖拽初始点时，会出Bug
     super.onPointDragging(e);
 
     const firstNode = first(this.editLine.properties.nodes);
@@ -168,7 +224,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     if (
       firstNode &&
       lastNode &&
-      [firstNode, lastNode].find(node => isSameFeature(dragPoint, node))
+      [firstNode, lastNode].find((node) => isSameFeature(dragPoint, node))
     ) {
       firstNode.geometry.coordinates = lastNode.geometry.coordinates =
         dragPoint.geometry.coordinates;
@@ -176,20 +232,19 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
 
     editPolygon.properties.nodes = this.editLine.properties.nodes;
     syncPolygonNodes(editPolygon);
-    this.setPolygonData(features =>
-      features.map(feature => {
-        if (isSameFeature(feature, editPolygon)) {
-          return editPolygon;
-        }
-        return feature;
-      }),
-    );
+    this.source.setData({
+      polygon: this.getPolygonData(),
+      text: [
+        ...this.getDistanceTextList(this.getLineData(), this.editLine),
+        ...this.getAreaTextList(this.getPolygonData(), this.editPolygon),
+      ],
+    });
   }
 
   onPointDragEnd(e: ISceneMouseEvent) {
     if (this.dragPoint && this.options.editable) {
-      this.setPointData(data =>
-        data.map(feature => {
+      this.setPointData((data) =>
+        data.map((feature) => {
           if (isSameFeature(this.dragPoint, feature)) {
             feature.properties.isActive = feature.properties.isDrag = false;
           }
@@ -201,6 +256,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
       });
       this.setCursor('pointHover');
       this.emit(DrawerEvent.edit, this.editPolygon, this.getPolygonData());
+      this.emit(DrawerEvent.change, this.getPolygonData());
     }
   }
 
@@ -217,11 +273,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
       );
       const drawLine = this.drawLine!;
       if (isFirstNode || isLastNode) {
-        const firstPoint = cloneDeep(first(this.drawPolygon.properties.nodes))!;
-        firstPoint.properties.id = getUuid('point');
-        drawLine.properties.nodes.push(firstPoint);
-        drawLine.geometry.coordinates.push(firstPoint.geometry.coordinates);
-        this.drawLineFinish();
+        this.drawPolygonFinish();
       } else if (this.options.allowOverlap) {
         this.onPointUnClick(e);
       }
@@ -234,8 +286,8 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
       this.printEditPolygon(editPolygon);
       this.bindEditEvent();
     } else {
-      this.setPolygonData(features =>
-        features.map(feature => {
+      this.setPolygonData((features) =>
+        features.map((feature) => {
           feature.properties = {
             ...feature.properties,
             isDrag: false,
@@ -247,13 +299,19 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
         }),
       );
       this.setEditLine(null);
+      this.source.setData({
+        text: [
+          ...this.getDistanceTextList(this.getLineData(), null),
+          ...this.getAreaTextList(this.getPolygonData(), null),
+        ],
+      });
     }
   }
 
   printEditPolygon(editPolygon: IPolygonFeature) {
     const otherPolygon = this.getPolygonData()
-      .filter(feature => !isSameFeature(feature, editPolygon))
-      .map(feature => {
+      .filter((feature) => !isSameFeature(feature, editPolygon))
+      .map((feature) => {
         feature.properties.isActive = false;
         return feature;
       });
@@ -264,15 +322,45 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     });
     this.setPolygonData([...otherPolygon, editPolygon]);
     this.setEditLine(editPolygon.properties.line);
+    this.source.setData({
+      text: [
+        ...this.getDistanceTextList(
+          this.getLineData(),
+          editPolygon.properties.line,
+        ),
+        ...this.getAreaTextList(this.getPolygonData(), editPolygon),
+      ],
+    });
   }
 
   onMidPointClick(e: ILayerMouseEvent<IMidPointFeature>) {
     super.onMidPointClick(e);
+    if (this.editPolygon) {
+      const lineNodes = this.editPolygon.properties.line.properties.nodes;
+      this.editPolygon.properties.nodes = lineNodes.slice(
+        0,
+        lineNodes.length - 1,
+      );
+      this.source.setData({
+        text: [
+          ...this.getDistanceTextList(
+            this.getLineData(),
+            this.editLine ?? null,
+          ),
+          ...this.getAreaTextList(this.getPolygonData(), this.editPolygon),
+        ],
+      });
+    }
   }
 
-  drawLineFinish() {
+  drawPolygonFinish() {
     const drawPolygon = this.drawPolygon;
-    if (drawPolygon) {
+    const drawLine = drawPolygon?.properties.line;
+    if (drawPolygon && drawLine) {
+      const firstPoint = cloneDeep(first(drawPolygon.properties.nodes))!;
+      firstPoint.properties.id = getUuid('point');
+      drawLine.properties.nodes.push(firstPoint);
+      drawLine.geometry.coordinates.push(firstPoint.geometry.coordinates);
       const { editable, autoFocus } = this.options;
       const isActive = editable && autoFocus;
       this.setEditPolygon(isActive ? drawPolygon : null);
@@ -301,15 +389,21 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
         );
       }
     }
+
     this.source.setData({
       dashLine,
+      text: [
+        ...this.getDistanceTextList(this.getLineData(), this.drawLine),
+        ...this.getDashLineDistanceTextList(dashLine),
+        ...this.getAreaTextList(this.getPolygonData(), this.drawPolygon),
+      ],
     });
   }
 
   onLineUnClick(e: ILayerMouseEvent) {}
 
   onLineMouseDown(e: ILayerMouseEvent<ILineFeature>) {
-    const targetPolygon = this.getPolygonData().find(feature =>
+    const targetPolygon = this.getPolygonData().find((feature) =>
       isSameFeature(feature.properties.line, e.feature),
     );
     if (targetPolygon) {
@@ -321,7 +415,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   }
 
   onLineDragging(e: ILayerMouseEvent<ILineFeature>) {
-    const targetPolygon = this.getPolygonData().find(feature =>
+    const targetPolygon = this.getPolygonData().find((feature) =>
       isSameFeature(feature.properties.line, e.feature),
     );
     if (targetPolygon) {
@@ -333,7 +427,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   }
 
   onLineDragEnd(e: ILayerMouseEvent<ILineFeature>) {
-    const targetPolygon = this.getPolygonData().find(feature =>
+    const targetPolygon = this.getPolygonData().find((feature) =>
       isSameFeature(feature.properties.line, e.feature),
     );
     if (targetPolygon) {
@@ -353,8 +447,8 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
       return;
     }
     this.setCursor('polygonHover');
-    this.setPolygonData(features =>
-      features.map(feature => {
+    this.setPolygonData((features) =>
+      features.map((feature) => {
         feature.properties.isHover = isSameFeature(e.feature, feature);
         return feature;
       }),
@@ -369,8 +463,8 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     if (this.dragPolygon || this.drawPolygon) {
       return;
     }
-    this.setPolygonData(features =>
-      features.map(feature => {
+    this.setPolygonData((features) =>
+      features.map((feature) => {
         feature.properties.isHover = false;
         return feature;
       }),
@@ -385,8 +479,8 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
 
     this.previousLngLat = e.lngLat;
     this.setEditPolygon(currentPolygon);
-    this.setPolygonData(features =>
-      features.map(feature => {
+    this.setPolygonData((features) =>
+      features.map((feature) => {
         feature.properties.isDrag = isSameFeature(e.feature, feature);
         return feature;
       }),
@@ -407,7 +501,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     const { lng: oldLng, lat: oldLat } = this.previousLngLat;
     const diffLng = newLng - oldLng;
     const diffLat = newLat - oldLat;
-    dragPolygon.properties.nodes.forEach(node => {
+    dragPolygon.properties.nodes.forEach((node) => {
       const [lng, lat] = node.geometry.coordinates;
       node.geometry.coordinates = [lng + diffLng, lat + diffLat];
     });
@@ -423,8 +517,8 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     if (!dragPolygon || !this.options.editable || this.dragPoint) {
       return;
     }
-    this.setPolygonData(features =>
-      features.map(feature => {
+    this.setPolygonData((features) =>
+      features.map((feature) => {
         feature.properties.isDrag = false;
         return feature;
       }),
@@ -442,6 +536,10 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     if (this.editPolygon) {
       this.setEditPolygon(null);
     }
+  }
+
+  onSceneDblClick(e: ISceneMouseEvent) {
+    this.drawPolygonFinish();
   }
 
   bindEvent() {
@@ -468,24 +566,25 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     super.bindThis();
 
     this.onPointUnClick = this.onPointUnClick.bind(this);
-    this.onPointDragging = debounceMoveFn(this.onPointDragging).bind(this);
+    this.onPointDragging = this.onPointDragging.bind(this);
     this.onPointDragEnd = this.onPointDragEnd.bind(this);
     this.onPointClick = this.onPointClick.bind(this);
     this.onMidPointClick = this.onMidPointClick.bind(this);
-    this.onSceneMouseMove = debounceMoveFn(this.onSceneMouseMove).bind(this);
+    this.onSceneMouseMove = this.onSceneMouseMove.bind(this);
 
     this.onLineUnClick = this.onLineUnClick.bind(this);
     this.onLineMouseDown = this.onLineMouseDown.bind(this);
     this.onLineDragging = this.onLineDragging.bind(this);
     this.onLineDragEnd = this.onLineDragEnd.bind(this);
 
-    this.onPolygonMouseMove = debounceMoveFn(this.onPolygonMouseMove).bind(
+    this.onPolygonMouseMove = this.onPolygonMouseMove.bind(
       this,
     );
     this.onPolygonMouseOut = this.onPolygonMouseOut.bind(this);
     this.onPolygonMouseDown = this.onPolygonMouseDown.bind(this);
-    this.onPolygonDragging = debounceMoveFn(this.onPolygonDragging).bind(this);
+    this.onPolygonDragging = this.onPolygonDragging.bind(this);
     this.onPolygonDragEnd = this.onPolygonDragEnd.bind(this);
     this.onPolygonUnClick = this.onPolygonUnClick.bind(this);
+    this.onSceneDblClick = this.onSceneDblClick.bind(this);
   }
 }

@@ -1,22 +1,26 @@
 import EventEmitter from 'eventemitter3';
-import {DEFAULT_SOURCE_DATA, SourceEvent} from '../constants';
-import {IBaseFeature, IRenderMap, IRenderType, ISourceData, ISourceDataHistory, ISourceOptions,} from '../typings';
-import {cloneDeep, fromPairs} from 'lodash';
+import { DEFAULT_SOURCE_DATA, SourceEvent } from '../constants';
+import {
+  IBaseFeature,
+  IRenderMap,
+  IRenderType,
+  ISourceData,
+  ISourceOptions,
+} from '../typings';
+import { fromPairs } from 'lodash';
 
 export class Source extends EventEmitter<SourceEvent> {
   // 数据
   data: ISourceData = {
-    ...DEFAULT_SOURCE_DATA
+    ...DEFAULT_SOURCE_DATA,
   };
+
+  diffData: Partial<ISourceData> = {};
+
+  timeout: number | null = null;
 
   // 渲染器对象
   render: IRenderMap = {};
-
-  // 数据历史栈
-  dataHistory: ISourceDataHistory[] = [];
-
-  // 当前历史栈下标
-  currentHistoryIndex = -1;
 
   constructor({ data, render }: ISourceOptions) {
     super();
@@ -31,40 +35,47 @@ export class Source extends EventEmitter<SourceEvent> {
   getRender(type: IRenderType) {
     const targetRender = this.render[type];
     if (!targetRender) {
-      debugger;
       throw new Error('当前render并未初始化，请检查Source构造器传参');
     }
     return targetRender;
   }
 
   setData(newData: Partial<ISourceData>, store = false) {
-    const renderTypes = Object.keys(newData) as IRenderType[];
-    if (renderTypes.length) {
+    if (Object.keys(newData).length) {
       this.data = {
         ...this.data,
         ...newData,
       };
 
+      this.diffData = {
+        ...this.diffData,
+        ...newData,
+      };
+
+      if (!this.timeout) {
+        this.timeout = setTimeout(() => this.updateData(), 16);
+      }
+
+      this.emit(SourceEvent.change, this.data);
+
+      if (store) {
+        // TODO: 存储数据
+      }
+    }
+  }
+
+  updateData() {
+    const renderTypes = Object.keys(this.diffData) as IRenderType[];
+    if (renderTypes.length) {
       renderTypes.forEach((renderType) => {
-        const renderData = newData[renderType];
+        const renderData = this.diffData[renderType];
         if (Array.isArray(renderData)) {
           // @ts-ignore
           this.getRender(renderType).setData(renderData);
         }
       });
-
-      this.emit(SourceEvent.change, this.data);
-
-      if (store) {
-        setTimeout(() => {
-          const newDataHistory: ISourceDataHistory = {
-            data: cloneDeep(this.data),
-            time: Date.now(),
-          };
-          this.dataHistory.push(newDataHistory);
-          this.currentHistoryIndex = this.dataHistory.length - 1;
-        }, 0);
-      }
+      this.diffData = {};
+      this.timeout = null;
     }
   }
 
@@ -78,9 +89,5 @@ export class Source extends EventEmitter<SourceEvent> {
     return Object.values(this.data).every((value: IBaseFeature[]) => {
       return !value.length;
     });
-  }
-
-  isEmptyHistory() {
-    return !this.dataHistory.length;
   }
 }

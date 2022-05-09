@@ -1,4 +1,9 @@
-import { IPointStyle, IPointStyleItem, IStyle } from '../typings';
+import {
+  IPointStyle,
+  IPointStyleItem,
+  IStyle,
+  ITextStyleItem,
+} from '../typings';
 
 export const NORMAL_COLOR = '#1990FF';
 
@@ -39,6 +44,7 @@ export const DEFAULT_POINT_STYLE: IPointStyle = {
     size: 8,
     color: ACTIVE_COLOR,
   },
+  style: {},
 };
 
 export const DEFAULT_NODE_STYLE: IPointStyle = {
@@ -51,6 +57,14 @@ export const DEFAULT_NODE_STYLE: IPointStyle = {
     ...DEFAULT_NODE_NORMAL_STYLE,
     size: 8,
   },
+  style: {},
+};
+
+export const DEFAULT_TEXT_NORMAL_STYLE: ITextStyleItem = {
+  color: NORMAL_COLOR,
+  size: 12,
+  borderColor: '#ffffff',
+  borderWidth: 0.5,
 };
 
 export const DEFAULT_DRAWER_STYLE: IStyle = {
@@ -98,11 +112,15 @@ export const DEFAULT_DRAWER_STYLE: IStyle = {
     },
   },
   text: {
-    normal: {
+    normal: DEFAULT_TEXT_NORMAL_STYLE,
+    active: {
+      ...DEFAULT_TEXT_NORMAL_STYLE,
       color: ACTIVE_COLOR,
-      size: 14,
-      borderColor: '#ffffff',
-      borderWidth: 1,
+    },
+    style: {
+      fontWeight: '800',
+      textOffset: [0, DEFAULT_TEXT_NORMAL_STYLE.size + 2],
+      textAllowOverlap: true,
     },
   },
 };

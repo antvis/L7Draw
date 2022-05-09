@@ -10,7 +10,7 @@ import {
 } from '../../typings';
 import {Scene} from '@antv/l7';
 import {RenderEvent} from '../../constants';
-import {debounceMoveFn, isSameFeature} from '../../utils';
+import { isSameFeature} from '../../utils';
 
 export abstract class NodeDrawer<
   T extends IDrawerOptions,
@@ -160,10 +160,10 @@ export abstract class NodeDrawer<
   bindThis() {
     super.bindThis();
     this.onPointUnClick = this.onPointUnClick.bind(this);
-    this.onPointMouseMove = debounceMoveFn(this.onPointMouseMove).bind(this);
-    this.onPointMouseOut = debounceMoveFn(this.onPointMouseOut).bind(this);
+    this.onPointMouseMove = this.onPointMouseMove.bind(this);
+    this.onPointMouseOut = this.onPointMouseOut.bind(this);
     this.onPointMouseDown = this.onPointMouseDown.bind(this);
-    this.onPointDragging = debounceMoveFn(this.onPointDragging).bind(this);
+    this.onPointDragging = this.onPointDragging.bind(this);
     this.onPointDragEnd = this.onPointDragEnd.bind(this);
   }
 }

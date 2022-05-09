@@ -1,13 +1,7 @@
 import { LineDrawer } from './LineDrawer';
 import { ILineFeature, IMidPointFeature } from '../typings';
+import { IBaseLineDrawerOptions } from './common/BaseLineDrawer';
 
-export class RulerDrawer extends LineDrawer {
-  getMidPointList(lineFeature: ILineFeature): IMidPointFeature[] {
-    return [];
-  }
+export interface IRulerDrawerOptions extends IBaseLineDrawerOptions {}
 
-  bindThis() {
-    super.bindThis();
-    this.getMidPointList = this.getMidPointList.bind(this);
-  }
-}
+export class RulerDrawer extends LineDrawer {}

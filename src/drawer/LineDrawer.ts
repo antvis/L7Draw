@@ -4,7 +4,6 @@ import {
 } from './common/BaseLineDrawer';
 import { DrawerEvent } from '../constants';
 import { ILayerMouseEvent, ILineFeature, ISceneMouseEvent } from '../typings';
-import { debounceMoveFn } from '../utils';
 
 export interface ILineDrawerOptions extends IBaseLineDrawerOptions {}
 
@@ -68,7 +67,7 @@ export class LineDrawer extends BaseLineDrawer<ILineDrawerOptions> {
     this.drawLineFinish = this.drawLineFinish.bind(this);
     this.onPointDragEnd = this.onPointDragEnd.bind(this);
     this.onLineMouseDown = this.onLineMouseDown.bind(this);
-    this.onLineDragging = debounceMoveFn(this.onLineDragging).bind(this);
+    this.onLineDragging = this.onLineDragging.bind(this);
     this.onLineDragEnd = this.onLineDragEnd.bind(this);
   }
 }

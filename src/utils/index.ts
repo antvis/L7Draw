@@ -1,6 +1,8 @@
 import { v4 } from 'uuid';
 import {
+  IAreaOptions,
   IBaseFeature,
+  IDistanceOptions,
   ILineFeature,
   ILineProperties,
   ILngLat,
@@ -9,6 +11,7 @@ import {
   IPointProperties,
   IPolygonFeature,
   IPolygonProperties,
+  ITextFeature,
 } from '../typings';
 import {
   booleanClockwise,
@@ -26,6 +29,10 @@ import {
   Properties,
   rhumbBearing,
   transformTranslate,
+  length,
+  along,
+  centerOfMass,
+  area,
 } from '@turf/turf';
 import { debounce, first, isEqual, last } from 'lodash';
 
@@ -94,7 +101,8 @@ export const syncPolygonNodes = (feature: IPolygonFeature) => {
     const firstLineNode = first(lineNodes);
     const lastLineNode = last(lineNodes);
     if (firstLineNode && lastLineNode && firstPosition) {
-      firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates = firstPosition;
+      firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates =
+        firstPosition;
     }
     lineFeature.geometry.coordinates = coordAll(featureCollection(lineNodes));
   }
@@ -132,12 +140,9 @@ export const moveFeatureList = <F extends IBaseFeature>(
   startLngLat: ILngLat,
   endLngLat: ILngLat,
 ) => {
-  return features.map(feature => moveFeature(feature, startLngLat, endLngLat));
-};
-
-export const debounceMoveFn = (f: Function) => {
-  // @ts-ignore
-  return f;
+  return features.map((feature) =>
+    moveFeature(feature, startLngLat, endLngLat),
+  );
 };
 
 export const calcMidPointList = (feature: ILineFeature) => {
@@ -157,6 +162,63 @@ export const calcMidPointList = (feature: ILineFeature) => {
     midPointList.push(newMidPoint);
   }
   return midPointList;
+};
+
+export const getLineCenterPoint = (feature: Feature<LineString>) => {
+  const dis = length(feature, {
+    units: 'meters',
+  });
+  return along(feature, dis / 2, {
+    units: 'meters',
+  });
+};
+
+export const calcDistanceText = (
+  feature: Feature<LineString>,
+  options: IDistanceOptions,
+) => {
+  const { format, total } = options;
+  const textList: ITextFeature[] = [];
+  if (total) {
+    const text = getLineCenterPoint(feature) as ITextFeature;
+    text.properties = {
+      ...text.properties,
+      text: format(
+        length(feature, {
+          units: 'meters',
+        }),
+      ),
+    };
+    textList.push(text);
+  } else if (feature.geometry) {
+    const { coordinates } = feature.geometry;
+    for (let index = 0; index < coordinates.length - 1; index++) {
+      const currentPoint = point(coordinates[index]);
+      const nextPoint = point(coordinates[index + 1]);
+      const meters = distance(currentPoint, nextPoint, {
+        units: 'meters',
+      });
+
+      const text = center(featureCollection([currentPoint, nextPoint]), {
+        properties: {
+          text: format(meters),
+        },
+      }) as ITextFeature;
+      textList.push(text);
+    }
+  }
+  return textList;
+};
+
+export const calcAreaText = (
+  feature: Feature<Polygon>,
+  options: IAreaOptions,
+) => {
+  const { format } = options;
+  return centerOfMass(feature, {
+    // @ts-ignore
+    text: format(area(feature)),
+  }) as ITextFeature;
 };
 
 export const transformPointFeature = (
@@ -219,6 +281,7 @@ export const transformPolygonFeature = (
     defaultProperties.line = transformLineFeature(
       lineString(coordAll(feature)),
     );
+    defaultProperties.line.properties.isActive = !!feature.properties?.isActive;
   }
   if (!feature.properties?.nodes?.length) {
     defaultProperties.nodes = defaultProperties.line.properties.nodes ?? [];
@@ -228,5 +291,3 @@ export const transformPolygonFeature = (
     : Object.assign(defaultProperties, feature.properties);
   return feature as IPolygonFeature;
 };
-
-export * from './cursor';
