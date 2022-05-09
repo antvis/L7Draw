@@ -1,33 +1,16 @@
-# l7-draw
+# L7 Draw
 
-## TODO_LIST
+> A drawing package for L7
 
-### 基础绘制
-- [X] 点绘制
-- [X] 线绘制
-- [X] 面绘制
+[![npm Version](https://img.shields.io/npm/v/@antv/l7-draw.svg)](https://www.npmjs.com/package/@antv/l7-draw)
+[![npm Download](https://img.shields.io/npm/dm/@antv/l7-draw.svg)](https://www.npmjs.com/package/@antv/l7-draw)
+[![npm License](https://img.shields.io/npm/l/@antv/l7-draw.svg)](https://www.npmjs.com/package/@antv/l7-draw)
+![Status](https://badgen.net/github/status/antvis/l7-draw)
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/antvis/l7-draw.svg)](http://isitmaintained.com/project/antvis/l7-draw 'Percentage of issues still open')
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/antvis/l7-draw.svg)](http://isitmaintained.com/project/antvis/l7-draw 'Average time to resolve an issue')
 
-### 进阶绘制
-- [ ] 标尺
-- [ ] 矩形
-- [ ] 圆形/椭圆
-- [ ] 正方形
-- [ ] 框选
+## Usage
 
-### 能力
-- [X] 样式自定义
-- [X] 鼠标指针自定义
-- [ ] 内置主题
-- [ ] 撤回
-- [ ] 线、面绘制支持删除顶点
-- [ ] 面切割
-- [ ] 面合并
-- [ ] 线/面最大顶点数
-- [ ] 线段绘制方式自定义（绘制道路）
-- [X] 绘制完成之后  自动退出编辑态开关
-- [X] 绘制完成之后  是否支持可编辑开关
-- [X] 清空数据
-- [X] 线长度/面长度/面面积
-- [ ] 自动吸附
-- [ ] 提示文案跟随光标
-- [ ] 禁止绘制区域
+## License
+
+MIT@[AntV](https://github.com/antvis).
