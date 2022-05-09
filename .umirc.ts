@@ -1,5 +1,7 @@
 import { defineConfig } from 'dumi';
 
+const prefixPath = 'l7-draw-2.0-site';
+
 export default defineConfig({
   title: 'L7-draw',
   favicon:
@@ -18,10 +20,10 @@ export default defineConfig({
       path: 'https://l7.antv.vision',
     },
   ],
+  // styles: ['https://cdn.bootcdn.net/ajax/libs/antd/4.20.2/antd.css'],
   outputPath: 'docs-dist',
-  styles: ['https://lib.baomitu.com/antd/4.18.6/antd.css'],
-  publicPath: '/l7-draw-2.0-site/',
-  base: '/l7-draw-2.0-site/',
+  publicPath: `/${prefixPath}/`,
+  base: `/${prefixPath}/`,
   devServer: {
     port: 8080,
   },
