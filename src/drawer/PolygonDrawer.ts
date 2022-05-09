@@ -15,7 +15,6 @@ import {
 import {
   calcAreaText,
   createPolygon,
-  debounceMoveFn,
   getUuid,
   isSameFeature,
   syncPolygonNodes,
@@ -567,23 +566,23 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     super.bindThis();
 
     this.onPointUnClick = this.onPointUnClick.bind(this);
-    this.onPointDragging = debounceMoveFn(this.onPointDragging).bind(this);
+    this.onPointDragging = this.onPointDragging.bind(this);
     this.onPointDragEnd = this.onPointDragEnd.bind(this);
     this.onPointClick = this.onPointClick.bind(this);
     this.onMidPointClick = this.onMidPointClick.bind(this);
-    this.onSceneMouseMove = debounceMoveFn(this.onSceneMouseMove).bind(this);
+    this.onSceneMouseMove = this.onSceneMouseMove.bind(this);
 
     this.onLineUnClick = this.onLineUnClick.bind(this);
     this.onLineMouseDown = this.onLineMouseDown.bind(this);
     this.onLineDragging = this.onLineDragging.bind(this);
     this.onLineDragEnd = this.onLineDragEnd.bind(this);
 
-    this.onPolygonMouseMove = debounceMoveFn(this.onPolygonMouseMove).bind(
+    this.onPolygonMouseMove = this.onPolygonMouseMove.bind(
       this,
     );
     this.onPolygonMouseOut = this.onPolygonMouseOut.bind(this);
     this.onPolygonMouseDown = this.onPolygonMouseDown.bind(this);
-    this.onPolygonDragging = debounceMoveFn(this.onPolygonDragging).bind(this);
+    this.onPolygonDragging = this.onPolygonDragging.bind(this);
     this.onPolygonDragEnd = this.onPolygonDragEnd.bind(this);
     this.onPolygonUnClick = this.onPolygonUnClick.bind(this);
     this.onSceneDblClick = this.onSceneDblClick.bind(this);

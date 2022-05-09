@@ -17,7 +17,7 @@ import { Scene } from '@antv/l7';
 import { NodeDrawer } from './NodeDrawer';
 import {
   calcMidPointList,
-  debounceMoveFn,
+
   getUuid,
   isSameFeature,
   createLineString,
@@ -552,22 +552,22 @@ export abstract class BaseLineDrawer<
   bindThis() {
     super.bindThis();
     this.onPointUnClick = this.onPointUnClick.bind(this);
-    this.onPointDragging = debounceMoveFn(this.onPointDragging).bind(this);
-    this.onSceneMouseMove = debounceMoveFn(this.onSceneMouseMove).bind(this);
+    this.onPointDragging = this.onPointDragging.bind(this);
+    this.onSceneMouseMove = this.onSceneMouseMove.bind(this);
     this.onPointClick = this.onPointClick.bind(this);
     this.onPointDragEnd = this.onPointDragEnd.bind(this);
     this.onMidPointClick = this.onMidPointClick.bind(this);
-    this.onMidPointMouseMove = debounceMoveFn(this.onMidPointMouseMove).bind(
+    this.onMidPointMouseMove = this.onMidPointMouseMove.bind(
       this,
     );
-    this.onMidPointMouseOut = debounceMoveFn(this.onMidPointMouseOut).bind(
+    this.onMidPointMouseOut = this.onMidPointMouseOut.bind(
       this,
     );
-    this.onLineMouseMove = debounceMoveFn(this.onLineMouseMove).bind(this);
-    this.onLineMouseOut = debounceMoveFn(this.onLineMouseOut).bind(this);
+    this.onLineMouseMove = this.onLineMouseMove.bind(this);
+    this.onLineMouseOut = this.onLineMouseOut.bind(this);
     this.onLineMouseDown = this.onLineMouseDown.bind(this);
-    this.onLineDragging = debounceMoveFn(this.onLineDragging).bind(this);
-    this.onLineDragEnd = debounceMoveFn(this.onLineDragEnd).bind(this);
+    this.onLineDragging = this.onLineDragging.bind(this);
+    this.onLineDragEnd = this.onLineDragEnd.bind(this);
     this.onLineUnClick = this.onLineUnClick.bind(this);
     this.onSceneDblClick = this.onSceneDblClick.bind(this);
   }
