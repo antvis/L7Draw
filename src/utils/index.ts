@@ -223,6 +223,7 @@ export const calcAreaText = (
 ) => {
   const { format } = options;
   return centerOfMass(feature, {
+    // @ts-ignore
     text: format(area(feature)),
   }) as ITextFeature;
 };
@@ -297,6 +298,3 @@ export const transformPolygonFeature = (
     : Object.assign(defaultProperties, feature.properties);
   return feature as IPolygonFeature;
 };
-
-export * from './cursor';
-export * from './popup';

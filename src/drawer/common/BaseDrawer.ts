@@ -18,7 +18,7 @@ import {
   DrawerEvent,
   RENDER_TYPE_MAP,
 } from '../../constants';
-import { Cursor, Popup, getPopup } from '../../utils';
+import { Cursor, Popup, getPopup } from '../../interactive';
 
 export abstract class BaseDrawer<
   T extends IDrawerOptions,
