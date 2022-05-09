@@ -1,14 +1,17 @@
 import { defineConfig } from 'dumi';
 
 export default defineConfig({
-  title: 'L7Draw',
+  title: 'l7-draw',
   favicon:
-    'https://gw.alipayobjects.com/mdn/rms_23a451/afts/img/A*GANRQqq6r2EAAAAAAAAAAAAAARQnAQ',
+    'https://user-images.githubusercontent.com/9554297/83762004-a0761b00-a6a9-11ea-83b4-9c8ff721d4b8.png',
   logo:
-    'https://gw.alipayobjects.com/mdn/rms_23a451/afts/img/A*GANRQqq6r2EAAAAAAAAAAAAAARQnAQ',
+    'https://user-images.githubusercontent.com/9554297/83762004-a0761b00-a6a9-11ea-83b4-9c8ff721d4b8.png',
   outputPath: 'docs-dist',
-  publicPath: '/L7-draw/',
-  base: '/L7-draw/',
-
+  styles: ['https://lib.baomitu.com/antd/4.18.6/antd.css'],
+  publicPath: '/L7-draw-2/',
+  base: '/L7-draw-2/',
+  devServer: {
+    port: 8080,
+  },
   // more config: https://d.umijs.org/config
 });
