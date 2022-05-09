@@ -31,12 +31,10 @@
   "lint-staged": {
     "*.{js,jsx,less,md,json}": [
       "prettier --write",
-      "eslint --fix",
       "git add"
     ],
     "*.ts?(x)": [
       "prettier --parser=typescript --write",
-      "eslint --fix",
       "git add"
     ]
   },
