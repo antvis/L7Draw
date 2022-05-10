@@ -257,7 +257,7 @@ export abstract class BaseLineDrawer<
 
   drawLineFinish() {
     const drawLine = this.drawLine;
-    if (drawLine) {
+    if (drawLine && drawLine.properties.nodes.length > 1) {
       const { editable, autoFocus } = this.options;
       const isActive = editable && autoFocus;
       drawLine.properties.createTime = Date.now();

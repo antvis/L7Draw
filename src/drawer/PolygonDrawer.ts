@@ -367,7 +367,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   drawPolygonFinish() {
     const drawPolygon = this.drawPolygon;
     const drawLine = drawPolygon?.properties.line;
-    if (drawPolygon && drawLine) {
+    if (drawPolygon && drawLine && drawPolygon.properties.nodes.length > 2) {
       const firstPoint = cloneDeep(first(drawPolygon.properties.nodes))!;
       firstPoint.properties.id = getUuid('point');
       drawLine.properties.nodes.push(firstPoint);
