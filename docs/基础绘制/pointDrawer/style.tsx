@@ -3,6 +3,7 @@ import { ILayer, Scene } from '@antv/l7';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import { useEffect } from 'react';
 import { Button } from 'antd';
+import 'antd/dist/antd.css';
 import { IPointStyleItem, PointDrawer } from '@antv/l7-draw';
 
 const id = String(Math.random());

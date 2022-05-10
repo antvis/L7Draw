@@ -3,15 +3,13 @@ import { Scene } from '@antv/l7';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import { useEffect } from 'react';
 import { Button } from 'antd';
-import { PolygonDrawer } from '@antv/l7-draw';
-import { polygonList } from './mock';
+import 'antd/dist/antd.css';
+import { PointDrawer } from '@antv/l7-draw';
 
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [polygonDrawer, setPolygonDrawer] = useState<PolygonDrawer | null>(
-    null,
-  );
+  const [pointDrawer, setPointDrawer] = useState<PointDrawer | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -24,19 +22,21 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new PolygonDrawer(scene, {
-        initData: {
-          polygon: polygonList,
-        },
-        editable: false,
-      });
-      setPolygonDrawer(drawer);
+      const drawer = new PointDrawer(scene, {});
+      setPointDrawer(drawer);
       drawer.enable();
+
+      console.log(drawer);
     });
   }, []);
 
   return (
     <div>
+      <div style={{ padding: 8 }}>
+        <Button onClick={() => pointDrawer?.enable()}>启用</Button>
+        <Button onClick={() => pointDrawer?.disable()}>禁用</Button>
+        <Button onClick={() => pointDrawer?.clear()}>清空</Button>
+      </div>
       <div id={id} style={{ height: 400, position: 'relative' }} />
     </div>
   );
