@@ -1,19 +1,28 @@
 import {
+  DeepPartial,
   IDrawerOptions,
   IDrawerOptionsData,
   ILayerMouseEvent,
   IPointFeature,
+  IPointHelper,
   ISceneMouseEvent,
   ISourceData,
 } from '../typings';
-import {NodeDrawer} from './common/NodeDrawer';
-import {DEFAULT_POINT_STYLE, DrawerEvent} from '../constants';
-import {cloneDeep} from 'lodash';
-import {transformPointFeature} from '../utils';
+import { NodeDrawer } from './common/NodeDrawer';
+import { DEFAULT_POINT_STYLE, DrawerEvent } from '../constants';
+import { cloneDeep } from 'lodash';
+import { transformPointFeature } from '../utils';
+import { DEFAULT_POINT_HELPER } from '../constants/helper';
 
-export interface IPointDrawerOptions extends IDrawerOptions {}
+export interface IPointDrawerOptions extends IDrawerOptions {
+  helper: IPointHelper;
+}
 
 export class PointDrawer extends NodeDrawer<IPointDrawerOptions> {
+  get helper() {
+    return this.options.helper;
+  }
+
   initData(data: IDrawerOptionsData): Partial<ISourceData> | undefined {
     if (data.point?.length) {
       return {
@@ -22,10 +31,19 @@ export class PointDrawer extends NodeDrawer<IPointDrawerOptions> {
     }
   }
 
-  getDefaultOptions(): IPointDrawerOptions {
-    const options: IPointDrawerOptions = this.getCommonOptions();
-    options.style.point = cloneDeep(DEFAULT_POINT_STYLE);
-    return options;
+  setPopupText(key: keyof IPointHelper) {
+    this.popup?.setText(this.helper[key]);
+  }
+
+  getDefaultOptions(
+    options: DeepPartial<IPointDrawerOptions>,
+  ): IPointDrawerOptions {
+    const newOptions: IPointDrawerOptions = {
+      ...this.getCommonOptions(),
+      helper: DEFAULT_POINT_HELPER,
+    };
+    newOptions.style.point = cloneDeep(DEFAULT_POINT_STYLE);
+    return newOptions;
   }
 
   disable() {
@@ -43,14 +61,30 @@ export class PointDrawer extends NodeDrawer<IPointDrawerOptions> {
 
   onPointUnClick(e: ILayerMouseEvent<IPointFeature>) {
     super.onPointUnClick(e);
+    if (this.options.editable) {
+      this.setPopupText('pointHover');
+    }
     const newFeature = e.feature;
     this.emit(DrawerEvent.add, newFeature, this.getPointData());
     this.emit(DrawerEvent.change, this.getPointData());
   }
 
+  onPointMouseMove(e: ILayerMouseEvent<IPointFeature>) {
+    super.onPointMouseMove(e);
+    if (this.options.editable && !this.dragPoint) {
+      this.setPopupText('pointHover');
+    }
+  }
+
+  onPointMouseOut() {
+    super.onPointMouseOut();
+    this.setPopupText('draw');
+  }
+
   onPointMouseDown(e: ILayerMouseEvent<IPointFeature>) {
     super.onPointMouseDown(e);
     if (this.dragPoint && this.options.editable) {
+      this.setPopupText('pointDrag');
       this.emit(DrawerEvent.dragStart, this.dragPoint, this.getPointData());
     }
   }
@@ -58,6 +92,7 @@ export class PointDrawer extends NodeDrawer<IPointDrawerOptions> {
   onPointDragging(e: ISceneMouseEvent) {
     super.onPointDragging(e);
     if (this.dragPoint && this.options.editable) {
+      this.setPopupText('pointDrag');
       this.emit(DrawerEvent.dragging, this.dragPoint, this.getPointData());
     }
   }
@@ -66,10 +101,16 @@ export class PointDrawer extends NodeDrawer<IPointDrawerOptions> {
     const dragPoint = this.dragPoint;
     super.onPointDragEnd(e);
     if (dragPoint && this.options.editable) {
+      this.setPopupText('pointHover');
       this.emit(DrawerEvent.dragEnd, dragPoint, this.getPointData());
       this.emit(DrawerEvent.edit, dragPoint, this.getPointData());
       this.emit(DrawerEvent.change, this.getPointData());
     }
+  }
+
+  enable() {
+    this.setPopupText('draw');
+    super.enable();
   }
 
   clear(disable: boolean = false) {
@@ -83,6 +124,7 @@ export class PointDrawer extends NodeDrawer<IPointDrawerOptions> {
     this.onPointMouseDown = this.onPointMouseDown.bind(this);
     this.onPointDragging = this.onPointDragging.bind(this);
     this.onPointDragEnd = this.onPointDragEnd.bind(this);
+    this.onPointMouseMove = this.onPointMouseMove.bind(this);
   }
 
   bindEvent() {

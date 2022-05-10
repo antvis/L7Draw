@@ -10,7 +10,7 @@ import {
 } from '../../typings';
 import {Scene} from '@antv/l7';
 import {RenderEvent} from '../../constants';
-import { isSameFeature} from '../../utils';
+import { getLngLat, isSameFeature } from '../../utils';
 
 export abstract class NodeDrawer<
   T extends IDrawerOptions,
@@ -129,7 +129,7 @@ export abstract class NodeDrawer<
         (data) =>
           data.map((feature) => {
             if (isSameFeature(this.dragPoint, feature)) {
-              const { lng, lat } = e.lngLat;
+              const { lng, lat } = getLngLat(e);
               feature.geometry.coordinates = [lng, lat];
             }
             return feature;

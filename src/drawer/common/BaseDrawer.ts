@@ -18,7 +18,7 @@ import {
   DrawerEvent,
   RENDER_TYPE_MAP,
 } from '../../constants';
-import { Cursor, Popup, getPopup } from '../../interactive';
+import { Cursor, Popup } from '../../interactive';
 
 export abstract class BaseDrawer<
   T extends IDrawerOptions,
@@ -28,7 +28,7 @@ export abstract class BaseDrawer<
   render: IRenderMap;
   options: T;
   cursor: Cursor;
-  // popup: Popup;
+  popup?: Popup;
   isEnable = false; // 当前是否开启编辑
   constructor(scene: Scene, options?: DeepPartial<T>) {
     super();
@@ -39,7 +39,6 @@ export abstract class BaseDrawer<
       this.getDefaultOptions(options ?? {}),
       options ?? {},
     );
-    // this.popup = getPopup(scene);
     this.render = this.initRender();
     this.cursor = new Cursor(scene, this.options.cursor);
     this.source = new Source({
@@ -48,12 +47,12 @@ export abstract class BaseDrawer<
         ? this.initData(this.options.initData)
         : undefined,
     });
-    this.emit(DrawerEvent.init, this);
-  }
 
-  get container() {
-    return (this.scene.getContainer()?.querySelector('.amap-maps') ??
-      null) as HTMLDivElement | null;
+    if (this.options.popup) {
+      this.popup = new Popup(scene, this.options.popup);
+    }
+
+    this.emit(DrawerEvent.init, this);
   }
 
   abstract initData(data: IDrawerOptionsData): Partial<ISourceData> | undefined;
@@ -104,6 +103,7 @@ export abstract class BaseDrawer<
       cursor: DEFAULT_CURSOR_MAP,
       editable: true,
       autoFocus: true,
+      popup: false,
     });
   }
 
@@ -130,6 +130,7 @@ export abstract class BaseDrawer<
     this.scene.setMapStatus({
       doubleClickZoom: true,
     });
+    this.popup?.setText(null);
     this.emit(DrawerEvent.disable, this);
   }
 
@@ -141,6 +142,7 @@ export abstract class BaseDrawer<
     Object.values(this.render).forEach((render) => {
       render.destroy();
     });
+    this.popup?.destory();
     this.emit(DrawerEvent.destroy, this);
   }
 

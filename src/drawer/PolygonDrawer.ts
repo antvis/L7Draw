@@ -15,6 +15,7 @@ import {
 import {
   calcAreaText,
   createPolygon,
+  getLngLat,
   getUuid,
   isSameFeature,
   syncPolygonNodes,
@@ -360,6 +361,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
       const firstPoint = cloneDeep(first(drawPolygon.properties.nodes))!;
       firstPoint.properties.id = getUuid('point');
       drawLine.properties.nodes.push(firstPoint);
+      drawLine.properties.createTime = Date.now();
       drawLine.geometry.coordinates.push(firstPoint.geometry.coordinates);
       const { editable, autoFocus } = this.options;
       const isActive = editable && autoFocus;
@@ -377,7 +379,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     const nodes = this.drawPolygon.properties.nodes;
     const nodesLength = nodes.length;
     if (nodesLength) {
-      const { lng, lat } = e.lnglat;
+      const { lng, lat } = getLngLat(e);
       const lastNode = last(nodes) as IPointFeature;
       dashLine.push(
         lineString([...coordAll(lastNode), [lng, lat]]) as IDashLineFeature,
@@ -577,9 +579,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
     this.onLineDragging = this.onLineDragging.bind(this);
     this.onLineDragEnd = this.onLineDragEnd.bind(this);
 
-    this.onPolygonMouseMove = this.onPolygonMouseMove.bind(
-      this,
-    );
+    this.onPolygonMouseMove = this.onPolygonMouseMove.bind(this);
     this.onPolygonMouseOut = this.onPolygonMouseOut.bind(this);
     this.onPolygonMouseDown = this.onPolygonMouseDown.bind(this);
     this.onPolygonDragging = this.onPolygonDragging.bind(this);

@@ -1,26 +1,43 @@
-import tippy, { Instance } from 'tippy.js';
+import tippy, { Instance, followCursor } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import { Scene } from '@antv/l7';
-import { ISceneMouseEvent } from '../typings';
+import { getMapDom } from '../utils';
+import { IPopupConfig } from '../typings';
 
 export class Popup {
-  scene: Scene;
-
+  container: Element;
   instance: Instance;
+  text: string | null = null;
 
-  constructor(scene: Scene) {
-    const container = scene.getContainer()!;
-    this.scene = scene;
+  constructor(scene: Scene, options: IPopupConfig = {}) {
+    const container = getMapDom(scene)!;
     this.instance = tippy(container, {
-      placement: 'top',
+      placement: 'bottom-start',
+      followCursor: true,
+      hideOnClick: false,
+      arrow: false,
+      trigger: 'manual',
+      offset: [10, 10],
+      plugins: [followCursor],
+      ...options,
     });
     this.instance.hide();
-    scene.on('mousemove', this.onMouseMove);
+    this.container = container;
+
+    this.container.addEventListener('mouseenter', this.onMouseEnter);
+    this.container.addEventListener('mouseleave', this.onMouseLeave);
   }
 
-  onMouseMove = (e: ISceneMouseEvent) => {
-    const { x, y } = e.pixel;
-    this.setOffset([x, y]);
+  onMouseEnter = (e: Event) => {
+    if (this.text) {
+      this.setText(this.text);
+    }
+  };
+
+  onMouseLeave = (e: Event) => {
+    if (this.text) {
+      this.hide();
+    }
   };
 
   show() {
@@ -31,11 +48,9 @@ export class Popup {
     this.instance.hide();
   }
 
-  setText(text: string | null, offset?: [number, number]) {
+  setText(text: string | null) {
+    this.text = text;
     this.instance.setContent(text ?? '');
-    if (offset) {
-      this.setOffset(offset);
-    }
     if (text) {
       this.show();
     } else {
@@ -43,22 +58,9 @@ export class Popup {
     }
   }
 
-  setOffset(offset: [number, number]) {
-    this.instance.setProps({
-      offset,
-    });
-  }
-
-  destroy() {
-    this.scene.off('mousemove', this.onMouseMove);
+  destory() {
+    this.instance.destroy();
+    this.container.removeEventListener('mouseenter', this.onMouseEnter);
+    this.container.removeEventListener('mouseleave', this.onMouseLeave);
   }
 }
-
-let popup: Popup | null = null;
-
-export const getPopup = (scene: Scene) => {
-  if (!popup) {
-    popup = new Popup(scene);
-  }
-  return popup;
-};

@@ -22,7 +22,7 @@ import {
   isSameFeature,
   createLineString,
   transformLineFeature,
-  calcDistanceText,
+  calcDistanceText, getLngLat,
 } from '../../utils';
 import {
   coordAll,
@@ -315,7 +315,7 @@ export abstract class BaseLineDrawer<
     // 当前在绘制线路中，且含有nodes节点，则需要最后一个节点和鼠标之间用虚线连接
     if (this.drawLine?.properties.nodes.length) {
       const lastNode = last(this.drawLine.properties.nodes)!;
-      const { lng, lat } = e.lnglat;
+      const { lng, lat } = getLngLat(e);
       const newDashLine = lineString([
         ...coordAll(lastNode),
         [lng, lat],

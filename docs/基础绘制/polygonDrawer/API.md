@@ -22,13 +22,13 @@ const drawer = new PolygonDrawer(scene, {
 
 | 名称               | 说明                                                  | 类型                                            | 默认值                                               | 示例                                           |
 |------------------|-----------------------------------------------------|-----------------------------------------------| ---------------------------------------------------- |----------------------------------------------|
-| initData.polygon | 设置 Polygon 的初始数据                                    | Feature&lt;Polygon&gt;[]                      | []                                                   | [初始化数据示例](/drawer/PolygonDrawer/init-data)   |
-| autoFocus        | 绘制 Polygon 后，新增面是否为编辑态                              | boolean                                       | true                                                 | [关闭自动激活示例](/drawer/PolygonDrawer/auto-focus) |
-| editable         | 绘制的 Polygon 是否支持二次编辑（拖拽位移）                          | boolean                                       | true                                                 | [禁用编辑示例](/drawer/PolygonDrawer/editable)     |
-| showMidPoint     | 展示中点                                                | boolean                                       | true                                                 | [禁用中点示例](/drawer/PolygonDrawer/mid-point)    |
-| distanceText     | 展示距离文本                                              | false 或 [IDistanceOptions](#idistanceoptions) |                                                      | [展示距离和面积示例](/drawer/PolygonDrawer/area)      |
-| areaText         | 展示面积文本                                              | false 或 [IAreaOptions](#iareaoptions)         |                                                      | [展示距离和面积示例](/drawer/PolygonDrawer/area)         |
-| style            | 绘制时 Polygon 不同状态下的样式，可以参考 [Style 配置](/drawer/style) | IStyleItem                                    | [Polygon Style 默认配置](/drawer/style#polygon-style-配置) | -                                            |
+| initData.polygon | 设置 Polygon 的初始数据                                    | Feature&lt;Polygon&gt;[]                      | []                                                   | [初始化数据示例](/基础绘制/PolygonDrawer/init-data)   |
+| autoFocus        | 绘制 Polygon 后，新增面是否为编辑态                              | boolean                                       | true                                                 | [关闭自动激活示例](/基础绘制/PolygonDrawer/auto-focus) |
+| editable         | 绘制的 Polygon 是否支持二次编辑（拖拽位移）                          | boolean                                       | true                                                 | [禁用编辑示例](/基础绘制/PolygonDrawer/editable)     |
+| showMidPoint     | 展示中点                                                | boolean                                       | true                                                 | [禁用中点示例](/基础绘制/PolygonDrawer/mid-point)    |
+| distanceText     | 展示距离文本                                              | false 或 [IDistanceOptions](#idistanceoptions) |                                                      | [展示距离和面积示例](/基础绘制/PolygonDrawer/area)      |
+| areaText         | 展示面积文本                                              | false 或 [IAreaOptions](#iareaoptions)         |                                                      | [展示距离和面积示例](/基础绘制/PolygonDrawer/area)         |
+| style            | 绘制时 Polygon 不同状态下的样式，可以参考 [Style 配置](/基础绘制/style) | IStyleItem                                    | [Polygon Style 默认配置](/基础绘制/style#polygon-style-配置) | -                                            |
 
 ## IDistanceOptions
 

@@ -20,12 +20,13 @@ const drawer = new PointDrawer(scene, {
 });
 ```
 
-| 名称           | 说明                                                                | 类型                   | 默认值                                                 | 示例                                                                                   |
-| -------------- | ------------------------------------------------------------------- | ---------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| initData.point | 设置 Point 的初始数据                                               | Feature&lt;Point&gt;[] | []                                                     | [初始化数据示例](/drawer/PointDrawer/init-data)                                        |
-| autoFocus      | 绘制 Point 后，新增点是否为编辑态                                   | boolean                | true                                                   | [关闭自动激活示例](/drawer/PointDrawer/auto-focus)                                     |
-| editable       | 绘制的 Point 是否支持二次编辑（拖拽位移）                           | boolean                | true                                                   | [禁用编辑示例](/drawer/PointDrawer/editable)                                           |
-| style          | 绘制时 Point 不同状态下的样式，可以参考 [Style 配置](/drawer/style) | IStyleItem             | [Point Style 默认配置](/drawer/style#point-style-配置) | [使用图片示例](/drawer/PointDrawer/image), [自定义样式示例](/drawer/PointDrawer/style) |
+| 名称           | 说明                                                                  | 类型                                                                   | 默认值                                                   | 示例                                                                                       |
+| -------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| initData.point | 设置 Point 的初始数据                                                 | Feature&lt;Point&gt;[]                                                 | []                                                       | [初始化数据示例](/基础绘制/PointDrawer/init-data)                                          |
+| autoFocus      | 绘制 Point 后，新增点是否为编辑态                                     | boolean                                                                | true                                                     | [关闭自动激活示例](/基础绘制/PointDrawer/auto-focus)                                       |
+| editable       | 绘制的 Point 是否支持二次编辑（拖拽位移）                             | boolean                                                                | true                                                     | [禁用编辑示例](/基础绘制/PointDrawer/editable)                                             |
+| popup          | 提示文本框的配置，底层使用 tippy.js                                   | false or [TippyProps](https://atomiks.github.io/tippyjs/v6/all-props/) | false                                                    | [提示文案](/基础绘制/PointDrawer/helper)                                                   |
+| style          | 绘制时 Point 不同状态下的样式，可以参考 [Style 配置](/基础绘制/style) | IStyleItem                                                             | [Point Style 默认配置](/基础绘制/style#point-style-配置) | [使用图片示例](/基础绘制/PointDrawer/image), [自定义样式示例](/基础绘制/PointDrawer/style) |
 
 # 方法
 
@@ -43,7 +44,7 @@ import { PointDrawer, DrawerEvent } from '@antv/l7-draw';
 
 const drawer = new PointDrawer(scene, {});
 
-drawer.on(DrawerEvent.init, drawer => {
+drawer.on(DrawerEvent.init, (drawer) => {
   // ....
 });
 ```
