@@ -16,23 +16,24 @@ import {
 import { Scene } from '@antv/l7';
 import { NodeDrawer } from './NodeDrawer';
 import {
+  calcDistanceText,
   calcMidPointList,
+  createLineString,
+  getLngLat,
   getUuid,
   isSameFeature,
-  createLineString,
   transformLineFeature,
-  calcDistanceText,
-  getLngLat,
 } from '../../utils';
 import {
   coordAll,
   featureCollection,
+  lineString,
   point,
   Position,
-  lineString,
 } from '@turf/turf';
 import { last } from 'lodash';
 import { RenderEvent } from '../../constants';
+import { DblClickTrigger } from '../../interactive';
 
 export interface IBaseLineDrawerOptions extends IDrawerOptions {
   allowOverlap: boolean;
@@ -57,9 +58,12 @@ export const defaultDistanceOptions: IDistanceOptions = {
 export abstract class BaseLineDrawer<
   T extends IBaseLineDrawerOptions = IBaseLineDrawerOptions,
 > extends NodeDrawer<T> {
+  dblClickTrigger: DblClickTrigger;
   constructor(scene: Scene, options?: DeepPartial<T>) {
     super(scene, options);
 
+    this.dblClickTrigger = new DblClickTrigger(this.scene);
+    this.dblClickTrigger.on(RenderEvent.dblClick, this.onSceneDblClick);
     this.pointRender?.on(RenderEvent.click, this.onPointClick);
     this.midPointRender?.on(RenderEvent.click, this.onMidPointClick);
     this.midPointRender?.on(RenderEvent.mousemove, this.onMidPointMouseMove);
@@ -526,7 +530,7 @@ export abstract class BaseLineDrawer<
     this.pointRender?.enableClick();
     this.lineRender?.enableUnClick();
     this.scene?.on('mousemove', this.onSceneMouseMove);
-    this.scene?.on('dblclick', this.onSceneDblClick);
+    this.dblClickTrigger.enable();
     if (this.options.editable) {
       this.lineRender?.enableHover();
       this.lineRender?.enableDrag();
@@ -537,8 +541,8 @@ export abstract class BaseLineDrawer<
     this.pointRender?.disableCreate();
     this.pointRender?.disableClick();
     this.lineRender?.disableUnClick();
+    this.dblClickTrigger?.disable();
     this.scene?.off('mousemove', this.onSceneMouseMove);
-    this.scene?.off('dblclick', this.onSceneDblClick);
     if (this.options.editable) {
       this.lineRender?.disableHover();
       this.lineRender?.disableDrag();

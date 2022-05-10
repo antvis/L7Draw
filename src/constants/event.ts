@@ -23,4 +23,5 @@ export enum RenderEvent {
   mouseout = 'mouseout',
   dragging = 'dragging',
   dragend = 'dragend',
+  dblClick = 'dblClick'
 }
