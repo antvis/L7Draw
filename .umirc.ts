@@ -1,14 +1,29 @@
 import { defineConfig } from 'dumi';
 
 export default defineConfig({
-  title: 'L7Draw',
+  title: 'L7-draw',
   favicon:
-    'https://gw.alipayobjects.com/mdn/rms_23a451/afts/img/A*GANRQqq6r2EAAAAAAAAAAAAAARQnAQ',
-  logo:
-    'https://gw.alipayobjects.com/mdn/rms_23a451/afts/img/A*GANRQqq6r2EAAAAAAAAAAAAAARQnAQ',
+    'https://user-images.githubusercontent.com/9554297/83762004-a0761b00-a6a9-11ea-83b4-9c8ff721d4b8.png',
+  logo: 'https://user-images.githubusercontent.com/9554297/83762004-a0761b00-a6a9-11ea-83b4-9c8ff721d4b8.png',
+  mode: 'site',
+  extraBabelIncludes: ['@antv/dumi-theme-antv'],
+  navs: [
+    null,
+    {
+      title: 'Github',
+      path: 'https://github.com/antvis/L7-draw',
+    },
+    {
+      title: 'L7',
+      path: 'https://l7.antv.vision',
+    },
+  ],
   outputPath: 'docs-dist',
-  publicPath: '/L7-draw/',
-  base: '/L7-draw/',
-
+  styles: ['https://lib.baomitu.com/antd/4.18.6/antd.css'],
+  publicPath: '/l7-draw-2.0-site/',
+  base: '/l7-draw-2.0-site/',
+  devServer: {
+    port: 8080,
+  },
   // more config: https://d.umijs.org/config
 });

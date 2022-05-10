@@ -7,15 +7,10 @@
     "importHelpers": true,
     "jsx": "react",
     "esModuleInterop": true,
+    "types": ["jest"],
+    "strict": true,
     "sourceMap": true,
     "baseUrl": "./",
-    "strict": true,
-    "paths": {
-      "@/*": ["src/*"],
-      "@@/*": ["src/.umi/*"]
-    },
-    "allowSyntheticDefaultImports": true,
-    "strictPropertyInitialization": false,
     "skipLibCheck": true
   },
   "exclude": [
