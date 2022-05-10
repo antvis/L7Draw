@@ -3,12 +3,13 @@ import { Scene } from '@antv/l7';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import { useEffect } from 'react';
 import { Button } from 'antd';
-import { PointDrawer } from '@antv/l7-draw';
+import 'antd/dist/antd.css';
+import { LineDrawer } from '@antv/l7-draw';
 
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [pointDrawer, setPointDrawer] = useState<PointDrawer | null>(null);
+  const [pointDrawer, setPointDrawer] = useState<LineDrawer | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -21,7 +22,7 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new PointDrawer(scene, {
+      const drawer = new LineDrawer(scene, {
         autoFocus: false,
       });
       setPointDrawer(drawer);

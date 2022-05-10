@@ -64,7 +64,8 @@
     "lint-staged": "^10.0.7",
     "prettier": "^2.2.1",
     "rollup-plugin-analyzer": "^4.0.0",
-    "yorkie": "^2.0.0"
+    "yorkie": "^2.0.0",
+    "@antv/l7": "^2.3.0"
   },
   "peerDependencies": {
     "@antv/l7": "^2.3.0"

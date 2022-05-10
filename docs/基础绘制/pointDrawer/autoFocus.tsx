@@ -3,14 +3,13 @@ import { Scene } from '@antv/l7';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import { useEffect } from 'react';
 import { Button } from 'antd';
-import { PolygonDrawer } from '@antv/l7-draw';
+import 'antd/dist/antd.css';
+import { PointDrawer } from '@antv/l7-draw';
 
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [polygonDrawer, setPolygonDrawer] = useState<PolygonDrawer | null>(
-    null,
-  );
+  const [pointDrawer, setPointDrawer] = useState<PointDrawer | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -23,10 +22,10 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new PolygonDrawer(scene, {
+      const drawer = new PointDrawer(scene, {
         autoFocus: false,
       });
-      setPolygonDrawer(drawer);
+      setPointDrawer(drawer);
       drawer.enable();
     });
   }, []);
