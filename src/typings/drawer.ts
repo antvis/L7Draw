@@ -44,9 +44,13 @@ export interface IDrawerOptions {
 export interface IDistanceOptions {
   total: boolean;
   showOnDash: boolean;
+  showOnNormal: boolean;
+  showOnActive: boolean;
   format: (meters: number) => string;
 }
 
 export interface IAreaOptions {
   format: (squareMeters: number) => string;
+  showOnNormal: boolean;
+  showOnActive: boolean;
 }

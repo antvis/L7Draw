@@ -17,12 +17,12 @@ import { Scene } from '@antv/l7';
 import { NodeDrawer } from './NodeDrawer';
 import {
   calcMidPointList,
-
   getUuid,
   isSameFeature,
   createLineString,
   transformLineFeature,
-  calcDistanceText, getLngLat,
+  calcDistanceText,
+  getLngLat,
 } from '../../utils';
 import {
   coordAll,
@@ -43,6 +43,8 @@ export interface IBaseLineDrawerOptions extends IDrawerOptions {
 export const defaultDistanceOptions: IDistanceOptions = {
   total: false,
   showOnDash: true,
+  showOnActive: true,
+  showOnNormal: true,
   format: (meters) => {
     if (meters >= 1000) {
       return +(meters / 1000).toFixed(2) + 'km';
@@ -103,7 +105,6 @@ export abstract class BaseLineDrawer<
       const line = data.line.map((feature) => transformLineFeature(feature));
       const editLine = line.find((feature) => feature.properties.isActive);
       sourceData.line = line;
-      sourceData.text = this.getDistanceTextList(line, editLine ?? null);
       setTimeout(() => {
         if (editLine && this.options.editable && this.isEnable) {
           this.setEditLine(editLine);
@@ -137,21 +138,25 @@ export abstract class BaseLineDrawer<
       ? features
           .map((feature) => {
             const isActive = isSameFeature(feature, activeFeature);
-            return calcDistanceText(feature, distanceText).map((feature) => {
-              feature.properties.isActive = isActive;
-              return feature;
-            });
+            return calcDistanceText(feature, distanceText, { isActive });
           })
           .flat()
+          .filter((feature) => {
+            return feature.properties.isActive
+              ? distanceText.showOnActive
+              : distanceText.showOnNormal;
+          })
       : [];
   }
 
   getDashLineDistanceTextList(features: (ILineFeature | IDashLineFeature)[]) {
-    return this.options.distanceText && this.options.distanceText.showOnDash
-      ? this.getDistanceTextList(features, null).map((feature) => {
-          feature.properties.isActive = true;
-          return feature;
-        })
+    const distanceText = this.options.distanceText;
+    return distanceText && distanceText.showOnDash
+      ? features
+          .map((feature) => {
+            return calcDistanceText(feature, distanceText, { isActive: true });
+          })
+          .flat()
       : [];
   }
 
@@ -172,7 +177,12 @@ export abstract class BaseLineDrawer<
     return {
       ...this.getCommonOptions(),
       allowOverlap: false,
-      distanceText: options.distanceText ? defaultDistanceOptions : false,
+      distanceText: options.distanceText
+        ? {
+            ...defaultDistanceOptions,
+            ...options.distanceText,
+          }
+        : false,
       showMidPoint: true,
     } as T;
   }
@@ -557,12 +567,8 @@ export abstract class BaseLineDrawer<
     this.onPointClick = this.onPointClick.bind(this);
     this.onPointDragEnd = this.onPointDragEnd.bind(this);
     this.onMidPointClick = this.onMidPointClick.bind(this);
-    this.onMidPointMouseMove = this.onMidPointMouseMove.bind(
-      this,
-    );
-    this.onMidPointMouseOut = this.onMidPointMouseOut.bind(
-      this,
-    );
+    this.onMidPointMouseMove = this.onMidPointMouseMove.bind(this);
+    this.onMidPointMouseOut = this.onMidPointMouseOut.bind(this);
     this.onLineMouseMove = this.onLineMouseMove.bind(this);
     this.onLineMouseOut = this.onLineMouseOut.bind(this);
     this.onLineMouseDown = this.onLineMouseDown.bind(this);

@@ -4,6 +4,7 @@ import {
   ILineFeature,
   IMidPointFeature,
   ITextFeature,
+  ITextProperties,
 } from '../typings';
 import {
   along,
@@ -60,10 +61,12 @@ export const getLineCenterPoint = (feature: Feature<LineString>) => {
  * 根据传入的lineString和options配置获取长度文本Feature
  * @param feature
  * @param options
+ * @param properties
  */
 export const calcDistanceText = (
   feature: Feature<LineString>,
   options: IDistanceOptions,
+  properties: Partial<ITextProperties> = {},
 ) => {
   const { format, total } = options;
   const textList: ITextFeature[] = [];
@@ -72,6 +75,7 @@ export const calcDistanceText = (
     const text = getLineCenterPoint(feature) as ITextFeature;
     text.properties = {
       ...text.properties,
+      ...properties,
       text: format(
         length(feature, {
           units: 'meters',
@@ -91,6 +95,7 @@ export const calcDistanceText = (
 
       const text = center(featureCollection([currentPoint, nextPoint]), {
         properties: {
+          ...properties,
           text: format(meters),
         },
       }) as ITextFeature;
@@ -104,16 +109,19 @@ export const calcDistanceText = (
  * 根据传入的polygon和options配置获取面积文本Feature
  * @param feature
  * @param options
+ * @param properties
  */
 export const calcAreaText = (
   feature: Feature<Polygon>,
   options: IAreaOptions,
+  properties: Partial<ITextProperties> = {},
 ) => {
   const { format } = options;
   return centerOfMass(feature, {
     properties: {
       // @ts-ignore
       text: format(area(feature)),
+      ...properties,
     },
   }) as ITextFeature;
 };
