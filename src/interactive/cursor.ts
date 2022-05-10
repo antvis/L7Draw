@@ -1,5 +1,6 @@
 import { Scene } from '@antv/l7';
 import { ICursor, ICursorType } from '../typings';
+import { getMapDom } from '../utils';
 
 export class Cursor {
   container: HTMLDivElement | null;
@@ -7,8 +8,7 @@ export class Cursor {
   options: ICursor;
 
   constructor(scene: Scene, options: ICursor) {
-    this.container = (scene.getContainer()?.querySelector('.amap-maps') ??
-      null) as HTMLDivElement | null;
+    this.container = getMapDom(scene) as HTMLDivElement | null;
     this.options = options;
   }
 

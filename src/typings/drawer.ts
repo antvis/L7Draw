@@ -1,5 +1,6 @@
 import { IStyle } from './render';
 import { Feature, LineString, Point, Polygon } from '@turf/turf';
+import { Props as TippyProps } from 'tippy.js';
 
 export type ICursorType =
   | 'draw'
@@ -18,12 +19,26 @@ export interface IDrawerOptionsData {
   polygon?: Feature<Polygon>[];
 }
 
+export interface IPointHelper {
+  draw: string;
+  pointHover: string;
+  pointDrag: string;
+}
+
+export interface ILineHelper extends IPointHelper {
+  lineHover: string;
+  lineDrag: string;
+}
+
+export type IPopupConfig = Partial<TippyProps>;
+
 export interface IDrawerOptions {
   style: IStyle;
   cursor: ICursor;
   initData?: IDrawerOptionsData;
   editable: boolean;
   autoFocus: boolean;
+  popup: false | IPopupConfig;
 }
 
 export interface IDistanceOptions {

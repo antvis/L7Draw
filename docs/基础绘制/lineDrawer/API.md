@@ -22,12 +22,12 @@ const drawer = new LineDrawer(scene, {
 
 | 名称          | 说明                                                               | 类型                                           | 默认值                                               | 示例                                              |
 | ------------- | ------------------------------------------------------------------ | ---------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------- |
-| initData.line | 设置 Line 的初始数据                                               | Feature&lt;LineString&gt;[]                    | []                                                   | [初始化数据示例](/drawer/LineDrawer/init-data)    |
-| autoFocus     | 绘制 Line 后，新增线是否为编辑态                                   | boolean                                        | true                                                 | [关闭自动激活示例](/drawer/LineDrawer/auto-focus) |
-| editable      | 绘制的 Line 是否支持二次编辑（拖拽位移）                           | boolean                                        | true                                                 | [禁用编辑示例](/drawer/LineDrawer/editable)       |
-| showMidPoint  | 展示中点                                                           | boolean                                        | true                                                 | [禁用中点示例](/drawer/LineDrawer/mid-point)      |
-| distanceText  | 展示距离文本                                                       | false 或 [IDistanceOptions](#idistanceoptions) |                                                      | [展示距离示例](/drawer/LineDrawer/distance)       |
-| style         | 绘制时 Line 不同状态下的样式，可以参考 [Style 配置](/drawer/style) | IStyleItem                                     | [Line Style 默认配置](/drawer/style#line-style-配置) | -                                                 |
+| initData.line | 设置 Line 的初始数据                                               | Feature&lt;LineString&gt;[]                    | []                                                   | [初始化数据示例](/基础绘制/LineDrawer/init-data)    |
+| autoFocus     | 绘制 Line 后，新增线是否为编辑态                                   | boolean                                        | true                                                 | [关闭自动激活示例](/基础绘制/LineDrawer/auto-focus) |
+| editable      | 绘制的 Line 是否支持二次编辑（拖拽位移）                           | boolean                                        | true                                                 | [禁用编辑示例](/基础绘制/LineDrawer/editable)       |
+| showMidPoint  | 展示中点                                                           | boolean                                        | true                                                 | [禁用中点示例](/基础绘制/LineDrawer/mid-point)      |
+| distanceText  | 展示距离文本                                                       | false 或 [IDistanceOptions](#idistanceoptions) |                                                      | [展示距离示例](/基础绘制/LineDrawer/distance)       |
+| style         | 绘制时 Line 不同状态下的样式，可以参考 [Style 配置](/基础绘制/style) | IStyleItem                                     | [Line Style 默认配置](/基础绘制/style#line-style-配置) | -                                                 |
 
 ## IDistanceOptions
 
