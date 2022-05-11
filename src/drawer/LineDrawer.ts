@@ -3,11 +3,33 @@ import {
   IBaseLineDrawerOptions,
 } from './common/BaseLineDrawer';
 import { DrawerEvent } from '../constants';
-import { ILayerMouseEvent, ILineFeature, ISceneMouseEvent } from '../typings';
+import {
+  IDrawerOptionsData,
+  ILayerMouseEvent,
+  ILineFeature,
+  ISceneMouseEvent,
+  ISourceData,
+} from '../typings';
+import { transformLineFeature } from '../utils';
 
 export interface ILineDrawerOptions extends IBaseLineDrawerOptions {}
 
 export class LineDrawer extends BaseLineDrawer<ILineDrawerOptions> {
+  initData(data: IDrawerOptionsData): Partial<ISourceData> | undefined {
+    if (data.line?.length) {
+      const sourceData: Partial<ISourceData> = {};
+      const line = data.line.map((feature) => transformLineFeature(feature));
+      const editLine = line.find((feature) => feature.properties.isActive);
+      sourceData.line = line;
+      setTimeout(() => {
+        if (editLine && this.options.editable && this.isEnable) {
+          this.setEditLine(editLine);
+        }
+      }, 0);
+      return sourceData;
+    }
+  }
+
   clear(disable: boolean = false) {
     super.clear(disable);
     this.emit(DrawerEvent.change, this.getLineData());

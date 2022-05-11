@@ -5,3 +5,4 @@ export * from './PolygonDrawer';
 export * from './common/BaseDrawer';
 export * from './common/NodeDrawer';
 export * from './common/BaseLineDrawer';
+export * from './common/BasePolygonDrawer';
