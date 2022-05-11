@@ -3,7 +3,6 @@ import {
   IDashLineFeature,
   IDistanceOptions,
   IDrawerOptions,
-  IDrawerOptionsData,
   ILayerMouseEvent,
   ILineFeature,
   IMidPointFeature,
@@ -22,7 +21,6 @@ import {
   getLngLat,
   getUuid,
   isSameFeature,
-  transformLineFeature,
 } from '../../utils';
 import {
   coordAll,
@@ -59,6 +57,7 @@ export abstract class BaseLineDrawer<
   T extends IBaseLineDrawerOptions = IBaseLineDrawerOptions,
 > extends NodeDrawer<T> {
   dblClickTrigger: DblClickTrigger;
+
   constructor(scene: Scene, options?: DeepPartial<T>) {
     super(scene, options);
 
@@ -101,21 +100,6 @@ export abstract class BaseLineDrawer<
 
   get midPointRender() {
     return this.render.midPoint;
-  }
-
-  initData(data: IDrawerOptionsData): Partial<ISourceData> | undefined {
-    if (data.line?.length) {
-      const sourceData: Partial<ISourceData> = {};
-      const line = data.line.map((feature) => transformLineFeature(feature));
-      const editLine = line.find((feature) => feature.properties.isActive);
-      sourceData.line = line;
-      setTimeout(() => {
-        if (editLine && this.options.editable && this.isEnable) {
-          this.setEditLine(editLine);
-        }
-      }, 0);
-      return sourceData;
-    }
   }
 
   getLineData() {
@@ -220,7 +204,7 @@ export abstract class BaseLineDrawer<
         dashLine: [],
       };
     } else {
-      const newLine = createLineString(feature.geometry.coordinates, {
+      const newLine = createLineString([feature.geometry.coordinates], {
         id: getUuid('line'),
         nodes: [feature],
         isHover: false,
@@ -395,7 +379,7 @@ export abstract class BaseLineDrawer<
   }
 
   onMidPointMouseOut(e: ILayerMouseEvent<IMidPointFeature>) {
-    this.setMouseOutCursor();
+    this.setCursor('draw');
   }
 
   onLineMouseMove(e: ILayerMouseEvent<ILineFeature>) {
@@ -415,7 +399,7 @@ export abstract class BaseLineDrawer<
     if (this.dragLine || this.drawLine) {
       return;
     }
-    this.setMouseOutCursor();
+    this.setCursor('draw');
     this.setLineData((features) =>
       features.map((feature) => {
         feature.properties.isHover = false;
@@ -521,10 +505,6 @@ export abstract class BaseLineDrawer<
     this.drawLineFinish();
   }
 
-  setMouseOutCursor() {
-    this.setCursor('draw');
-  }
-
   bindEvent() {
     this.pointRender?.enableCreate();
     this.pointRender?.enableClick();
@@ -541,8 +521,8 @@ export abstract class BaseLineDrawer<
     this.pointRender?.disableCreate();
     this.pointRender?.disableClick();
     this.lineRender?.disableUnClick();
-    this.dblClickTrigger?.disable();
     this.scene?.off('mousemove', this.onSceneMouseMove);
+    this.dblClickTrigger?.disable();
     if (this.options.editable) {
       this.lineRender?.disableHover();
       this.lineRender?.disableDrag();

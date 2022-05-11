@@ -47,6 +47,10 @@ export class Source extends EventEmitter<SourceEvent> {
         ...newData,
       };
 
+      if (store) {
+        // TODO: 存储数据
+      }
+
       this.diffData = {
         ...this.diffData,
         ...newData,
@@ -57,10 +61,6 @@ export class Source extends EventEmitter<SourceEvent> {
       }
 
       this.emit(SourceEvent.change, this.data);
-
-      if (store) {
-        // TODO: 存储数据
-      }
     }
   }
 

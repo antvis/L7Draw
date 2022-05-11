@@ -1,20 +1,29 @@
 import {
   Position,
-  booleanClockwise,
-  coordAll,
-  featureCollection,
-  lineString,
+  point,
 } from '@turf/turf';
 import {
   ILineFeature,
   ILineProperties,
+  ILngLat,
+  IPointFeature,
   IPolygonFeature,
   IPolygonProperties,
 } from '../typings';
-import { first, isEqual, last } from 'lodash';
+import { getUuid } from './common';
+
+export const createPointFeature = ({ lng, lat }: ILngLat) => {
+  return point([lng, lat], {
+    id: getUuid('point'),
+    isHover: false,
+    isActive: true,
+    isDrag: false,
+    createTime: Date.now(),
+  }) as IPointFeature;
+};
 
 export const createLineString = (
-  position: Position,
+  positions: Position[],
   properties: ILineProperties,
 ) => {
   return {
@@ -22,7 +31,7 @@ export const createLineString = (
     properties,
     geometry: {
       type: 'LineString',
-      coordinates: [position],
+      coordinates: positions,
     },
   } as ILineFeature;
 };
@@ -39,31 +48,4 @@ export const createPolygon = (
       coordinates: [[position, position]],
     },
   } as IPolygonFeature;
-};
-
-/**
- * 将 polygon 当前的properties.nodes数据同步到 geometry 和 line上
- * @param feature
- */
-export const syncPolygonNodes = (feature: IPolygonFeature) => {
-  const nodes = feature.properties.nodes;
-  const positions = coordAll(featureCollection(nodes));
-  const firstPosition = first(positions);
-  if (!isEqual(firstPosition, last(positions))) {
-    positions.push(firstPosition!);
-  }
-  if (!feature.properties.isDraw) {
-    const lineFeature = feature.properties.line;
-    const lineNodes = lineFeature.properties.nodes;
-    const firstLineNode = first(lineNodes);
-    const lastLineNode = last(lineNodes);
-    if (firstLineNode && lastLineNode && firstPosition) {
-      firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates =
-        firstPosition;
-    }
-    lineFeature.geometry.coordinates = coordAll(featureCollection(lineNodes));
-  }
-  feature.geometry.coordinates[0] = booleanClockwise(lineString(positions))
-    ? positions
-    : positions.reverse();
 };
