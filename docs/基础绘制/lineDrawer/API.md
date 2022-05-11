@@ -20,28 +20,24 @@ const drawer = new LineDrawer(scene, {
 });
 ```
 
-| 名称          | 说明                                                               | 类型                                           | 默认值                                               | 示例                                              |
-| ------------- | ------------------------------------------------------------------ | ---------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------- |
-| initData.line | 设置 Line 的初始数据                                               | Feature&lt;LineString&gt;[]                    | []                                                   | [初始化数据示例](/基础绘制/LineDrawer/init-data)    |
-| autoFocus     | 绘制 Line 后，新增线是否为编辑态                                   | boolean                                        | true                                                 | [关闭自动激活示例](/基础绘制/LineDrawer/auto-focus) |
-| editable      | 绘制的 Line 是否支持二次编辑（拖拽位移）                           | boolean                                        | true                                                 | [禁用编辑示例](/基础绘制/LineDrawer/editable)       |
-| showMidPoint  | 展示中点                                                           | boolean                                        | true                                                 | [禁用中点示例](/基础绘制/LineDrawer/mid-point)      |
-| distanceText  | 展示距离文本                                                       | false 或 [IDistanceOptions](#idistanceoptions) |                                                      | [展示距离示例](/基础绘制/LineDrawer/distance)       |
-| style         | 绘制时 Line 不同状态下的样式，可以参考 [Style 配置](/基础绘制/style) | IStyleItem                                     | [Line Style 默认配置](/基础绘制/style#line-style-配置) | -                                                 |
+| 名称          | 说明                                                                 | 类型                                           | 默认值                                                 | 示例                                                |
+| ------------- | -------------------------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------ | --------------------------------------------------- |
+| initData.line | 设置 Line 的初始数据                                                 | Feature&lt;LineString&gt;[]                    | []                                                     | [初始化数据示例](/基础绘制/LineDrawer/init-data)    |
+| autoFocus     | 绘制 Line 后，新增线是否为编辑态                                     | boolean                                        | true                                                   | [关闭自动激活示例](/基础绘制/LineDrawer/auto-focus) |
+| editable      | 绘制的 Line 是否支持二次编辑（拖拽位移）                             | boolean                                        | true                                                   | [禁用编辑示例](/基础绘制/LineDrawer/editable)       |
+| showMidPoint  | 展示中点                                                             | boolean                                        | true                                                   | [禁用中点示例](/基础绘制/LineDrawer/mid-point)      |
+| distanceText  | 展示距离文本                                                         | false 或 [IDistanceOptions](#idistanceoptions) |                                                        | [展示距离示例](/基础绘制/LineDrawer/distance)       |
+| style         | 绘制时 Line 不同状态下的样式，可以参考 [Style 配置](/基础绘制/style) | IStyleItem                                     | [Line Style 默认配置](/基础绘制/style#line-style-配置) | -                                                   |
 
 ## IDistanceOptions
 
-| 名称       | 说明                                              | 类型                       | 默认值 |
-| ---------- | ------------------------------------------------- | -------------------------- | ------ |
-| total      | true 为展示完整 Line 的距离，false 为展示分段距离 | boolean                    | false  |
-| showOnDash | 虚线/绘制线是否展示距离                           | boolean                    | true   |
-| format     | 格式化距离的方法，默认区分 km 和 m 并保留两位小数 | (squaremeters: number) => string | -      |
-
-## IAreaOptions
-
-| 名称       | 说明                             | 类型                       | 默认值 |
-| ---------- |--------------------------------| -------------------------- | ------ |
-| format     | 格式化距离的方法，默认区分 km² 和 m² 并保留两位小数 | (squareMeters: number) => string | -      |
+| 名称         | 说明                                              | 类型                             | 默认值 |
+| ------------ | ------------------------------------------------- | -------------------------------- | ------ |
+| total        | true 为展示完整 Line 的距离，false 为展示分段距离 | boolean                          | false  |
+| showOnDash   | 绘制时的虚线是否展示距离                          | boolean                          | true   |
+| showOnNormal | 常规态下是否展示距离                              | boolean                          | true   |
+| showOnActive | 编辑态下是否展示距离                              | boolean                          | true   |
+| format       | 格式化距离的方法，默认区分 km 和 m 并保留两位小数 | (squaremeters: number) => string | -      |
 
 # 方法
 
@@ -59,7 +55,7 @@ import { LineDrawer, DrawerEvent } from '@antv/l7-draw';
 
 const drawer = new LineDrawer(scene, {});
 
-drawer.on(DrawerEvent.init, drawer => {
+drawer.on(DrawerEvent.init, (drawer) => {
   // ....
 });
 ```

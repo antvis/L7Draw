@@ -40,12 +40,13 @@ export const defaultAreaOptions: IAreaOptions = {
       ? `${+(squareMeters / 1000000).toFixed(2)}km²`
       : `${+squareMeters.toFixed(2)}m²`;
   },
+  showOnNormal: true,
+  showOnActive: true,
 };
 
 export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   constructor(scene: Scene, options?: DeepPartial<IPolygonDrawerOptions>) {
     super(scene, options);
-
     this.polygonRender?.on(RenderEvent.mousemove, this.onPolygonMouseMove);
     this.polygonRender?.on(RenderEvent.mouseout, this.onPolygonMouseOut);
     this.polygonRender?.on(RenderEvent.mousedown, this.onPolygonMouseDown);
@@ -105,11 +106,14 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
           .filter((feature) => feature.properties.nodes.length > 2)
           .map((feature) => {
             const isActive = isSameFeature(feature, activeFeature);
-            const area = calcAreaText(feature, areaText);
-            area.properties.isActive = isActive;
-            return area;
+            return calcAreaText(feature, areaText, { isActive });
           })
           .flat()
+          .filter((feature) =>
+            feature.properties.isActive
+              ? areaText.showOnActive
+              : areaText.showOnNormal,
+          )
       : [];
   }
 
@@ -145,7 +149,13 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   ): IPolygonDrawerOptions {
     return {
       ...super.getDefaultOptions(options),
-      areaText: options.areaText ? defaultAreaOptions : false,
+      // @ts-ignore
+      areaText: options.areaText
+        ? {
+            ...defaultAreaOptions,
+            ...options.areaText,
+          }
+        : false,
     };
   }
 
@@ -357,7 +367,7 @@ export class PolygonDrawer extends BaseLineDrawer<IPolygonDrawerOptions> {
   drawPolygonFinish() {
     const drawPolygon = this.drawPolygon;
     const drawLine = drawPolygon?.properties.line;
-    if (drawPolygon && drawLine) {
+    if (drawPolygon && drawLine && drawPolygon.properties.nodes.length > 2) {
       const firstPoint = cloneDeep(first(drawPolygon.properties.nodes))!;
       firstPoint.properties.id = getUuid('point');
       drawLine.properties.nodes.push(firstPoint);
