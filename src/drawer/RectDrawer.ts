@@ -91,7 +91,12 @@ export class RectDrawer extends BasePolygonDrawer<IRectDrawerOptions> {
     feature.geometry.coordinates = [positions];
 
     line.geometry.coordinates = positions;
-    line.properties.nodes = positions.map((position) => point(position));
+    line.properties.nodes = positions.map((position) => {
+      const targetNode = nodes.find((node) =>
+        isEqual(node.geometry.coordinates, position),
+      );
+      return targetNode ?? point(position);
+    });
 
     if (feature.properties.isDraw) {
       line.properties.isActive = false;

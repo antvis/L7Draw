@@ -46,14 +46,12 @@ export class PolygonDrawer extends BasePolygonDrawer<IPolygonDrawerOptions> {
     }
     if (!feature.properties.isDraw) {
       const lineFeature = feature.properties.line;
-      const lineNodes = lineFeature.properties.nodes;
-      const firstLineNode = first(lineNodes);
-      const lastLineNode = last(lineNodes);
-      if (firstLineNode && lastLineNode && firstPosition) {
-        firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates =
-          firstPosition;
-      }
-      lineFeature.geometry.coordinates = coordAll(featureCollection(lineNodes));
+      const firstNode = cloneDeep(first(nodes))!;
+      firstNode.properties.id = getUuid('point');
+      lineFeature.properties.nodes = [...nodes, firstNode];
+      lineFeature.geometry.coordinates = lineFeature.properties.nodes.map(
+        (feature) => feature.geometry.coordinates,
+      );
     }
     feature.geometry.coordinates[0] = booleanClockwise(lineString(positions))
       ? positions
@@ -83,6 +81,8 @@ export class PolygonDrawer extends BasePolygonDrawer<IPolygonDrawerOptions> {
         ),
         ...this.getAreaTextList(sourceData.polygon, editPolygon ?? null),
       ];
+
+      console.log(sourceData)
       return sourceData;
     }
   }
@@ -152,23 +152,11 @@ export class PolygonDrawer extends BasePolygonDrawer<IPolygonDrawerOptions> {
       return;
     }
     super.onPointDragging(e);
-
-    const firstNode = first(this.editLine.properties.nodes);
-    const lastNode = last(this.editLine.properties.nodes);
-
-    if (
-      firstNode &&
-      lastNode &&
-      [firstNode, lastNode].find((node) => isSameFeature(dragPoint, node))
-    ) {
-      firstNode.geometry.coordinates = lastNode.geometry.coordinates =
-        dragPoint.geometry.coordinates;
-    }
-
-    editPolygon.properties.nodes = this.editLine.properties.nodes;
     this.syncPolygonNodes(editPolygon);
     this.source.setData({
+      point: editPolygon.properties.nodes,
       polygon: this.getPolygonData(),
+      midPoint: this.getMidPointList(editPolygon.properties.line),
       text: [
         ...this.getDistanceTextList(this.getLineData(), this.editLine),
         ...this.getAreaTextList(this.getPolygonData(), this.editPolygon),
