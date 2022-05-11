@@ -1,9 +1,9 @@
 ---
 title: 关闭自动激活
-order: 4
+order: 5
 group: 
-  path: /PolygonDrawer
-  title: PolygonDrawer 绘制面
+  path: /LineDrawer
+  title: LineDrawer 绘制线
   order: 3
 ---
 

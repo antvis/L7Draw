@@ -1,9 +1,9 @@
 ---
 title: 禁用编辑
-order: 5
+order: 6
 group: 
-  path: /PolygonDrawer
-  title: PolygonDrawer 绘制面
+  path: /LineDrawer
+  title: LineDrawer 绘制线
   order: 3
 ---
 

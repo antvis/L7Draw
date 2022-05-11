@@ -4,7 +4,7 @@ order: 9
 group:
   path: /PolygonDrawer
   title: PolygonDrawer 绘制面
-  order: 3
+  order: 4
 ---
 
 # 构造器配置

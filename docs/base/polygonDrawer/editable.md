@@ -1,10 +1,10 @@
 ---
 title: 禁用编辑
-order: 6
+order: 5
 group: 
-  path: /LineDrawer
-  title: LineDrawer 绘制线
-  order: 2
+  path: /PolygonDrawer
+  title: PolygonDrawer 绘制面
+  order: 4
 ---
 
 <code src="./editable.tsx" compact="true" defaultShowCode="true"></code>

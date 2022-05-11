@@ -2,8 +2,8 @@
 title: 初始化数据
 order: 2
 group: 
-  path: /PolygonDrawer
-  title: PolygonDrawer 绘制面
+  path: /LineDrawer
+  title: LineDrawer 绘制线
   order: 3
 ---
 

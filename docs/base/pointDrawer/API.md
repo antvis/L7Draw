@@ -4,7 +4,7 @@ order: 9
 group:
   path: /PointDrawer
   title: Point绘制点
-  order: 1
+  order: 2
 ---
 
 # 构造器配置

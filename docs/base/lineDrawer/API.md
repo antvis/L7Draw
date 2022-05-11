@@ -4,7 +4,7 @@ order: 9
 group:
   path: /LineDrawer
   title: LineDrawer 绘制线
-  order: 2
+  order: 3
 ---
 
 # 构造器配置

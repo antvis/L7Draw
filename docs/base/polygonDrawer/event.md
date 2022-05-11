@@ -1,10 +1,10 @@
 ---
 title: 监听绘制事件
-order: 7
+order: 6
 group: 
-  path: /LineDrawer
-  title: LineDrawer 绘制线
-  order: 2
+  path: /PolygonDrawer
+  title: PolygonDrawer 绘制面
+  order: 4
 ---
 
 <code src="./event.tsx" compact="true" defaultShowCode="true"></code>
