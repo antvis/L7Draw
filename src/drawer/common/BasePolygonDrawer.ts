@@ -88,7 +88,9 @@ export abstract class BasePolygonDrawer<
     const { areaText } = this.options;
     return areaText
       ? features
-          .filter((feature) => feature.properties.nodes.length > 2)
+          .filter((feature) => {
+            return feature.geometry.coordinates?.[0]?.length > 2;
+          })
           .map((feature) => {
             const isActive = isSameFeature(feature, activeFeature);
             return calcAreaText(feature, areaText, { isActive });
@@ -126,10 +128,10 @@ export abstract class BasePolygonDrawer<
 
   setEditPolygon(editPolygon: IPolygonFeature | null) {
     if (editPolygon) {
-      this.setEditLine(editPolygon.properties.line);
       this.printEditPolygon(editPolygon);
       this.bindEditEvent();
     } else {
+      this.setEditLine(null);
       this.setPolygonData((features) =>
         features.map((feature) => {
           feature.properties = {
@@ -142,7 +144,6 @@ export abstract class BasePolygonDrawer<
           return feature;
         }),
       );
-      this.setEditLine(null);
       this.source.setData({
         text: [
           ...this.getDistanceTextList(this.getLineData(), null),
@@ -164,9 +165,10 @@ export abstract class BasePolygonDrawer<
       isActive: true,
       isHover: false,
     });
-    this.setPolygonData([...otherPolygon, editPolygon]);
     this.setEditLine(editPolygon.properties.line);
     this.source.setData({
+      point: editPolygon.properties.nodes,
+      polygon: [...otherPolygon, editPolygon],
       text: [
         ...this.getDistanceTextList(
           this.getLineData(),
@@ -311,7 +313,7 @@ export abstract class BasePolygonDrawer<
     this.emit(DrawerEvent.change, this.getPolygonData());
   }
 
-  onPolygonUnClick(e: ILayerMouseEvent<IPolygonFeature>) {
+  onPolygonUnClick() {
     if (this.editPolygon) {
       this.setEditPolygon(null);
     }

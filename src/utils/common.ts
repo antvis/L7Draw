@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { IBaseFeature, ISceneMouseEvent } from '../typings';
+import { IBaseFeature, ILayerMouseEvent, ISceneMouseEvent } from '../typings';
 import { Scene } from '@antv/l7';
 
 // @ts-ignore
@@ -47,6 +47,7 @@ export const getMapDom = (scene: Scene) => {
  * 磨平L7 Scene 鼠标事件返回的经纬度差异
  * @param e
  */
-export const getLngLat = (e: ISceneMouseEvent) => {
+export const getLngLat = (e: ISceneMouseEvent | ILayerMouseEvent) => {
+  // @ts-ignore
   return e.lngLat || e.lnglat;
 };
