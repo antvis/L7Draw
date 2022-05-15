@@ -52,6 +52,7 @@ export class RectDrawer extends BasePolygonDrawer<IRectDrawerOptions> {
       showMidPoint: false,
       createByDrag: true,
       createByClick: true,
+      autoFocus: false,
     };
   }
 
@@ -245,13 +246,13 @@ export class RectDrawer extends BasePolygonDrawer<IRectDrawerOptions> {
     }
   }
 
-  // onPointDragEnd(e: ISceneMouseEvent) {
-  //   super.onPointDragEnd(e);
-  //   if (this.editPolygon) {
-  //     this.emit(DrawerEvent.edit, this.editPolygon, this.getPolygonData());
-  //     this.emit(DrawerEvent.change, this.getPolygonData());
-  //   }
-  // }
+  onPointDragEnd(e: ISceneMouseEvent) {
+    super.onPointDragEnd(e);
+    if (this.editPolygon) {
+      this.emit(DrawerEvent.edit, this.editPolygon, this.getPointData());
+      this.emit(DrawerEvent.change, this.getPolygonData());
+    }
+  }
 
   onPointDragging(e: ISceneMouseEvent) {
     const dragPoint = this.dragPoint;
@@ -302,6 +303,6 @@ export class RectDrawer extends BasePolygonDrawer<IRectDrawerOptions> {
     this.onSceneMouseMove = this.onSceneMouseMove.bind(this);
     this.onPointUnClick = this.onPointUnClick.bind(this);
     this.onPointClick = this.onPointClick.bind(this);
-    // this.onPointDragEnd = this.onPointDragEnd.bind(this);
+    this.onPointDragEnd = this.onPointDragEnd.bind(this);
   }
 }
