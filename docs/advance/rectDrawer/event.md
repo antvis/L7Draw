@@ -1,6 +1,6 @@
 ---
 title: 监听绘制事件
-order: 6
+order: 7
 group:
   path: /RectDrawer
   title: RectDrawer 绘制矩形

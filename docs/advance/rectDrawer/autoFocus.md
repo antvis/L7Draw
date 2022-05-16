@@ -1,5 +1,5 @@
 ---
-title: 关闭自动激活
+title: 开启自动激活
 order: 3
 group:
   path: /RectDrawer
