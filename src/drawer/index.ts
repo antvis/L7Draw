@@ -3,6 +3,7 @@ export * from './LineDrawer';
 export * from './RulerDrawer';
 export * from './PolygonDrawer';
 export * from './RectDrawer';
+export * from './CircleDrawer';
 export * from './common/BaseDrawer';
 export * from './common/NodeDrawer';
 export * from './common/BaseLineDrawer';
