@@ -1,0 +1,48 @@
+import React, { useEffect, useState } from 'react';
+import { Scene } from '@antv/l7';
+import { GaodeMapV2 } from '@antv/l7-maps';
+import { DrawerEvent, PointDrawer } from '@antv/l7-draw';
+import { pointList } from './mock';
+import { cloneDeep } from 'lodash';
+
+const id = String(Math.random());
+
+const Demo: React.FC = () => {
+  const [pointDrawer, setPointDrawer] = useState<PointDrawer | null>(null);
+
+  useEffect(() => {
+    const scene = new Scene({
+      id,
+      map: new GaodeMapV2({
+        center: [120.13858795166014, 30.247204606534158],
+        pitch: 0,
+        style: 'dark',
+        zoom: 10,
+      }),
+    });
+    scene.on('loaded', () => {
+      const initData = cloneDeep(pointList);
+      initData[0].properties = {
+        ...(initData[0].properties ?? {}),
+        isActive: true,
+      };
+      const drawer = new PointDrawer(scene, {
+        initData: pointList,
+      });
+      setPointDrawer(drawer);
+      drawer.enable();
+
+      drawer.on(DrawerEvent.add, (e) => {
+        console.log(e);
+      });
+    });
+  }, []);
+
+  return (
+    <div>
+      <div id={id} style={{ height: 400, position: 'relative' }} />
+    </div>
+  );
+};
+
+export default Demo;

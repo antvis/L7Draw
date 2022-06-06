@@ -1,51 +1,79 @@
+import { v4 } from 'uuid';
+import { isDev } from './common';
 import {
-  Position,
-  point,
-} from '@turf/turf';
-import {
-  ILineFeature,
-  ILineProperties,
-  ILngLat,
+  IBaseFeature,
   IPointFeature,
-  IPolygonFeature,
-  IPolygonProperties,
+  IPointProperties,
+  IRenderType,
 } from '../typings';
-import { getUuid } from './common';
+import { Position } from '@turf/turf';
+import { point } from '_@turf_turf@6.5.0@@turf/turf';
 
-export const createPointFeature = ({ lng, lat }: ILngLat) => {
-  return point([lng, lat], {
+/**
+ * 获取feature唯一id
+ */
+export const getUuid = (() => {
+  let count = 1;
+  return (prefix: IRenderType) => {
+    return `${prefix}-${isDev ? count++ : v4()}`;
+  };
+})();
+
+/**
+ * 根据id判断两个feature是否为同一feature
+ * @param feature1
+ * @param feature2
+ */
+export const isSameFeature = (
+  feature1?: IBaseFeature | null,
+  feature2?: IBaseFeature | null,
+) => {
+  return !!(
+    feature1 &&
+    feature2 &&
+    feature1.properties?.id === feature2.properties?.id
+  );
+};
+
+/**
+ * 对target数据使用targetHandler，对target以外数据采用otherHandler
+ * @param target
+ * @param data
+ * @param targetHandler
+ * @param otherHandler
+ */
+export const updateTargetFeature = <F extends IBaseFeature>({
+  target,
+  data,
+  targetHandler,
+  otherHandler,
+}: {
+  target: F;
+  data: F[];
+  targetHandler?: (item: F, index: number) => F | void;
+  otherHandler?: (item: F, index: number) => F | void;
+}) => {
+  return data.map((item, index) => {
+    const handler = isSameFeature(item, target) ? targetHandler : otherHandler;
+    return handler?.(item, index) ?? item;
+  });
+};
+
+/**
+ * 创建
+ * @param position
+ * @param properties
+ */
+export const createPointFeature = (
+  position: Position,
+  properties: Partial<IPointProperties> = {},
+) => {
+  return point(position, {
     id: getUuid('point'),
     isHover: false,
-    isActive: true,
+    isActive: false,
     isDrag: false,
     createTime: Date.now(),
+    ...properties,
   }) as IPointFeature;
-};
-
-export const createLineString = (
-  positions: Position[],
-  properties: ILineProperties,
-) => {
-  return {
-    type: 'Feature',
-    properties,
-    geometry: {
-      type: 'LineString',
-      coordinates: positions,
-    },
-  } as ILineFeature;
-};
-
-export const createPolygon = (
-  position: Position,
-  properties: IPolygonProperties,
-) => {
-  return {
-    type: 'Feature',
-    properties,
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[position, position]],
-    },
-  } as IPolygonFeature;
 };

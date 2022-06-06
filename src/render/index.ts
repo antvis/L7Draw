@@ -1,5 +1,2 @@
-export * from './BaseRender';
-export * from './PointRender';
-export * from './PolygonRender';
-export * from './LineRender';
-export * from './TextRender';
+export * from './base-render';
+export * from './point-render';
