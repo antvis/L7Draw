@@ -42,20 +42,21 @@ const drawer = new PolygonDrawer(scene, {
 
 ## IAreaOptions
 
-| 名称         | 说明                             | 类型                             | 默认值 |
-| ------------ |--------------------------------| -------------------------------- | ------ |
+| 名称         | 说明                                                | 类型                             | 默认值 |
+| ------------ | --------------------------------------------------- | -------------------------------- | ------ |
 | format       | 格式化面积的方法，默认区分 km² 和 m² 并保留两位小数 | (squareMeters: number) => string | -      |
-| showOnNormal | 常规态下是否展示面积                     | boolean                          | true   |
-| showOnActive | 编辑态下是否展示面积                     | boolean                          | true   |
+| showOnNormal | 常规态下是否展示面积                                | boolean                          | true   |
+| showOnActive | 编辑态下是否展示面积                                | boolean                          | true   |
 
 # 方法
 
-| 名称           | 说明               | 传参                        |
-| -------------- | ------------------ | --------------------------- |
-| enable         | 开启绘制           | -                           |
-| disable        | 警用绘制           | -                           |
-| clear          | 清除数据           | (disable: boolean) => void; |
-| getPolygonData | 获取当前绘制面数据 | () => IPolygonFeature[];    |
+| 名称           | 说明               | 传参                                        |
+| -------------- | ------------------ |-------------------------------------------|
+| enable         | 开启绘制           | -                                         |
+| disable        | 警用绘制           | -                                         |
+| clear          | 清除数据           | (disable: boolean) => void;               |
+| getPolygonData | 获取当前绘制面数据 | () => IPolygonFeature[];                  |
+| setData        | 设置当前绘制面数据 | (data: Feature&lt;Polygon&gt;[]) => void; |
 
 # 事件
 

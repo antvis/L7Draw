@@ -11,6 +11,7 @@ import {
   ISourceData,
 } from '../typings';
 import { transformLineFeature } from '../utils';
+import {Feature, LineString, Point} from '@turf/turf';
 
 export interface ILineDrawerOptions extends IBaseLineDrawerOptions {}
 
@@ -28,6 +29,14 @@ export class LineDrawer extends BaseLineDrawer<ILineDrawerOptions> {
       }, 0);
       return sourceData;
     }
+  }
+
+  setData(data: Feature<LineString>[]) {
+    this.source.setData(
+      this.initData({
+        line: data,
+      }) ?? {},
+    );
   }
 
   clear(disable: boolean = false) {

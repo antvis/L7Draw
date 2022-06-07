@@ -25,8 +25,10 @@ import { cloneDeep, first, isEqual, last } from 'lodash';
 import {
   booleanClockwise,
   coordAll,
+  Feature,
   featureCollection,
   lineString,
+  Polygon,
 } from '@turf/turf';
 import { DrawerEvent } from '../constants';
 
@@ -36,6 +38,14 @@ export class PolygonDrawer extends BasePolygonDrawer<IPolygonDrawerOptions> {
   // constructor(scene: Scene, options: DeepPartial<IPolygonDrawerOptions>) {
   //   super(scene, options);
   // }
+
+  setData(data: Feature<Polygon>[]) {
+    this.source.setData(
+      this.initData({
+        polygon: data,
+      }) ?? {},
+    );
+  }
 
   syncPolygonNodes(feature: IPolygonFeature): void {
     const nodes = feature.properties.nodes;
@@ -82,7 +92,6 @@ export class PolygonDrawer extends BasePolygonDrawer<IPolygonDrawerOptions> {
         ...this.getAreaTextList(sourceData.polygon, editPolygon ?? null),
       ];
 
-      console.log(sourceData)
       return sourceData;
     }
   }

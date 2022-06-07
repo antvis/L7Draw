@@ -30,12 +30,13 @@ const drawer = new PointDrawer(scene, {
 
 # 方法
 
-| 名称         | 说明               | 传参                        |
-| ------------ | ------------------ | --------------------------- |
-| enable       | 开启绘制           | -                           |
-| disable      | 警用绘制           | -                           |
-| clear        | 清除数据           | (disable: boolean) => void; |
-| getPointData | 获取当前绘制点数据 | () => IPointFeature[];      |
+| 名称         | 说明        | 传参                                    |
+| ------------ |-----------|---------------------------------------|
+| enable       | 开启绘制      | -                                     |
+| disable      | 警用绘制      | -                                     |
+| clear        | 清除数据      | (disable: boolean) => void;           |
+| getPointData | 获取当前绘制点数据 | () => IPointFeature[];                |
+| setData     | 设置当前绘制点数据 | (data: Feature&lt;Point&gt;) => void; |
 
 # 事件
 

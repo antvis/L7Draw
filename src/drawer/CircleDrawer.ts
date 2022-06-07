@@ -4,7 +4,8 @@ import {
 } from './common/BasePolygonDrawer';
 import { Scene } from '@antv/l7';
 import {
-  DeepPartial, IDistanceOptions,
+  DeepPartial,
+  IDistanceOptions,
   IDrawerOptionsData,
   ILayerMouseEvent,
   ILineFeature,
@@ -22,9 +23,11 @@ import {
   coordAll,
   distance,
   envelope,
+  Feature,
   featureCollection,
   lineString,
   point,
+  Polygon,
   polygon,
   Position,
   square,
@@ -48,6 +51,14 @@ export interface ICircleDrawerOptions extends IBasePolygonDrawerOptions {
 export class CircleDrawer extends BasePolygonDrawer<ICircleDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<ICircleDrawerOptions>) {
     super(scene, options);
+  }
+
+  setData(data: Feature<Polygon>[]) {
+    this.source.setData(
+      this.initData({
+        polygon: data,
+      }) ?? {},
+    );
   }
 
   getDefaultOptions(

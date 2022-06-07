@@ -13,6 +13,7 @@ import { DEFAULT_POINT_STYLE, DrawerEvent } from '../constants';
 import { cloneDeep } from 'lodash';
 import { transformPointFeature } from '../utils';
 import { DEFAULT_POINT_HELPER } from '../constants/helper';
+import { Feature, Point } from '@turf/turf';
 
 export interface IPointDrawerOptions extends IDrawerOptions {
   helper: IPointHelper;
@@ -29,6 +30,14 @@ export class PointDrawer extends NodeDrawer<IPointDrawerOptions> {
         point: data.point.map((feature) => transformPointFeature(feature)),
       };
     }
+  }
+
+  setData(data: Feature<Point>[]) {
+    this.source.setData(
+      this.initData({
+        point: data,
+      }) ?? {},
+    );
   }
 
   setPopupText(key: keyof IPointHelper) {

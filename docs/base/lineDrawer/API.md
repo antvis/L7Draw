@@ -41,12 +41,13 @@ const drawer = new LineDrawer(scene, {
 
 # 方法
 
-| 名称        | 说明               | 传参                        |
-| ----------- | ------------------ | --------------------------- |
-| enable      | 开启绘制           | -                           |
-| disable     | 警用绘制           | -                           |
-| clear       | 清除数据           | (disable: boolean) => void; |
-| getLineData | 获取当前绘制线数据 | () => ILineFeature[];       |
+| 名称        | 说明               | 传参                                           |
+| ----------- | ------------------ |----------------------------------------------|
+| enable      | 开启绘制           | -                                            |
+| disable     | 警用绘制           | -                                            |
+| clear       | 清除数据           | (disable: boolean) => void;                  |
+| getLineData | 获取当前绘制线数据 | () => ILineFeature[];                        |
+| setData     | 设置当前绘制线数据 | (data: Feature&lt;LineString&gt;[]) => void; |
 
 # 事件
 

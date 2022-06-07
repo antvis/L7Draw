@@ -19,9 +19,11 @@ import {
   bbox,
   coordAll,
   envelope,
+  Feature,
   featureCollection,
   lineString,
   point,
+  Polygon,
   polygon,
   Position,
 } from '@turf/turf';
@@ -42,6 +44,14 @@ export interface IRectDrawerOptions extends IBasePolygonDrawerOptions {
 export class RectDrawer extends BasePolygonDrawer<IRectDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<IRectDrawerOptions>) {
     super(scene, options);
+  }
+
+  setData(data: Feature<Polygon>[]) {
+    this.source.setData(
+      this.initData({
+        polygon: data,
+      }) ?? {},
+    );
   }
 
   getDefaultOptions(

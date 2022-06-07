@@ -57,7 +57,7 @@ export class Source extends EventEmitter<SourceEvent> {
       };
 
       if (!this.timeout) {
-        this.timeout = setTimeout(() => this.updateData(), 16);
+        this.timeout = setTimeout(() => this.updateData(), 0);
       }
 
       this.emit(SourceEvent.change, this.data);
