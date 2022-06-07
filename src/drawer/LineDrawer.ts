@@ -11,7 +11,7 @@ import {
   ISourceData,
 } from '../typings';
 import { transformLineFeature } from '../utils';
-import {Feature, LineString, Point} from '@turf/turf';
+import { Feature, LineString } from '@turf/turf';
 
 export interface ILineDrawerOptions extends IBaseLineDrawerOptions {}
 
@@ -89,6 +89,9 @@ export class LineDrawer extends BaseLineDrawer<ILineDrawerOptions> {
     if (drawLine) {
       this.emit(DrawerEvent.add, drawLine, this.getLineData());
       this.emit(DrawerEvent.change, this.getLineData());
+      if (!this.options.multiple) {
+        this.disable();
+      }
     }
   }
 

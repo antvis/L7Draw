@@ -104,6 +104,7 @@ export abstract class BaseDrawer<
       editable: true,
       autoFocus: true,
       popup: false,
+      multiple: true,
     });
   }
 

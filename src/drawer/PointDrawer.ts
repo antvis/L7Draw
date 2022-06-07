@@ -69,13 +69,17 @@ export class PointDrawer extends NodeDrawer<IPointDrawerOptions> {
   }
 
   onPointUnClick(e: ILayerMouseEvent<IPointFeature>) {
+    const { editable, multiple } = this.options;
     super.onPointUnClick(e);
-    if (this.options.editable) {
+    if (editable) {
       this.setPopupText('pointHover');
     }
     const newFeature = e.feature;
     this.emit(DrawerEvent.add, newFeature, this.getPointData());
     this.emit(DrawerEvent.change, this.getPointData());
+    if (!multiple) {
+      this.disable();
+    }
   }
 
   onPointMouseMove(e: ILayerMouseEvent<IPointFeature>) {

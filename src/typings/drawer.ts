@@ -38,6 +38,7 @@ export interface IDrawerOptions {
   initData?: IDrawerOptionsData;
   editable: boolean;
   autoFocus: boolean;
+  multiple: boolean;
   popup: false | IPopupConfig;
 }
 

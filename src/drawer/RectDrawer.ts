@@ -212,7 +212,7 @@ export class RectDrawer extends BasePolygonDrawer<IRectDrawerOptions> {
     ) {
       drawPolygon.properties.isDraw = false;
       this.syncPolygonNodes(drawPolygon);
-      const { editable, autoFocus } = this.options;
+      const { editable, autoFocus, multiple } = this.options;
       const isActive = editable && autoFocus;
       this.setLineData(
         this.getPolygonData().map((feature) => feature.properties.line),
@@ -223,6 +223,9 @@ export class RectDrawer extends BasePolygonDrawer<IRectDrawerOptions> {
       });
       this.emit(DrawerEvent.add, drawPolygon, this.getPolygonData());
       this.emit(DrawerEvent.change, this.getPolygonData());
+      if (!multiple) {
+        this.disable();
+      }
     }
   }
 

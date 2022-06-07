@@ -271,11 +271,14 @@ export class PolygonDrawer extends BasePolygonDrawer<IPolygonDrawerOptions> {
       drawLine.properties.nodes.push(firstPoint);
       drawLine.properties.createTime = Date.now();
       drawLine.geometry.coordinates.push(firstPoint.geometry.coordinates);
-      const { editable, autoFocus } = this.options;
+      const { editable, autoFocus, multiple } = this.options;
       const isActive = editable && autoFocus;
       this.setEditPolygon(isActive ? drawPolygon : null);
       this.emit(DrawerEvent.add, drawPolygon, this.getPolygonData());
       this.emit(DrawerEvent.change, this.getPolygonData());
+      if (!multiple) {
+        this.disable();
+      }
     }
   }
 
