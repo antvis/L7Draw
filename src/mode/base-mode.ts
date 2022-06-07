@@ -16,7 +16,7 @@ import {
   RenderMap,
   SourceData,
 } from '../typings';
-import { merge } from 'lodash';
+import { cloneDeep, merge } from 'lodash';
 import { Feature } from '@turf/turf';
 import { Cursor } from '../interactive/cursor';
 
@@ -61,7 +61,7 @@ export abstract class BaseMode<
     this.bindThis();
 
     this.scene = scene;
-    this.options = merge(this.getDefaultOptions(options), options);
+    this.options = merge({}, this.getDefaultOptions(options), options);
     this.render = this.initRender();
 
     const initData = this.options.initData;
@@ -151,9 +151,9 @@ export abstract class BaseMode<
     return {
       initData: [] as any[],
       autoFocus: true,
-      cursor: DEFAULT_CURSOR_MAP,
+      cursor: cloneDeep(DEFAULT_CURSOR_MAP),
       editable: true,
-      style: DEFAULT_STYLE,
+      style: cloneDeep(DEFAULT_STYLE),
     };
   }
 

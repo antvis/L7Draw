@@ -2,11 +2,13 @@ import { v4 } from 'uuid';
 import { isDev } from './common';
 import {
   IBaseFeature,
+  ILineFeature,
+  ILineProperties,
   IPointFeature,
   IPointProperties,
   IRenderType,
 } from '../typings';
-import { Position } from '@turf/turf';
+import { coordAll, featureCollection, lineString, Position } from '@turf/turf';
 import { point } from '_@turf_turf@6.5.0@@turf/turf';
 
 /**
@@ -76,4 +78,32 @@ export const createPointFeature = (
     createTime: Date.now(),
     ...properties,
   }) as IPointFeature;
+};
+
+export const createLineFeature = (
+  nodes: IPointFeature[],
+  properties: Partial<ILineProperties> = {},
+) => {
+  return {
+    type: 'Feature',
+    properties: {
+      id: getUuid('line'),
+      nodes,
+      isActive: false,
+      isDraw: false,
+      isHover: false,
+      isDrag: false,
+      ...properties,
+    },
+    geometry: {
+      type: 'LineString',
+      coordinates: coordAll(featureCollection(nodes)),
+    },
+  } as ILineFeature;
+};
+
+export const createDashLine = (positions: Position[]) => {
+  return lineString(positions, {
+    id: getUuid('dashLine'),
+  });
 };

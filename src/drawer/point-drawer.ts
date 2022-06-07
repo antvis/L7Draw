@@ -4,14 +4,13 @@ import {
   IBaseModeOptions,
   ILayerMouseEvent,
   IPointFeature,
-  IPointProperties,
   IRenderType,
   ISceneMouseEvent,
   SourceData,
 } from '../typings';
 import { Scene } from '@antv/l7';
-import { getUuid, updateTargetFeature } from '../utils';
-import { DEFAULT_POINT_STYLE, DrawerEvent, RenderEvent } from '../constant';
+import { getUuid } from '../utils';
+import { DEFAULT_POINT_STYLE, DrawerEvent } from '../constant';
 import { Feature, Point } from '@turf/turf';
 
 export interface IPointDrawerOptions extends IBaseModeOptions<Feature<Point>> {}
@@ -20,18 +19,7 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<IPointDrawerOptions>) {
     super(scene, options);
 
-    this.pointRender?.on(RenderEvent.create, this.onPointCreate.bind(this));
-    this.pointRender?.on(
-      RenderEvent.mousemove,
-      this.onPointMouseMove.bind(this),
-    );
-    this.pointRender?.on(RenderEvent.mouseout, this.onPointMouseOut.bind(this));
-    this.pointRender?.on(
-      RenderEvent.dragstart,
-      this.onPointDragStart.bind(this),
-    );
-    this.pointRender?.on(RenderEvent.dragging, this.onPointDragging.bind(this));
-    this.pointRender?.on(RenderEvent.dragend, this.onPointDragEnd.bind(this));
+    this.bindPointRenderEvent();
   }
 
   getDefaultOptions(options: DeepPartial<IPointDrawerOptions>) {
@@ -41,18 +29,11 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   }
 
   bindEnableEvent(): void {
-    const { editable } = this.options;
-    this.pointRender?.enableCreate();
-    this.pointRender?.enableHover();
-    if (editable) {
-      this.pointRender?.enableDrag();
-    }
+    this.enablePointRenderAction();
   }
 
   unbindEnableEvent(): void {
-    this.pointRender?.disableCreate();
-    this.pointRender?.disableHover();
-    this.pointRender?.disableDrag();
+    this.disablePointRenderAction();
   }
 
   getRenderTypes(): IRenderType[] {
@@ -60,15 +41,15 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   }
 
   // @ts-ignore
-  initData(data: Feature<Point>[]): Partial<SourceData> | undefined {
+  initData(points: Feature<Point>[]): Partial<SourceData> | undefined {
     return {
-      point: data.map((item) => {
-        item.properties = {
-          ...(item.properties ?? {}),
+      point: points.map((point) => {
+        point.properties = {
           id: getUuid('point'),
           createTime: Date.now(),
+          ...(point.properties ?? {}),
         };
-        return item as IPointFeature;
+        return point as IPointFeature;
       }),
     };
   }
@@ -81,9 +62,13 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     return this.setPointData(data);
   }
 
-  onPointCreate(e: ILayerMouseEvent<IPointFeature>) {
+  onPointCreate(e: ILayerMouseEvent<IPointFeature>): IPointFeature | undefined {
     const newFeature = super.onPointCreate(e);
+    if (!newFeature) {
+      return;
+    }
     this.emit(DrawerEvent.add, newFeature, this.getData());
+    this.emit(DrawerEvent.change, this.getData());
     return newFeature;
   }
 
@@ -106,7 +91,13 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     if (dragPoint && this.options.editable) {
       this.emit(DrawerEvent.dragEnd, dragPoint, this.getData());
       this.emit(DrawerEvent.edit, dragPoint, this.getData());
+      this.emit(DrawerEvent.change, this.getData());
     }
     return dragPoint;
+  }
+
+  bindThis() {
+    super.bindThis();
+    this.bindPointRenderEvent = this.bindPointRenderEvent.bind(this);
   }
 }

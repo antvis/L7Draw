@@ -7,8 +7,10 @@ import {
   IPointFeature,
   ISceneMouseEvent,
 } from '../typings';
-import { createPointFeature, getLngLat, updateTargetFeature } from '../utils';
+import {createPointFeature, getLngLat, transLngLat2Position, updateTargetFeature} from '../utils';
 import { Position } from '@turf/turf';
+import { RenderEvent, SceneEvent } from '../constant';
+import { PointRender } from '../render';
 
 export abstract class PointMode<
   T extends IBaseModeOptions,
@@ -17,7 +19,7 @@ export abstract class PointMode<
    * 获取point类型对应的render
    * @protected
    */
-  protected get pointRender() {
+  protected get pointRender(): PointRender | undefined {
     return this.render.point;
   }
 
@@ -37,6 +39,39 @@ export abstract class PointMode<
     return this.getPointData().find((feature) => {
       return feature.properties.isActive;
     });
+  }
+
+  /**
+   * 获取点数据
+   */
+  getPointData() {
+    return this.source.getRenderData<IPointFeature>('point');
+  }
+
+  /**
+   * 设置点数据
+   * @param data
+   */
+  setPointData(data: FeatureUpdater<IPointFeature>) {
+    return this.source.setRenderData('point', data);
+  }
+
+  /**
+   * 绑定点Render相关事件
+   */
+  bindPointRenderEvent() {
+    this.pointRender?.on(RenderEvent.unclick, this.onPointCreate.bind(this));
+    this.pointRender?.on(
+      RenderEvent.mousemove,
+      this.onPointMouseMove.bind(this),
+    );
+    this.pointRender?.on(RenderEvent.mouseout, this.onPointMouseOut.bind(this));
+    this.pointRender?.on(
+      RenderEvent.dragstart,
+      this.onPointDragStart.bind(this),
+    );
+    this.pointRender?.on(RenderEvent.dragging, this.onPointDragging.bind(this));
+    this.pointRender?.on(RenderEvent.dragend, this.onPointDragEnd.bind(this));
   }
 
   /**
@@ -126,13 +161,13 @@ export abstract class PointMode<
     return point;
   }
 
-  handlePointDragging(point: IPointFeature, { lng, lat }: ILngLat) {
+  handlePointDragging(point: IPointFeature, lngLat: ILngLat) {
     this.setPointData((features) => {
       return updateTargetFeature<IPointFeature>({
         target: point,
         data: features,
         targetHandler: (item) => {
-          item.geometry.coordinates = [lng, lat];
+          item.geometry.coordinates = transLngLat2Position(lngLat);
         },
       });
     });
@@ -161,27 +196,11 @@ export abstract class PointMode<
   }
 
   /**
-   * 获取点数据
-   */
-  getPointData() {
-    return this.source.getRenderData<IPointFeature>('point');
-  }
-
-  /**
-   * 设置点数据
-   * @param data
-   */
-  setPointData(data: FeatureUpdater<IPointFeature>) {
-    return this.source.setRenderData('point', data);
-  }
-
-  /**
    * 创建点回调
    * @param e
    */
-  onPointCreate(e: ILayerMouseEvent) {
-    const { lng, lat } = getLngLat(e);
-    return this.handlePointCreate([lng, lat]);
+  onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {
+    return this.handlePointCreate(transLngLat2Position(getLngLat(e)));
   }
 
   onPointMouseMove(e: ILayerMouseEvent<IPointFeature>) {
@@ -225,5 +244,22 @@ export abstract class PointMode<
       return;
     }
     return this.handlePointDragEnd(dragPoint);
+  }
+
+  enablePointRenderAction() {
+    const { editable } = this.options;
+    this.pointRender?.enableCreate();
+    this.pointRender?.enableHover();
+    this.pointRender?.enableClick();
+    if (editable) {
+      this.pointRender?.enableDrag();
+    }
+  }
+
+  disablePointRenderAction() {
+    this.pointRender?.disableCreate();
+    this.pointRender?.disableHover();
+    this.pointRender?.disableDrag();
+    this.pointRender?.disableClick();
   }
 }

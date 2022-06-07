@@ -41,7 +41,6 @@ export class PointRender extends BaseRender<
           },
         ],
         strokeWidth: 2,
-        // TODO: L7 问题，待石灰修复
         // strokeWidth: [
         //   'isHover*isActive',
         //   (isHover: boolean, isActive: boolean) => {
@@ -59,7 +58,7 @@ export class PointRender extends BaseRender<
   }
 
   onCreate = (e: ILayerMouseEvent) => {
-    this.emit(RenderEvent.create, e);
+    this.emit(RenderEvent.unclick, e);
   };
 
   onMouseMove = (e: ILayerMouseEvent) => {

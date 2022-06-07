@@ -65,7 +65,7 @@ export interface IMidPointProperties extends IBaseProperties {
 export type IMidPointFeature = IBaseFeature<Point, IMidPointProperties>;
 
 // 虚线Feature类型
-export type IDashLineFeature = IBaseFeature<LineString, any>;
+export type IDashLineFeature = IBaseFeature<LineString, IBaseProperties>;
 
 // 文本Feature Properties类型
 export interface ITextProperties extends IBaseProperties {
@@ -76,4 +76,6 @@ export interface ITextProperties extends IBaseProperties {
 // 文本Feature类型
 export type ITextFeature = IBaseFeature<Point, ITextProperties>;
 
-export type FeatureUpdater<F extends IBaseFeature> = F[] | ((newFeatures: F[]) => F[]);
+export type FeatureUpdater<F extends IBaseFeature> =
+  | F[]
+  | ((newFeatures: F[]) => F[]);

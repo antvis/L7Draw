@@ -43,6 +43,9 @@ const Demo: React.FC = () => {
               size: 12,
               color: '#ff0000',
             },
+            style: {
+              zIndex: 1
+            },
             callback: (layers: ILayer[]) => {
               // 对layers进行函数式设置样式
             },

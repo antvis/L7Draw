@@ -1,10 +1,10 @@
 import {
-  SourceData,
-  RenderMap,
-  SourceOptions,
-  IRenderType,
-  IBaseFeature,
   FeatureUpdater,
+  IBaseFeature,
+  IRenderType,
+  RenderMap,
+  SourceData,
+  SourceOptions,
 } from '../typings';
 import { SourceEvent } from '../constant';
 import { BaseRender } from '../render';
@@ -110,6 +110,7 @@ export class Source extends EventEmitter<SourceEvent> {
     this.setData({
       [renderType]: data,
     });
+    this.emit(SourceEvent.change, this.data);
     return data;
   }
 
@@ -127,6 +128,7 @@ export class Source extends EventEmitter<SourceEvent> {
           this.getRender(renderType).setData(renderData);
         }
       });
+      this.emit(SourceEvent.update, this.data, this.diffData);
       this.diffData = {};
       this.timeout = null;
     }

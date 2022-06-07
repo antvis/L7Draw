@@ -1,6 +1,12 @@
 import { v4 } from 'uuid';
 import { Scene } from '@antv/l7';
-import { IBaseFeature, ILayerMouseEvent, ISceneMouseEvent } from '../typings';
+import {
+  IBaseFeature,
+  ILayerMouseEvent,
+  ILngLat,
+  ISceneMouseEvent,
+} from '../typings';
+import { Position } from '@turf/turf';
 
 // @ts-ignore
 export const isDev = process.env.NODE_ENV === 'development';
@@ -26,3 +32,13 @@ export const getLngLat = (e: ISceneMouseEvent | ILayerMouseEvent) => {
   // @ts-ignore
   return e.lngLat || e.lnglat;
 };
+
+/**
+ * 将lnglat转换为position格式
+ * @param lng
+ * @param lat
+ */
+export const transLngLat2Position: (lngLat: ILngLat) => Position = ({
+  lng,
+  lat,
+}) => [lng, lat];
