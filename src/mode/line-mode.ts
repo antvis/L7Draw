@@ -7,30 +7,34 @@ import {
   ILineFeature,
   ILineProperties,
   ILngLat,
+  IMidPointFeature,
   IPointFeature,
   ISceneMouseEvent,
 } from '../typings';
-import { PointMode } from './point-mode';
 import {
   createLineFeature,
+  createPointFeature,
   getLngLat,
+  getUuid,
   isSameFeature,
   transLngLat2Position,
   updateTargetFeature,
 } from '../utils';
-import { coordAll, featureCollection } from '@turf/turf';
+import { center, coordAll, Feature, featureCollection } from '@turf/turf';
 import { RenderEvent, SceneEvent } from '../constant';
 import { LineRender } from '../render';
-import { Position } from '_@turf_turf@6.5.0@@turf/turf';
+import { Position } from '@turf/turf';
+import { IMidPointModeOptions, MidPointMode } from './mid-point-mode';
 
-export interface ILineModeOptions {
+export interface ILineModeOptions<F extends Feature = Feature>
+  extends IMidPointModeOptions<F> {
   showMidPoint: boolean;
   distanceText: false | IDistanceOptions;
 }
 
 export abstract class LineMode<
-  T extends IBaseModeOptions,
-> extends PointMode<T> {
+  T extends ILineModeOptions,
+> extends MidPointMode<T> {
   /**
    * 获取line类型对应的render
    * @protected
@@ -108,7 +112,7 @@ export abstract class LineMode<
    * @param line
    * @param nodes
    */
-  handleSyncLineNodes(line: ILineFeature, nodes: IPointFeature[]) {
+  syncLineNodes(line: ILineFeature, nodes: IPointFeature[]) {
     line.properties.nodes = nodes;
     line.geometry.coordinates = coordAll(featureCollection(nodes));
     this.setLineData((features) => {
@@ -123,18 +127,7 @@ export abstract class LineMode<
     return line;
   }
 
-  handleSetEditLine(
-    line: ILineFeature,
-    properties: Partial<ILineProperties> = {},
-  ) {
-    line.properties = {
-      ...line.properties,
-      isDraw: false,
-      isActive: true,
-      isDrag: false,
-      isHover: false,
-      ...properties,
-    };
+  setEditLine(line: ILineFeature, properties: Partial<ILineProperties> = {}) {
     this.setLineData((features) =>
       updateTargetFeature({
         target: line,
@@ -169,6 +162,7 @@ export abstract class LineMode<
         return feature;
       }),
     );
+    this.setMidPointData(this.calcMidPoints(line));
     this.setDashLineData([]);
     return line;
   }
@@ -202,12 +196,13 @@ export abstract class LineMode<
   }
 
   handleLineDragStart(line: ILineFeature) {
-    this.handleSetEditLine(line, {
+    this.setEditLine(line, {
       isDrag: true,
     });
     this.scene.setMapStatus({
       dragEnable: false,
     });
+    console.log(this.dragLine);
     this.setCursor('lineDrag');
     return line;
   }
@@ -222,8 +217,8 @@ export abstract class LineMode<
         coordinates[1] + lat - preLat,
       ];
     });
-    this.handleSyncLineNodes(line, nodes);
-    this.handleSetEditLine(line, {
+    this.syncLineNodes(line, nodes);
+    this.setEditLine(line, {
       isDrag: true,
     });
     this.setCursor('lineDrag');
@@ -251,7 +246,7 @@ export abstract class LineMode<
       return;
     }
     if (drawLine) {
-      this.handleSyncLineNodes(drawLine, [...drawLine.properties.nodes, point]);
+      this.syncLineNodes(drawLine, [...drawLine.properties.nodes, point]);
       this.setDashLineData([]);
     } else {
       this.handleCreateLine(point);
@@ -271,7 +266,8 @@ export abstract class LineMode<
     const dragPoint = super.onPointDragging(e);
     const editLine = this.editLine;
     if (editLine) {
-      this.handleSyncLineNodes(editLine, editLine.properties.nodes);
+      this.syncLineNodes(editLine, editLine.properties.nodes);
+      this.setEditLine(editLine);
     }
     return dragPoint;
   }
@@ -301,6 +297,7 @@ export abstract class LineMode<
         feature.properties.isActive = false;
         return feature;
       }),
+      midPoint: [],
     });
     return editLine;
   }
@@ -365,6 +362,32 @@ export abstract class LineMode<
    */
   getDashLineData() {
     return this.source.getRenderData<IDashLineFeature>('dashLine');
+  }
+
+  onMidPointClick(
+    e: ILayerMouseEvent<IMidPointFeature>,
+  ): IPointFeature | undefined {
+    const editLine = this.editLine;
+    const feature = e.feature;
+    if (!editLine || !feature) {
+      return;
+    }
+    const nodes = editLine.properties.nodes;
+    const { startId, endId } = feature.properties;
+    const startIndex = nodes.findIndex(
+      (feature) => feature.properties.id === startId,
+    );
+    const endIndex = nodes.findIndex(
+      (feature) => feature.properties.id === endId,
+    );
+    if (startIndex > -1 && endIndex > -1) {
+      const newNode = createPointFeature(feature.geometry.coordinates);
+      nodes.splice(endIndex, 0, newNode);
+      editLine.geometry.coordinates = coordAll(featureCollection(nodes));
+      this.syncLineNodes(editLine, nodes);
+      this.setEditLine(editLine);
+      return newNode;
+    }
   }
 
   /**

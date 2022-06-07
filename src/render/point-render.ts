@@ -10,10 +10,7 @@ import {
 import { featureCollection } from '@turf/turf';
 import { RenderEvent } from '../constant';
 
-export class PointRender extends BaseRender<
-  IPointFeature | IMidPointFeature,
-  IPointStyle
-> {
+export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
   getLayers(): ILayer[] {
     const { normal, hover, active, style } = this.style;
     const layer = new PointLayer({

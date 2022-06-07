@@ -11,13 +11,17 @@ import {
 import { Feature, LineString } from '@turf/turf';
 import { Scene } from '@antv/l7';
 import { RenderEvent } from '../constant';
-import { LineMode } from '../mode';
-import {createDashLine, getLngLat, getUuid, isSameFeature, transLngLat2Position} from '../utils';
+import { ILineModeOptions, LineMode } from '../mode';
+import {
+  createDashLine,
+  getLngLat,
+  getUuid,
+  isSameFeature,
+  transLngLat2Position,
+} from '../utils';
 import { last } from 'lodash';
-import { coordAll, point } from '@turf/turf';
 
-export interface ILineDrawerOptions
-  extends IBaseModeOptions<Feature<LineString>> {}
+export interface ILineDrawerOptions extends ILineModeOptions {}
 
 export class LineDrawer extends LineMode<ILineDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<ILineDrawerOptions>) {
@@ -25,6 +29,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
 
     this.bindPointRenderEvent();
     this.bindSceneEvent();
+    this.bindMidPointRenderEvent();
     this.bindLineRenderEvent();
     this.pointRender?.on(RenderEvent.click, this.onPointClick.bind(this));
   }
@@ -45,7 +50,11 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   getDefaultOptions(
     options: DeepPartial<ILineDrawerOptions>,
   ): ILineDrawerOptions {
-    return this.getCommonOptions();
+    return {
+      ...this.getCommonOptions(),
+      showMidPoint: true,
+      distanceText: false,
+    };
   }
 
   getRenderTypes(): IRenderType[] {
@@ -61,7 +70,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     const feature = e.feature!;
     if (isSameFeature(feature, last(nodes))) {
       setTimeout(() => {
-        this.handleSetEditLine(drawLine);
+        this.setEditLine(drawLine);
       }, 0);
     } else {
       const [lng, lat] = feature.geometry.coordinates;
@@ -80,24 +89,30 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     }
     const lastNode = last(drawLine.properties.nodes)!;
     this.setDashLineData([
-      createDashLine([transLngLat2Position(getLngLat(e)), lastNode.geometry.coordinates]),
+      createDashLine([
+        transLngLat2Position(getLngLat(e)),
+        lastNode.geometry.coordinates,
+      ]),
     ]);
   }
 
   bindEnableEvent(): void {
     this.enablePointRenderAction();
     this.enableLineRenderAction();
+    this.enableMidPointRenderAction();
   }
 
   unbindEnableEvent(): void {
     this.disablePointRenderAction();
     this.disableLineRenderAction();
+    this.disableMidPointRenderAction();
   }
 
   bindThis() {
     super.bindThis();
     this.bindPointRenderEvent = this.bindPointRenderEvent.bind(this);
     this.bindSceneEvent = this.bindSceneEvent.bind(this);
+    this.bindMidPointRenderEvent = this.bindMidPointRenderEvent.bind(this);
     this.bindLineRenderEvent = this.bindLineRenderEvent.bind(this);
   }
 }
