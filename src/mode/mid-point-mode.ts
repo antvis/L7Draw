@@ -2,7 +2,6 @@ import { Feature } from '@turf/turf';
 import {
   FeatureUpdater,
   IBaseModeOptions,
-  IDistanceOptions,
   ILayerMouseEvent,
   ILineFeature,
   IMidPointFeature,
@@ -10,7 +9,7 @@ import {
 } from '../typings';
 import { PointMode } from './point-mode';
 import { MidPointRender } from '../render';
-import { center, featureCollection } from '_@turf_turf@6.5.0@@turf/turf';
+import { center, featureCollection } from '@turf/turf';
 import { getUuid } from '../utils';
 import { RenderEvent } from '../constant';
 

@@ -9,7 +9,7 @@ import {
   IRenderType,
 } from '../typings';
 import { coordAll, featureCollection, lineString, Position } from '@turf/turf';
-import { point } from '_@turf_turf@6.5.0@@turf/turf';
+import { point } from '@turf/turf';
 
 /**
  * 获取feature唯一id

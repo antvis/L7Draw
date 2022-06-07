@@ -8,7 +8,7 @@ import {
   ISceneMouseEvent,
   SourceData,
 } from '../typings';
-import { Feature, LineString } from '@turf/turf';
+import { Feature, LineString, Point } from '@turf/turf';
 import { Scene } from '@antv/l7';
 import { RenderEvent } from '../constant';
 import { ILineModeOptions, LineMode } from '../mode';
@@ -21,7 +21,7 @@ import {
 } from '../utils';
 import { last } from 'lodash';
 
-export interface ILineDrawerOptions extends ILineModeOptions {}
+export interface ILineDrawerOptions extends ILineModeOptions<Feature<Point>> {}
 
 export class LineDrawer extends LineMode<ILineDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<ILineDrawerOptions>) {
@@ -112,7 +112,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     super.bindThis();
     this.bindPointRenderEvent = this.bindPointRenderEvent.bind(this);
     this.bindSceneEvent = this.bindSceneEvent.bind(this);
-    this.bindMidPointRenderEvent = this.bindMidPointRenderEvent.bind(this);
     this.bindLineRenderEvent = this.bindLineRenderEvent.bind(this);
+    this.bindMidPointRenderEvent = this.bindMidPointRenderEvent.bind(this);
   }
 }

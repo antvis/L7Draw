@@ -15,12 +15,11 @@ import {
   createLineFeature,
   createPointFeature,
   getLngLat,
-  getUuid,
   isSameFeature,
   transLngLat2Position,
   updateTargetFeature,
 } from '../utils';
-import { center, coordAll, Feature, featureCollection } from '@turf/turf';
+import { coordAll, Feature, featureCollection } from '@turf/turf';
 import { RenderEvent, SceneEvent } from '../constant';
 import { LineRender } from '../render';
 import { Position } from '@turf/turf';
@@ -202,7 +201,6 @@ export abstract class LineMode<
     this.scene.setMapStatus({
       dragEnable: false,
     });
-    console.log(this.dragLine);
     this.setCursor('lineDrag');
     return line;
   }
@@ -265,7 +263,7 @@ export abstract class LineMode<
   onPointDragging(e: ISceneMouseEvent): IPointFeature | undefined {
     const dragPoint = super.onPointDragging(e);
     const editLine = this.editLine;
-    if (editLine) {
+    if (editLine && dragPoint) {
       this.syncLineNodes(editLine, editLine.properties.nodes);
       this.setEditLine(editLine);
     }
