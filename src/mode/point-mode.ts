@@ -78,7 +78,7 @@ export abstract class PointMode<
    * 创建点Feature
    * @param position
    */
-  handlePointCreate(position: Position): IPointFeature {
+  handleCreatePoint(position: Position): IPointFeature {
     const { autoFocus, editable } = this.options;
     const newFeature = createPointFeature(position);
     this.setPointData((oldData) => {
@@ -200,7 +200,7 @@ export abstract class PointMode<
    * @param e
    */
   onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {
-    return this.handlePointCreate(transLngLat2Position(getLngLat(e)));
+    return this.handleCreatePoint(transLngLat2Position(getLngLat(e)));
   }
 
   onPointMouseMove(e: ILayerMouseEvent<IPointFeature>) {

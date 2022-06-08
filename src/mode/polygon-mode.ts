@@ -15,7 +15,7 @@ import {
   IMidPointFeature,
   IPointFeature,
   IPolygonFeature,
-  IPolygonProperties,
+  IPolygonProperties, IRenderType,
   ISceneMouseEvent,
   ITextFeature,
 } from '../typings';
@@ -33,6 +33,7 @@ import {
 } from '../utils';
 import { first, isEqual, last } from 'lodash';
 import { calcAreaText } from '../utils/calc';
+import {Polygon} from "_@turf_turf@6.5.0@@turf/turf";
 
 export interface IPolygonModeOptions<F extends Feature = Feature>
   extends ILineModeOptions<F> {
@@ -75,6 +76,19 @@ export abstract class PolygonMode<
       const { isActive, isDraw } = feature.properties;
       return !isDraw && isActive;
     });
+  }
+
+  getRenderTypes(): IRenderType[] {
+    return ['polygon', 'line', 'dashLine', 'midPoint', 'point', 'text'];
+  }
+
+  setData(data: Feature<Polygon>[]): IPolygonFeature[] {
+    this.source.setData(this.initData(data) ?? {});
+    return this.getPolygonData();
+  }
+
+  getData(): IPolygonFeature[] {
+    return this.getPolygonData();
   }
 
   getDefaultOptions(options: DeepPartial<T>): T {
@@ -137,9 +151,9 @@ export abstract class PolygonMode<
     return this.source.setRenderData('polygon', data);
   }
 
-  handleCreatePolygon(point: IPointFeature, line: ILineFeature) {
-    const newPolygon = createPolygonFeature([point], {
-      nodes: [point],
+  handleCreatePolygon(points: IPointFeature[], line: ILineFeature) {
+    const newPolygon = createPolygonFeature(points, {
+      nodes: points,
       line,
       isActive: true,
       isDraw: true,
@@ -392,5 +406,29 @@ export abstract class PolygonMode<
     this.polygonRender?.disableUnClick();
     this.polygonRender?.disableHover();
     this.polygonRender?.disableDrag();
+  }
+
+  bindEnableEvent(): void {
+    this.enablePointRenderAction();
+    this.enableLineRenderAction();
+    this.enableMidPointRenderAction();
+    this.enablePolygonRenderAction();
+  }
+
+  unbindEnableEvent(): void {
+    this.disablePointRenderAction();
+    this.disableLineRenderAction();
+    this.disableMidPointRenderAction();
+    this.disablePolygonRenderAction();
+  }
+
+  bindThis() {
+    super.bindThis();
+
+    this.bindPointRenderEvent = this.bindPointRenderEvent.bind(this);
+    this.bindSceneEvent = this.bindSceneEvent.bind(this);
+    this.bindLineRenderEvent = this.bindLineRenderEvent.bind(this);
+    this.bindMidPointRenderEvent = this.bindMidPointRenderEvent.bind(this);
+    this.bindPolygonRenderEvent = this.bindPolygonRenderEvent.bind(this);
   }
 }

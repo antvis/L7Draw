@@ -57,6 +57,9 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
       }, 0);
     }
     return {
+      point: [],
+      midPoint: [],
+      dashLine: [],
       line: lineFeatures,
       text: this.getAllTexts(),
     };

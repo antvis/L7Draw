@@ -37,10 +37,6 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     this.bindPolygonRenderEvent();
   }
 
-  getRenderTypes(): IRenderType[] {
-    return ['polygon', 'line', 'dashLine', 'midPoint', 'point', 'text'];
-  }
-
   // @ts-ignore
   initData(data: Feature<Polygon>[]) {
     const polygonFeatures = data.map((polygon) => {
@@ -73,19 +69,13 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
       }, 0);
     }
     return {
+      point: [],
+      midPoint: [],
+      dashLine: [],
       polygon: polygonFeatures,
       line: polygonFeatures.map((feature) => feature.properties.line),
       text: this.getAllTexts(),
     };
-  }
-
-  setData(data: Feature<Polygon>[]): IPolygonFeature[] {
-    this.source.setData(this.initData(data) ?? {});
-    return this.getPolygonData();
-  }
-
-  getData(): IPolygonFeature[] {
-    return this.getPolygonData();
   }
 
   onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {
@@ -113,7 +103,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
           ]),
         ]);
       } else if (drawLine) {
-        this.handleCreatePolygon(feature, drawLine);
+        this.handleCreatePolygon([feature], drawLine);
       }
     }
     return feature;
@@ -252,29 +242,5 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     }
     this.setDashLineData(dashLineData);
     this.setTextData(this.getAllTexts());
-  }
-
-  bindEnableEvent(): void {
-    this.enablePointRenderAction();
-    this.enableLineRenderAction();
-    this.enableMidPointRenderAction();
-    this.enablePolygonRenderAction();
-  }
-
-  unbindEnableEvent(): void {
-    this.disablePointRenderAction();
-    this.disableLineRenderAction();
-    this.disableMidPointRenderAction();
-    this.disablePolygonRenderAction();
-  }
-
-  bindThis() {
-    super.bindThis();
-
-    this.bindPointRenderEvent = this.bindPointRenderEvent.bind(this);
-    this.bindSceneEvent = this.bindSceneEvent.bind(this);
-    this.bindLineRenderEvent = this.bindLineRenderEvent.bind(this);
-    this.bindMidPointRenderEvent = this.bindMidPointRenderEvent.bind(this);
-    this.bindPolygonRenderEvent = this.bindPolygonRenderEvent.bind(this);
   }
 }

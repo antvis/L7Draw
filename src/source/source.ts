@@ -6,10 +6,10 @@ import {
   SourceData,
   SourceOptions,
 } from '../typings';
-import { SourceEvent } from '../constant';
+import { DEFAULT_SOURCE_DATA, SourceEvent } from '../constant';
 import { BaseRender } from '../render';
 import EventEmitter from 'eventemitter3';
-import { fromPairs } from 'lodash';
+import { cloneDeep, fromPairs } from 'lodash';
 
 export class Source extends EventEmitter<SourceEvent> {
   /**
@@ -22,14 +22,7 @@ export class Source extends EventEmitter<SourceEvent> {
    * 用于存储当前最新数据
    * @protected
    */
-  protected data: SourceData = {
-    point: [],
-    line: [],
-    polygon: [],
-    midPoint: [],
-    dashLine: [],
-    text: [],
-  };
+  protected data: SourceData = cloneDeep(DEFAULT_SOURCE_DATA);
 
   /**
    * 存储当前延迟更新函数的timeout
@@ -108,7 +101,7 @@ export class Source extends EventEmitter<SourceEvent> {
         ? updater(this.getRenderData(renderType))
         : updater;
     this.setData({
-      [renderType]: data.sort((a, b) => {
+      [renderType]: [...data].sort((a, b) => {
         // @ts-ignore
         return +a.properties.isActive - +b.properties.isActive;
       }),
@@ -128,7 +121,7 @@ export class Source extends EventEmitter<SourceEvent> {
     if (renderTypes.length) {
       renderTypes.forEach(([renderType, renderData]) => {
         if (Array.isArray(renderData)) {
-          this.getRender(renderType).setData(renderData);
+          this.getRender(renderType)?.setData(renderData);
         }
       });
       this.emit(SourceEvent.update, this.data, this.diffData);
@@ -141,14 +134,10 @@ export class Source extends EventEmitter<SourceEvent> {
    * 获取对应renderType类型的render实例，如果没有获取到则代表
    * @param type
    */
-  getRender<R extends BaseRender = BaseRender>(type: IRenderType): R {
-    const render = this.render[type];
-    if (!render) {
-      throw new Error(
-        '当前render并未初始化，请检查 getRenderTypes 方法实现问题',
-      );
-    }
-    return render as R;
+  getRender<R extends BaseRender = BaseRender>(
+    type: IRenderType,
+  ): R | undefined {
+    return this.render[type] as R | undefined;
   }
 
   /**

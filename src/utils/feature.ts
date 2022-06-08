@@ -12,6 +12,7 @@ import {
 } from '../typings';
 import { coordAll, featureCollection, lineString, Position } from '@turf/turf';
 import { point } from '@turf/turf';
+import { first } from 'lodash';
 
 /**
  * 获取feature唯一id
@@ -149,7 +150,7 @@ export const createPolygonFeature = (
     },
     geometry: {
       type: 'Polygon',
-      coordinates: [coordAll(featureCollection(nodes))],
+      coordinates: [coordAll(featureCollection([...nodes, first(nodes)!]))],
     },
   } as IPolygonFeature;
 };

@@ -1,4 +1,4 @@
-import { ICursor } from '../typings';
+import { ICursor, SourceData } from '../typings';
 
 /**
  * 鼠标指针默认值
@@ -11,4 +11,13 @@ export const DEFAULT_CURSOR_MAP: ICursor = {
   lineDrag: 'move',
   polygonHover: 'pointer',
   polygonDrag: 'move',
+};
+
+export const DEFAULT_SOURCE_DATA: SourceData = {
+  point: [],
+  line: [],
+  polygon: [],
+  midPoint: [],
+  dashLine: [],
+  text: [],
 };
