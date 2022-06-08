@@ -27,6 +27,7 @@ export interface IBaseModeOptions<F extends Feature = Feature> {
   initData?: F[];
   editable: boolean;
   autoFocus: boolean;
+  multiple: boolean;
 }
 
 /**

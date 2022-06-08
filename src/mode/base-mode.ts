@@ -158,6 +158,7 @@ export abstract class BaseMode<
       cursor: cloneDeep(DEFAULT_CURSOR_MAP),
       editable: true,
       style: cloneDeep(DEFAULT_STYLE),
+      multiple: true,
     } as unknown as O;
   }
 
@@ -178,6 +179,7 @@ export abstract class BaseMode<
     }
     this.isEnable = true;
     this.setCursor('draw');
+    this.unbindEnableEvent();
     this.bindEnableEvent();
     this.scene.setMapStatus({
       doubleClickZoom: false,
@@ -193,6 +195,7 @@ export abstract class BaseMode<
       return;
     }
     this.isEnable = false;
+    this.setCursor(null);
     this.unbindEnableEvent();
     this.scene.setMapStatus({
       doubleClickZoom: true,

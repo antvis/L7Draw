@@ -9,7 +9,7 @@ import {
   SourceData,
 } from '../typings';
 import { Scene } from '@antv/l7';
-import {getDefaultPointProperties, getUuid} from '../utils';
+import { getDefaultPointProperties, getUuid } from '../utils';
 import { DEFAULT_POINT_STYLE, DrawerEvent } from '../constant';
 import { Feature, Point } from '@turf/turf';
 
@@ -63,6 +63,19 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   }
 
   onPointCreate(e: ILayerMouseEvent<IPointFeature>): IPointFeature | undefined {
+    if (this.getPointData().length >= 1 && !this.options.multiple) {
+      this.setPointData((features) => {
+        return features.map((feature) => {
+          feature.properties = {
+            ...feature.properties,
+            isHover: false,
+            isActive: false,
+          };
+          return feature;
+        });
+      });
+      return;
+    }
     const newFeature = super.onPointCreate(e);
     if (!newFeature) {
       return;

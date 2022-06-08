@@ -20,7 +20,9 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new PointDrawer(scene, {});
+      const drawer = new PointDrawer(scene, {
+        multiple: false,
+      });
       setPointDrawer(drawer);
       drawer.enable();
     });

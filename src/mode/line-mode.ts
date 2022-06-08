@@ -320,8 +320,6 @@ export abstract class LineMode<
     return line;
   }
 
-  // handle
-
   /**
    * 创建点之后，对应线段的处理
    * @param e

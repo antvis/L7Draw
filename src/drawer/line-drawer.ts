@@ -104,6 +104,17 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     }
   }
 
+  onPointCreate(e: ILayerMouseEvent) {
+    if (
+      !this.options.multiple &&
+      !this.drawLine &&
+      this.getLineData().length >= 1
+    ) {
+      return;
+    }
+    return super.onPointCreate(e);
+  }
+
   onPointDragEnd(e: ISceneMouseEvent): IPointFeature | undefined {
     const editLine = this.editLine;
     const feature = super.onPointDragEnd(e);
