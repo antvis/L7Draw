@@ -68,7 +68,7 @@
     "@antv/l7": "^2.3.0"
   },
   "peerDependencies": {
-    "@antv/l7": "^2.3.0"
+    "@antv/l7": "2.8.35"
   },
   "husky": {
     "hooks": {

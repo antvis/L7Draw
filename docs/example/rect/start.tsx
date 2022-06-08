@@ -9,9 +9,7 @@ import { RectDrawer } from '@antv/l7-draw';
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [rectDrawer, setRectDrawer] = useState<RectDrawer | null>(
-    null,
-  );
+  const [rectDrawer, setRectDrawer] = useState<RectDrawer | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -24,9 +22,7 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new RectDrawer(scene, {
-        distanceText: {}
-      });
+      const drawer = new RectDrawer(scene, {});
       setRectDrawer(drawer);
       drawer.enable();
     });

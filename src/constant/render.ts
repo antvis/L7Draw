@@ -5,6 +5,7 @@ import {
   TextRender,
   MidPointRender,
   PolygonRender,
+  DashLineRender,
 } from '../render';
 
 /**
@@ -17,10 +18,11 @@ export const RENDER_MAP: Record<
   | typeof MidPointRender
   | typeof TextRender
   | typeof PolygonRender
+  | typeof DashLineRender
 > = {
   point: PointRender,
   line: LineRender,
-  dashLine: LineRender,
+  dashLine: DashLineRender,
   midPoint: MidPointRender,
   text: TextRender,
   polygon: PolygonRender,
