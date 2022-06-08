@@ -1,21 +1,22 @@
 import {
   DeepPartial,
-  IBaseModeOptions,
   ILayerMouseEvent,
   ILineFeature,
+  IMidPointFeature,
   IPointFeature,
   IRenderType,
   ISceneMouseEvent,
   SourceData,
 } from '../typings';
-import { Feature, LineString, Point } from '@turf/turf';
+import { coordAll, Feature, LineString, Point } from '@turf/turf';
 import { Scene } from '@antv/l7';
-import { RenderEvent } from '../constant';
+import { DrawerEvent, RenderEvent } from '../constant';
 import { ILineModeOptions, LineMode } from '../mode';
 import {
   createDashLine,
+  createPointFeature,
+  getDefaultLineProperties,
   getLngLat,
-  getUuid,
   isSameFeature,
   transLngLat2Position,
 } from '../utils';
@@ -35,30 +36,45 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   }
 
   // @ts-ignore
-  initData(lines: Feature<LineString>[]): Partial<SourceData> | undefined {
-    return {};
+  initData(lines: Feature<LineString>[]): Partial<SourceData> {
+    const lineFeatures = lines.map((line) => {
+      line.properties = {
+        ...getDefaultLineProperties(),
+        ...(line.properties ?? {}),
+      };
+      if (!line.properties.nodes?.length) {
+        line.properties.nodes = coordAll(line).map((position) => {
+          console.log(position);
+          return createPointFeature(position);
+        });
+      }
+      return line as ILineFeature;
+    });
+    const editLine = lineFeatures.find(
+      (feature) => feature.properties.isActive,
+    );
+    if (editLine) {
+      setTimeout(() => {
+        this.setEditLine(editLine);
+      }, 0);
+    }
+    return {
+      line: lineFeatures,
+      text: this.getAllDistanceTexts(),
+    };
   }
 
   getData(): ILineFeature[] {
     return this.getLineData();
   }
 
-  setData(data: ILineFeature[]): ILineFeature[] {
-    return this.setLineData(data);
-  }
-
-  getDefaultOptions(
-    options: DeepPartial<ILineDrawerOptions>,
-  ): ILineDrawerOptions {
-    return {
-      ...this.getCommonOptions(),
-      showMidPoint: true,
-      distanceText: false,
-    };
+  setData(data: Feature<LineString>[]) {
+    this.source.setData(this.initData(data) ?? {});
+    return this.getLineData();
   }
 
   getRenderTypes(): IRenderType[] {
-    return ['line', 'dashLine', 'point', 'midPoint'];
+    return ['line', 'dashLine', 'midPoint', 'point', 'text'];
   }
 
   onPointClick(e: ILayerMouseEvent<IPointFeature>) {
@@ -71,6 +87,12 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     if (isSameFeature(feature, last(nodes))) {
       setTimeout(() => {
         this.setEditLine(drawLine);
+        const { autoFocus, editable } = this.options;
+        if (!autoFocus || !editable) {
+          this.handleLineUnClick(drawLine);
+        }
+        this.emit(DrawerEvent.add, drawLine, this.getLineData());
+        this.emit(DrawerEvent.change, this.getLineData());
       }, 0);
     } else {
       const [lng, lat] = feature.geometry.coordinates;
@@ -80,6 +102,54 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
       };
       this.onPointCreate(e);
     }
+  }
+
+  onPointDragEnd(e: ISceneMouseEvent): IPointFeature | undefined {
+    const editLine = this.editLine;
+    const feature = super.onPointDragEnd(e);
+    if (editLine && feature) {
+      this.emit(DrawerEvent.edit, editLine, this.getLineData());
+      this.emit(DrawerEvent.change, this.getLineData());
+    }
+    return feature;
+  }
+
+  onLineDragStart(e: ILayerMouseEvent<ILineFeature>) {
+    const feature = super.onLineDragStart(e);
+    if (feature) {
+      this.emit(DrawerEvent.dragStart, feature, this.getLineData());
+    }
+    return feature;
+  }
+
+  onLineDragging(e: ISceneMouseEvent) {
+    const feature = super.onLineDragging(e);
+    if (feature) {
+      this.emit(DrawerEvent.dragging, feature, this.getLineData());
+    }
+    return feature;
+  }
+
+  onLineDragEnd(e: ISceneMouseEvent): ILineFeature | undefined {
+    const feature = super.onLineDragEnd(e);
+    if (feature) {
+      this.emit(DrawerEvent.dragEnd, feature, this.getLineData());
+      this.emit(DrawerEvent.edit, feature, this.getLineData());
+      this.emit(DrawerEvent.change, this.getLineData());
+    }
+    return feature;
+  }
+
+  onMidPointClick(
+    e: ILayerMouseEvent<IMidPointFeature>,
+  ): IPointFeature | undefined {
+    const editLine = this.editLine;
+    const feature = super.onMidPointClick(e);
+    if (editLine && feature) {
+      this.emit(DrawerEvent.edit, editLine, this.getLineData());
+      this.emit(DrawerEvent.change, this.getLineData());
+    }
+    return feature;
   }
 
   onSceneMouseMove(e: ISceneMouseEvent) {
@@ -94,6 +164,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
         lastNode.geometry.coordinates,
       ]),
     ]);
+    this.setTextData(this.getAllDistanceTexts());
   }
 
   bindEnableEvent(): void {

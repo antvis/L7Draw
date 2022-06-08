@@ -1,6 +1,6 @@
 import {
+  DeepPartial,
   FeatureUpdater,
-  IBaseModeOptions,
   IDashLineFeature,
   IDistanceOptions,
   ILayerMouseEvent,
@@ -10,6 +10,7 @@ import {
   IMidPointFeature,
   IPointFeature,
   ISceneMouseEvent,
+  ITextFeature,
 } from '../typings';
 import {
   createLineFeature,
@@ -20,14 +21,15 @@ import {
   updateTargetFeature,
 } from '../utils';
 import { coordAll, Feature, featureCollection } from '@turf/turf';
-import { RenderEvent, SceneEvent } from '../constant';
+import { DEFAULT_DISTANCE_OPTIONS, RenderEvent, SceneEvent } from '../constant';
 import { LineRender } from '../render';
 import { Position } from '@turf/turf';
 import { IMidPointModeOptions, MidPointMode } from './mid-point-mode';
+import { ILineDrawerOptions } from '../drawer';
+import { calcDistanceTextsByLine } from '../utils/calc';
 
 export interface ILineModeOptions<F extends Feature = Feature>
   extends IMidPointModeOptions<F> {
-  showMidPoint: boolean;
   distanceText: false | IDistanceOptions;
 }
 
@@ -71,6 +73,21 @@ export abstract class LineMode<
 
   protected previousPosition: Position = [0, 0];
 
+  getDefaultOptions(options: DeepPartial<T>): T {
+    const newOptions: T = {
+      ...this.getCommonOptions(options),
+      showMidPoint: true,
+      distanceText: false,
+    };
+    if (options.distanceText) {
+      newOptions.distanceText = {
+        ...DEFAULT_DISTANCE_OPTIONS,
+        ...newOptions.distanceText,
+      };
+    }
+    return newOptions;
+  }
+
   bindSceneEvent() {
     this.scene.on(SceneEvent.mousemove, this.onSceneMouseMove.bind(this));
   }
@@ -82,6 +99,63 @@ export abstract class LineMode<
     this.lineRender?.on(RenderEvent.dragstart, this.onLineDragStart.bind(this));
     this.lineRender?.on(RenderEvent.dragging, this.onLineDragging.bind(this));
     this.lineRender?.on(RenderEvent.dragend, this.onLineDragEnd.bind(this));
+  }
+
+  getAllDistanceTexts(): ITextFeature[] {
+    const { distanceText } = this.options;
+    if (!distanceText) {
+      return [];
+    }
+    const textList: ITextFeature[] = [];
+    const { showOnNormal, showOnActive, showOnDash, format, total } =
+      distanceText;
+    const lines = this.getLineData();
+    if (showOnDash) {
+      const dashLines = this.getDashLineData();
+      textList.push(
+        ...dashLines
+          .map((dashLine) =>
+            calcDistanceTextsByLine(
+              dashLine,
+              { total: false, format },
+              { isActive: true, type: 'dash' },
+            ),
+          )
+          .flat(),
+      );
+    }
+
+    if (showOnActive) {
+      const activeLines = lines.filter(
+        (line) => line.properties.isActive && line.properties.nodes.length > 1,
+      );
+
+      textList.push(
+        ...activeLines
+          .map((line) =>
+            calcDistanceTextsByLine(
+              line,
+              { total, format },
+              { isActive: true },
+            ),
+          )
+          .flat(),
+      );
+    }
+
+    if (showOnNormal) {
+      const normalLines = lines.filter(
+        (line) => !line.properties.isActive && line.properties.nodes.length > 1,
+      );
+
+      textList.push(
+        ...normalLines
+          .map((line) => calcDistanceTextsByLine(line, { total, format }))
+          .flat(),
+      );
+    }
+
+    return textList;
   }
 
   /**
@@ -103,6 +177,7 @@ export abstract class LineMode<
       });
     });
     this.setPointData([point]);
+    this.setTextData(this.getAllDistanceTexts());
     return newLine;
   }
 
@@ -123,6 +198,7 @@ export abstract class LineMode<
       });
     });
     this.setPointData(line.properties.nodes);
+    this.setTextData(this.getAllDistanceTexts());
     return line;
   }
 
@@ -161,9 +237,23 @@ export abstract class LineMode<
         return feature;
       }),
     );
-    this.setMidPointData(this.calcMidPoints(line));
+    this.setMidPointData(this.getMidPointsByLine(line));
     this.setDashLineData([]);
+    this.setTextData(this.getAllDistanceTexts());
     return line;
+  }
+
+  handleLineUnClick(link: ILineFeature) {
+    this.source.setData({
+      point: [],
+      line: this.getLineData().map((feature) => {
+        feature.properties.isActive = false;
+        return feature;
+      }),
+      midPoint: [],
+      text: this.getAllDistanceTexts(),
+    });
+    return link;
   }
 
   handleLineHover(line: ILineFeature) {
@@ -221,11 +311,13 @@ export abstract class LineMode<
     });
     this.setCursor('lineDrag');
     this.previousPosition = [lng, lat];
+    return line;
   }
 
   handleLineDragEnd(line: ILineFeature) {
     line.properties.isDrag = false;
     this.setLineData((features) => features);
+    return line;
   }
 
   // handle
@@ -289,15 +381,7 @@ export abstract class LineMode<
     if (!editLine) {
       return;
     }
-    this.source.setData({
-      point: [],
-      line: this.getLineData().map((feature) => {
-        feature.properties.isActive = false;
-        return feature;
-      }),
-      midPoint: [],
-    });
-    return editLine;
+    return this.handleLineUnClick(editLine);
   }
 
   onLineMouseMove(e: ILayerMouseEvent<ILineFeature>) {
@@ -355,11 +439,27 @@ export abstract class LineMode<
     return this.source.setRenderData('line', data);
   }
 
+  getTextData() {
+    return this.source.getRenderData<ITextFeature>('text');
+  }
+
+  setTextData(data: FeatureUpdater<ITextFeature>) {
+    return this.source.setRenderData('text', data);
+  }
+
   /**
    * 获取线数据
    */
   getDashLineData() {
     return this.source.getRenderData<IDashLineFeature>('dashLine');
+  }
+
+  /**
+   * 设置线数据
+   * @param data
+   */
+  setDashLineData(data: FeatureUpdater<IDashLineFeature>) {
+    return this.source.setRenderData('dashLine', data);
   }
 
   onMidPointClick(
@@ -388,19 +488,11 @@ export abstract class LineMode<
     }
   }
 
-  /**
-   * 设置线数据
-   * @param data
-   */
-  setDashLineData(data: FeatureUpdater<IDashLineFeature>) {
-    return this.source.setRenderData('dashLine', data);
-  }
-
   enableLineRenderAction() {
     const { editable } = this.options;
     this.lineRender?.enableUnClick();
-    this.lineRender?.enableHover();
     if (editable) {
+      this.lineRender?.enableHover();
       this.lineRender?.enableDrag();
     }
   }

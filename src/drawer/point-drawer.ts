@@ -9,7 +9,7 @@ import {
   SourceData,
 } from '../typings';
 import { Scene } from '@antv/l7';
-import { getUuid } from '../utils';
+import {getDefaultPointProperties, getUuid} from '../utils';
 import { DEFAULT_POINT_STYLE, DrawerEvent } from '../constant';
 import { Feature, Point } from '@turf/turf';
 
@@ -23,7 +23,7 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   }
 
   getDefaultOptions(options: DeepPartial<IPointDrawerOptions>) {
-    const defaultOptions = this.getCommonOptions();
+    const defaultOptions = this.getCommonOptions(options);
     defaultOptions.style.point = DEFAULT_POINT_STYLE;
     return defaultOptions;
   }
@@ -41,12 +41,11 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   }
 
   // @ts-ignore
-  initData(points: Feature<Point>[]): Partial<SourceData> | undefined {
+  initData(points: Feature<Point>[]): Partial<SourceData> {
     return {
       point: points.map((point) => {
         point.properties = {
-          id: getUuid('point'),
-          createTime: Date.now(),
+          ...getDefaultPointProperties(),
           ...(point.properties ?? {}),
         };
         return point as IPointFeature;
@@ -58,8 +57,9 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     return this.getPointData();
   }
 
-  setData(data: IPointFeature[]) {
-    return this.setPointData(data);
+  setData(data: Feature<Point>[]) {
+    this.source.setData(this.initData(data) ?? {});
+    return this.getPointData();
   }
 
   onPointCreate(e: ILayerMouseEvent<IPointFeature>): IPointFeature | undefined {

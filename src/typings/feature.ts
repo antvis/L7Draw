@@ -69,7 +69,9 @@ export type IDashLineFeature = IBaseFeature<LineString, IBaseProperties>;
 
 // 文本Feature Properties类型
 export interface ITextProperties extends IBaseProperties {
+  type: 'distance' | 'totalDistance' | 'dash';
   text: string;
+  meters: number;
   isActive: boolean;
 }
 

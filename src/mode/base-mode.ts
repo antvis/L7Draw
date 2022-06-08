@@ -67,8 +67,12 @@ export abstract class BaseMode<
     const initData = this.options.initData;
     this.source = new Source({
       render: this.render,
-      data: initData ? this.initData(initData) : undefined,
     });
+    if (initData) {
+      setTimeout(() => {
+        this.source.setData(this.initData(initData) ?? {});
+      }, 0);
+    }
     this.cursor = new Cursor(scene, this.options.cursor);
 
     this.emit(DrawerEvent.init, this);
@@ -112,7 +116,7 @@ export abstract class BaseMode<
    * 设置数据
    * @param data
    */
-  abstract setData(data: IBaseFeature[]): IBaseFeature[];
+  abstract setData(data: Feature[]): IBaseFeature[];
 
   /**
    * 获取当前是否为编辑态
@@ -147,14 +151,14 @@ export abstract class BaseMode<
     return renderMap;
   }
 
-  getCommonOptions() {
+  getCommonOptions<F extends Feature = Feature>(options: DeepPartial<O>): O {
     return {
-      initData: [] as any[],
+      initData: [] as F[],
       autoFocus: true,
       cursor: cloneDeep(DEFAULT_CURSOR_MAP),
       editable: true,
       style: cloneDeep(DEFAULT_STYLE),
-    };
+    } as unknown as O;
   }
 
   /**

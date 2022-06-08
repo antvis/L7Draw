@@ -61,6 +61,29 @@ export const updateTargetFeature = <F extends IBaseFeature>({
   });
 };
 
+export const getDefaultPointProperties = () => {
+  return {
+    id: getUuid('point'),
+    isHover: false,
+    isActive: false,
+    isDrag: false,
+    createTime: Date.now(),
+  };
+};
+
+export const getDefaultLineProperties = () => {
+  return {
+    id: getUuid('line'),
+    isHover: false,
+    isActive: false,
+    isDrag: false,
+    isDraw: false,
+    createTime: Date.now(),
+  };
+};
+
+// export const getDefaultLinePro
+
 /**
  * 创建
  * @param position
@@ -71,11 +94,7 @@ export const createPointFeature = (
   properties: Partial<IPointProperties> = {},
 ) => {
   return point(position, {
-    id: getUuid('point'),
-    isHover: false,
-    isActive: false,
-    isDrag: false,
-    createTime: Date.now(),
+    ...getDefaultPointProperties(),
     ...properties,
   }) as IPointFeature;
 };
@@ -87,12 +106,8 @@ export const createLineFeature = (
   return {
     type: 'Feature',
     properties: {
-      id: getUuid('line'),
+      ...getDefaultLineProperties(),
       nodes,
-      isActive: false,
-      isDraw: false,
-      isHover: false,
-      isDrag: false,
       ...properties,
     },
     geometry: {

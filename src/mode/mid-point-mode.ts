@@ -60,7 +60,7 @@ export abstract class MidPointMode<
    * 计算并返回传入线段的中点数组
    * @param line
    */
-  calcMidPoints(line: ILineFeature): IMidPointFeature[] {
+  getMidPointsByLine(line: ILineFeature): IMidPointFeature[] {
     const nodes = line.properties.nodes;
     if (!this.options.showMidPoint || nodes.length < 2) {
       return [];

@@ -88,7 +88,7 @@ export abstract class PointMode<
         targetHandler: (item) => {
           item.properties = {
             ...item.properties,
-            isHover: true,
+            isHover: editable,
             isActive: autoFocus && editable,
           };
         },
@@ -249,9 +249,9 @@ export abstract class PointMode<
   enablePointRenderAction() {
     const { editable } = this.options;
     this.pointRender?.enableCreate();
-    this.pointRender?.enableHover();
     this.pointRender?.enableClick();
     if (editable) {
+      this.pointRender?.enableHover();
       this.pointRender?.enableDrag();
     }
   }
