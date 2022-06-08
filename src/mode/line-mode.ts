@@ -92,6 +92,11 @@ export abstract class LineMode<
     this.scene.on(SceneEvent.mousemove, this.onSceneMouseMove.bind(this));
   }
 
+  bindPointRenderEvent() {
+    super.bindPointRenderEvent();
+    this.pointRender?.on(RenderEvent.click, this.onPointClick.bind(this));
+  }
+
   bindLineRenderEvent() {
     this.lineRender?.on(RenderEvent.unclick, this.onLineUnClick.bind(this));
     this.lineRender?.on(RenderEvent.mousemove, this.onLineMouseMove.bind(this));
@@ -101,7 +106,7 @@ export abstract class LineMode<
     this.lineRender?.on(RenderEvent.dragend, this.onLineDragEnd.bind(this));
   }
 
-  getAllDistanceTexts(): ITextFeature[] {
+  getDistanceTexts(): ITextFeature[] {
     const { distanceText } = this.options;
     if (!distanceText) {
       return [];
@@ -158,6 +163,10 @@ export abstract class LineMode<
     return textList;
   }
 
+  getAllTexts() {
+    return this.getDistanceTexts();
+  }
+
   /**
    * 创建LineFeature
    * @param point
@@ -177,7 +186,7 @@ export abstract class LineMode<
       });
     });
     this.setPointData([point]);
-    this.setTextData(this.getAllDistanceTexts());
+    this.setTextData(this.getAllTexts());
     return newLine;
   }
 
@@ -198,7 +207,7 @@ export abstract class LineMode<
       });
     });
     this.setPointData(line.properties.nodes);
-    this.setTextData(this.getAllDistanceTexts());
+    this.setTextData(this.getAllTexts());
     return line;
   }
 
@@ -239,7 +248,7 @@ export abstract class LineMode<
     );
     this.setMidPointData(this.getMidPointsByLine(line));
     this.setDashLineData([]);
-    this.setTextData(this.getAllDistanceTexts());
+    this.setTextData(this.getAllTexts());
     return line;
   }
 
@@ -251,7 +260,7 @@ export abstract class LineMode<
         return feature;
       }),
       midPoint: [],
-      text: this.getAllDistanceTexts(),
+      text: this.getAllTexts(),
     });
     return link;
   }
@@ -287,6 +296,7 @@ export abstract class LineMode<
   handleLineDragStart(line: ILineFeature) {
     this.setEditLine(line, {
       isDrag: true,
+      isActive: true,
     });
     this.scene.setMapStatus({
       dragEnable: false,
@@ -422,6 +432,8 @@ export abstract class LineMode<
 
   onSceneMouseMove(e: ISceneMouseEvent) {}
 
+  onPointClick(e: ILayerMouseEvent<IPointFeature>) {}
+
   /**
    * 获取线数据
    */
@@ -465,7 +477,7 @@ export abstract class LineMode<
   ): IPointFeature | undefined {
     const editLine = this.editLine;
     const feature = e.feature;
-    if (!editLine || !feature) {
+    if (!editLine || !feature || this.dragPoint) {
       return;
     }
     const nodes = editLine.properties.nodes;

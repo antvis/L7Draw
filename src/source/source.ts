@@ -69,7 +69,7 @@ export class Source extends EventEmitter<SourceEvent> {
       };
 
       if (!this.timeout) {
-        this.timeout = setTimeout(() => this.updateDiffData(), 16);
+        this.timeout = setTimeout(() => this.updateDiffData(), 0);
       }
 
       this.emit(SourceEvent.change, {

@@ -6,6 +6,8 @@ import {
   ILineProperties,
   IPointFeature,
   IPointProperties,
+  IPolygonFeature,
+  IPolygonProperties,
   IRenderType,
 } from '../typings';
 import { coordAll, featureCollection, lineString, Position } from '@turf/turf';
@@ -82,6 +84,17 @@ export const getDefaultLineProperties = () => {
   };
 };
 
+export const getDefaultPolygonProperties = () => {
+  return {
+    id: getUuid('polygon'),
+    isHover: false,
+    isActive: false,
+    isDrag: false,
+    isDraw: false,
+    createTime: Date.now(),
+  };
+};
+
 // export const getDefaultLinePro
 
 /**
@@ -121,4 +134,22 @@ export const createDashLine = (positions: Position[]) => {
   return lineString(positions, {
     id: getUuid('dashLine'),
   });
+};
+
+export const createPolygonFeature = (
+  nodes: IPointFeature[],
+  properties: Partial<IPolygonProperties> = {},
+) => {
+  return {
+    type: 'Feature',
+    properties: {
+      ...getDefaultPolygonProperties(),
+      nodes,
+      ...properties,
+    },
+    geometry: {
+      type: 'Polygon',
+      coordinates: [coordAll(featureCollection(nodes))],
+    },
+  } as IPolygonFeature;
 };

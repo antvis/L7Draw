@@ -32,7 +32,6 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     this.bindSceneEvent();
     this.bindMidPointRenderEvent();
     this.bindLineRenderEvent();
-    this.pointRender?.on(RenderEvent.click, this.onPointClick.bind(this));
   }
 
   // @ts-ignore
@@ -44,7 +43,6 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
       };
       if (!line.properties.nodes?.length) {
         line.properties.nodes = coordAll(line).map((position) => {
-          console.log(position);
           return createPointFeature(position);
         });
       }
@@ -60,7 +58,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     }
     return {
       line: lineFeatures,
-      text: this.getAllDistanceTexts(),
+      text: this.getAllTexts(),
     };
   }
 
@@ -175,7 +173,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
         lastNode.geometry.coordinates,
       ]),
     ]);
-    this.setTextData(this.getAllDistanceTexts());
+    this.setTextData(this.getAllTexts());
   }
 
   bindEnableEvent(): void {
