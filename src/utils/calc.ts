@@ -1,4 +1,5 @@
 import {
+  IAreaOptions,
   IDashLineFeature,
   IDistanceOptions,
   ILineFeature,
@@ -14,6 +15,8 @@ import {
   distance,
   center,
   featureCollection,
+  Polygon,
+  centerOfMass, area,
 } from '@turf/turf';
 import { getUuid } from './feature';
 
@@ -81,4 +84,28 @@ export const calcDistanceTextsByLine = (
     }
   }
   return textList;
+};
+
+/**
+ * 根据传入的polygon和options配置获取面积文本Feature
+ * @param feature
+ * @param options
+ * @param properties
+ */
+export const calcAreaText = (
+  feature: Feature<Polygon>,
+  options: Pick<IAreaOptions, 'format'>,
+  properties: Partial<ITextProperties> = {},
+) => {
+  const { format } = options;
+  const meters = area(feature);
+  return centerOfMass(feature, {
+    properties: {
+      meters,
+      text: format(meters),
+      type: 'area',
+      isActive: false,
+      ...properties,
+    },
+  }) as ITextFeature;
 };

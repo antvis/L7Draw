@@ -1,22 +1,21 @@
 import { IPolygonModeOptions, PolygonMode } from '../mode';
-import { booleanEqual, Feature, Polygon, Position } from '@turf/turf';
+import { coordAll, Feature, Polygon } from '@turf/turf';
 import {
   DeepPartial,
-  IBaseFeature,
   IDashLineFeature,
   ILayerMouseEvent,
   ILineFeature,
+  IMidPointFeature,
   IPointFeature,
   IPolygonFeature,
   IRenderType,
   ISceneMouseEvent,
-  SourceData,
 } from '../typings';
 import { Scene } from '@antv/l7';
 import {
   createDashLine,
+  createLineFeature,
   createPointFeature,
-  getDefaultLineProperties,
   getDefaultPolygonProperties,
   getLngLat,
   isSameFeature,
@@ -24,7 +23,6 @@ import {
 } from '../utils';
 import { first, last } from 'lodash';
 import { DrawerEvent } from '../constant';
-import { coordAll, LineString } from '_@turf_turf@6.5.0@@turf/turf';
 
 export interface IPolygonDrawerOptions
   extends IPolygonModeOptions<Feature<Polygon>> {}
@@ -57,6 +55,13 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
           return createPointFeature(position);
         });
       }
+      if (!polygon.properties.line) {
+        const nodes = polygon.properties.nodes as IPointFeature[];
+        polygon.properties.line = createLineFeature([
+          ...nodes,
+          createPointFeature(first(nodes)!.geometry.coordinates),
+        ]);
+      }
       return polygon as IPolygonFeature;
     });
     const editPolygon = polygonFeatures.find(
@@ -69,16 +74,49 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     }
     return {
       polygon: polygonFeatures,
+      line: polygonFeatures.map((feature) => feature.properties.line),
       text: this.getAllTexts(),
     };
   }
 
-  setData(data: Feature[]): IBaseFeature[] {
+  setData(data: Feature<Polygon>[]): IPolygonFeature[] {
+    this.source.setData(this.initData(data) ?? {});
     return this.getPolygonData();
   }
 
-  getData(): IBaseFeature[] {
-    return [];
+  getData(): IPolygonFeature[] {
+    return this.getPolygonData();
+  }
+
+  onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {
+    if (
+      (!this.options.multiple &&
+        !this.drawPolygon &&
+        this.getPolygonData().length >= 1) ||
+      this.dragPoint
+    ) {
+      return;
+    }
+    const feature = super.onPointCreate(e);
+    const drawPolygon = this.drawPolygon;
+    const drawLine = this.drawLine;
+    if (feature) {
+      if (drawPolygon) {
+        this.syncPolygonNodes(drawPolygon, [
+          ...drawPolygon.properties.nodes,
+          feature,
+        ]);
+        this.setDashLineData([
+          createDashLine([
+            transLngLat2Position(getLngLat(e)),
+            drawPolygon.properties.nodes[0].geometry.coordinates,
+          ]),
+        ]);
+      } else if (drawLine) {
+        this.handleCreatePolygon(feature, drawLine);
+      }
+    }
+    return feature;
   }
 
   onPointClick(e: ILayerMouseEvent<IPointFeature>) {
@@ -133,6 +171,65 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
       }
       this.syncPolygonNodes(editPolygon, nodes);
       this.setEditPolygon(editPolygon);
+    }
+    return feature;
+  }
+
+  onPointDragEnd(e: ISceneMouseEvent): IPointFeature | undefined {
+    const editPolygon = this.editPolygon;
+    const feature = super.onPointDragEnd(e);
+    if (feature && editPolygon) {
+      this.emit(DrawerEvent.edit, editPolygon, this.getPolygonData());
+      this.emit(DrawerEvent.change, this.getPolygonData());
+    }
+    return feature;
+  }
+
+  onLineDragStart(e: ILayerMouseEvent<ILineFeature>) {
+    const editPolygon = this.editPolygon;
+    const feature = super.onLineDragStart(e);
+    if (feature && editPolygon) {
+      this.emit(DrawerEvent.dragStart, editPolygon, this.getPolygonData());
+    }
+    return feature;
+  }
+
+  onPolygonDragStart(e: ILayerMouseEvent<IPolygonFeature>) {
+    const feature = super.onPolygonDragStart(e);
+    if (feature) {
+      this.emit(DrawerEvent.dragStart, feature, this.getPolygonData());
+    }
+    return feature;
+  }
+
+  onLineDragging(e: ISceneMouseEvent) {
+    const feature = super.onLineDragging(e);
+    const dragPolygon = this.dragPolygon;
+    if (feature && dragPolygon) {
+      this.emit(DrawerEvent.dragging, dragPolygon, this.getPolygonData());
+    }
+    return feature;
+  }
+
+  onLineDragEnd(e: ISceneMouseEvent) {
+    const dragPolygon = this.dragPolygon;
+    const feature = super.onLineDragEnd(e);
+    if (feature && dragPolygon) {
+      this.emit(DrawerEvent.dragEnd, dragPolygon, this.getPolygonData());
+      this.emit(DrawerEvent.edit, dragPolygon, this.getPolygonData());
+      this.emit(DrawerEvent.change, this.getPolygonData());
+    }
+    return feature;
+  }
+
+  onMidPointClick(
+    e: ILayerMouseEvent<IMidPointFeature>,
+  ): IPointFeature | undefined {
+    const feature = super.onMidPointClick(e);
+    const editPolygon = this.editPolygon;
+    if (feature && editPolygon) {
+      this.emit(DrawerEvent.edit, editPolygon, this.getPolygonData());
+      this.emit(DrawerEvent.change, this.getPolygonData());
     }
     return feature;
   }

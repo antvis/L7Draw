@@ -1,4 +1,5 @@
 import {
+  area,
   booleanClockwise,
   coordAll,
   Feature,
@@ -6,8 +7,9 @@ import {
   lineString,
 } from '@turf/turf';
 import {
+  DeepPartial,
   FeatureUpdater,
-  IDistanceOptions,
+  IAreaOptions,
   ILayerMouseEvent,
   ILineFeature,
   IMidPointFeature,
@@ -15,10 +17,11 @@ import {
   IPolygonFeature,
   IPolygonProperties,
   ISceneMouseEvent,
+  ITextFeature,
 } from '../typings';
 import { ILineModeOptions, LineMode } from './line-mode';
 import { PolygonRender } from '../render';
-import { RenderEvent } from '../constant';
+import { DEFAULT_AREA_OPTIONS, RenderEvent } from '../constant';
 import {
   createDashLine,
   createPointFeature,
@@ -28,11 +31,12 @@ import {
   transLngLat2Position,
   updateTargetFeature,
 } from '../utils';
-import {first, isEqual, last} from 'lodash';
+import { first, isEqual, last } from 'lodash';
+import { calcAreaText } from '../utils/calc';
 
 export interface IPolygonModeOptions<F extends Feature = Feature>
   extends ILineModeOptions<F> {
-  areaText: false | IDistanceOptions;
+  areaText: false | IAreaOptions;
 }
 
 export abstract class PolygonMode<
@@ -71,6 +75,51 @@ export abstract class PolygonMode<
       const { isActive, isDraw } = feature.properties;
       return !isDraw && isActive;
     });
+  }
+
+  getDefaultOptions(options: DeepPartial<T>): T {
+    const newOptions: T = {
+      ...super.getDefaultOptions(options),
+      areaText: false,
+    };
+    if (options.areaText) {
+      newOptions.areaText = {
+        ...DEFAULT_AREA_OPTIONS,
+        ...options.areaText,
+      };
+    }
+    return newOptions;
+  }
+
+  getAreaTexts(): ITextFeature[] {
+    const { areaText } = this.options;
+    if (!areaText) {
+      return [];
+    }
+    const textList: ITextFeature[] = [];
+    const polygonData = this.getPolygonData().filter(
+      (feature) => feature.properties.nodes.length >= 3,
+    );
+
+    polygonData.forEach((feature) => {
+      textList.push(
+        calcAreaText(
+          feature,
+          {
+            format: areaText.format,
+          },
+          {
+            isActive: feature.properties.isActive,
+          },
+        ),
+      );
+    });
+
+    return textList;
+  }
+
+  getAllTexts(): ITextFeature[] {
+    return [...super.getAllTexts(), ...this.getAreaTexts()];
   }
 
   /**
@@ -243,32 +292,6 @@ export abstract class PolygonMode<
       }),
     );
     return polygon;
-  }
-
-  onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {
-    if (this.dragPoint) {
-      return;
-    }
-    const feature = super.onPointCreate(e);
-    const drawPolygon = this.drawPolygon;
-    const drawLine = this.drawLine;
-    if (feature) {
-      if (drawPolygon) {
-        this.syncPolygonNodes(drawPolygon, [
-          ...drawPolygon.properties.nodes,
-          feature,
-        ]);
-        this.setDashLineData([
-          createDashLine([
-            transLngLat2Position(getLngLat(e)),
-            drawPolygon.properties.nodes[0].geometry.coordinates,
-          ]),
-        ]);
-      } else if (drawLine) {
-        this.handleCreatePolygon(feature, drawLine);
-      }
-    }
-    return feature;
   }
 
   onLineDragStart(e: ILayerMouseEvent<ILineFeature>) {

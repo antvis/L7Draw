@@ -46,7 +46,6 @@ export interface IDistanceOptions {
  */
 export interface IAreaOptions {
   format: (squareMeters: number) => string;
-  showOnDash: boolean;
   showOnNormal: boolean;
   showOnActive: boolean;
 }

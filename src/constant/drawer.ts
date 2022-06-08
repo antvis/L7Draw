@@ -1,4 +1,4 @@
-import { IDistanceOptions } from '../typings';
+import { IAreaOptions, IDistanceOptions } from '../typings';
 
 export const DEFAULT_DISTANCE_OPTIONS: IDistanceOptions = {
   total: false,
@@ -12,4 +12,14 @@ export const DEFAULT_DISTANCE_OPTIONS: IDistanceOptions = {
       return +meters.toFixed(2) + 'm';
     }
   },
+};
+
+export const DEFAULT_AREA_OPTIONS: IAreaOptions = {
+  format: (squareMeters: number) => {
+    return squareMeters > 1000000
+      ? `${+(squareMeters / 1000000).toFixed(2)}km²`
+      : `${+squareMeters.toFixed(2)}m²`;
+  },
+  showOnNormal: true,
+  showOnActive: true,
 };

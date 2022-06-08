@@ -1,5 +1,6 @@
 import { Feature } from '@turf/turf';
 import {
+  DeepPartial,
   FeatureUpdater,
   IBaseModeOptions,
   ILayerMouseEvent,
@@ -27,6 +28,13 @@ export abstract class MidPointMode<
    */
   protected get midPointRender(): MidPointRender | undefined {
     return this.render.midPoint;
+  }
+
+  getCommonOptions(options: DeepPartial<T>): T {
+    return {
+      ...super.getCommonOptions(options),
+      showMidPoint: true,
+    };
   }
 
   bindMidPointRenderEvent() {
