@@ -25,7 +25,7 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new PolygonDrawer(scene, {
-        distanceText: {},
+        // distanceText: {},
       });
       setPolygonDrawer(drawer);
       drawer.enable();

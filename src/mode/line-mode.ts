@@ -266,6 +266,9 @@ export abstract class LineMode<
   }
 
   handleLineHover(line: ILineFeature) {
+    if (this.drawLine) {
+      return;
+    }
     this.setCursor('lineHover');
     this.setLineData((features) =>
       updateTargetFeature({
@@ -283,6 +286,9 @@ export abstract class LineMode<
   }
 
   handleLineUnHover(line: ILineFeature) {
+    if (this.drawLine) {
+      return;
+    }
     this.setCursor('draw');
     this.setLineData((features) =>
       features.map((feature) => {

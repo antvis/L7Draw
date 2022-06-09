@@ -165,49 +165,17 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     return feature;
   }
 
-  onPointDragEnd(e: ISceneMouseEvent): IPointFeature | undefined {
-    const editPolygon = this.editPolygon;
-    const feature = super.onPointDragEnd(e);
-    if (feature && editPolygon) {
-      this.emit(DrawerEvent.edit, editPolygon, this.getPolygonData());
-      this.emit(DrawerEvent.change, this.getPolygonData());
-    }
-    return feature;
-  }
-
-  onLineDragStart(e: ILayerMouseEvent<ILineFeature>) {
-    const editPolygon = this.editPolygon;
-    const feature = super.onLineDragStart(e);
-    if (feature && editPolygon) {
-      this.emit(DrawerEvent.dragStart, editPolygon, this.getPolygonData());
-    }
-    return feature;
-  }
-
-  onPolygonDragStart(e: ILayerMouseEvent<IPolygonFeature>) {
-    const feature = super.onPolygonDragStart(e);
-    if (feature) {
-      this.emit(DrawerEvent.dragStart, feature, this.getPolygonData());
-    }
-    return feature;
-  }
 
   onLineDragging(e: ISceneMouseEvent) {
+    const dragPolygon = this.dragPolygon;
     const feature = super.onLineDragging(e);
-    const dragPolygon = this.dragPolygon;
     if (feature && dragPolygon) {
+      const lineNodes = feature.properties.nodes;
+      this.syncPolygonNodes(
+        dragPolygon,
+        lineNodes.slice(0, lineNodes.length - 1),
+      );
       this.emit(DrawerEvent.dragging, dragPolygon, this.getPolygonData());
-    }
-    return feature;
-  }
-
-  onLineDragEnd(e: ISceneMouseEvent) {
-    const dragPolygon = this.dragPolygon;
-    const feature = super.onLineDragEnd(e);
-    if (feature && dragPolygon) {
-      this.emit(DrawerEvent.dragEnd, dragPolygon, this.getPolygonData());
-      this.emit(DrawerEvent.edit, dragPolygon, this.getPolygonData());
-      this.emit(DrawerEvent.change, this.getPolygonData());
     }
     return feature;
   }

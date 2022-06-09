@@ -1,5 +1,6 @@
 import { IPolygonModeOptions, PolygonMode } from '../mode';
 import {
+  bbox,
   coordAll,
   envelope,
   Feature,
@@ -11,11 +12,11 @@ import {
   ILayerMouseEvent,
   ILineFeature,
   ILineProperties,
+  IMidPointFeature,
   IPointFeature,
   IPolygonFeature,
   IPolygonProperties,
   ISceneMouseEvent,
-  SourceData,
 } from '../typings';
 import { Scene } from '@antv/l7';
 import { IPolygonDrawerOptions } from './polygon-drawer';
@@ -23,13 +24,13 @@ import {
   createLineFeature,
   createPointFeature,
   createPolygonFeature,
-  getDefaultLineProperties,
   getLngLat,
   isSameFeature,
   transLngLat2Position,
   updateTargetFeature,
 } from '../utils';
 import { first, isEqual, last } from 'lodash';
+import { DrawerEvent } from '../constant';
 
 export interface IRectDrawerOptions
   extends IPolygonModeOptions<Feature<Polygon>> {}
@@ -44,6 +45,10 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     this.bindPolygonRenderEvent();
   }
 
+  get drawLine() {
+    return this.drawPolygon?.properties.line;
+  }
+
   getDefaultOptions(
     options: DeepPartial<IRectDrawerOptions>,
   ): IRectDrawerOptions {
@@ -53,8 +58,34 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     };
   }
 
-  initData<F>(data: F[]): Partial<SourceData> | undefined {
-    return undefined;
+  // @ts-ignore
+  initData(data: Feature<Polygon>[]) {
+    const result = data.map((feature) => {
+      const [lng1, lat1, lng2, lat2] = bbox(feature);
+      const startNode = createPointFeature([lng1, lat1]);
+      const endNode = createPointFeature([lng2, lat2]);
+      const isActive = !!feature.properties?.isActive;
+      const line = this.handleCreateRectLine(startNode, endNode, {
+        isActive,
+      });
+      return this.handleCreatePolygon([startNode, endNode], line, {
+        isActive,
+      });
+    });
+    const editPolygon = result.find((feature) => feature.properties.isActive);
+    if (editPolygon) {
+      setTimeout(() => {
+        this.setEditPolygon(editPolygon);
+      }, 0);
+    }
+    return {
+      point: [],
+      midPoint: [],
+      dashLine: [],
+      polygon: result,
+      line: result.map((feature) => feature.properties.line),
+      text: this.getAllTexts(),
+    };
   }
 
   handleCreateRectLine(
@@ -77,13 +108,16 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     return createLineFeature(nodes, properties);
   }
 
-  handleCreatePolygon(points: IPointFeature[], line: ILineFeature) {
+  handleCreatePolygon(
+    points: IPointFeature[],
+    line: ILineFeature,
+    properties: Partial<IPolygonProperties> = {},
+  ) {
     const lineNodes = line.properties.nodes;
     return createPolygonFeature(lineNodes.slice(0, lineNodes.length - 1), {
-      isDraw: true,
-      isActive: true,
       nodes: points,
       line,
+      ...properties,
     });
   }
 
@@ -127,9 +161,6 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
 
     line.geometry.coordinates = positions;
 
-    if (!polygon.properties.isDraw) {
-    }
-
     return polygon;
   }
 
@@ -137,7 +168,6 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     polygon: IPolygonFeature,
     properties: Partial<IPolygonProperties> = {},
   ) {
-    this.setLineData((features) => [...features, polygon.properties.line]);
     this.setEditLine(polygon.properties.line, properties);
     this.setPolygonData((features) => {
       return updateTargetFeature({
@@ -165,25 +195,37 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     });
     this.setPointData(polygon.properties.nodes);
     this.setDashLineData([]);
+    const texts = this.getAllTexts();
+    this.setTextData(texts);
     return polygon;
   }
 
   onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {
     if (
       (!this.options.multiple &&
-        !this.drawPolygon &&
-        this.getPolygonData().length >= 1) ||
-      this.dragPoint
+        this.getPolygonData().length >= 1 &&
+        !this.drawPolygon) ||
+      this.dragPoint ||
+      this.editLine
     ) {
       return;
     }
+    const { autoFocus, editable } = this.options;
     const drawPolygon = this.drawPolygon;
     const position = transLngLat2Position(getLngLat(e));
     const feature = this.handleCreatePoint(position);
     if (drawPolygon) {
       setTimeout(() => {
+        this.setLineData((features) => [
+          ...features,
+          drawPolygon.properties.line,
+        ]);
         this.setEditPolygon(drawPolygon);
-        console.log(this.getLineData());
+        if (!(autoFocus && editable)) {
+          this.handlePolygonUnClick(drawPolygon);
+        }
+        this.emit(DrawerEvent.add, drawPolygon, this.getPolygonData());
+        this.emit(DrawerEvent.change, this.getPolygonData());
       }, 0);
     } else {
       const endNode = createPointFeature(position);
@@ -191,7 +233,10 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
         isDraw: true,
         isActive: true,
       });
-      const polygon = this.handleCreatePolygon([feature, endNode], line);
+      const polygon = this.handleCreatePolygon([feature, endNode], line, {
+        isDraw: true,
+        isActive: true,
+      });
       this.setPolygonData((features) =>
         updateTargetFeature({
           target: polygon,
@@ -220,6 +265,29 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     const feature = this.handlePointDragging(dragPoint, getLngLat(e));
     const editPolygon = this.editPolygon;
     if (feature && editPolygon) {
+      this.syncPolygonNodes(
+        editPolygon,
+        editPolygon.properties.nodes.map((node) => {
+          if (isSameFeature(node, feature)) {
+            return feature;
+          }
+          return node;
+        }),
+      );
+      this.setEditPolygon(editPolygon);
+    }
+    return feature;
+  }
+
+  onLineDragging(e: ISceneMouseEvent) {
+    const feature = super.onLineDragging(e);
+    const dragPolygon = this.dragPolygon;
+    if (feature && dragPolygon) {
+      this.syncPolygonNodes(dragPolygon, dragPolygon.properties.nodes);
+      this.setEditPolygon(dragPolygon, {
+        isDrag: true,
+      });
+      this.emit(DrawerEvent.dragging, dragPolygon, this.getPolygonData());
     }
     return feature;
   }
@@ -235,6 +303,7 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     lastNode.geometry.coordinates = transLngLat2Position(getLngLat(e));
     this.syncPolygonNodes(drawPolygon, [firstNode, lastNode]);
     this.setDashLineData([drawPolygon.properties.line]);
+    this.setTextData(this.getAllTexts());
     this.setCursor('draw');
   }
 }

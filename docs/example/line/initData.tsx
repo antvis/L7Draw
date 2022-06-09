@@ -27,7 +27,6 @@ const Demo: React.FC = () => {
       drawer.enable();
 
       drawer.on(DrawerEvent.add, (e) => {
-        console.log(e);
       });
     });
   }, []);

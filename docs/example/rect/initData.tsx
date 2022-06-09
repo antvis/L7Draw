@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Scene } from '@antv/l7';
 import { GaodeMapV2 } from '@antv/l7-maps';
-import { DrawerEvent, PolygonDrawer } from '@antv/l7-draw';
-import { polygonList } from './mock';
+import { DrawerEvent, RectDrawer } from '@antv/l7-draw';
+import { rectList } from './mock';
 
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [polygonDrawer, setPolygonDrawer] = useState<PolygonDrawer | null>(
-    null,
-  );
+  const [rectDrawer, setRectDrawer] = useState<RectDrawer | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -22,11 +20,17 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new PolygonDrawer(scene, {
-        initData: polygonList,
+      const drawer = new RectDrawer(scene, {
+        initData: rectList,
       });
-      setPolygonDrawer(drawer);
+      setRectDrawer(drawer);
       drawer.enable();
+
+      // setTimeout(() => {
+      //   drawer.setData([
+      //     rectList[2]
+      //   ])
+      // }, 1000)
 
       drawer.on(DrawerEvent.add, (e) => {
       });

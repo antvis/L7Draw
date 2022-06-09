@@ -15,13 +15,14 @@ import {
   IMidPointFeature,
   IPointFeature,
   IPolygonFeature,
-  IPolygonProperties, IRenderType,
+  IPolygonProperties,
+  IRenderType,
   ISceneMouseEvent,
   ITextFeature,
 } from '../typings';
 import { ILineModeOptions, LineMode } from './line-mode';
 import { PolygonRender } from '../render';
-import { DEFAULT_AREA_OPTIONS, RenderEvent } from '../constant';
+import { DEFAULT_AREA_OPTIONS, DrawerEvent, RenderEvent } from '../constant';
 import {
   createDashLine,
   createPointFeature,
@@ -33,7 +34,7 @@ import {
 } from '../utils';
 import { first, isEqual, last } from 'lodash';
 import { calcAreaText } from '../utils/calc';
-import {Polygon} from "_@turf_turf@6.5.0@@turf/turf";
+import { Polygon } from '_@turf_turf@6.5.0@@turf/turf';
 
 export interface IPolygonModeOptions<F extends Feature = Feature>
   extends ILineModeOptions<F> {
@@ -112,7 +113,7 @@ export abstract class PolygonMode<
     }
     const textList: ITextFeature[] = [];
     const polygonData = this.getPolygonData().filter(
-      (feature) => feature.properties.nodes.length >= 3,
+      (feature) => feature.geometry.coordinates[0].length >= 4,
     );
 
     polygonData.forEach((feature) => {
@@ -317,6 +318,7 @@ export abstract class PolygonMode<
       this.setEditPolygon(polygon, {
         isDrag: true,
       });
+      this.emit(DrawerEvent.dragStart, polygon, this.getPolygonData());
     }
     return line;
   }
@@ -325,24 +327,14 @@ export abstract class PolygonMode<
     return this.editLine;
   }
 
-  onLineDragging(e: ISceneMouseEvent) {
-    const dragPolygon = this.dragPolygon;
-    const feature = super.onLineDragging(e);
-    if (feature && dragPolygon) {
-      const lineNodes = feature.properties.nodes;
-      this.syncPolygonNodes(
-        dragPolygon,
-        lineNodes.slice(0, lineNodes.length - 1),
-      );
-    }
-    return feature;
-  }
-
   onLineDragEnd(e: ISceneMouseEvent) {
     const feature = super.onLineDragEnd(e);
     const dragPolygon = this.dragPolygon;
     if (feature && dragPolygon) {
       dragPolygon.properties.isDrag = false;
+      this.emit(DrawerEvent.dragEnd, dragPolygon, this.getPolygonData());
+      this.emit(DrawerEvent.edit, dragPolygon, this.getPolygonData());
+      this.emit(DrawerEvent.change, this.getPolygonData());
     }
     return feature;
   }
@@ -373,8 +365,10 @@ export abstract class PolygonMode<
     if (!this.options.editable || this.drawPolygon) {
       return;
     }
+    const polygon = e.feature!;
     this.previousPosition = transLngLat2Position(getLngLat(e));
-    return this.handlePolygonDragStart(e.feature!);
+    this.emit(DrawerEvent.dragStart, polygon, this.getPolygonData());
+    return this.handlePolygonDragStart(polygon);
   }
 
   onMidPointClick(
@@ -389,6 +383,16 @@ export abstract class PolygonMode<
         lineNodes.slice(0, lineNodes.length - 1),
       );
       this.setEditPolygon(editPolygon);
+    }
+    return feature;
+  }
+
+  onPointDragEnd(e: ISceneMouseEvent): IPointFeature | undefined {
+    const editPolygon = this.editPolygon;
+    const feature = super.onPointDragEnd(e);
+    if (feature && editPolygon) {
+      this.emit(DrawerEvent.edit, editPolygon, this.getPolygonData());
+      this.emit(DrawerEvent.change, this.getPolygonData());
     }
     return feature;
   }
