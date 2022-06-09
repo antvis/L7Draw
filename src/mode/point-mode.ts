@@ -14,7 +14,7 @@ import {
   updateTargetFeature,
 } from '../utils';
 import { Position } from '@turf/turf';
-import { RenderEvent, SceneEvent } from '../constant';
+import { RenderEvent } from '../constant';
 import { PointRender } from '../render';
 
 export abstract class PointMode<

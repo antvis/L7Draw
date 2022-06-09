@@ -10,7 +10,7 @@ import {
 } from '../typings';
 import { coordAll, Feature, LineString, Point } from '@turf/turf';
 import { Scene } from '@antv/l7';
-import { DrawerEvent, RenderEvent } from '../constant';
+import { DrawerEvent } from '../constant';
 import { ILineModeOptions, LineMode } from '../mode';
 import {
   createDashLine,

@@ -2,7 +2,6 @@ import { BaseRender } from './base-render';
 import { ILayer, PointLayer } from '@antv/l7';
 import {
   ILayerMouseEvent,
-  IMidPointFeature,
   IPointFeature,
   IPointStyle,
   ISceneMouseEvent,

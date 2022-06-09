@@ -1,11 +1,5 @@
-import { v4 } from 'uuid';
 import { Scene } from '@antv/l7';
-import {
-  IBaseFeature,
-  ILayerMouseEvent,
-  ILngLat,
-  ISceneMouseEvent,
-} from '../typings';
+import { ILayerMouseEvent, ILngLat, ISceneMouseEvent } from '../typings';
 import { Position } from '@turf/turf';
 
 // @ts-ignore

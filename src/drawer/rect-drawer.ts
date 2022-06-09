@@ -12,7 +12,6 @@ import {
   ILayerMouseEvent,
   ILineFeature,
   ILineProperties,
-  IMidPointFeature,
   IPointFeature,
   IPolygonFeature,
   IPolygonProperties,

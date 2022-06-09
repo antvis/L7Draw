@@ -23,7 +23,6 @@ import { ILineModeOptions, LineMode } from './line-mode';
 import { PolygonRender } from '../render';
 import { DEFAULT_AREA_OPTIONS, DrawerEvent, RenderEvent } from '../constant';
 import {
-  createDashLine,
   createPointFeature,
   createPolygonFeature,
   getLngLat,

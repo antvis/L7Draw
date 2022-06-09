@@ -4,11 +4,9 @@ import {
   DeepPartial,
   IDashLineFeature,
   ILayerMouseEvent,
-  ILineFeature,
   IMidPointFeature,
   IPointFeature,
   IPolygonFeature,
-  IRenderType,
   ISceneMouseEvent,
 } from '../typings';
 import { Scene } from '@antv/l7';

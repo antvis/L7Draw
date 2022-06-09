@@ -4,9 +4,6 @@ import {
   ILayerMouseEvent,
   IMidPointFeature,
   IMidPointStyle,
-  IPointFeature,
-  IPointStyle,
-  ISceneMouseEvent,
 } from '../typings';
 import { featureCollection } from '@turf/turf';
 import { RenderEvent } from '../constant';

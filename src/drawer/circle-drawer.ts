@@ -5,9 +5,7 @@ import {
   circle,
   coordAll,
   distance,
-  envelope,
   Feature,
-  featureCollection,
   Polygon,
 } from '@turf/turf';
 import {
@@ -31,7 +29,7 @@ import {
   transLngLat2Position,
   updateTargetFeature,
 } from '../utils';
-import { first, isEqual, last } from 'lodash';
+import { first, last } from 'lodash';
 import { DrawerEvent } from '../constant';
 
 export interface ICircleDrawerOptions
