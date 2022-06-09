@@ -16,8 +16,8 @@ import {
   createLineFeature,
   createPointFeature,
   getLngLat,
+  getPosition,
   isSameFeature,
-  transLngLat2Position,
   updateTargetFeature,
 } from '../utils';
 import { coordAll, Feature, featureCollection } from '@turf/turf';
@@ -415,7 +415,7 @@ export abstract class LineMode<
     if (!this.options.editable || this.drawLine) {
       return;
     }
-    this.previousPosition = transLngLat2Position(getLngLat(e));
+    this.previousPosition = getPosition(e);
     return this.handleLineDragStart(e.feature!);
   }
 

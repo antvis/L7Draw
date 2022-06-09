@@ -3,9 +3,7 @@ import { Feature, Point } from '@turf/turf';
 export const pointList: Feature<Point>[] = [
   {
     type: 'Feature',
-    properties: {
-      isActive: true,
-    },
+    properties: {},
     geometry: {
       type: 'Point',
       coordinates: [120.103666, 30.262449],

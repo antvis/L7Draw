@@ -32,8 +32,7 @@ const Demo: React.FC = () => {
       //   ])
       // }, 1000)
 
-      drawer.on(DrawerEvent.add, (e) => {
-      });
+      drawer.on(DrawerEvent.add, (e) => {});
     });
   }, []);
 

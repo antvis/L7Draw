@@ -3,9 +3,7 @@ import { Feature, Polygon } from '@turf/turf';
 export const polygonList: Feature<Polygon>[] = [
   {
     type: 'Feature',
-    properties: {
-      isActive: true,
-    },
+    properties: {},
     geometry: {
       type: 'Polygon',
       coordinates: [

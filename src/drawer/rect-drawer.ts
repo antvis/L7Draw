@@ -24,8 +24,8 @@ import {
   createPointFeature,
   createPolygonFeature,
   getLngLat,
+  getPosition,
   isSameFeature,
-  transLngLat2Position,
   updateTargetFeature,
 } from '../utils';
 import { first, isEqual, last } from 'lodash';
@@ -210,7 +210,7 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     }
     const { autoFocus, editable } = this.options;
     const drawPolygon = this.drawPolygon;
-    const position = transLngLat2Position(getLngLat(e));
+    const position = getPosition(e);
     const feature = this.handleCreatePoint(position);
     if (drawPolygon) {
       setTimeout(() => {
@@ -223,7 +223,6 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
           this.handlePolygonUnClick(drawPolygon);
         }
         this.emit(DrawerEvent.add, drawPolygon, this.getPolygonData());
-        this.emit(DrawerEvent.change, this.getPolygonData());
       }, 0);
     } else {
       const endNode = createPointFeature(position);
@@ -298,7 +297,7 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     const { nodes } = drawPolygon.properties;
     const firstNode = first(nodes)!;
     const lastNode = last(nodes)!;
-    lastNode.geometry.coordinates = transLngLat2Position(getLngLat(e));
+    lastNode.geometry.coordinates = getPosition(e);
     this.syncPolygonNodes(drawPolygon, [firstNode, lastNode]);
     this.setDashLineData([drawPolygon.properties.line]);
     this.setTextData(this.getAllTexts());

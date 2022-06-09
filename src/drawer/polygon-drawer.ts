@@ -15,9 +15,8 @@ import {
   createLineFeature,
   createPointFeature,
   getDefaultPolygonProperties,
-  getLngLat,
+  getPosition,
   isSameFeature,
-  transLngLat2Position,
 } from '../utils';
 import { first, last } from 'lodash';
 import { DrawerEvent } from '../constant';
@@ -95,7 +94,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
         ]);
         this.setDashLineData([
           createDashLine([
-            transLngLat2Position(getLngLat(e)),
+            getPosition(e),
             drawPolygon.properties.nodes[0].geometry.coordinates,
           ]),
         ]);
@@ -129,7 +128,6 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
           this.handlePolygonUnClick(drawPolygon);
         }
         this.emit(DrawerEvent.add, drawPolygon, this.getPolygonData());
-        this.emit(DrawerEvent.change, this.getPolygonData());
       }, 0);
     } else {
       const [lng, lat] = feature.geometry.coordinates;
@@ -183,7 +181,6 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     const editPolygon = this.editPolygon;
     if (feature && editPolygon) {
       this.emit(DrawerEvent.edit, editPolygon, this.getPolygonData());
-      this.emit(DrawerEvent.change, this.getPolygonData());
     }
     return feature;
   }
@@ -194,7 +191,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     if (!drawPolygon || !nodes.length) {
       return;
     }
-    const mousePosition = transLngLat2Position(getLngLat(e));
+    const mousePosition = getPosition(e);
     const dashLineData: IDashLineFeature[] = [];
     dashLineData.push(
       createDashLine([mousePosition, first(nodes)!.geometry.coordinates]),

@@ -3,9 +3,7 @@ import { Feature, LineString } from '@turf/turf';
 export const lineList: Feature<LineString>[] = [
   {
     type: 'Feature',
-    properties: {
-      isActive: true,
-    },
+    properties: {},
     geometry: {
       type: 'LineString',
       coordinates: [

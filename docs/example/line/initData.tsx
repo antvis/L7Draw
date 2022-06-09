@@ -26,8 +26,7 @@ const Demo: React.FC = () => {
       setLineDrawer(drawer);
       drawer.enable();
 
-      drawer.on(DrawerEvent.add, (e) => {
-      });
+      drawer.on(DrawerEvent.add, (e) => {});
     });
   }, []);
 

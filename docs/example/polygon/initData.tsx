@@ -28,8 +28,7 @@ const Demo: React.FC = () => {
       setPolygonDrawer(drawer);
       drawer.enable();
 
-      drawer.on(DrawerEvent.add, (e) => {
-      });
+      drawer.on(DrawerEvent.add, (e) => {});
     });
   }, []);
 

@@ -54,7 +54,9 @@ export type IDashLineStyle = IBaseStyle<ILineStyleItem>;
 
 export type ITextStyleItem = Omit<IPointStyleItem, 'shape'>;
 
-export type ITextStyle = IComplexStyle<ITextStyleItem>;
+export type ITextStyle = IBaseStyle<ITextStyleItem> & {
+  active: ITextStyleItem;
+};
 
 export interface IStyle {
   point: IPointStyle;

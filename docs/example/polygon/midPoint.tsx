@@ -32,9 +32,7 @@ const Demo: React.FC = () => {
     scene.on('loaded', () => {
       const drawer = new PolygonDrawer(scene, {
         showMidPoint: false,
-        initData: {
-          polygon,
-        },
+        initData: polygon,
       });
       setPolygonDrawer(drawer);
       drawer.enable();

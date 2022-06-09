@@ -26,9 +26,7 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new PolygonDrawer(scene, {
-        initData: {
-          polygon: polygonList,
-        },
+        initData: polygonList,
         editable: false,
       });
       setPolygonDrawer(drawer);

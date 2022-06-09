@@ -27,6 +27,13 @@ export const getLngLat = (e: ISceneMouseEvent | ILayerMouseEvent) => {
   return e.lngLat || e.lnglat;
 };
 
+export const getPosition: (
+  e: ISceneMouseEvent | ILayerMouseEvent,
+) => Position = (e) => {
+  const { lng, lat } = getLngLat(e);
+  return [lng, lat];
+};
+
 /**
  * 将lnglat转换为position格式
  * @param lng

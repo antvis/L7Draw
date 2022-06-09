@@ -30,9 +30,7 @@ const Demo: React.FC = () => {
     scene.on('loaded', () => {
       const drawer = new LineDrawer(scene, {
         showMidPoint: false,
-        initData: {
-          line,
-        },
+        initData: line,
       });
       setLineDrawer(drawer);
       drawer.enable();

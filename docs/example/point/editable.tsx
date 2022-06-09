@@ -22,9 +22,7 @@ const Demo: React.FC = () => {
     scene.on('loaded', () => {
       const drawer = new PointDrawer(scene, {
         editable: false, // 禁用编辑
-        initData: {
-          point: pointList,
-        },
+        initData: pointList,
       });
       setPointDrawer(drawer);
       drawer.enable();

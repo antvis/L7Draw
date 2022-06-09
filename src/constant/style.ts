@@ -113,7 +113,6 @@ export const DEFAULT_STYLE: IStyle = {
   },
   text: {
     normal: DEFAULT_TEXT_NORMAL_STYLE,
-    hover: DEFAULT_TEXT_NORMAL_STYLE,
     active: {
       ...DEFAULT_TEXT_NORMAL_STYLE,
       color: ACTIVE_COLOR,

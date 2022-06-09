@@ -8,7 +8,7 @@ import {
   ISceneMouseEvent,
   SourceData,
 } from '../typings';
-import { coordAll, Feature, LineString, Point } from '@turf/turf';
+import { coordAll, Feature, LineString } from '@turf/turf';
 import { Scene } from '@antv/l7';
 import { DrawerEvent } from '../constant';
 import { ILineModeOptions, LineMode } from '../mode';
@@ -16,13 +16,12 @@ import {
   createDashLine,
   createPointFeature,
   getDefaultLineProperties,
-  getLngLat,
+  getPosition,
   isSameFeature,
-  transLngLat2Position,
 } from '../utils';
 import { last } from 'lodash';
 
-export type ILineDrawerOptions = ILineModeOptions<Feature<Point>>;
+export type ILineDrawerOptions = ILineModeOptions<Feature<LineString>>;
 
 export class LineDrawer extends LineMode<ILineDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<ILineDrawerOptions>) {
@@ -93,7 +92,6 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
           this.handleLineUnClick(drawLine);
         }
         this.emit(DrawerEvent.add, drawLine, this.getLineData());
-        this.emit(DrawerEvent.change, this.getLineData());
       }, 0);
     } else {
       const [lng, lat] = feature.geometry.coordinates;
@@ -121,7 +119,6 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     const feature = super.onPointDragEnd(e);
     if (editLine && feature) {
       this.emit(DrawerEvent.edit, editLine, this.getLineData());
-      this.emit(DrawerEvent.change, this.getLineData());
     }
     return feature;
   }
@@ -147,7 +144,6 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     if (feature) {
       this.emit(DrawerEvent.dragEnd, feature, this.getLineData());
       this.emit(DrawerEvent.edit, feature, this.getLineData());
-      this.emit(DrawerEvent.change, this.getLineData());
     }
     return feature;
   }
@@ -159,7 +155,6 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     const feature = super.onMidPointClick(e);
     if (editLine && feature) {
       this.emit(DrawerEvent.edit, editLine, this.getLineData());
-      this.emit(DrawerEvent.change, this.getLineData());
     }
     return feature;
   }
@@ -171,10 +166,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     }
     const lastNode = last(drawLine.properties.nodes)!;
     this.setDashLineData([
-      createDashLine([
-        transLngLat2Position(getLngLat(e)),
-        lastNode.geometry.coordinates,
-      ]),
+      createDashLine([getPosition(e), lastNode.geometry.coordinates]),
     ]);
     this.setTextData(this.getAllTexts());
   }

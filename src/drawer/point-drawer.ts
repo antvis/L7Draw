@@ -81,7 +81,6 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
       return;
     }
     this.emit(DrawerEvent.add, newFeature, this.getData());
-    this.emit(DrawerEvent.change, this.getData());
     return newFeature;
   }
 
@@ -104,7 +103,6 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     if (dragPoint && this.options.editable) {
       this.emit(DrawerEvent.dragEnd, dragPoint, this.getData());
       this.emit(DrawerEvent.edit, dragPoint, this.getData());
-      this.emit(DrawerEvent.change, this.getData());
     }
     return dragPoint;
   }

@@ -74,6 +74,7 @@ export abstract class BaseMode<
     this.cursor = new Cursor(scene, this.options.cursor);
 
     this.emit(DrawerEvent.init, this);
+    this.bindCommonEvent();
   }
 
   /**
@@ -128,6 +129,18 @@ export abstract class BaseMode<
    */
   bindThis() {
     this.initRender = this.initRender.bind(this);
+    this.getData = this.getData.bind(this);
+    this.setData = this.setData.bind(this);
+    this.bindCommonEvent = this.bindCommonEvent.bind(this);
+  }
+
+  bindCommonEvent() {
+    const onChange = () => {
+      this.emit(DrawerEvent.change, this.getData());
+    };
+
+    this.on(DrawerEvent.add, onChange);
+    this.on(DrawerEvent.edit, onChange);
   }
 
   /**

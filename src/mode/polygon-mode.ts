@@ -25,9 +25,8 @@ import { DEFAULT_AREA_OPTIONS, DrawerEvent, RenderEvent } from '../constant';
 import {
   createPointFeature,
   createPolygonFeature,
-  getLngLat,
+  getPosition,
   isSameFeature,
-  transLngLat2Position,
   updateTargetFeature,
 } from '../utils';
 import { first, isEqual, last } from 'lodash';
@@ -332,7 +331,6 @@ export abstract class PolygonMode<
       dragPolygon.properties.isDrag = false;
       this.emit(DrawerEvent.dragEnd, dragPolygon, this.getPolygonData());
       this.emit(DrawerEvent.edit, dragPolygon, this.getPolygonData());
-      this.emit(DrawerEvent.change, this.getPolygonData());
     }
     return feature;
   }
@@ -364,7 +362,7 @@ export abstract class PolygonMode<
       return;
     }
     const polygon = e.feature!;
-    this.previousPosition = transLngLat2Position(getLngLat(e));
+    this.previousPosition = getPosition(e);
     this.emit(DrawerEvent.dragStart, polygon, this.getPolygonData());
     return this.handlePolygonDragStart(polygon);
   }
@@ -390,7 +388,6 @@ export abstract class PolygonMode<
     const feature = super.onPointDragEnd(e);
     if (feature && editPolygon) {
       this.emit(DrawerEvent.edit, editPolygon, this.getPolygonData());
-      this.emit(DrawerEvent.change, this.getPolygonData());
     }
     return feature;
   }
