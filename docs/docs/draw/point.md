@@ -1,12 +1,13 @@
 ---
 title: 点
+order: 2
 group:
   title: 绘制
   order: 1
   path: /draw
 ---
 
-# 构造器配置
+# options
 
 以下所有配置项均非必传，未传的情况下各个参数将会自动使用默认值
 
@@ -22,19 +23,19 @@ const drawer = new PointDrawer(scene, {
 | 名称      | 说明                                                              | 类型                   | 默认值 | 示例                                                                         |
 | --------- | ----------------------------------------------------------------- | ---------------------- | ------ | ---------------------------------------------------------------------------- |
 | initData  | 设置 Point 的初始数据                                             | Feature&lt;Point&gt;[] | []     | [初始化数据示例](/example/point/init-data)                                   |
-| multiple  | 是否支持绘制多个 Point                                            | boolean                | true   | -                                                                            |
+| multiple  | 是否支持绘制多个 Point                                            | boolean                | true   | [关闭绘制多个](/example/point/multiple)                                      |
 | autoFocus | 绘制 Point 后，新增点是否为编辑态                                 | boolean                | true   | [关闭自动激活示例](/example/point/auto-focus)                                |
 | editable  | 绘制的 Point 是否支持二次编辑（拖拽位移）                         | boolean                | true   | [禁用编辑示例](/example/point/editable)                                      |
 | style     | 绘制时 Point 不同状态下的样式，可以参考 [Style 配置](/docs/style) | IStyleItem             | -      | [使用图片示例](/example/point/image), [自定义样式示例](/example/point/style) |
 
 # 方法
 
-| 名称    | 说明               | 传参                              |
-| ------- | ------------------ | --------------------------------- |
-| enable  | 开启绘制           | -                                 |
-| disable | 警用绘制           | -                                 |
-| clear   | 清除数据           | (disable: boolean) => void;       |
-| getData | 获取当前绘制点数据 | () => IPointFeature[];            |
+| 名称    | 说明               | 传参                                    |
+| ------- | ------------------ | --------------------------------------- |
+| enable  | 开启绘制           | -                                       |
+| disable | 警用绘制           | -                                       |
+| clear   | 清除数据           | (disable: boolean) => void;             |
+| getData | 获取当前绘制点数据 | () => IPointFeature[];                  |
 | setData | 设置当前绘制点数据 | (data: Feature&lt;Point&gt;[]) => void; |
 
 # 事件

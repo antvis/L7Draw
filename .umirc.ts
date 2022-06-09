@@ -41,7 +41,11 @@ export default defineConfig({
     },
     {
       title: 'Github',
-      path: 'https://github.com/antvis/L7-draw',
+      path: 'https://github.com/antvis/L7-draw/tree/feat/refactor',
+    },
+    {
+      title: '更新日志',
+      path: 'https://github.com/antvis/L7-draw/tree/feat/refactor',
     },
   ],
   // styles: ['https://cdn.bootcdn.net/ajax/libs/antd/4.20.2/antd.css'],
