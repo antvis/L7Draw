@@ -57,7 +57,7 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
   }
 
   // @ts-ignore
-  initData(data: Feature<Polygon>[]) {
+  setData(data: Feature<Polygon>[]) {
     const result = data.map((feature) => {
       const [lng1, lat1, lng2, lat2] = bbox(feature);
       const startNode = createPointFeature([lng1, lat1]);
@@ -76,14 +76,14 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
         this.setEditPolygon(editPolygon);
       }, 0);
     }
-    return {
+    this.source.setData({
       point: [],
       midPoint: [],
       dashLine: [],
       polygon: result,
       line: result.map((feature) => feature.properties.line),
-      text: this.getAllTexts(),
-    };
+    });
+    this.setTextData(this.getAllTexts());
   }
 
   handleCreateRectLine(

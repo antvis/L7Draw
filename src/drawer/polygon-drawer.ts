@@ -34,7 +34,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
   }
 
   // @ts-ignore
-  initData(data: Feature<Polygon>[]) {
+  setData(data: Feature<Polygon>[]) {
     const polygonFeatures = data.map((polygon) => {
       polygon.properties = {
         ...getDefaultPolygonProperties(),
@@ -64,14 +64,14 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
         this.setEditPolygon(editPolygon);
       }, 0);
     }
-    return {
+    this.source.setData({
       point: [],
       midPoint: [],
       dashLine: [],
       polygon: polygonFeatures,
       line: polygonFeatures.map((feature) => feature.properties.line),
-      text: this.getAllTexts(),
-    };
+    });
+    this.setTextData(this.getAllTexts());
   }
 
   onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {

@@ -62,7 +62,7 @@ export class CircleDrawer extends PolygonMode<ICircleDrawerOptions> {
   }
 
   // @ts-ignore
-  initData(data: Feature<Polygon>[]) {
+  setData(data: Feature<Polygon>[]) {
     const result = data.map((feature) => {
       const [lng1, lat1] = center(feature).geometry.coordinates;
       const box = bbox(feature);
@@ -84,14 +84,14 @@ export class CircleDrawer extends PolygonMode<ICircleDrawerOptions> {
         this.setEditPolygon(editPolygon);
       }, 0);
     }
-    return {
+    this.source.setData({
       point: [],
       midPoint: [],
       dashLine: [],
       polygon: result,
       line: result.map((feature) => feature.properties.line),
-      text: this.getAllTexts(),
-    };
+    });
+    this.setTextData(this.getAllTexts());
   }
 
   handleCreateCircleLine(

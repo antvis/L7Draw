@@ -80,11 +80,6 @@ export abstract class PolygonMode<
     return ['polygon', 'line', 'dashLine', 'midPoint', 'point', 'text'];
   }
 
-  setData(data: Feature<Polygon>[]): IPolygonFeature[] {
-    this.source.setData(this.initData(data) ?? {});
-    return this.getPolygonData();
-  }
-
   getData(): IPolygonFeature[] {
     return this.getPolygonData();
   }

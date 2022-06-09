@@ -41,24 +41,19 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   }
 
   // @ts-ignore
-  initData(points: Feature<Point>[]): Partial<SourceData> {
-    return {
-      point: points.map((point) => {
+  setData(points: Feature<Point>[]) {
+    this.setPointData(
+      points.map((point) => {
         point.properties = {
           ...getDefaultPointProperties(),
           ...(point.properties ?? {}),
         };
         return point as IPointFeature;
       }),
-    };
+    );
   }
 
   getData() {
-    return this.getPointData();
-  }
-
-  setData(data: Feature<Point>[]) {
-    this.source.setData(this.initData(data) ?? {});
     return this.getPointData();
   }
 

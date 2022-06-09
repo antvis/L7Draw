@@ -34,7 +34,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   }
 
   // @ts-ignore
-  initData(lines: Feature<LineString>[]): Partial<SourceData> {
+  setData(lines: Feature<LineString>[]) {
     const lineFeatures = lines.map((line) => {
       line.properties = {
         ...getDefaultLineProperties(),
@@ -55,21 +55,16 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
         this.setEditLine(editLine);
       }, 0);
     }
-    return {
+    this.source.setData({
       point: [],
       midPoint: [],
       dashLine: [],
       line: lineFeatures,
-      text: this.getAllTexts(),
-    };
+    });
+    this.setTextData(this.getAllTexts());
   }
 
   getData(): ILineFeature[] {
-    return this.getLineData();
-  }
-
-  setData(data: Feature<LineString>[]) {
-    this.source.setData(this.initData(data) ?? {});
     return this.getLineData();
   }
 

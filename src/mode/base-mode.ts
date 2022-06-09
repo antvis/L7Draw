@@ -62,13 +62,14 @@ export abstract class BaseMode<
     this.options = merge({}, this.getDefaultOptions(options), options);
     this.render = this.initRender();
 
-    const initData = this.options.initData;
     this.source = new Source({
       render: this.render,
     });
+
+    const initData = this.options.initData;
     if (initData) {
       setTimeout(() => {
-        this.source.setData(this.initData(initData) ?? {});
+        this.setData(initData);
       }, 0);
     }
     this.cursor = new Cursor(scene, this.options.cursor);
@@ -76,14 +77,6 @@ export abstract class BaseMode<
     this.emit(DrawerEvent.init, this);
     this.bindCommonEvent();
   }
-
-  /**
-   * 将用户传入的数据初始化
-   * @param data
-   */
-  abstract initData<F extends Feature>(
-    data: F[],
-  ): Partial<SourceData> | undefined;
 
   /**
    * 获取当前Drawer需要用到的render类型数据，避免创建无效的Render
@@ -109,13 +102,13 @@ export abstract class BaseMode<
   /**
    * 获取数据
    */
-  abstract getData(): IBaseFeature[];
+  abstract getData(): void;
 
   /**
    * 设置数据
    * @param data
    */
-  abstract setData(data: Feature[]): IBaseFeature[];
+  abstract setData(data: Feature[]): void;
 
   /**
    * 获取当前是否为编辑态
