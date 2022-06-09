@@ -25,8 +25,7 @@ import { DEFAULT_DISTANCE_OPTIONS, RenderEvent, SceneEvent } from '../constant';
 import { LineRender } from '../render';
 import { Position } from '@turf/turf';
 import { IMidPointModeOptions, MidPointMode } from './mid-point-mode';
-import { ILineDrawerOptions } from '../drawer';
-import { calcDistanceTextsByLine } from '../utils/calc';
+import { calcDistanceTextsByLine } from '../utils';
 
 export interface ILineModeOptions<F extends Feature = Feature>
   extends IMidPointModeOptions<F> {

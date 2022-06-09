@@ -22,7 +22,7 @@ import {
 } from '../utils';
 import { last } from 'lodash';
 
-export interface ILineDrawerOptions extends ILineModeOptions<Feature<Point>> {}
+export type ILineDrawerOptions = ILineModeOptions<Feature<Point>>;
 
 export class LineDrawer extends LineMode<ILineDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<ILineDrawerOptions>) {

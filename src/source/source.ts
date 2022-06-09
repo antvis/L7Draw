@@ -9,7 +9,7 @@ import {
 import { DEFAULT_SOURCE_DATA, SourceEvent } from '../constant';
 import { BaseRender } from '../render';
 import EventEmitter from 'eventemitter3';
-import {cloneDeep, fromPairs, isEqual} from 'lodash';
+import { cloneDeep, fromPairs } from 'lodash';
 
 export class Source extends EventEmitter<SourceEvent> {
   /**

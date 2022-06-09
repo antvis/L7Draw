@@ -1,8 +1,5 @@
 import { BaseRender } from './base-render';
-import {
-  IDashLineFeature,
-  IDashLineStyle,
-} from '../typings';
+import { IDashLineFeature, IDashLineStyle } from '../typings';
 import { ILayer, LineLayer } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
 

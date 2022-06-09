@@ -32,8 +32,7 @@ import {
 import { first, isEqual, last } from 'lodash';
 import { DrawerEvent } from '../constant';
 
-export interface IRectDrawerOptions
-  extends IPolygonModeOptions<Feature<Polygon>> {}
+export type IRectDrawerOptions = IPolygonModeOptions<Feature<Polygon>>;
 
 export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<IPolygonDrawerOptions>) {
@@ -139,7 +138,7 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
 
     this.setPointData(polygon.properties.isDraw ? [nodes[0]] : nodes);
 
-    let lineNodes = line.properties.nodes;
+    const lineNodes = line.properties.nodes;
 
     const otherPositions = positions.filter(
       (position) =>

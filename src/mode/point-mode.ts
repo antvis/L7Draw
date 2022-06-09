@@ -7,7 +7,12 @@ import {
   IPointFeature,
   ISceneMouseEvent,
 } from '../typings';
-import {createPointFeature, getLngLat, transLngLat2Position, updateTargetFeature} from '../utils';
+import {
+  createPointFeature,
+  getLngLat,
+  transLngLat2Position,
+  updateTargetFeature,
+} from '../utils';
 import { Position } from '@turf/turf';
 import { RenderEvent, SceneEvent } from '../constant';
 import { PointRender } from '../render';

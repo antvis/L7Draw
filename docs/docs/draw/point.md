@@ -7,18 +7,26 @@ group:
   path: /draw
 ---
 
-# options
-
-以下所有配置项均非必传，未传的情况下各个参数将会自动使用默认值
+# 使用示例
 
 ```tsx | pure
-import { PointDrawer } from '@antv/l7-draw';
+import { PointDrawer, DrawerEvent } from '@antv/l7-draw';
 
 const drawer = new PointDrawer(scene, {
   autoFocus: false,
   //  ....
 });
+
+drawer.enable();
+
+drawer.on(DrawerEvent.add, (newPoint) => {
+  console.log(newPoint);
+});
 ```
+
+# 配置
+
+options 配置是 Drawer 实例化的时候，作为第二个参数传入，所有的 options 配置均不是必传项。
 
 | 名称      | 说明                                                              | 类型                   | 默认值 | 示例                                                                         |
 | --------- | ----------------------------------------------------------------- | ---------------------- | ------ | ---------------------------------------------------------------------------- |
@@ -30,25 +38,15 @@ const drawer = new PointDrawer(scene, {
 
 # 方法
 
-| 名称    | 说明               | 传参                                    |
+| 名称    | 说明               | 类型                                    |
 | ------- | ------------------ | --------------------------------------- |
-| enable  | 开启绘制           | -                                       |
-| disable | 警用绘制           | -                                       |
+| enable  | 开启绘制           | () => void;                             |
+| disable | 警用绘制           | () => void;                             |
 | clear   | 清除数据           | (disable: boolean) => void;             |
 | getData | 获取当前绘制点数据 | () => IPointFeature[];                  |
 | setData | 设置当前绘制点数据 | (data: Feature&lt;Point&gt;[]) => void; |
 
 # 事件
-
-```tsx | pure
-import { PointDrawer, DrawerEvent } from '@antv/l7-draw';
-
-const drawer = new PointDrawer(scene, {});
-
-drawer.on(DrawerEvent.init, (drawer) => {
-  // ....
-});
-```
 
 | 名称                  | 说明                     | 回调函数                          |
 | --------------------- | ------------------------ | --------------------------------- |

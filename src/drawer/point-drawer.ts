@@ -9,11 +9,11 @@ import {
   SourceData,
 } from '../typings';
 import { Scene } from '@antv/l7';
-import { getDefaultPointProperties, getUuid } from '../utils';
+import { getDefaultPointProperties } from '../utils';
 import { DEFAULT_POINT_STYLE, DrawerEvent } from '../constant';
 import { Feature, Point } from '@turf/turf';
 
-export interface IPointDrawerOptions extends IBaseModeOptions<Feature<Point>> {}
+export type IPointDrawerOptions = IBaseModeOptions<Feature<Point>>;
 
 export class PointDrawer extends PointMode<IPointDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<IPointDrawerOptions>) {

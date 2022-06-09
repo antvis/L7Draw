@@ -11,7 +11,10 @@ import {
 import { featureCollection } from '@turf/turf';
 import { RenderEvent } from '../constant';
 
-export class MidPointRender extends BaseRender<IMidPointFeature, IMidPointStyle> {
+export class MidPointRender extends BaseRender<
+  IMidPointFeature,
+  IMidPointStyle
+> {
   getLayers(): ILayer[] {
     const { normal, style } = this.style;
     const { shape, size, color, borderColor, borderWidth } = normal;

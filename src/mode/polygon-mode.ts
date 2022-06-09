@@ -1,5 +1,4 @@
 import {
-  area,
   booleanClockwise,
   coordAll,
   Feature,
@@ -33,8 +32,8 @@ import {
   updateTargetFeature,
 } from '../utils';
 import { first, isEqual, last } from 'lodash';
-import { calcAreaText } from '../utils/calc';
-import { Polygon } from '_@turf_turf@6.5.0@@turf/turf';
+import { calcAreaText } from '../utils';
+import { Polygon } from '@turf/turf';
 
 export interface IPolygonModeOptions<F extends Feature = Feature>
   extends ILineModeOptions<F> {

@@ -1,9 +1,9 @@
 import EventEmitter from 'eventemitter3';
 import {
-  DrawerEvent,
-  RENDER_MAP,
   DEFAULT_CURSOR_MAP,
   DEFAULT_STYLE,
+  DrawerEvent,
+  RENDER_MAP,
 } from '../constant';
 import { Scene } from '@antv/l7';
 import { Source } from '../source';
@@ -52,9 +52,7 @@ export abstract class BaseMode<
   /**
    * 当前Drawer是否为开启绘制状态
    */
-  protected isEnable: boolean = false;
-
-  // cursor: Cursor
+  protected isEnable = false;
 
   constructor(scene: Scene, options: DeepPartial<O>) {
     super();
@@ -168,6 +166,10 @@ export abstract class BaseMode<
    */
   setCursor(cursor: ICursorType | null) {
     this.cursor.setCursor(cursor);
+  }
+
+  resetCursor() {
+    this.setCursor('draw');
   }
 
   /**

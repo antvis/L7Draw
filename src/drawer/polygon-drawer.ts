@@ -24,8 +24,7 @@ import {
 import { first, last } from 'lodash';
 import { DrawerEvent } from '../constant';
 
-export interface IPolygonDrawerOptions
-  extends IPolygonModeOptions<Feature<Polygon>> {}
+export type IPolygonDrawerOptions = IPolygonModeOptions<Feature<Polygon>>;
 
 export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<IPolygonDrawerOptions>) {
@@ -164,7 +163,6 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     }
     return feature;
   }
-
 
   onLineDragging(e: ISceneMouseEvent) {
     const dragPolygon = this.dragPolygon;

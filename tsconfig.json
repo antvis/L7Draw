@@ -13,6 +13,7 @@
     "baseUrl": "./",
     "skipLibCheck": true
   },
+  "include": ["docs", "src"],
   "exclude": [
     "node_modules",
     "lib",

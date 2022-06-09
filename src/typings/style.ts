@@ -46,7 +46,7 @@ export interface IPolygonStyleItem {
 
 export type IPolygonStyle = IComplexStyle<IPolygonStyleItem>;
 
-export interface IMidPointStyleItem extends IPointStyleItem {}
+export type IMidPointStyleItem = IPointStyleItem;
 
 export type IMidPointStyle = IBaseStyle<IMidPointStyleItem>;
 

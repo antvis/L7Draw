@@ -19,7 +19,7 @@ export enum DrawerEvent {
  */
 export enum SourceEvent {
   change = 'change',
-  update = 'update'
+  update = 'update',
 }
 
 /**

@@ -16,7 +16,8 @@ import {
   center,
   featureCollection,
   Polygon,
-  centerOfMass, area,
+  centerOfMass,
+  area,
 } from '@turf/turf';
 import { getUuid } from './feature';
 

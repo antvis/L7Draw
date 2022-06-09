@@ -11,10 +11,6 @@ export default defineConfig({
   extraBabelIncludes: ['@antv/dumi-theme-antv'],
   navs: [
     {
-      title: '快速开始',
-      path: '/start',
-    },
-    {
       title: '文档',
       path: '/docs',
     },
