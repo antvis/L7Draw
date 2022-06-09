@@ -298,6 +298,7 @@ export abstract class PolygonMode<
         },
       }),
     );
+    this.setTextData(this.getAllTexts());
     return polygon;
   }
 
