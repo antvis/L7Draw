@@ -101,7 +101,16 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     ) {
       return;
     }
-    return super.onPointCreate(e);
+    const feature = super.onPointCreate(e);
+    if (feature) {
+      this.emit(
+        DrawerEvent.addNode,
+        feature,
+        this.drawLine,
+        this.getLineData(),
+      );
+    }
+    return feature;
   }
 
   onPointDragEnd(e: ISceneMouseEvent): IPointFeature | undefined {
@@ -145,6 +154,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     const feature = super.onMidPointClick(e);
     if (editLine && feature) {
       this.emit(DrawerEvent.edit, editLine, this.getLineData());
+      this.emit(DrawerEvent.addNode, feature, editLine, this.getLineData());
     }
     return feature;
   }

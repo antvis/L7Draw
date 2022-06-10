@@ -65,7 +65,6 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     });
     this.setTextData(this.getAllTexts());
 
-
     if (this.editPolygon) {
       this.setEditPolygon(this.editPolygon);
     }
@@ -98,6 +97,12 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
       } else if (drawLine) {
         this.handleCreatePolygon([feature], drawLine);
       }
+      this.emit(
+        DrawerEvent.addNode,
+        feature,
+        drawPolygon,
+        this.getPolygonData(),
+      );
     }
     return feature;
   }
@@ -178,6 +183,12 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     const editPolygon = this.editPolygon;
     if (feature && editPolygon) {
       this.emit(DrawerEvent.edit, editPolygon, this.getPolygonData());
+      this.emit(
+        DrawerEvent.addNode,
+        feature,
+        editPolygon,
+        this.getPolygonData(),
+      );
     }
     return feature;
   }

@@ -12,6 +12,7 @@ export enum DrawerEvent {
   dragStart = 'dragStart',
   dragging = 'dragging',
   dragEnd = 'dragEnd',
+  addNode = 'addNode',
 }
 
 /**

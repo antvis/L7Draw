@@ -24,33 +24,38 @@ const Demo: React.FC = () => {
       drawer.enable();
 
       // 监听添加Point的事件
-      drawer.on(DrawerEvent.add, (newPoint, pointList) => {
-        console.log('add', newPoint, pointList);
+      drawer.on(DrawerEvent.add, (newPoint, lineList) => {
+        console.log('add', newPoint, lineList);
       });
 
       // 监听编辑Point(拖拽结束)的事件
-      drawer.on(DrawerEvent.edit, (editPoint, pointList) => {
-        console.log('edit', editPoint, pointList);
+      drawer.on(DrawerEvent.edit, (editPoint, lineList) => {
+        console.log('edit', editPoint, lineList);
+      });
+
+      // 监听添加结点的事件
+      drawer.on(DrawerEvent.addNode, (node, editPoint, lineList) => {
+        console.log('addNode', node, editPoint, lineList);
       });
 
       // Point数据发生变更时触发，等价于同时监听add和edit事件
-      drawer.on(DrawerEvent.change, (pointList) => {
-        console.log('change', pointList);
+      drawer.on(DrawerEvent.change, (lineList) => {
+        console.log('change', lineList);
       });
 
       // 拖拽开始
-      drawer.on(DrawerEvent.dragStart, (editPoint, pointList) => {
-        console.log('dragStart', editPoint, pointList);
+      drawer.on(DrawerEvent.dragStart, (editPoint, lineList) => {
+        console.log('dragStart', editPoint, lineList);
       });
 
       // 拖拽中
-      drawer.on(DrawerEvent.dragging, (editPoint, pointList) => {
-        console.log('dragging', editPoint, pointList);
+      drawer.on(DrawerEvent.dragging, (editPoint, lineList) => {
+        console.log('dragging', editPoint, lineList);
       });
 
       // 拖拽结束
-      drawer.on(DrawerEvent.dragEnd, (editPoint, pointList) => {
-        console.log('dragEnd', editPoint, pointList);
+      drawer.on(DrawerEvent.dragEnd, (editPoint, lineList) => {
+        console.log('dragEnd', editPoint, lineList);
       });
     });
   }, []);
