@@ -1,12 +1,8 @@
 import { BaseRender } from './base-render';
 import { ILayer, PointLayer } from '@antv/l7';
-import {
-  ILayerMouseEvent,
-  IMidPointFeature,
-  IMidPointStyle,
-} from '../typings';
+import { ILayerMouseEvent, IMidPointFeature, IMidPointStyle } from '../typings';
 import { featureCollection } from '@turf/turf';
-import { RenderEvent } from '../constant';
+import { LayerEvent, RenderEvent } from '../constant';
 
 export class MidPointRender extends BaseRender<
   IMidPointFeature,
@@ -45,21 +41,21 @@ export class MidPointRender extends BaseRender<
 
   enableClick() {
     this.disableClick();
-    this.layers[0].on('click', this.onClick);
+    this.layers[0].on(LayerEvent.click, this.onClick);
   }
 
   disableClick() {
-    this.layers[0].off('click', this.onClick);
+    this.layers[0].off(LayerEvent.click, this.onClick);
   }
 
   enableHover() {
     this.disableHover();
-    this.layers[0].on('mousemove', this.onMouseMove);
-    this.layers[0].on('mouseout', this.onMouseOut);
+    this.layers[0]?.on(LayerEvent.mousemove, this.onMouseMove);
+    this.layers[0]?.on(LayerEvent.mouseout, this.onMouseOut);
   }
 
   disableHover() {
-    this.layers[0].off('mousemove', this.onMouseMove);
-    this.layers[0].off('mouseout', this.onMouseOut);
+    this.layers[0]?.off(LayerEvent.mousemove, this.onMouseMove);
+    this.layers[0]?.off(LayerEvent.mouseout, this.onMouseOut);
   }
 }

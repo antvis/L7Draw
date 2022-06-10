@@ -7,7 +7,7 @@ import {
 } from '../typings';
 import { ILayer, PolygonLayer } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
-import { RenderEvent } from '../constant';
+import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
 
 export class PolygonRender extends BaseRender<IPolygonFeature, IPolygonStyle> {
   getLayers(): ILayer[] {
@@ -51,34 +51,34 @@ export class PolygonRender extends BaseRender<IPolygonFeature, IPolygonStyle> {
   };
 
   enableHover = () => {
-    this.layers[0]?.on('mousemove', this.onMouseMove);
-    this.layers[0]?.on('mouseout', this.onMouseOut);
+    this.layers[0]?.on(LayerEvent.mousemove, this.onMouseMove);
+    this.layers[0]?.on(LayerEvent.mouseout, this.onMouseOut);
   };
 
   disableHover = () => {
-    this.layers[0]?.off('mousemove', this.onMouseMove);
-    this.layers[0]?.off('mouseout', this.onMouseOut);
+    this.layers[0]?.off(LayerEvent.mousemove, this.onMouseMove);
+    this.layers[0]?.off(LayerEvent.mouseout, this.onMouseOut);
   };
 
   enableDrag() {
     this.disableDrag();
-    this.layers[0].on('mousedown', this.onMouseDown);
-    this.scene.on('dragging', this.onDragging);
-    this.scene.on('mouseup', this.onDragEnd);
+    this.layers[0].on(LayerEvent.mousedown, this.onMouseDown);
+    this.scene.on(SceneEvent.dragging, this.onDragging);
+    this.scene.on(SceneEvent.mouseup, this.onDragEnd);
   }
 
   disableDrag() {
-    this.layers[0].off('mousedown', this.onMouseDown);
-    this.scene.off('dragging', this.onDragging);
-    this.scene.off('mouseup', this.onDragEnd);
+    this.layers[0].off(LayerEvent.mousedown, this.onMouseDown);
+    this.scene.off(SceneEvent.dragging, this.onDragging);
+    this.scene.off(SceneEvent.mouseup, this.onDragEnd);
   }
 
   enableUnClick() {
     this.disableUnClick();
-    this.layers[0].on('unclick', this.onUnClick);
+    this.layers[0].on(LayerEvent.unclick, this.onUnClick);
   }
 
   disableUnClick() {
-    this.layers[0].on('unclick', this.onUnClick);
+    this.layers[0].on(LayerEvent.unclick, this.onUnClick);
   }
 }

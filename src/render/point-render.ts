@@ -7,7 +7,7 @@ import {
   ISceneMouseEvent,
 } from '../typings';
 import { featureCollection } from '@turf/turf';
-import { RenderEvent } from '../constant';
+import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
 
 export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
   getLayers(): ILayer[] {
@@ -83,43 +83,43 @@ export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
 
   enableCreate() {
     this.disableCreate();
-    this.layers[0].on('unclick', this.onCreate);
+    this.layers[0].on(LayerEvent.unclick, this.onCreate);
   }
 
   disableCreate() {
-    this.layers[0].off('unclick', this.onCreate);
+    this.layers[0].off(LayerEvent.unclick, this.onCreate);
   }
 
   enableHover() {
     this.disableHover();
-    this.layers[0].on('mousemove', this.onMouseMove);
-    this.layers[0].on('mouseout', this.onMouseOut);
+    this.layers[0]?.on(LayerEvent.mousemove, this.onMouseMove);
+    this.layers[0]?.on(LayerEvent.mouseout, this.onMouseOut);
   }
 
   disableHover() {
-    this.layers[0].off('mousemove', this.onMouseMove);
-    this.layers[0].off('mouseout', this.onMouseOut);
+    this.layers[0]?.off(LayerEvent.mousemove, this.onMouseMove);
+    this.layers[0]?.off(LayerEvent.mouseout, this.onMouseOut);
   }
 
   enableDrag() {
     this.disableDrag();
-    this.layers[0].on('mousedown', this.onMouseDown);
-    this.scene.on('dragging', this.onDragging);
-    this.scene.on('mouseup', this.onDragEnd);
+    this.layers[0].on(LayerEvent.mousedown, this.onMouseDown);
+    this.scene.on(SceneEvent.dragging, this.onDragging);
+    this.scene.on(SceneEvent.mouseup, this.onDragEnd);
   }
 
   disableDrag() {
-    this.layers[0].off('mousedown', this.onMouseDown);
-    this.scene.off('dragging', this.onDragging);
-    this.scene.off('mouseup', this.onDragEnd);
+    this.layers[0].off(LayerEvent.mousedown, this.onMouseDown);
+    this.scene.off(SceneEvent.dragging, this.onDragging);
+    this.scene.off(SceneEvent.mouseup, this.onDragEnd);
   }
 
   enableClick() {
     this.disableClick();
-    this.layers[0].on('click', this.onClick);
+    this.layers[0].on(LayerEvent.click, this.onClick);
   }
 
   disableClick() {
-    this.layers[0].off('click', this.onClick);
+    this.layers[0].off(LayerEvent.click, this.onClick);
   }
 }

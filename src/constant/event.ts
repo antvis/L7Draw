@@ -43,6 +43,7 @@ export enum LayerEvent {
   mousedown = 'mousedown',
   mouseup = 'mouseup',
   click = 'click',
+  unclick = 'unclick',
   dblclick = 'dblclick',
   mousemove = 'mousemove',
   mouseover = 'mouseover',
