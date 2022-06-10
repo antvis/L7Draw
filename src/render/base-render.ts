@@ -41,6 +41,7 @@ export abstract class BaseRender<
 
     this.layers.forEach((layer) => {
       scene.addLayer(layer);
+      // layer.active(true);
     });
   }
 

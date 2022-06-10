@@ -6,7 +6,6 @@ import {
   IPointFeature,
   IRenderType,
   ISceneMouseEvent,
-  SourceData,
 } from '../typings';
 import { coordAll, Feature, LineString } from '@turf/turf';
 import { Scene } from '@antv/l7';

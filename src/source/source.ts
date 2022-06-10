@@ -78,7 +78,7 @@ export class Source extends EventEmitter<SourceEvent> {
       };
 
       if (!this.timeout) {
-        this.timeout = setTimeout(() => this.updateDiffData(), 0);
+        this.timeout = requestAnimationFrame(() => this.updateDiffData());
       }
 
       this.emit(SourceEvent.change, {
