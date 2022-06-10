@@ -35,17 +35,17 @@ export class MidPointRender extends BaseRender<
     this.emit(RenderEvent.mouseout, e);
   };
 
-  onClick = (e: ILayerMouseEvent) => {
+  onMouseDown = (e: ILayerMouseEvent) => {
     this.emit(RenderEvent.click, e);
   };
 
   enableClick() {
     this.disableClick();
-    this.layers[0].on(LayerEvent.click, this.onClick);
+    this.layers[0].on(LayerEvent.mousedown, this.onMouseDown);
   }
 
   disableClick() {
-    this.layers[0].off(LayerEvent.click, this.onClick);
+    this.layers[0].off(LayerEvent.mousedown, this.onMouseDown);
   }
 
   enableHover() {

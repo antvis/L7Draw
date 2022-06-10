@@ -530,7 +530,9 @@ export abstract class LineMode<
       (feature) => feature.properties.id === endId,
     );
     if (startIndex > -1 && endIndex > -1) {
-      const newNode = createPointFeature(feature.geometry.coordinates);
+      const newNode = createPointFeature(feature.geometry.coordinates, {
+        isDrag: true,
+      });
       nodes.splice(endIndex, 0, newNode);
       editLine.geometry.coordinates = coordAll(featureCollection(nodes));
       this.syncLineNodes(editLine, nodes);
