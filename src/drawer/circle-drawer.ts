@@ -122,12 +122,7 @@ export class CircleDrawer extends PolygonMode<ICircleDrawerOptions> {
         isActive,
       });
     });
-    const editPolygon = result.find((feature) => feature.properties.isActive);
-    if (editPolygon) {
-      setTimeout(() => {
-        this.setEditPolygon(editPolygon);
-      }, 0);
-    }
+
     this.source.setData({
       point: [],
       midPoint: [],
@@ -136,6 +131,10 @@ export class CircleDrawer extends PolygonMode<ICircleDrawerOptions> {
       line: result.map((feature) => feature.properties.line),
     });
     this.setTextData(this.getAllTexts());
+
+    if (this.editPolygon) {
+      this.setEditPolygon(this.editPolygon);
+    }
   }
 
   handleCreateCircleLine(

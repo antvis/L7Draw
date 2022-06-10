@@ -9,12 +9,10 @@ import { Scene } from '@antv/l7';
 import { Source } from '../source';
 import {
   DeepPartial,
-  IBaseFeature,
   IBaseModeOptions,
   ICursorType,
   IRenderType,
   RenderMap,
-  SourceData,
 } from '../typings';
 import { cloneDeep, merge } from 'lodash';
 import { Feature } from '@turf/turf';
@@ -65,6 +63,10 @@ export abstract class BaseMode<
     this.source = new Source({
       render: this.render,
     });
+    this.cursor = new Cursor(scene, this.options.cursor);
+
+    this.emit(DrawerEvent.init, this);
+    this.bindCommonEvent();
 
     const initData = this.options.initData;
     if (initData) {
@@ -72,10 +74,6 @@ export abstract class BaseMode<
         this.setData(initData);
       }, 0);
     }
-    this.cursor = new Cursor(scene, this.options.cursor);
-
-    this.emit(DrawerEvent.init, this);
-    this.bindCommonEvent();
   }
 
   /**

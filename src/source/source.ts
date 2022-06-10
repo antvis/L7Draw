@@ -36,10 +36,26 @@ export class Source extends EventEmitter<SourceEvent> {
    */
   protected diffData: Partial<SourceData> = {};
 
+  protected dataHistory: SourceData[] = [];
+
   constructor({ data, render }: SourceOptions) {
     super();
 
     this.render = render;
+    if (data) {
+      this.setData(data);
+    }
+  }
+
+  saveHistory() {
+    this.dataHistory.push(cloneDeep(this.data));
+  }
+
+  resetHistory() {
+    if (this.dataHistory.length) {
+      return;
+    }
+    const data = this.dataHistory.pop();
     if (data) {
       this.setData(data);
     }

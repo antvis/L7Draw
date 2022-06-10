@@ -56,14 +56,6 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
       }
       return polygon as IPolygonFeature;
     });
-    const editPolygon = polygonFeatures.find(
-      (feature) => feature.properties.isActive,
-    );
-    if (editPolygon) {
-      setTimeout(() => {
-        this.setEditPolygon(editPolygon);
-      }, 0);
-    }
     this.source.setData({
       point: [],
       midPoint: [],
@@ -72,6 +64,11 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
       line: polygonFeatures.map((feature) => feature.properties.line),
     });
     this.setTextData(this.getAllTexts());
+
+
+    if (this.editPolygon) {
+      this.setEditPolygon(this.editPolygon);
+    }
   }
 
   onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {

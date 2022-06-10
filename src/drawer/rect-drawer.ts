@@ -70,12 +70,7 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
         isActive,
       });
     });
-    const editPolygon = result.find((feature) => feature.properties.isActive);
-    if (editPolygon) {
-      setTimeout(() => {
-        this.setEditPolygon(editPolygon);
-      }, 0);
-    }
+
     this.source.setData({
       point: [],
       midPoint: [],
@@ -84,6 +79,10 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
       line: result.map((feature) => feature.properties.line),
     });
     this.setTextData(this.getAllTexts());
+
+    if (this.editPolygon) {
+      this.setEditPolygon(this.editPolygon);
+    }
   }
 
   handleCreateRectLine(

@@ -47,14 +47,6 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
       }
       return line as ILineFeature;
     });
-    const editLine = lineFeatures.find(
-      (feature) => feature.properties.isActive,
-    );
-    if (editLine) {
-      setTimeout(() => {
-        this.setEditLine(editLine);
-      }, 0);
-    }
     this.source.setData({
       point: [],
       midPoint: [],
@@ -62,6 +54,10 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
       line: lineFeatures,
     });
     this.setTextData(this.getAllTexts());
+
+    if (this.editLine) {
+      this.setEditLine(this.editLine);
+    }
   }
 
   getData(): ILineFeature[] {
