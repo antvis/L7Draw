@@ -7,7 +7,7 @@ export default {
   umd: {
     name: 'L7.Draw',
     file: 'l7-draw',
-    minFile: true,
+    minFile: false,
     sourcemap: true,
     globals: {
       '@antv/l7': 'L7',

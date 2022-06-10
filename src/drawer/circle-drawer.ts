@@ -10,6 +10,7 @@ import {
 } from '@turf/turf';
 import {
   DeepPartial,
+  IDistanceOptions,
   ILayerMouseEvent,
   ILineFeature,
   ILineProperties,
@@ -17,9 +18,9 @@ import {
   IPolygonFeature,
   IPolygonProperties,
   ISceneMouseEvent,
+  ITextFeature,
 } from '../typings';
 import { Scene } from '@antv/l7';
-import { IPolygonDrawerOptions } from './polygon-drawer';
 import {
   createLineFeature,
   createPointFeature,
@@ -32,13 +33,18 @@ import {
 import { first, last } from 'lodash';
 import { DrawerEvent } from '../constant';
 
+export interface ICircleDistanceOptions extends IDistanceOptions {
+  showOnRadius: boolean;
+}
+
 export interface ICircleDrawerOptions
   extends IPolygonModeOptions<Feature<Polygon>> {
   circleSteps: number;
+  distanceText: ICircleDistanceOptions;
 }
 
 export class CircleDrawer extends PolygonMode<ICircleDrawerOptions> {
-  constructor(scene: Scene, options: DeepPartial<IPolygonDrawerOptions>) {
+  constructor(scene: Scene, options: DeepPartial<ICircleDrawerOptions>) {
     super(scene, options);
     this.bindPointRenderEvent();
     this.bindSceneEvent();
@@ -54,11 +60,49 @@ export class CircleDrawer extends PolygonMode<ICircleDrawerOptions> {
   getDefaultOptions(
     options: DeepPartial<ICircleDrawerOptions>,
   ): ICircleDrawerOptions {
+    const newOptions = super.getDefaultOptions(options);
+    if (newOptions.distanceText) {
+      newOptions.distanceText.total = true;
+      if (newOptions.distanceText.showOnRadius === undefined) {
+        newOptions.distanceText.showOnRadius = true;
+      }
+    }
     return {
-      ...super.getDefaultOptions(options),
+      ...newOptions,
       showMidPoint: false,
       circleSteps: 60,
     };
+  }
+
+  // getRadiusDistanceTexts(
+  //   polygons: IPolygonFeature[],
+  //   {}: Pick<ICircleDistanceOptions, 'showOnRadius' | 'showOnDash'>,
+  // ) {}
+
+  getDistanceTexts(): ITextFeature[] {
+    const { distanceText } = this.options;
+    if (!distanceText) {
+      return [];
+    }
+    const textList: ITextFeature[] = [];
+    const { showOnNormal, showOnActive, showOnDash, format, total } =
+      distanceText;
+
+    textList.push(
+      ...this.getDashLineDistanceTexts(this.getDashLineData(), {
+        total: true,
+        format,
+        showOnDash,
+      }),
+      ...this.getLineDistanceTexts(this.getLineData(), {
+        total,
+        format,
+        showOnActive,
+        showOnNormal,
+      }),
+    );
+
+    return textList;
   }
 
   // @ts-ignore
@@ -277,9 +321,19 @@ export class CircleDrawer extends PolygonMode<ICircleDrawerOptions> {
   }
 
   onLineDragging(e: ISceneMouseEvent) {
-    const feature = super.onLineDragging(e);
     const dragPolygon = this.dragPolygon;
-    if (feature && dragPolygon) {
+    const [preLng, preLat] = this.previousPosition;
+    const feature = super.onLineDragging(e);
+    if (dragPolygon) {
+      const [curLng, curLat] = getPosition(e);
+      const nodes = dragPolygon.properties.nodes;
+      nodes.forEach((node) => {
+        const [lng, lat] = node.geometry.coordinates;
+        node.geometry.coordinates = [
+          lng + curLng - preLng,
+          lat + curLat - preLat,
+        ];
+      });
       this.syncPolygonNodes(dragPolygon, dragPolygon.properties.nodes);
       this.setEditPolygon(dragPolygon, {
         isDrag: true,

@@ -105,30 +105,40 @@ export abstract class LineMode<
     this.lineRender?.on(RenderEvent.dragend, this.onLineDragEnd.bind(this));
   }
 
-  getDistanceTexts(): ITextFeature[] {
-    const { distanceText } = this.options;
-    if (!distanceText) {
-      return [];
-    }
-    const textList: ITextFeature[] = [];
-    const { showOnNormal, showOnActive, showOnDash, format, total } =
-      distanceText;
-    const lines = this.getLineData();
-    if (showOnDash) {
-      const dashLines = this.getDashLineData();
-      textList.push(
-        ...dashLines
-          .map((dashLine) =>
-            calcDistanceTextsByLine(
+  getDashLineDistanceTexts(
+    dashLines: IDashLineFeature[],
+    {
+      total,
+      format,
+      showOnDash,
+    }: Pick<IDistanceOptions, 'total' | 'format' | 'showOnDash'>,
+  ): ITextFeature[] {
+    return showOnDash
+      ? dashLines
+          .map((dashLine) => {
+            return calcDistanceTextsByLine(
               dashLine,
-              { total: false, format },
+              { total, format },
               { isActive: true, type: 'dash' },
-            ),
-          )
-          .flat(),
-      );
-    }
+            );
+          })
+          .flat()
+      : [];
+  }
 
+  getLineDistanceTexts(
+    lines: ILineFeature[],
+    {
+      total,
+      format,
+      showOnNormal,
+      showOnActive,
+    }: Pick<
+      IDistanceOptions,
+      'total' | 'format' | 'showOnNormal' | 'showOnActive'
+    >,
+  ) {
+    const textList: ITextFeature[] = [];
     if (showOnActive) {
       const activeLines = lines.filter(
         (line) => line.properties.isActive && line.properties.nodes.length > 1,
@@ -158,6 +168,32 @@ export abstract class LineMode<
           .flat(),
       );
     }
+
+    return textList;
+  }
+
+  getDistanceTexts(): ITextFeature[] {
+    const { distanceText } = this.options;
+    if (!distanceText) {
+      return [];
+    }
+    const textList: ITextFeature[] = [];
+    const { showOnNormal, showOnActive, showOnDash, format, total } =
+      distanceText;
+
+    textList.push(
+      ...this.getDashLineDistanceTexts(this.getDashLineData(), {
+        total: false,
+        format,
+        showOnDash,
+      }),
+      ...this.getLineDistanceTexts(this.getLineData(), {
+        total,
+        format,
+        showOnActive,
+        showOnNormal,
+      }),
+    );
 
     return textList;
   }

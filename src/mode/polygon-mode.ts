@@ -98,13 +98,13 @@ export abstract class PolygonMode<
     return newOptions;
   }
 
-  getAreaTexts(): ITextFeature[] {
+  getAreaTexts(polygons: IPolygonFeature[]): ITextFeature[] {
     const { areaText } = this.options;
     if (!areaText) {
       return [];
     }
     const textList: ITextFeature[] = [];
-    const polygonData = this.getPolygonData().filter(
+    const polygonData = polygons.filter(
       (feature) => feature.geometry.coordinates[0].length >= 4,
     );
 
@@ -126,7 +126,10 @@ export abstract class PolygonMode<
   }
 
   getAllTexts(): ITextFeature[] {
-    return [...super.getAllTexts(), ...this.getAreaTexts()];
+    return [
+      ...super.getAllTexts(),
+      ...this.getAreaTexts(this.getPolygonData()),
+    ];
   }
 
   /**
