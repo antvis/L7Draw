@@ -36,7 +36,9 @@ export class Source extends EventEmitter<SourceEvent> {
    */
   protected diffData: Partial<SourceData> = {};
 
-  protected dataHistory: SourceData[] = [];
+  protected historyList: SourceData[] = [];
+
+  protected history: SourceData | null = null;
 
   constructor({ data, render }: SourceOptions) {
     super();
@@ -48,16 +50,23 @@ export class Source extends EventEmitter<SourceEvent> {
   }
 
   saveHistory() {
-    this.dataHistory.push(cloneDeep(this.data));
+    if (this.history) {
+      this.historyList.unshift(this.history);
+    }
+    this.history = cloneDeep(this.data);
   }
 
   resetHistory() {
-    if (this.dataHistory.length) {
+    if (!this.historyList.length) {
       return;
     }
-    const data = this.dataHistory.pop();
-    if (data) {
-      this.setData(data);
+    const previousData =
+      this.historyList.length === 1
+        ? this.historyList[0]
+        : this.historyList.shift();
+    if (previousData) {
+      this.setData(previousData);
+      this.history = null;
     }
   }
 

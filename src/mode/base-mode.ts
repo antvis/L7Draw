@@ -14,9 +14,10 @@ import {
   IRenderType,
   RenderMap,
 } from '../typings';
-import { cloneDeep, merge } from 'lodash';
+import { cloneDeep, debounce, merge } from 'lodash';
 import { Feature } from '@turf/turf';
 import { Cursor } from '../interactive/cursor';
+import Mousetrap from 'mousetrap';
 
 export abstract class BaseMode<
   O extends IBaseModeOptions,
@@ -72,6 +73,7 @@ export abstract class BaseMode<
     if (initData) {
       setTimeout(() => {
         this.setData(initData);
+        this.saveSourceHistory();
       }, 0);
     }
   }
@@ -125,14 +127,32 @@ export abstract class BaseMode<
     this.bindCommonEvent = this.bindCommonEvent.bind(this);
   }
 
+  /**
+   * 监听通用事件
+   */
   bindCommonEvent() {
-    const onChange = () => {
-      this.emit(DrawerEvent.change, this.getData());
-    };
-
-    this.on(DrawerEvent.add, onChange);
-    this.on(DrawerEvent.edit, onChange);
+    this.on(DrawerEvent.add, () => this.emitChangeEvent());
+    this.on(DrawerEvent.edit, () => this.emitChangeEvent());
+    this.on(DrawerEvent.addNode, () => this.saveSourceHistory());
+    Mousetrap.bind(['command+z', 'ctrl+z'], () => {
+      this.source.resetHistory();
+    });
   }
+
+  /**
+   * 触发change事件
+   */
+  emitChangeEvent() {
+    this.emit(DrawerEvent.change, this.getData());
+    this.saveSourceHistory();
+  }
+
+  /**
+   * 保存当前数据备份
+   */
+  saveSourceHistory = debounce(() => {
+    this.source.saveHistory();
+  }, 100);
 
   /**
    * 根据子类实现的 getRenderTypes 方法，初始化对应的Render实例。
