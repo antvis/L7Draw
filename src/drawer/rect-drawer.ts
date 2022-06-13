@@ -1,4 +1,4 @@
-import { IPolygonModeOptions, PolygonMode } from '../mode';
+import { Scene } from '@antv/l7';
 import {
   bbox,
   coordAll,
@@ -7,6 +7,9 @@ import {
   featureCollection,
   Polygon,
 } from '@turf/turf';
+import { first, isEqual, last } from 'lodash';
+import { DrawerEvent } from '../constant';
+import { IPolygonModeOptions, PolygonMode } from '../mode';
 import {
   DeepPartial,
   ILayerMouseEvent,
@@ -17,8 +20,6 @@ import {
   IPolygonProperties,
   ISceneMouseEvent,
 } from '../typings';
-import { Scene } from '@antv/l7';
-import { IPolygonDrawerOptions } from './polygon-drawer';
 import {
   createLineFeature,
   createPointFeature,
@@ -28,8 +29,7 @@ import {
   isSameFeature,
   updateTargetFeature,
 } from '../utils';
-import { first, isEqual, last } from 'lodash';
-import { DrawerEvent } from '../constant';
+import { IPolygonDrawerOptions } from './polygon-drawer';
 
 export type IRectDrawerOptions = IPolygonModeOptions<Feature<Polygon>>;
 
@@ -63,7 +63,7 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
       const startNode = createPointFeature([lng1, lat1]);
       const endNode = createPointFeature([lng2, lat2]);
       const isActive = !!feature.properties?.isActive;
-      const line = this.handleCreateRectLine(startNode, endNode, {
+      const line = this.handleCreatePolygonLine(startNode, endNode, {
         isActive,
       });
       return this.handleCreatePolygon([startNode, endNode], line, {
@@ -85,7 +85,7 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     }
   }
 
-  handleCreateRectLine(
+  handleCreatePolygonLine(
     startNode: IPointFeature,
     endNode: IPointFeature,
     properties: Partial<ILineProperties> = {},
@@ -225,7 +225,7 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
       }, 0);
     } else {
       const endNode = createPointFeature(position);
-      const line = this.handleCreateRectLine(feature, endNode, {
+      const line = this.handleCreatePolygonLine(feature, endNode, {
         isDraw: true,
         isActive: true,
       });

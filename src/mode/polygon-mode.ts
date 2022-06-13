@@ -5,6 +5,9 @@ import {
   featureCollection,
   lineString,
 } from '@turf/turf';
+import { first, isEqual, last } from 'lodash';
+import { DEFAULT_AREA_OPTIONS, DrawerEvent, RenderEvent } from '../constant';
+import { PolygonRender } from '../render';
 import {
   DeepPartial,
   FeatureUpdater,
@@ -19,19 +22,15 @@ import {
   ISceneMouseEvent,
   ITextFeature,
 } from '../typings';
-import { ILineModeOptions, LineMode } from './line-mode';
-import { PolygonRender } from '../render';
-import { DEFAULT_AREA_OPTIONS, DrawerEvent, RenderEvent } from '../constant';
 import {
+  calcAreaText,
   createPointFeature,
   createPolygonFeature,
   getPosition,
   isSameFeature,
   updateTargetFeature,
 } from '../utils';
-import { first, isEqual, last } from 'lodash';
-import { calcAreaText } from '../utils';
-import { Polygon } from '@turf/turf';
+import { ILineModeOptions, LineMode } from './line-mode';
 
 export interface IPolygonModeOptions<F extends Feature = Feature>
   extends ILineModeOptions<F> {
