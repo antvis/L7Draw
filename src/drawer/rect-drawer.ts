@@ -7,33 +7,22 @@ import {
   featureCollection,
   Polygon,
 } from '@turf/turf';
-import { first, isEqual, last } from 'lodash';
+import { isEqual } from 'lodash';
 import { DrawerEvent } from '../constant';
-import { IPolygonModeOptions, PolygonMode } from '../mode';
+import { DragPolygonMode, IDragPolygonModeOptions } from '../mode';
 import {
   DeepPartial,
-  ILayerMouseEvent,
-  ILineFeature,
   ILineProperties,
   IPointFeature,
   IPolygonFeature,
-  IPolygonProperties,
   ISceneMouseEvent,
 } from '../typings';
-import {
-  createLineFeature,
-  createPointFeature,
-  createPolygonFeature,
-  getLngLat,
-  getPosition,
-  isSameFeature,
-  updateTargetFeature,
-} from '../utils';
+import { createLineFeature, createPointFeature, isSameFeature } from '../utils';
 import { IPolygonDrawerOptions } from './polygon-drawer';
 
-export type IRectDrawerOptions = IPolygonModeOptions<Feature<Polygon>>;
+export type IRectDrawerOptions = IDragPolygonModeOptions<Feature<Polygon>>;
 
-export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
+export class RectDrawer extends DragPolygonMode<IRectDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<IPolygonDrawerOptions>) {
     super(scene, options);
     this.bindPointRenderEvent();
@@ -41,19 +30,6 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     this.bindMidPointRenderEvent();
     this.bindLineRenderEvent();
     this.bindPolygonRenderEvent();
-  }
-
-  get drawLine() {
-    return this.drawPolygon?.properties.line;
-  }
-
-  getDefaultOptions(
-    options: DeepPartial<IRectDrawerOptions>,
-  ): IRectDrawerOptions {
-    return {
-      ...super.getDefaultOptions(options),
-      showMidPoint: false,
-    };
   }
 
   // @ts-ignore
@@ -105,19 +81,6 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     return createLineFeature(nodes, properties);
   }
 
-  handleCreatePolygon(
-    points: IPointFeature[],
-    line: ILineFeature,
-    properties: Partial<IPolygonProperties> = {},
-  ) {
-    const lineNodes = line.properties.nodes;
-    return createPolygonFeature(lineNodes.slice(0, lineNodes.length - 1), {
-      nodes: points,
-      line,
-      ...properties,
-    });
-  }
-
   syncPolygonNodes(polygon: IPolygonFeature, nodes: IPointFeature[]) {
     const line = polygon.properties.line;
     const positions = coordAll(envelope(featureCollection(nodes)));
@@ -161,120 +124,6 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     return polygon;
   }
 
-  setEditPolygon(
-    polygon: IPolygonFeature,
-    properties: Partial<IPolygonProperties> = {},
-  ) {
-    this.setEditLine(polygon.properties.line, properties);
-    this.setPolygonData((features) => {
-      return updateTargetFeature({
-        target: polygon,
-        data: features,
-        targetHandler: (feature) => {
-          feature.properties = {
-            ...feature.properties,
-            isDraw: false,
-            isActive: true,
-            isDrag: false,
-            isHover: false,
-            ...properties,
-          };
-        },
-        otherHandler: (feature) => {
-          feature.properties = {
-            ...feature.properties,
-            isDraw: false,
-            isActive: false,
-            isDrag: false,
-          };
-        },
-      });
-    });
-    this.setPointData(polygon.properties.nodes);
-    this.setDashLineData([]);
-    const texts = this.getAllTexts();
-    this.setTextData(texts);
-    return polygon;
-  }
-
-  onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {
-    if (
-      (!this.options.multiple &&
-        this.getPolygonData().length >= 1 &&
-        !this.drawPolygon) ||
-      this.dragPoint ||
-      this.editLine
-    ) {
-      return;
-    }
-    const { autoFocus, editable } = this.options;
-    const drawPolygon = this.drawPolygon;
-    const position = getPosition(e);
-    const feature = this.handleCreatePoint(position);
-    if (drawPolygon) {
-      setTimeout(() => {
-        this.setLineData((features) => [
-          ...features,
-          drawPolygon.properties.line,
-        ]);
-        this.setEditPolygon(drawPolygon);
-        if (!(autoFocus && editable)) {
-          this.handlePolygonUnClick(drawPolygon);
-        }
-        this.emit(DrawerEvent.add, drawPolygon, this.getPolygonData());
-      }, 0);
-    } else {
-      const endNode = createPointFeature(position);
-      const line = this.handleCreatePolygonLine(feature, endNode, {
-        isDraw: true,
-        isActive: true,
-      });
-      const polygon = this.handleCreatePolygon([feature, endNode], line, {
-        isDraw: true,
-        isActive: true,
-      });
-      this.setPolygonData((features) =>
-        updateTargetFeature({
-          target: polygon,
-          data: [...features, polygon],
-          targetHandler: (feature) => {
-            feature.properties = {
-              ...feature.properties,
-              isDraw: true,
-              isActive: true,
-            };
-          },
-          otherHandler: (feature) => {
-            feature.properties.isActive = false;
-          },
-        }),
-      );
-    }
-    return feature;
-  }
-
-  onPointDragging(e: ISceneMouseEvent) {
-    const dragPoint = this.dragPoint;
-    if (!dragPoint) {
-      return;
-    }
-    const feature = this.handlePointDragging(dragPoint, getLngLat(e));
-    const editPolygon = this.editPolygon;
-    if (feature && editPolygon) {
-      this.syncPolygonNodes(
-        editPolygon,
-        editPolygon.properties.nodes.map((node) => {
-          if (isSameFeature(node, feature)) {
-            return feature;
-          }
-          return node;
-        }),
-      );
-      this.setEditPolygon(editPolygon);
-    }
-    return feature;
-  }
-
   onLineDragging(e: ISceneMouseEvent) {
     const feature = super.onLineDragging(e);
     const dragPolygon = this.dragPolygon;
@@ -286,20 +135,5 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
       this.emit(DrawerEvent.dragging, dragPolygon, this.getPolygonData());
     }
     return feature;
-  }
-
-  onSceneMouseMove(e: ISceneMouseEvent) {
-    const drawPolygon = this.drawPolygon;
-    if (!drawPolygon) {
-      return;
-    }
-    const { nodes } = drawPolygon.properties;
-    const firstNode = first(nodes)!;
-    const lastNode = last(nodes)!;
-    lastNode.geometry.coordinates = getPosition(e);
-    this.syncPolygonNodes(drawPolygon, [firstNode, lastNode]);
-    this.setDashLineData([drawPolygon.properties.line]);
-    this.setTextData(this.getAllTexts());
-    this.resetCursor();
   }
 }

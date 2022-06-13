@@ -1,6 +1,7 @@
+import { Scene } from '@antv/l7';
 import { Feature } from '@turf/turf';
 import { first, last } from 'lodash';
-import { DrawerEvent } from '../constant';
+import { DrawerEvent, SceneEvent } from '../constant';
 import {
   DeepPartial,
   ILayerMouseEvent,
@@ -29,17 +30,31 @@ export interface IDragPolygonModeOptions<F extends Feature = Feature>
 }
 
 export abstract class DragPolygonMode<
-  T extends IPolygonModeOptions,
+  T extends IDragPolygonModeOptions,
 > extends PolygonMode<T> {
+  constructor(scene: Scene, options: DeepPartial<T>) {
+    super(scene, options);
+
+    this.onSceneDragStart = this.onSceneDragStart.bind(this);
+    this.onSceneDragEnd = this.onSceneDragEnd.bind(this);
+  }
+
   get drawLine() {
     return this.drawPolygon?.properties.line;
   }
 
   getDefaultOptions(options: DeepPartial<T>): T {
-    return {
+    const newOptions = {
       ...super.getDefaultOptions(options),
       showMidPoint: false,
+      createByClick: true,
+      createByDrag: false,
+      autoFocus: false,
     };
+    if (options.createByDrag) {
+      newOptions.autoFocus = false;
+    }
+    return newOptions;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -66,58 +81,69 @@ export abstract class DragPolygonMode<
     });
   }
 
+  handleFirstNodeCreate(firstNode: IPointFeature) {
+    const lastNode = createPointFeature(firstNode.geometry.coordinates);
+    const line = this.handleCreatePolygonLine(firstNode, lastNode, {
+      isDraw: true,
+      isActive: true,
+    });
+    const polygon = this.handleCreatePolygon([firstNode, lastNode], line, {
+      isDraw: true,
+      isActive: true,
+    });
+    this.setPolygonData((features) =>
+      updateTargetFeature({
+        target: polygon,
+        data: [...features, polygon],
+        targetHandler: (feature) => {
+          feature.properties = {
+            ...feature.properties,
+            isDraw: true,
+            isActive: true,
+          };
+        },
+        otherHandler: (feature) => {
+          feature.properties.isActive = false;
+        },
+      }),
+    );
+    return firstNode;
+  }
+
+  handleLastNodeCreate(lastNode: IPointFeature) {
+    const { autoFocus, editable } = this.options;
+    const drawPolygon = this.drawPolygon;
+    if (!drawPolygon) {
+      return lastNode;
+    }
+    this.setLineData((features) => [...features, drawPolygon.properties.line]);
+    this.setEditPolygon(drawPolygon);
+    if (!(autoFocus && editable)) {
+      this.handlePolygonUnClick(drawPolygon);
+    }
+    this.emit(DrawerEvent.add, drawPolygon, this.getPolygonData());
+    return lastNode;
+  }
+
   onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {
+    const { multiple, createByClick } = this.options;
     if (
-      (!this.options.multiple &&
-        this.getPolygonData().length >= 1 &&
-        !this.drawPolygon) ||
+      (!multiple && this.getPolygonData().length >= 1 && !this.drawPolygon) ||
       this.dragPoint ||
-      this.editLine
+      this.editLine ||
+      !createByClick
     ) {
       return;
     }
-    const { autoFocus, editable } = this.options;
     const drawPolygon = this.drawPolygon;
     const position = getPosition(e);
     const feature = this.handleCreatePoint(position);
     if (drawPolygon) {
       setTimeout(() => {
-        this.setLineData((features) => [
-          ...features,
-          drawPolygon.properties.line,
-        ]);
-        this.setEditPolygon(drawPolygon);
-        if (!(autoFocus && editable)) {
-          this.handlePolygonUnClick(drawPolygon);
-        }
-        this.emit(DrawerEvent.add, drawPolygon, this.getPolygonData());
+        this.handleLastNodeCreate(feature);
       }, 0);
     } else {
-      const endNode = createPointFeature(position);
-      const line = this.handleCreatePolygonLine(feature, endNode, {
-        isDraw: true,
-        isActive: true,
-      });
-      const polygon = this.handleCreatePolygon([feature, endNode], line, {
-        isDraw: true,
-        isActive: true,
-      });
-      this.setPolygonData((features) =>
-        updateTargetFeature({
-          target: polygon,
-          data: [...features, polygon],
-          targetHandler: (feature) => {
-            feature.properties = {
-              ...feature.properties,
-              isDraw: true,
-              isActive: true,
-            };
-          },
-          otherHandler: (feature) => {
-            feature.properties.isActive = false;
-          },
-        }),
-      );
+      this.handleFirstNodeCreate(feature);
     }
     return feature;
   }
@@ -180,6 +206,40 @@ export abstract class DragPolygonMode<
     return feature;
   }
 
+  onSceneDragStart(e: ISceneMouseEvent) {
+    const { multiple, createByDrag } = this.options;
+
+    if (
+      !createByDrag ||
+      (!multiple && this.getPolygonData().length >= 1 && !this.drawPolygon) ||
+      this.dragPoint ||
+      this.editLine
+    ) {
+      return;
+    }
+    this.scene.setMapStatus({
+      dragEnable: false,
+    });
+    this.handleFirstNodeCreate(this.handleCreatePoint(getPosition(e)));
+  }
+
+  onSceneDragEnd(e: ISceneMouseEvent) {
+    const { multiple, createByDrag } = this.options;
+    if (
+      !createByDrag ||
+      (!multiple && this.getPolygonData().length >= 1 && !this.drawPolygon) ||
+      this.dragPoint ||
+      this.editLine ||
+      !this.drawPolygon
+    ) {
+      return;
+    }
+    this.scene.setMapStatus({
+      dragEnable: false,
+    });
+    this.handleLastNodeCreate(this.handleCreatePoint(getPosition(e)));
+  }
+
   onSceneMouseMove(e: ISceneMouseEvent) {
     const drawPolygon = this.drawPolygon;
     if (!drawPolygon) {
@@ -193,5 +253,29 @@ export abstract class DragPolygonMode<
     this.setDashLineData([drawPolygon.properties.line]);
     this.setTextData(this.getAllTexts());
     this.resetCursor();
+  }
+
+  bindEnableEvent() {
+    super.bindEnableEvent();
+
+    if (this.options.createByDrag) {
+      this.scene.on(SceneEvent.dragstart, this.onSceneDragStart);
+      this.scene.on(SceneEvent.dragend, this.onSceneDragEnd);
+
+      this.scene.setMapStatus({
+        dragEnable: false,
+      });
+    }
+  }
+
+  unbindEnableEvent() {
+    super.unbindEnableEvent();
+    this.scene.off(SceneEvent.dragstart, this.onSceneDragStart);
+    this.scene.off(SceneEvent.dragend, this.onSceneDragEnd);
+    if (this.options.createByDrag) {
+      this.scene.setMapStatus({
+        dragEnable: true,
+      });
+    }
   }
 }
