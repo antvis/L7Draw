@@ -1,48 +1,25 @@
 import {
   IAreaOptions,
+  IDashLineFeature,
   IDistanceOptions,
   ILineFeature,
-  IMidPointFeature,
   ITextFeature,
   ITextProperties,
 } from '../typings';
 import {
-  along,
-  area,
-  center,
-  centerOfMass,
-  distance,
   Feature,
-  featureCollection,
-  length,
   LineString,
+  length,
+  along,
   point,
+  distance,
+  center,
+  featureCollection,
   Polygon,
+  centerOfMass,
+  area,
 } from '@turf/turf';
-import { getUuid } from './common';
-
-/**
- * 计算LineString各个结点之间的中心点列表
- * @param feature
- */
-export const calcMidPointList = (feature: ILineFeature) => {
-  const { nodes } = feature.properties;
-  const midPointList: IMidPointFeature[] = [];
-  for (let index = 0; index < nodes.length - 1; index++) {
-    const newMidPoint = center(
-      featureCollection([nodes[index], nodes[index + 1]]),
-      {
-        properties: {
-          id: getUuid('midPoint'),
-          startId: nodes[index].properties?.id ?? '',
-          endId: nodes[index + 1].properties?.id ?? '',
-        },
-      },
-    ) as IMidPointFeature;
-    midPointList.push(newMidPoint);
-  }
-  return midPointList;
-};
+import { getUuid } from './feature';
 
 /**
  * 获取线段的中心点Feature
@@ -58,33 +35,33 @@ export const getLineCenterPoint = (feature: Feature<LineString>) => {
 };
 
 /**
- * 根据传入的lineString和options配置获取长度文本Feature
+ * 返回线段对应的距离文本
  * @param feature
- * @param options
+ * @param total
+ * @param format
  * @param properties
  */
-export const calcDistanceText = (
-  feature: Feature<LineString>,
-  options: IDistanceOptions,
+export const calcDistanceTextsByLine = (
+  feature: ILineFeature | IDashLineFeature,
+  { total, format }: Pick<IDistanceOptions, 'total' | 'format'>,
   properties: Partial<ITextProperties> = {},
 ) => {
-  const { format, total } = options;
   const textList: ITextFeature[] = [];
-  // total为true时计算整个LineString的长度
   if (total) {
     const text = getLineCenterPoint(feature) as ITextFeature;
+    const meters = length(feature, {
+      units: 'meters',
+    });
     text.properties = {
-      ...text.properties,
+      id: getUuid('text'),
+      isActive: false,
+      meters,
+      text: format(meters),
+      type: 'totalDistance',
       ...properties,
-      text: format(
-        length(feature, {
-          units: 'meters',
-        }),
-      ),
     };
     textList.push(text);
-    // total为false时，计算LineString中每两个结点之间的数据
-  } else if (feature.geometry) {
+  } else {
     const { coordinates } = feature.geometry;
     for (let index = 0; index < coordinates.length - 1; index++) {
       const currentPoint = point(coordinates[index]);
@@ -93,12 +70,17 @@ export const calcDistanceText = (
         units: 'meters',
       });
 
-      const text = center(featureCollection([currentPoint, nextPoint]), {
-        properties: {
-          ...properties,
-          text: format(meters),
-        },
-      }) as ITextFeature;
+      const text = center(
+        featureCollection([currentPoint, nextPoint]),
+      ) as ITextFeature;
+      text.properties = {
+        id: getUuid('text'),
+        isActive: false,
+        meters,
+        text: format(meters),
+        type: 'distance',
+        ...properties,
+      };
       textList.push(text);
     }
   }
@@ -113,14 +95,17 @@ export const calcDistanceText = (
  */
 export const calcAreaText = (
   feature: Feature<Polygon>,
-  options: IAreaOptions,
+  options: Pick<IAreaOptions, 'format'>,
   properties: Partial<ITextProperties> = {},
 ) => {
   const { format } = options;
+  const meters = area(feature);
   return centerOfMass(feature, {
     properties: {
-      // @ts-ignore
-      text: format(area(feature)),
+      meters,
+      text: format(meters),
+      type: 'area',
+      isActive: false,
       ...properties,
     },
   }) as ITextFeature;

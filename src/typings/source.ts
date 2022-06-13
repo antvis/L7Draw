@@ -6,10 +6,13 @@ import {
   IPolygonFeature,
   ITextFeature,
 } from './feature';
-import { PointRender, LineRender, PolygonRender } from '../render';
-import { TextRender } from '../render/TextRender';
+import { PointRender } from '../render';
+// import { PointRender, LineRender, PolygonRender, TextRender } from '../render';
 
-export interface ISourceData {
+/**
+ * Source数据类型
+ */
+export interface SourceData {
   point: IPointFeature[];
   line: ILineFeature[];
   polygon: IPolygonFeature[];
@@ -18,21 +21,28 @@ export interface ISourceData {
   text: ITextFeature[];
 }
 
-export type IRenderMap = {
-  point?: PointRender;
-  line?: LineRender;
-  polygon?: PolygonRender;
-  midPoint?: PointRender;
-  dashLine?: LineRender;
-  text?: TextRender;
-};
+/**
+ * Render key => value 映射关系
+ */
+export type RenderMap = Partial<{
+  point: PointRender;
+  line: any;
+  polygon: any;
+  midPoint: any;
+  dashLine: any;
+  text: any;
+  // point?: PointRender;
+  // line?: LineRender;
+  // polygon?: PolygonRender;
+  // midPoint?: PointRender;
+  // dashLine?: LineRender;
+  // text?: TextRender;
+}>;
 
-export interface ISourceOptions {
-  data?: Partial<ISourceData>;
-  render: IRenderMap;
-}
-
-export interface ISourceDataHistory {
-  data: ISourceData;
-  time: number;
+/**
+ * Source构造器中传输的配置
+ */
+export interface SourceOptions {
+  data?: Partial<SourceData>;
+  render: RenderMap;
 }

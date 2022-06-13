@@ -1,7 +1,9 @@
-import { IStyle } from './render';
-import { Feature, LineString, Point, Polygon } from '@turf/turf';
-import { Props as TippyProps } from 'tippy.js';
+import { IStyle } from './style';
+import { Feature } from '@turf/turf';
 
+/**
+ * 鼠标指针类型
+ */
 export type ICursorType =
   | 'draw'
   | 'pointHover'
@@ -11,36 +13,26 @@ export type ICursorType =
   | 'polygonHover'
   | 'polygonDrag';
 
+/**
+ * 鼠标指针类型键值对
+ */
 export type ICursor = Record<ICursorType, string>;
 
-export interface IDrawerOptionsData {
-  point?: Feature<Point>[];
-  line?: Feature<LineString>[];
-  polygon?: Feature<Polygon>[];
-}
-
-export interface IPointHelper {
-  draw: string;
-  pointHover: string;
-  pointDrag: string;
-}
-
-export interface ILineHelper extends IPointHelper {
-  lineHover: string;
-  lineDrag: string;
-}
-
-export type IPopupConfig = Partial<TippyProps>;
-
-export interface IDrawerOptions {
+/**
+ * 基础Drawer配置
+ */
+export interface IBaseModeOptions<F extends Feature = Feature> {
   style: IStyle;
   cursor: ICursor;
-  initData?: IDrawerOptionsData;
+  initData?: F[];
   editable: boolean;
   autoFocus: boolean;
-  popup: false | IPopupConfig;
+  multiple: boolean;
 }
 
+/**
+ * 距离文案配置
+ */
 export interface IDistanceOptions {
   total: boolean;
   showOnDash: boolean;
@@ -49,6 +41,9 @@ export interface IDistanceOptions {
   format: (meters: number) => string;
 }
 
+/**
+ * 面积文案配置
+ */
 export interface IAreaOptions {
   format: (squareMeters: number) => string;
   showOnNormal: boolean;

@@ -1,0 +1,317 @@
+import EventEmitter from 'eventemitter3';
+import {
+  DEFAULT_CURSOR_MAP,
+  DEFAULT_STYLE,
+  DrawerEvent,
+  RENDER_MAP,
+  SceneEvent,
+} from '../constant';
+import { Scene } from '@antv/l7';
+import { Source } from '../source';
+import {
+  DeepPartial,
+  IBaseFeature,
+  IBaseModeOptions,
+  ICursorType,
+  ILngLat,
+  IRenderType,
+  ISceneMouseEvent,
+  RenderMap,
+} from '../typings';
+import { cloneDeep, debounce, merge } from 'lodash';
+import { Feature } from '@turf/turf';
+import { Cursor } from '../interactive';
+import Mousetrap from 'mousetrap';
+import { getLngLat } from '../utils';
+
+export abstract class BaseMode<
+  O extends IBaseModeOptions,
+> extends EventEmitter<DrawerEvent> {
+  /**
+   * L7 场景实例，在构造器中传入
+   */
+  protected scene: Scene;
+
+  /**
+   * 数据管理中心
+   */
+  protected source: Source;
+
+  /**
+   * 渲染器render对象
+   */
+  protected render: RenderMap;
+
+  /**
+   * 指针管理器
+   * @protected
+   */
+  protected cursor: Cursor;
+
+  /**
+   * Drawer 配置
+   */
+  protected options: O;
+
+  /**
+   * 当前Drawer是否为开启绘制状态
+   */
+  protected isEnable = false;
+
+  protected mouseLngLat: ILngLat = {
+    lng: 0,
+    lat: 0,
+  };
+
+  constructor(scene: Scene, options: DeepPartial<O>) {
+    super();
+    this.bindThis();
+
+    this.scene = scene;
+    this.options = merge({}, this.getDefaultOptions(options), options);
+    this.render = this.initRender();
+
+    this.source = new Source({
+      render: this.render,
+    });
+    this.cursor = new Cursor(scene, this.options.cursor);
+
+    this.emit(DrawerEvent.init, this);
+
+    setTimeout(() => {
+      const initData = this.options.initData;
+      if (initData) {
+        this.setData(initData);
+      }
+      this.saveSourceHistory();
+    }, 0);
+  }
+
+  /**
+   * 获取当前Drawer需要用到的render类型数据，避免创建无效的Render
+   */
+  abstract getRenderTypes(): IRenderType[];
+
+  /**
+   * 获取当前Drawer默认参数
+   * @param options
+   */
+  abstract getDefaultOptions(options: DeepPartial<O>): O;
+
+  /**
+   * 监听事件
+   */
+  abstract bindEnableEvent(): void;
+
+  /**
+   * 解除监听事件
+   */
+  abstract unbindEnableEvent(): void;
+
+  /**
+   * 获取数据
+   */
+  abstract getData(): IBaseFeature[];
+
+  /**
+   * 设置数据
+   * @param data
+   */
+  abstract setData(data: Feature[]): void;
+
+  /**
+   * 获取当前是否为编辑态
+   */
+  getIsEnable() {
+    return this.isEnable;
+  }
+
+  /**
+   * 绑定回调函数的this指向
+   */
+  bindThis() {
+    this.initRender = this.initRender.bind(this);
+    this.getData = this.getData.bind(this);
+    this.setData = this.setData.bind(this);
+    this.emitChangeEvent = this.emitChangeEvent.bind(this);
+    this.saveSourceHistory = this.saveSourceHistory.bind(this);
+    this.onSceneMouseMove = this.onSceneMouseMove.bind(this);
+    this.revertSourceHistory = this.revertSourceHistory.bind(this);
+    this.saveMouseLngLat = this.saveMouseLngLat.bind(this);
+    this.bindCommonEvent = this.bindCommonEvent.bind(this);
+    this.unbindCommonEvent = this.unbindCommonEvent.bind(this);
+  }
+
+  /**
+   * 监听通用事件
+   */
+  bindCommonEvent() {
+    this.on(DrawerEvent.add, this.emitChangeEvent);
+    this.on(DrawerEvent.edit, this.emitChangeEvent);
+    this.on(DrawerEvent.addNode, this.saveSourceHistory);
+    this.scene.on(SceneEvent.mousemove, this.saveMouseLngLat);
+    Mousetrap.bind(['mod+z'], this.revertSourceHistory);
+  }
+
+  /**
+   * 监听通用事件
+   */
+  unbindCommonEvent() {
+    this.off(DrawerEvent.add, this.emitChangeEvent);
+    this.off(DrawerEvent.edit, this.emitChangeEvent);
+    this.off(DrawerEvent.addNode, this.saveSourceHistory);
+    this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
+    Mousetrap.unbind(['mod+z']);
+  }
+
+  // 用于收集当前鼠标所在经纬度的回调函数，用于在数据回退时，若有存在绘制中的数据，伪造mousemove事件时使用
+  saveMouseLngLat(e: ISceneMouseEvent) {
+    this.mouseLngLat = getLngLat(e);
+  }
+
+  /**
+   * 触发change事件，同时触发保存数据备份
+   */
+  emitChangeEvent() {
+    this.emit(DrawerEvent.change, this.getData());
+    this.saveSourceHistory();
+  }
+
+  /**
+   * 保存当前数据备份
+   */
+  saveSourceHistory = debounce(() => {
+    this.source.saveHistory();
+  }, 100);
+
+  /**
+   * 回退至上一次数据备份
+   */
+  revertSourceHistory() {
+    if (!this.isEnable) {
+      return;
+    }
+    this.source.revertHistory();
+    const drawItem = this.getData().find((item) => item.properties.isDraw);
+    // 如果当前有正在绘制的元素，需要将虚线部分与鼠标位置表现一致，而非history保存时的虚线位置
+    if (drawItem) {
+      this.onSceneMouseMove({
+        type: 'mousemove',
+        lnglat: this.mouseLngLat,
+        lngLat: this.mouseLngLat,
+      });
+    }
+  }
+
+  /**
+   * 根据子类实现的 getRenderTypes 方法，初始化对应的Render实例。
+   */
+  initRender(): RenderMap {
+    const renderMap: RenderMap = {};
+    const renderTypeList = this.getRenderTypes();
+
+    for (const renderType of renderTypeList) {
+      const Render = RENDER_MAP[renderType];
+      const style = this.options.style[renderType];
+      renderMap[renderType] = new Render(this.scene, {
+        // @ts-ignore
+        style,
+      });
+    }
+
+    return renderMap;
+  }
+
+  /**
+   * 光标在地图上移动时的回调，子类均会重写该方法
+   * @param e
+   */
+  abstract onSceneMouseMove(e: ISceneMouseEvent): void;
+
+  /**
+   * 根据用户传入的options返回通用的options默认配置
+   * @param options
+   */
+  getCommonOptions<F extends Feature = Feature>(options: DeepPartial<O>): O {
+    return {
+      initData: [] as F[],
+      autoFocus: true,
+      cursor: cloneDeep(DEFAULT_CURSOR_MAP),
+      editable: true,
+      style: cloneDeep(DEFAULT_STYLE),
+      multiple: true,
+    } as unknown as O;
+  }
+
+  /**
+   * 设置地图上光标样式类型
+   * @param cursor
+   */
+  setCursor(cursor: ICursorType | null) {
+    this.cursor.setCursor(cursor);
+  }
+
+  /**
+   * 重置光标到常规状态
+   */
+  resetCursor() {
+    this.setCursor('draw');
+  }
+
+  /**
+   * 启用Drawer
+   */
+  enable() {
+    if (this.isEnable) {
+      return;
+    }
+    this.isEnable = true;
+    this.resetCursor();
+    this.unbindEnableEvent();
+    this.unbindCommonEvent();
+    this.bindEnableEvent();
+    this.bindCommonEvent();
+    this.scene.setMapStatus({
+      doubleClickZoom: false,
+    });
+    this.emit(DrawerEvent.enable, this);
+  }
+
+  /**
+   * 禁用Drawer
+   */
+  disable() {
+    if (!this.isEnable) {
+      return;
+    }
+    this.isEnable = false;
+    this.setCursor(null);
+    this.unbindEnableEvent();
+    this.unbindCommonEvent();
+    this.scene.setMapStatus({
+      doubleClickZoom: true,
+    });
+    this.emit(DrawerEvent.disable, this);
+  }
+
+  /**
+   * 清空所有数据
+   */
+  clear(disable = false) {
+    this.source.clear();
+    if (disable) {
+      this.disable();
+    }
+  }
+
+  /**
+   * 销毁当前Drawer
+   */
+  destroy() {
+    this.clear(true);
+    Object.values(this.render).forEach((render) => {
+      render.destroy();
+    });
+    this.emit(DrawerEvent.destroy, this);
+  }
+}
