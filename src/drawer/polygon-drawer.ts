@@ -145,8 +145,12 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     const feature = this.dragPoint;
     const editPolygon = this.editPolygon;
     if (feature && editPolygon) {
-      const { nodes, line } = editPolygon.properties;
+      const { line } = editPolygon.properties;
+      line.properties.nodes = line.properties.nodes.map((node) => {
+        return isSameFeature(node, feature) ? feature : node;
+      });
       const lineNodes = line.properties.nodes;
+      const nodes = lineNodes.slice(0, lineNodes.length - 1);
       const firstLineNode = first(lineNodes)!;
       const lastLineNode = last(lineNodes)!;
       if (

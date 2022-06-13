@@ -270,9 +270,9 @@ export abstract class DragPolygonMode<
 
   unbindEnableEvent() {
     super.unbindEnableEvent();
-    this.scene.off(SceneEvent.dragstart, this.onSceneDragStart);
-    this.scene.off(SceneEvent.dragend, this.onSceneDragEnd);
     if (this.options.createByDrag) {
+      this.scene.off(SceneEvent.dragstart, this.onSceneDragStart);
+      this.scene.off(SceneEvent.dragend, this.onSceneDragEnd);
       this.scene.setMapStatus({
         dragEnable: true,
       });
