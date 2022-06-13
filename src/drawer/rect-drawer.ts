@@ -6,8 +6,9 @@ import {
   Feature,
   featureCollection,
   Polygon,
+  Position,
 } from '@turf/turf';
-import { isEqual } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import { DrawerEvent } from '../constant';
 import { DragPolygonMode, IDragPolygonModeOptions } from '../mode';
 import {
@@ -108,15 +109,25 @@ export class RectDrawer extends DragPolygonMode<IRectDrawerOptions> {
     );
 
     lineNodes.forEach((lineNode, index) => {
-      if (index === 1) {
-        lineNode.geometry.coordinates = otherPositions[0];
+      let position: Position = [0, 0];
+      switch (index) {
+        case 0:
+          position = nodes[0].geometry.coordinates;
+          break;
+        case 1:
+          position = otherPositions[0];
+          break;
+        case 2:
+          position = nodes[1].geometry.coordinates;
+          break;
+        case 3:
+          position = otherPositions[1];
+          break;
+        case 4:
+          position = cloneDeep(nodes[0].geometry.coordinates);
+          break;
       }
-      if (index === 3) {
-        lineNode.geometry.coordinates = otherPositions[1];
-      }
-      if (index === 4) {
-        lineNode.geometry.coordinates = [...nodes[0].geometry.coordinates];
-      }
+      lineNode.geometry.coordinates = position;
     });
 
     line.geometry.coordinates = positions;
@@ -128,7 +139,8 @@ export class RectDrawer extends DragPolygonMode<IRectDrawerOptions> {
     const feature = super.onLineDragging(e);
     const dragPolygon = this.dragPolygon;
     if (feature && dragPolygon) {
-      this.syncPolygonNodes(dragPolygon, dragPolygon.properties.nodes);
+      const lineNodes = dragPolygon.properties.line.properties.nodes;
+      this.syncPolygonNodes(dragPolygon, [lineNodes[0], lineNodes[2]]);
       this.setEditPolygon(dragPolygon, {
         isDrag: true,
       });
