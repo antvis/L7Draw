@@ -195,7 +195,7 @@ export abstract class PolygonMode<
   }
 
   handlePolygonUnHover() {
-    this.setCursor('draw');
+    this.resetCursor();
     this.setPolygonData((features) =>
       features.map((feature) => {
         feature.properties.isHover = false;

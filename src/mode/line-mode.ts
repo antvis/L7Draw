@@ -324,7 +324,7 @@ export abstract class LineMode<
     if (this.drawLine) {
       return;
     }
-    this.setCursor('draw');
+    this.resetCursor();
     this.setLineData((features) =>
       features.map((feature) => {
         feature.properties.isHover = false;
@@ -470,8 +470,6 @@ export abstract class LineMode<
     }
     return this.handleLineDragEnd(dragLine);
   }
-
-  onSceneMouseMove(e: ISceneMouseEvent) {}
 
   onPointClick(e: ILayerMouseEvent<IPointFeature>) {}
 

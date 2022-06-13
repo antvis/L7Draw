@@ -354,6 +354,6 @@ export class CircleDrawer extends PolygonMode<ICircleDrawerOptions> {
     this.syncPolygonNodes(drawPolygon, [firstNode, lastNode]);
     this.setDashLineData([drawPolygon.properties.line]);
     this.setTextData(this.getAllTexts());
-    this.setCursor('draw');
+    this.resetCursor();
   }
 }

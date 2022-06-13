@@ -6,7 +6,6 @@ import {
   IPointFeature,
   IRenderType,
   ISceneMouseEvent,
-  SourceData,
 } from '../typings';
 import { Scene } from '@antv/l7';
 import { getDefaultPointProperties } from '../utils';
@@ -106,4 +105,7 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     super.bindThis();
     this.bindPointRenderEvent = this.bindPointRenderEvent.bind(this);
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onSceneMouseMove(e: ISceneMouseEvent): void {}
 }

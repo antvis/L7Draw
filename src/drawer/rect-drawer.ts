@@ -300,6 +300,6 @@ export class RectDrawer extends PolygonMode<IRectDrawerOptions> {
     this.syncPolygonNodes(drawPolygon, [firstNode, lastNode]);
     this.setDashLineData([drawPolygon.properties.line]);
     this.setTextData(this.getAllTexts());
-    this.setCursor('draw');
+    this.resetCursor();
   }
 }

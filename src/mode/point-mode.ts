@@ -128,7 +128,7 @@ export abstract class PointMode<
   }
 
   handlePointUnHover(point: IPointFeature) {
-    this.setCursor('draw');
+    this.resetCursor();
     this.setPointData((features) =>
       features.map((feature) => {
         feature.properties.isHover = false;

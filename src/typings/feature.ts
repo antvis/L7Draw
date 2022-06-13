@@ -8,6 +8,7 @@ import {
 
 export interface IBaseProperties {
   id: string;
+  isDraw?: boolean;
 }
 
 // @ts-ignore
@@ -36,7 +37,6 @@ export interface ILineProperties extends IBaseProperties {
   isHover?: boolean;
   isActive?: boolean;
   isDrag?: boolean;
-  isDraw?: boolean;
   createTime: number;
 }
 
@@ -49,7 +49,6 @@ export interface IPolygonProperties extends IBaseProperties {
   isHover?: boolean;
   isActive?: boolean;
   isDrag?: boolean;
-  isDraw?: boolean;
   createTime: number;
 }
 

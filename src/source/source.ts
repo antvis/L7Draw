@@ -56,7 +56,7 @@ export class Source extends EventEmitter<SourceEvent> {
     this.history = cloneDeep(this.data);
   }
 
-  resetHistory() {
+  revertHistory() {
     if (!this.historyList.length) {
       return;
     }

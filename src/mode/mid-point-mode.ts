@@ -99,7 +99,7 @@ export abstract class MidPointMode<
   }
 
   onMidPointUnHover(e: ILayerMouseEvent<IMidPointFeature>) {
-    this.setCursor('draw');
+    this.resetCursor();
   }
 
   enableMidPointRenderAction() {
