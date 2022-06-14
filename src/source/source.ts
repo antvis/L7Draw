@@ -1,3 +1,7 @@
+import EventEmitter from 'eventemitter3';
+import { cloneDeep, fromPairs } from 'lodash';
+import { DEFAULT_SOURCE_DATA, SourceEvent } from '../constant';
+import { BaseRender } from '../render';
 import {
   FeatureUpdater,
   IBaseFeature,
@@ -6,10 +10,7 @@ import {
   SourceData,
   SourceOptions,
 } from '../typings';
-import { DEFAULT_SOURCE_DATA, SourceEvent } from '../constant';
-import { BaseRender } from '../render';
-import EventEmitter from 'eventemitter3';
-import { cloneDeep, fromPairs } from 'lodash';
+import { History } from './history';
 
 export class Source extends EventEmitter<SourceEvent> {
   /**
@@ -36,37 +37,43 @@ export class Source extends EventEmitter<SourceEvent> {
    */
   protected diffData: Partial<SourceData> = {};
 
-  protected historyList: SourceData[] = [];
+  /**
+   *
+   * @protected
+   */
+  protected history?: History;
 
-  protected history: SourceData | null = null;
-
-  constructor({ data, render }: SourceOptions) {
+  constructor({ data, render, history: historyConfig }: SourceOptions) {
     super();
 
     this.render = render;
+    if (historyConfig) {
+      this.history = new History({
+        config: historyConfig,
+      });
+    }
     if (data) {
       this.setData(data);
     }
   }
 
   saveHistory() {
-    if (this.history) {
-      this.historyList.unshift(this.history);
-    }
-    this.history = cloneDeep(this.data);
+    this.history?.save(this.data);
   }
 
   revertHistory() {
-    if (!this.historyList.length) {
-      return;
+    const data = this.history?.revert();
+    if (data) {
+      this.setData(data);
+      return data;
     }
-    const previousData =
-      this.historyList.length === 1
-        ? this.historyList[0]
-        : this.historyList.shift();
-    if (previousData) {
-      this.setData(previousData);
-      this.history = null;
+  }
+
+  redoHistory() {
+    const data = this.history?.redo();
+    if (data) {
+      this.setData(data);
+      return data;
     }
   }
 

@@ -1,12 +1,17 @@
+import { Scene } from '@antv/l7';
+import { Feature } from '@turf/turf';
 import EventEmitter from 'eventemitter3';
+import { cloneDeep, debounce, merge } from 'lodash';
+import Mousetrap from 'mousetrap';
 import {
   DEFAULT_CURSOR_MAP,
+  DEFAULT_HISTORY_CONFIG,
   DEFAULT_STYLE,
   DrawerEvent,
   RENDER_MAP,
   SceneEvent,
 } from '../constant';
-import { Scene } from '@antv/l7';
+import { Cursor } from '../interactive';
 import { Source } from '../source';
 import {
   DeepPartial,
@@ -18,10 +23,6 @@ import {
   ISceneMouseEvent,
   RenderMap,
 } from '../typings';
-import { cloneDeep, debounce, merge } from 'lodash';
-import { Feature } from '@turf/turf';
-import { Cursor } from '../interactive';
-import Mousetrap from 'mousetrap';
 import { getLngLat } from '../utils';
 
 export abstract class BaseMode<
@@ -73,6 +74,7 @@ export abstract class BaseMode<
 
     this.source = new Source({
       render: this.render,
+      history: this.options.history,
     });
     this.cursor = new Cursor(scene, this.options.cursor);
 
@@ -137,6 +139,7 @@ export abstract class BaseMode<
     this.saveSourceHistory = this.saveSourceHistory.bind(this);
     this.onSceneMouseMove = this.onSceneMouseMove.bind(this);
     this.revertSourceHistory = this.revertSourceHistory.bind(this);
+    this.redoSourceHistory = this.redoSourceHistory.bind(this);
     this.saveMouseLngLat = this.saveMouseLngLat.bind(this);
     this.bindCommonEvent = this.bindCommonEvent.bind(this);
     this.unbindCommonEvent = this.unbindCommonEvent.bind(this);
@@ -150,7 +153,10 @@ export abstract class BaseMode<
     this.on(DrawerEvent.edit, this.emitChangeEvent);
     this.on(DrawerEvent.addNode, this.saveSourceHistory);
     this.scene.on(SceneEvent.mousemove, this.saveMouseLngLat);
-    Mousetrap.bind(['mod+z'], this.revertSourceHistory);
+    if (this.options.history) {
+      Mousetrap.bind(this.options.history.revertKeys, this.revertSourceHistory);
+      Mousetrap.bind(this.options.history.redoKeys, this.redoSourceHistory);
+    }
   }
 
   /**
@@ -161,7 +167,10 @@ export abstract class BaseMode<
     this.off(DrawerEvent.edit, this.emitChangeEvent);
     this.off(DrawerEvent.addNode, this.saveSourceHistory);
     this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
-    Mousetrap.unbind(['mod+z']);
+    if (this.options.history) {
+      Mousetrap.unbind(this.options.history.revertKeys);
+      Mousetrap.unbind(this.options.history.redoKeys);
+    }
   }
 
   // 用于收集当前鼠标所在经纬度的回调函数，用于在数据回退时，若有存在绘制中的数据，伪造mousemove事件时使用
@@ -181,6 +190,9 @@ export abstract class BaseMode<
    * 保存当前数据备份
    */
   saveSourceHistory = debounce(() => {
+    if (!this.options.history) {
+      return;
+    }
     this.source.saveHistory();
   }, 100);
 
@@ -188,10 +200,30 @@ export abstract class BaseMode<
    * 回退至上一次数据备份
    */
   revertSourceHistory() {
-    if (!this.isEnable) {
+    if (!this.isEnable || !this.options.history) {
       return;
     }
-    this.source.revertHistory();
+    if (this.source.revertHistory()) {
+      this.correctDrawItem();
+    }
+  }
+
+  /**
+   * 重做回退之前的数据备份
+   */
+  redoSourceHistory() {
+    if (!this.isEnable || !this.options.history) {
+      return;
+    }
+    if (this.source.redoHistory()) {
+      this.correctDrawItem();
+    }
+  }
+
+  /**
+   * 矫正正在绘制Feature的虚线部分（Drawer中都是在onSceneMouseMove中进行绘制）
+   */
+  correctDrawItem() {
     const drawItem = this.getData().find((item) => item.properties.isDraw);
     // 如果当前有正在绘制的元素，需要将虚线部分与鼠标位置表现一致，而非history保存时的虚线位置
     if (drawItem) {
@@ -240,6 +272,7 @@ export abstract class BaseMode<
       editable: true,
       style: cloneDeep(DEFAULT_STYLE),
       multiple: true,
+      history: cloneDeep(DEFAULT_HISTORY_CONFIG),
     } as unknown as O;
   }
 
@@ -308,6 +341,7 @@ export abstract class BaseMode<
    * 销毁当前Drawer
    */
   destroy() {
+    this.disable();
     this.clear(true);
     Object.values(this.render).forEach((render) => {
       render.destroy();

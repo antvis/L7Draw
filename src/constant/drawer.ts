@@ -1,4 +1,8 @@
-import { IAreaOptions, IDistanceOptions } from '../typings';
+import {
+  IAreaOptions,
+  IDistanceOptions,
+  SourceHistoryConfig,
+} from '../typings';
 
 export const DEFAULT_DISTANCE_OPTIONS: IDistanceOptions = {
   total: false,
@@ -22,4 +26,10 @@ export const DEFAULT_AREA_OPTIONS: IAreaOptions = {
   },
   showOnNormal: true,
   showOnActive: true,
+};
+
+export const DEFAULT_HISTORY_CONFIG: SourceHistoryConfig = {
+  revertKeys: ['command+z', 'ctrl+z'],
+  redoKeys: ['command+shift+z', 'ctrl+shift+z'],
+  maxSize: 100,
 };

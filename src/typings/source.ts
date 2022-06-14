@@ -1,3 +1,4 @@
+import { PointRender } from '../render';
 import {
   IDashLineFeature,
   ILineFeature,
@@ -6,7 +7,6 @@ import {
   IPolygonFeature,
   ITextFeature,
 } from './feature';
-import { PointRender } from '../render';
 // import { PointRender, LineRender, PolygonRender, TextRender } from '../render';
 
 /**
@@ -20,6 +20,14 @@ export interface SourceData {
   dashLine: IDashLineFeature[];
   text: ITextFeature[];
 }
+
+export type SourceHistoryConfig = {
+  revertKeys: string[];
+  redoKeys: string[];
+  maxSize: number;
+};
+
+export type SourceHistoryOptions = false | SourceHistoryConfig;
 
 /**
  * Render key => value 映射关系
@@ -45,4 +53,5 @@ export type RenderMap = Partial<{
 export interface SourceOptions {
   data?: Partial<SourceData>;
   render: RenderMap;
+  history: SourceHistoryOptions;
 }
