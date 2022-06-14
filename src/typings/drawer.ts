@@ -1,5 +1,6 @@
-import { IStyle } from './style';
 import { Feature } from '@turf/turf';
+import { SourceHistoryOptions } from './source';
+import { IStyle } from './style';
 
 /**
  * 鼠标指针类型
@@ -28,6 +29,7 @@ export interface IBaseModeOptions<F extends Feature = Feature> {
   editable: boolean;
   autoFocus: boolean;
   multiple: boolean;
+  history: SourceHistoryOptions;
 }
 
 /**
