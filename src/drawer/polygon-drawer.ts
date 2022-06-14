@@ -1,5 +1,8 @@
-import { IPolygonModeOptions, PolygonMode } from '../mode';
+import { Scene } from '@antv/l7';
 import { coordAll, Feature, Polygon } from '@turf/turf';
+import { first, last } from 'lodash';
+import { DrawerEvent } from '../constant';
+import { IPolygonModeOptions, PolygonMode } from '../mode';
 import {
   DeepPartial,
   IDashLineFeature,
@@ -9,7 +12,6 @@ import {
   IPolygonFeature,
   ISceneMouseEvent,
 } from '../typings';
-import { Scene } from '@antv/l7';
 import {
   createDashLine,
   createLineFeature,
@@ -18,8 +20,6 @@ import {
   getPosition,
   isSameFeature,
 } from '../utils';
-import { first, last } from 'lodash';
-import { DrawerEvent } from '../constant';
 
 export type IPolygonDrawerOptions = IPolygonModeOptions<Feature<Polygon>>;
 
@@ -142,11 +142,15 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
   }
 
   onPointDragging(e: ISceneMouseEvent): IPointFeature | undefined {
-    const feature = super.onPointDragging(e);
+    const feature = this.dragPoint;
     const editPolygon = this.editPolygon;
     if (feature && editPolygon) {
-      const { nodes, line } = editPolygon.properties;
+      const { line } = editPolygon.properties;
+      line.properties.nodes = line.properties.nodes.map((node) => {
+        return isSameFeature(node, feature) ? feature : node;
+      });
       const lineNodes = line.properties.nodes;
+      const nodes = lineNodes.slice(0, lineNodes.length - 1);
       const firstLineNode = first(lineNodes)!;
       const lastLineNode = last(lineNodes)!;
       if (
@@ -154,8 +158,9 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
         isSameFeature(lastLineNode, feature)
       ) {
         firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates =
-          feature.geometry.coordinates;
+          getPosition(e);
       }
+      super.onPointDragging(e);
       this.syncPolygonNodes(editPolygon, nodes);
       this.setEditPolygon(editPolygon);
     }

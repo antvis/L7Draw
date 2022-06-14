@@ -1,3 +1,6 @@
+import { coordAll, Feature, featureCollection, Position } from '@turf/turf';
+import { DEFAULT_DISTANCE_OPTIONS, RenderEvent, SceneEvent } from '../constant';
+import { LineRender } from '../render';
 import {
   DeepPartial,
   FeatureUpdater,
@@ -13,6 +16,7 @@ import {
   ITextFeature,
 } from '../typings';
 import {
+  calcDistanceTextsByLine,
   createLineFeature,
   createPointFeature,
   getLngLat,
@@ -20,12 +24,7 @@ import {
   isSameFeature,
   updateTargetFeature,
 } from '../utils';
-import { coordAll, Feature, featureCollection } from '@turf/turf';
-import { DEFAULT_DISTANCE_OPTIONS, RenderEvent, SceneEvent } from '../constant';
-import { LineRender } from '../render';
-import { Position } from '@turf/turf';
 import { IMidPointModeOptions, MidPointMode } from './mid-point-mode';
-import { calcDistanceTextsByLine } from '../utils';
 
 export interface ILineModeOptions<F extends Feature = Feature>
   extends IMidPointModeOptions<F> {
@@ -368,6 +367,9 @@ export abstract class LineMode<
   handleLineDragEnd(line: ILineFeature) {
     line.properties.isDrag = false;
     this.setLineData((features) => features);
+    this.scene.setMapStatus({
+      dragEnable: true,
+    });
     return line;
   }
 
