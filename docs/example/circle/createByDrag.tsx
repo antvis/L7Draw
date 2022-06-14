@@ -21,7 +21,6 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new CircleDrawer(scene, {
-        createByClick: false,
         createByDrag: true,
       });
       setCircleDrawer(drawer);

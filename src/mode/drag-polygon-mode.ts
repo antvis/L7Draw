@@ -25,7 +25,6 @@ import { IPolygonModeOptions, PolygonMode } from './polygon-mode';
 
 export interface IDragPolygonModeOptions<F extends Feature = Feature>
   extends IPolygonModeOptions<F> {
-  createByClick: boolean;
   createByDrag: boolean;
 }
 
@@ -47,7 +46,6 @@ export abstract class DragPolygonMode<
     const newOptions = {
       ...super.getDefaultOptions(options),
       showMidPoint: false,
-      createByClick: true,
       createByDrag: false,
       autoFocus: false,
     };
@@ -126,12 +124,12 @@ export abstract class DragPolygonMode<
   }
 
   onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {
-    const { multiple, createByClick } = this.options;
+    const { multiple, createByDrag } = this.options;
     if (
       (!multiple && this.getPolygonData().length >= 1 && !this.drawPolygon) ||
       this.dragPoint ||
       this.editLine ||
-      !createByClick
+      createByDrag
     ) {
       return;
     }
