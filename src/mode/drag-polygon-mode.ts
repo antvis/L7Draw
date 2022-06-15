@@ -1,7 +1,7 @@
 import { Scene } from '@antv/l7';
 import { Feature } from '@turf/turf';
 import { first, last } from 'lodash';
-import {DrawerEvent, RenderEvent, SceneEvent} from '../constant';
+import { DrawerEvent, RenderEvent, SceneEvent } from '../constant';
 import {
   DeepPartial,
   ILayerMouseEvent,

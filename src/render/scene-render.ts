@@ -3,16 +3,41 @@ import EventEmitter from 'eventemitter3';
 import { RenderEvent, SceneEvent } from '../constant';
 import { ISceneMouseEvent } from '../typings';
 
+type PreviousClick = {
+  time: number;
+  x: number;
+  y: number;
+};
+
 export class SceneRender extends EventEmitter<RenderEvent> {
   protected scene: Scene;
+
+  protected previousClick?: PreviousClick;
 
   constructor(scene: Scene) {
     super();
     this.scene = scene;
   }
 
+  /**
+   * L7原生dblclick经常误触发，故改用这种方式
+   * @param e
+   */
   onDblClick = (e: ISceneMouseEvent) => {
-    this.emit(RenderEvent.dblClick, e);
+    const { x = 0, y = 0 } = e.pixel ?? {};
+    const time = Date.now();
+
+    if (this.previousClick) {
+      const { x: oldX, y: oldY, time: oldTime } = this.previousClick;
+      if (
+        time - oldTime < 300 &&
+        Math.abs(x - oldX) < 5 &&
+        Math.abs(y - oldY) < 5
+      ) {
+        this.emit(RenderEvent.dblClick, e);
+      }
+    }
+    this.previousClick = { x, y, time };
   };
 
   onMouseMove = (e: ISceneMouseEvent) => {
@@ -54,10 +79,10 @@ export class SceneRender extends EventEmitter<RenderEvent> {
   }
 
   enableDblClick() {
-    this.scene.on(SceneEvent.dblclick, this.onDblClick);
+    this.scene.on(SceneEvent.mousedown, this.onDblClick);
   }
 
   disableDblClick() {
-    this.scene.on(SceneEvent.dblclick, this.onDblClick);
+    this.scene.on(SceneEvent.mousedown, this.onDblClick);
   }
 }
