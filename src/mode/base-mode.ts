@@ -6,6 +6,7 @@ import Mousetrap from 'mousetrap';
 import {
   DEFAULT_CURSOR_MAP,
   DEFAULT_HISTORY_CONFIG,
+  DEFAULT_KEYBOARD_CONFIG,
   DEFAULT_STYLE,
   DrawerEvent,
   RENDER_MAP,
@@ -23,7 +24,7 @@ import {
   ISceneMouseEvent,
   RenderMap,
 } from '../typings';
-import { getLngLat } from '../utils';
+import { getLngLat, isSameFeature } from '../utils';
 
 export abstract class BaseMode<
   O extends IBaseModeOptions,
@@ -74,7 +75,7 @@ export abstract class BaseMode<
 
     this.source = new Source({
       render: this.render,
-      history: this.options.history,
+      history: this.options.history || undefined,
     });
     this.cursor = new Cursor(scene, this.options.cursor);
 
@@ -140,6 +141,7 @@ export abstract class BaseMode<
     this.onSceneMouseMove = this.onSceneMouseMove.bind(this);
     this.revertHistory = this.revertHistory.bind(this);
     this.redoHistory = this.redoHistory.bind(this);
+    this.removeActiveItem = this.removeActiveItem.bind(this);
     this.saveMouseLngLat = this.saveMouseLngLat.bind(this);
     this.bindCommonEvent = this.bindCommonEvent.bind(this);
     this.unbindCommonEvent = this.unbindCommonEvent.bind(this);
@@ -151,11 +153,16 @@ export abstract class BaseMode<
   bindCommonEvent() {
     this.on(DrawerEvent.add, this.emitChangeEvent);
     this.on(DrawerEvent.edit, this.emitChangeEvent);
+    this.on(DrawerEvent.remove, this.emitChangeEvent);
     this.on(DrawerEvent.addNode, this.saveHistory);
     this.scene.on(SceneEvent.mousemove, this.saveMouseLngLat);
+
+    // 快捷键绑定
+    const { revert, redo, remove } = this.options.keyboard || {};
+    remove && Mousetrap.bind(remove, this.removeActiveItem);
     if (this.options.history) {
-      Mousetrap.bind(this.options.history.revertKeys, this.revertHistory);
-      Mousetrap.bind(this.options.history.redoKeys, this.redoHistory);
+      revert && Mousetrap.bind(revert, this.revertHistory);
+      redo && Mousetrap.bind(redo, this.redoHistory);
     }
   }
 
@@ -165,11 +172,16 @@ export abstract class BaseMode<
   unbindCommonEvent() {
     this.off(DrawerEvent.add, this.emitChangeEvent);
     this.off(DrawerEvent.edit, this.emitChangeEvent);
+    this.off(DrawerEvent.remove, this.emitChangeEvent);
     this.off(DrawerEvent.addNode, this.saveHistory);
     this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
+
+    // 快捷键解绑
+    const { revert, redo, remove } = this.options.keyboard || {};
+    remove && Mousetrap.unbind(remove);
     if (this.options.history) {
-      Mousetrap.unbind(this.options.history.revertKeys);
-      Mousetrap.unbind(this.options.history.redoKeys);
+      revert && Mousetrap.unbind(revert);
+      redo && Mousetrap.unbind(redo);
     }
   }
 
@@ -218,6 +230,32 @@ export abstract class BaseMode<
     if (this.source.redoHistory()) {
       this.correctDrawItem();
     }
+  }
+
+  /**
+   * 删除当前active的绘制物
+   */
+  removeActiveItem() {
+    const activeItem = this.getData().find((item) => {
+      // @ts-ignore
+      const { isActive, isDraw } = item.properties;
+      return isActive || isDraw;
+    });
+    if (activeItem) {
+      this.removeItem(activeItem);
+    }
+    return activeItem;
+  }
+
+  /**
+   * 删除指定
+   * @param target
+   */
+  removeItem<F extends IBaseFeature = IBaseFeature>(target: F) {
+    const data = this.getData();
+    // @ts-ignore
+    this.setData(data.filter((item) => !isSameFeature(target, item)));
+    this.emit(DrawerEvent.remove, target, this.getData());
   }
 
   /**
@@ -273,6 +311,7 @@ export abstract class BaseMode<
       style: cloneDeep(DEFAULT_STYLE),
       multiple: true,
       history: cloneDeep(DEFAULT_HISTORY_CONFIG),
+      keyboard: cloneDeep(DEFAULT_KEYBOARD_CONFIG),
     } as unknown as O;
   }
 

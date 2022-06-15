@@ -58,7 +58,7 @@ export class Source extends EventEmitter<SourceEvent> {
   }
 
   saveHistory() {
-    this.history?.save(this.data);
+    return this.history?.save(this.data);
   }
 
   revertHistory() {
