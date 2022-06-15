@@ -2,7 +2,7 @@
 title: 样式
 order: 1
 group:
-  title: 通用配置
+  title: 配置
   order: 2
   path: /common
 ---

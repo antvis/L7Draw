@@ -35,6 +35,11 @@ const Demo: React.FC = () => {
         console.log('edit', editPolygon, polygonList);
       });
 
+      // 监听删除 Polygon 的事件
+      drawer.on(DrawerEvent.remove, (removePolygon, polygonList) => {
+        console.log('remove', removePolygon, polygonList);
+      });
+
       // 监听添加结点的事件
       drawer.on(DrawerEvent.addNode, (node, editPoint, polygonList) => {
         console.log('addNode', node, editPoint, polygonList);

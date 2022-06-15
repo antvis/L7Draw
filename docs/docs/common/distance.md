@@ -2,7 +2,7 @@
 title: 距离
 order: 3
 group:
-  title: 通用配置
+  title: 配置
   order: 2
   path: /common
 ---

@@ -38,7 +38,9 @@ export class History {
     if (this.historyList.length >= maxSize) {
       this.historyList.pop();
     }
-    this.historyList.unshift(cloneDeep(data));
+    const cloneData = cloneDeep(data);
+    this.historyList.unshift(cloneData);
+    return cloneData;
   }
 
   revert() {

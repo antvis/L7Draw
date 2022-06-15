@@ -33,6 +33,11 @@ const Demo: React.FC = () => {
         console.log('edit', editPoint, pointList);
       });
 
+      // 删除 Point 的事件
+      drawer.on(DrawerEvent.remove, (removePoint, pointList) => {
+        console.log('remove', removePoint, pointList);
+      });
+
       // Point数据发生变更时触发，等价于同时监听add和edit事件
       drawer.on(DrawerEvent.change, (pointList) => {
         console.log('change', pointList);

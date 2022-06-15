@@ -23,39 +23,44 @@ const Demo: React.FC = () => {
       setLineDrawer(drawer);
       drawer.enable();
 
-      // 监听添加Point的事件
-      drawer.on(DrawerEvent.add, (newPoint, lineList) => {
-        console.log('add', newPoint, lineList);
+      // 监听添加LineString的事件
+      drawer.on(DrawerEvent.add, (newLine, lineList) => {
+        console.log('add', newLine, lineList);
       });
 
-      // 监听编辑Point(拖拽结束)的事件
-      drawer.on(DrawerEvent.edit, (editPoint, lineList) => {
-        console.log('edit', editPoint, lineList);
+      // 监听编辑LineString(拖拽结束)的事件
+      drawer.on(DrawerEvent.edit, (editLine, lineList) => {
+        console.log('edit', editLine, lineList);
+      });
+
+      // 监听删除 LineString 的事件
+      drawer.on(DrawerEvent.remove, (removePolygon, polygonList) => {
+        console.log('remove', removePolygon, polygonList);
       });
 
       // 监听添加结点的事件
-      drawer.on(DrawerEvent.addNode, (node, editPoint, lineList) => {
-        console.log('addNode', node, editPoint, lineList);
+      drawer.on(DrawerEvent.addNode, (node, editLine, lineList) => {
+        console.log('addNode', node, editLine, lineList);
       });
 
-      // Point数据发生变更时触发，等价于同时监听add和edit事件
+      // LineString数据发生变更时触发，等价于同时监听add和edit事件
       drawer.on(DrawerEvent.change, (lineList) => {
         console.log('change', lineList);
       });
 
       // 拖拽开始
-      drawer.on(DrawerEvent.dragStart, (editPoint, lineList) => {
-        console.log('dragStart', editPoint, lineList);
+      drawer.on(DrawerEvent.dragStart, (editLine, lineList) => {
+        console.log('dragStart', editLine, lineList);
       });
 
       // 拖拽中
-      drawer.on(DrawerEvent.dragging, (editPoint, lineList) => {
-        console.log('dragging', editPoint, lineList);
+      drawer.on(DrawerEvent.dragging, (editLine, lineList) => {
+        console.log('dragging', editLine, lineList);
       });
 
       // 拖拽结束
-      drawer.on(DrawerEvent.dragEnd, (editPoint, lineList) => {
-        console.log('dragEnd', editPoint, lineList);
+      drawer.on(DrawerEvent.dragEnd, (editLine, lineList) => {
+        console.log('dragEnd', editLine, lineList);
       });
     });
   }, []);
