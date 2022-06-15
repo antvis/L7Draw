@@ -1,4 +1,4 @@
-import { BaseRender } from '../render';
+import { LayerRender } from '../render';
 import {
   ILayerMouseEvent,
   ILineFeature,
@@ -9,7 +9,7 @@ import { ILayer, PolygonLayer } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
 import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
 
-export class PolygonRender extends BaseRender<IPolygonFeature, IPolygonStyle> {
+export class PolygonRender extends LayerRender<IPolygonFeature, IPolygonStyle> {
   getLayers(): ILayer[] {
     const { normal, hover, active, style } = this.style;
     const polygonLayer = new PolygonLayer({
@@ -79,6 +79,6 @@ export class PolygonRender extends BaseRender<IPolygonFeature, IPolygonStyle> {
   }
 
   disableUnClick() {
-    this.layers[0].on(LayerEvent.unclick, this.onUnClick);
+    this.layers[0].off(LayerEvent.unclick, this.onUnClick);
   }
 }

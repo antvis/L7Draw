@@ -4,7 +4,7 @@ import { RenderEvent } from '../constant';
 import { Scene, ILayer } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
 
-export abstract class BaseRender<
+export abstract class LayerRender<
   F extends IBaseFeature = IBaseFeature,
   S extends IBaseStyle = IBaseStyle,
 > extends EventEmitter<RenderEvent> {

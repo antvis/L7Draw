@@ -1,4 +1,4 @@
-import { BaseRender } from './base-render';
+import { LayerRender } from './layer-render';
 import { ILayer, PointLayer } from '@antv/l7';
 import {
   ILayerMouseEvent,
@@ -9,7 +9,7 @@ import {
 import { featureCollection } from '@turf/turf';
 import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
 
-export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
+export class PointRender extends LayerRender<IPointFeature, IPointStyle> {
   getLayers(): ILayer[] {
     const { normal, hover, active, style } = this.style;
     const layer = new PointLayer({
