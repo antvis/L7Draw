@@ -16,7 +16,7 @@ group:
 距离文本配置是在各个 Drawer 的 areaText 字段来进行配置的
 
 ```tsx | pure
-import {PointDrawer} from '@antv/l7-draw';
+import { PointDrawer } from '@antv/l7-draw';
 
 const drawer = new PointDrawer(scene, {
   areaText: {
@@ -35,8 +35,8 @@ const drawer = new PointDrawer(scene, {
 
 # 配置
 
-| 名称         | 说明                   | 类型                               | 默认值              |
-| ------------ | ---------------------- |----------------------------------| ------------------- |
+| 名称         | 说明                   | 类型                             | 默认值              |
+| ------------ | ---------------------- | -------------------------------- | ------------------- |
 | showOnActive | 是否在编辑状态下展示   | boolean                          | true                |
 | showOnNormal | 是否在非编辑状态下展示 | boolean                          | true                |
 | format       | 格式化面积平方米的函数 | (squareMeters: number) => string | [见上述示例](#示例) |

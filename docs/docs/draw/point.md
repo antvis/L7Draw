@@ -34,14 +34,14 @@ drawer.on(DrawerEvent.change, (pointList) => {
 
 options 配置是 Drawer 实例化的时候，作为第二个参数传入，所有的 options 配置均不是必传项。
 
-| 名称      | 说明                                        | 类型                   | 默认值 | 示例                                                                         |
-| --------- |-------------------------------------------| ---------------------- | ------ | ---------------------------------------------------------------------------- |
-| initData  | 设置 Drawer 的初始数据                           | Feature&lt;Point&gt;[] | []     | [初始化数据示例](/example/point/init-data)                                   |
-| multiple  | 是否支持绘制多个 Point                            | boolean                | true   | [关闭绘制多个](/example/point/multiple)                                      |
-| autoFocus | 绘制 Point 后，新增的 Point 是否为激活态               | boolean                | true   | [关闭自动激活示例](/example/point/auto-focus)                                |
-| editable  | 绘制的 Point 是否支持二次编辑（拖拽位移）                  | boolean                | true   | [禁用编辑示例](/example/point/editable)                                      |
-| style     | 绘制时不同状态下的样式，详情可见 [样式](/docs/style)   | IStyleItem             | -      | [使用图片示例](/example/point/image), [自定义样式示例](/example/point/style) |
-| history   | 回退、重做、历史记录等相关配置，详情可见 [回退/重做](/docs/history) | [History配置](/docs/history)          | -      | -                                                                            |
+| 名称      | 说明                                                                | 类型                          | 默认值 | 示例                                                                         |
+| --------- | ------------------------------------------------------------------- | ----------------------------- | ------ | ---------------------------------------------------------------------------- |
+| initData  | 设置 Drawer 的初始数据                                              | Feature&lt;Point&gt;[]        | []     | [初始化数据示例](/example/point/init-data)                                   |
+| multiple  | 是否支持绘制多个 Point                                              | boolean                       | true   | [关闭绘制多个](/example/point/multiple)                                      |
+| autoFocus | 绘制 Point 后，新增的 Point 是否为激活态                            | boolean                       | true   | [关闭自动激活示例](/example/point/auto-focus)                                |
+| editable  | 绘制的 Point 是否支持二次编辑（拖拽位移）                           | boolean                       | true   | [禁用编辑示例](/example/point/editable)                                      |
+| style     | 绘制时不同状态下的样式，详情可见 [样式](/docs/style)                | IStyleItem                    | -      | [使用图片示例](/example/point/image), [自定义样式示例](/example/point/style) |
+| history   | 回退、重做、历史记录等相关配置，详情可见 [回退/重做](/docs/history) | [History 配置](/docs/history) | -      | -                                                                            |
 
 # 方法
 

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Scene } from '@antv/l7';
-import { GaodeMapV2 } from '@antv/l7-maps';
-import { DrawerEvent, CircleDrawer } from '@antv/l7-draw';
-import { circleList } from './mock';
+import {Scene} from '@antv/l7';
+import {CircleDrawer, DrawerEvent} from '@antv/l7-draw';
+import {GaodeMapV2} from '@antv/l7-maps';
+import React, {useEffect, useState} from 'react';
+import {circleList} from './mock';
 
 const id = String(Math.random());
 

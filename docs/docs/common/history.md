@@ -18,7 +18,7 @@ group:
 回退/重做的配置是在各个 Drawer 的 history 字段来进行配置的
 
 ```tsx | pure
-import {PointDrawer} from '@antv/l7-draw';
+import { PointDrawer } from '@antv/l7-draw';
 
 const drawer = new PointDrawer(scene, {
   history: {
@@ -36,9 +36,9 @@ drawer.revertHistory();
 
 # 配置
 
-| 名称       | 说明                                                                                                  | 类型     | 默认值                              |
-| ---------- | ----------------------------------------------------------------------------------------------------- | -------- | ----------------------------------- |
-| maxSize    | 保存历史记录的最大个数，超出时则把最早的记录剔除                                                      | number   | 100                                 |
+| 名称       | 说明                                                                                                       | 类型     | 默认值                              |
+| ---------- | ---------------------------------------------------------------------------------------------------------- | -------- | ----------------------------------- |
+| maxSize    | 保存历史记录的最大个数，超出时则把最早的记录剔除                                                           | number   | 100                                 |
 | revertKeys | 回退操作对应的快捷键，其中每组快捷键的具体配置方法可以参照 [Mousetrap 文档](https://craig.is/killing/mice) | string[] | ['command+z', 'ctrl+z']             |
 | redoKeys   | 重做操作对应的快捷键，其中每组快捷键的具体配置方法可以参照 [Mousetrap 文档](https://craig.is/killing/mice) | string[] | ['command+shift+z', 'ctrl+shift+z'] |
 
