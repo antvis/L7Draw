@@ -13,6 +13,7 @@ import {
   SceneEvent,
 } from '../constant';
 import { Cursor } from '../interactive';
+import { SceneRender } from '../render';
 import { Source } from '../source';
 import {
   DeepPartial,
@@ -60,6 +61,12 @@ export abstract class BaseMode<
    */
   protected isEnable = false;
 
+  /**
+   * scene相关事件管理
+   * @protected
+   */
+  protected sceneRender: SceneRender;
+
   protected mouseLngLat: ILngLat = {
     lng: 0,
     lat: 0,
@@ -70,6 +77,7 @@ export abstract class BaseMode<
     this.bindThis();
 
     this.scene = scene;
+    this.sceneRender = new SceneRender(scene);
     this.options = merge({}, this.getDefaultOptions(options), options);
     this.render = this.initRender();
 
@@ -142,7 +150,6 @@ export abstract class BaseMode<
     this.revertHistory = this.revertHistory.bind(this);
     this.redoHistory = this.redoHistory.bind(this);
     this.removeActiveItem = this.removeActiveItem.bind(this);
-    this.saveMouseLngLat = this.saveMouseLngLat.bind(this);
     this.bindCommonEvent = this.bindCommonEvent.bind(this);
     this.unbindCommonEvent = this.unbindCommonEvent.bind(this);
   }
@@ -186,9 +193,15 @@ export abstract class BaseMode<
   }
 
   // 用于收集当前鼠标所在经纬度的回调函数，用于在数据回退时，若有存在绘制中的数据，伪造mousemove事件时使用
-  saveMouseLngLat(e: ISceneMouseEvent) {
-    this.mouseLngLat = getLngLat(e);
-  }
+  saveMouseLngLat = debounce(
+    (e: ISceneMouseEvent) => {
+      this.mouseLngLat = getLngLat(e);
+    },
+    100,
+    {
+      maxWait: 100,
+    },
+  );
 
   /**
    * 触发change事件，同时触发保存数据备份
@@ -339,8 +352,6 @@ export abstract class BaseMode<
     }
     this.isEnable = true;
     this.resetCursor();
-    this.unbindEnableEvent();
-    this.unbindCommonEvent();
     this.bindEnableEvent();
     this.bindCommonEvent();
     this.scene.setMapStatus({

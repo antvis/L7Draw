@@ -172,12 +172,14 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   }
 
   bindEnableEvent(): void {
+    this.enableSceneRenderAction();
     this.enablePointRenderAction();
     this.enableLineRenderAction();
     this.enableMidPointRenderAction();
   }
 
   unbindEnableEvent(): void {
+    this.disableSceneRenderAction();
     this.disablePointRenderAction();
     this.disableLineRenderAction();
     this.disableMidPointRenderAction();
