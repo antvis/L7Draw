@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
 import { Scene } from '@antv/l7';
+import { PointDrawer } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
-import { useEffect } from 'react';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
-import { PointDrawer } from '@antv/l7-draw';
+import React, { useEffect, useState } from 'react';
 
 const Demo: React.FC = () => {
   const [pointDrawer, setPointDrawer] = useState<PointDrawer | null>(null);

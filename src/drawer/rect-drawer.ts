@@ -19,12 +19,11 @@ import {
   ISceneMouseEvent,
 } from '../typings';
 import { createLineFeature, createPointFeature, isSameFeature } from '../utils';
-import { IPolygonDrawerOptions } from './polygon-drawer';
 
 export type IRectDrawerOptions = IDragPolygonModeOptions<Feature<Polygon>>;
 
 export class RectDrawer extends DragPolygonMode<IRectDrawerOptions> {
-  constructor(scene: Scene, options: DeepPartial<IPolygonDrawerOptions>) {
+  constructor(scene: Scene, options: DeepPartial<IRectDrawerOptions>) {
     super(scene, options);
     this.bindPointRenderEvent();
     this.bindSceneEvent();

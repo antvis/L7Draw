@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import { Scene } from '@antv/l7';
-import { GaodeMapV2 } from '@antv/l7-maps';
 import { PolygonDrawer } from '@antv/l7-draw';
-import { polygonList } from './mock';
+import { GaodeMapV2 } from '@antv/l7-maps';
 import { cloneDeep } from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { polygonList } from './mock';
 
 const id = String(Math.random());
 

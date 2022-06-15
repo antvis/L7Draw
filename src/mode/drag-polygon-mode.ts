@@ -105,6 +105,12 @@ export abstract class DragPolygonMode<
         },
       }),
     );
+    this.emit(
+      DrawerEvent.addNode,
+      firstNode,
+      this.drawPolygon,
+      this.getPolygonData(),
+    );
     return firstNode;
   }
 
@@ -120,6 +126,13 @@ export abstract class DragPolygonMode<
       this.handlePolygonUnClick(drawPolygon);
     }
     this.emit(DrawerEvent.add, drawPolygon, this.getPolygonData());
+
+    this.emit(
+      DrawerEvent.addNode,
+      drawPolygon.properties.nodes[1],
+      this.drawPolygon,
+      this.getPolygonData(),
+    );
     return lastNode;
   }
 

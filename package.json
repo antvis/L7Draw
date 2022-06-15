@@ -2,6 +2,7 @@
   "name": "@antv/l7-draw",
   "version": "3.0.0-alpha.2",
   "description": "A drawing package for L7",
+  "license": "MIT",
   "scripts": {
     "prepare": "husky install",
     "start": "dumi dev",
@@ -26,19 +27,6 @@
   "module": "es/index.js",
   "typings": "es/index.d.ts",
   "browser": "dist/l7-draw.min.js",
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,jsx,less,md,json}": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.ts?(x)": [
-      "prettier --parser=typescript --write",
-      "git add"
-    ]
-  },
   "dependencies": {
     "@turf/turf": "^6.5.0",
     "eventemitter3": "^4.0.7",
@@ -88,6 +76,25 @@
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,less,md,json}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.ts?(x)": [
+      "prettier --parser=typescript --write",
+      "git add"
+    ]
+  },
+  "keywords": [
+    "antv",
+    "l7",
+    "draw",
+    "l7 draw"
+  ],
   "author": {
     "name": "AntV",
     "url": "https://antv.vision/"
