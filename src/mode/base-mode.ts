@@ -85,7 +85,7 @@ export abstract class BaseMode<
       if (initData) {
         this.setData(initData);
       }
-      this.saveSourceHistory();
+      this.saveHistory();
     }, 0);
   }
 
@@ -136,10 +136,10 @@ export abstract class BaseMode<
     this.getData = this.getData.bind(this);
     this.setData = this.setData.bind(this);
     this.emitChangeEvent = this.emitChangeEvent.bind(this);
-    this.saveSourceHistory = this.saveSourceHistory.bind(this);
+    this.saveHistory = this.saveHistory.bind(this);
     this.onSceneMouseMove = this.onSceneMouseMove.bind(this);
-    this.revertSourceHistory = this.revertSourceHistory.bind(this);
-    this.redoSourceHistory = this.redoSourceHistory.bind(this);
+    this.revertHistory = this.revertHistory.bind(this);
+    this.redoHistory = this.redoHistory.bind(this);
     this.saveMouseLngLat = this.saveMouseLngLat.bind(this);
     this.bindCommonEvent = this.bindCommonEvent.bind(this);
     this.unbindCommonEvent = this.unbindCommonEvent.bind(this);
@@ -151,11 +151,11 @@ export abstract class BaseMode<
   bindCommonEvent() {
     this.on(DrawerEvent.add, this.emitChangeEvent);
     this.on(DrawerEvent.edit, this.emitChangeEvent);
-    this.on(DrawerEvent.addNode, this.saveSourceHistory);
+    this.on(DrawerEvent.addNode, this.saveHistory);
     this.scene.on(SceneEvent.mousemove, this.saveMouseLngLat);
     if (this.options.history) {
-      Mousetrap.bind(this.options.history.revertKeys, this.revertSourceHistory);
-      Mousetrap.bind(this.options.history.redoKeys, this.redoSourceHistory);
+      Mousetrap.bind(this.options.history.revertKeys, this.revertHistory);
+      Mousetrap.bind(this.options.history.redoKeys, this.redoHistory);
     }
   }
 
@@ -165,7 +165,7 @@ export abstract class BaseMode<
   unbindCommonEvent() {
     this.off(DrawerEvent.add, this.emitChangeEvent);
     this.off(DrawerEvent.edit, this.emitChangeEvent);
-    this.off(DrawerEvent.addNode, this.saveSourceHistory);
+    this.off(DrawerEvent.addNode, this.saveHistory);
     this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
     if (this.options.history) {
       Mousetrap.unbind(this.options.history.revertKeys);
@@ -183,13 +183,13 @@ export abstract class BaseMode<
    */
   emitChangeEvent() {
     this.emit(DrawerEvent.change, this.getData());
-    this.saveSourceHistory();
+    this.saveHistory();
   }
 
   /**
    * 保存当前数据备份
    */
-  saveSourceHistory = debounce(() => {
+  saveHistory = debounce(() => {
     if (!this.options.history) {
       return;
     }
@@ -199,7 +199,7 @@ export abstract class BaseMode<
   /**
    * 回退至上一次数据备份
    */
-  revertSourceHistory() {
+  revertHistory() {
     if (!this.isEnable || !this.options.history) {
       return;
     }
@@ -211,7 +211,7 @@ export abstract class BaseMode<
   /**
    * 重做回退之前的数据备份
    */
-  redoSourceHistory() {
+  redoHistory() {
     if (!this.isEnable || !this.options.history) {
       return;
     }

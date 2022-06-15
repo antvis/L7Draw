@@ -19,13 +19,13 @@ export const DEFAULT_DISTANCE_OPTIONS: IDistanceOptions = {
 };
 
 export const DEFAULT_AREA_OPTIONS: IAreaOptions = {
+  showOnNormal: true,
+  showOnActive: true,
   format: (squareMeters: number) => {
     return squareMeters > 1000000
       ? `${+(squareMeters / 1000000).toFixed(2)}km²`
       : `${+squareMeters.toFixed(2)}m²`;
   },
-  showOnNormal: true,
-  showOnActive: true,
 };
 
 export const DEFAULT_HISTORY_CONFIG: SourceHistoryConfig = {

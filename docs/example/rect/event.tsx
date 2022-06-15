@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import { Scene } from '@antv/l7';
-import { GaodeMapV2 } from '@antv/l7-maps';
 import { DrawerEvent, RectDrawer } from '@antv/l7-draw';
+import { GaodeMapV2 } from '@antv/l7-maps';
+import React, { useEffect, useState } from 'react';
 
 const id = String(Math.random());
 
