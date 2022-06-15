@@ -14,7 +14,7 @@ group:
 # 示例
 
 ```tsx | pure
-import {CircleDrawer, DrawerEvent} from '@antv/l7-draw';
+import { CircleDrawer, DrawerEvent } from '@antv/l7-draw';
 
 // 实例化
 const drawer = new CircleDrawer(scene, {
