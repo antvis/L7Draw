@@ -1,7 +1,8 @@
 import {
+  HistoryConfig,
   IAreaOptions,
   IDistanceOptions,
-  SourceHistoryConfig,
+  KeyBoardConfig,
 } from '../typings';
 
 export const DEFAULT_DISTANCE_OPTIONS: IDistanceOptions = {
@@ -28,8 +29,12 @@ export const DEFAULT_AREA_OPTIONS: IAreaOptions = {
   showOnActive: true,
 };
 
-export const DEFAULT_HISTORY_CONFIG: SourceHistoryConfig = {
-  revertKeys: ['command+z', 'ctrl+z'],
-  redoKeys: ['command+shift+z', 'ctrl+shift+z'],
+export const DEFAULT_HISTORY_CONFIG: HistoryConfig = {
   maxSize: 100,
+};
+
+export const DEFAULT_KEYBOARD_CONFIG: KeyBoardConfig = {
+  remove: ['del', 'backspace'],
+  revert: ['command+z', 'ctrl+z'],
+  redo: ['command+shift+z', 'ctrl+shift+z'],
 };

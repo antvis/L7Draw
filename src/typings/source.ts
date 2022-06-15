@@ -21,13 +21,9 @@ export interface SourceData {
   text: ITextFeature[];
 }
 
-export type SourceHistoryConfig = {
-  revertKeys: string[];
-  redoKeys: string[];
+export type HistoryConfig = {
   maxSize: number;
 };
-
-export type SourceHistoryOptions = false | SourceHistoryConfig;
 
 /**
  * Render key => value 映射关系
@@ -53,5 +49,5 @@ export type RenderMap = Partial<{
 export interface SourceOptions {
   data?: Partial<SourceData>;
   render: RenderMap;
-  history: SourceHistoryOptions;
+  history?: HistoryConfig;
 }

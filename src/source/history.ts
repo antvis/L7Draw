@@ -1,9 +1,5 @@
 import { cloneDeep } from 'lodash';
-import { SourceData, SourceHistoryConfig } from '../typings';
-
-export enum HistoryEvent {
-  change = 'change',
-}
+import { HistoryConfig, SourceData } from '../typings';
 
 export class History {
   /**
@@ -22,9 +18,9 @@ export class History {
    * 配置
    * @protected
    */
-  protected config: SourceHistoryConfig;
+  protected config: HistoryConfig;
 
-  constructor({ config }: { config: SourceHistoryConfig }) {
+  constructor({ config }: { config: HistoryConfig }) {
     this.config = config;
   }
 

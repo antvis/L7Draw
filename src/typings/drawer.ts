@@ -1,5 +1,5 @@
 import { Feature } from '@turf/turf';
-import { SourceHistoryOptions } from './source';
+import { HistoryConfig } from './source';
 import { IStyle } from './style';
 
 /**
@@ -19,6 +19,12 @@ export type ICursorType =
  */
 export type ICursor = Record<ICursorType, string>;
 
+export type KeyBoardConfig = Partial<{
+  remove: string[] | false;
+  revert: string[] | false;
+  redo: string[] | false;
+}>;
+
 /**
  * 基础Drawer配置
  */
@@ -29,7 +35,8 @@ export interface IBaseModeOptions<F extends Feature = Feature> {
   editable: boolean;
   autoFocus: boolean;
   multiple: boolean;
-  history: SourceHistoryOptions;
+  history: HistoryConfig | false;
+  keyboard: KeyBoardConfig | false;
 }
 
 /**
