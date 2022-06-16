@@ -1,8 +1,8 @@
-import { EventEmitter } from 'eventemitter3';
-import { IBaseFeature, IBaseStyle, IRenderOptions } from '../typings';
-import { RenderEvent } from '../constant';
-import { Scene, ILayer } from '@antv/l7';
+import { ILayer, Scene } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
+import { EventEmitter } from 'eventemitter3';
+import { RenderEvent } from '../constant';
+import { IBaseFeature, IBaseStyle, IRenderOptions } from '../typings';
 
 export abstract class BaseRender<
   F extends IBaseFeature = IBaseFeature,
@@ -35,14 +35,14 @@ export abstract class BaseRender<
     this.style = style;
     this.layers = this.getLayers();
 
-    if (style.callback instanceof Function) {
-      style.callback(this.layers);
-    }
-
     this.layers.forEach((layer) => {
       scene.addLayer(layer);
       // layer.active(true);
     });
+
+    if (style.callback instanceof Function) {
+      style.callback(this.layers);
+    }
   }
 
   /**

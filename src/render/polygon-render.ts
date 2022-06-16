@@ -1,3 +1,6 @@
+import { ILayer, PolygonLayer } from '@antv/l7';
+import { featureCollection } from '@turf/turf';
+import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
 import { BaseRender } from '../render';
 import {
   ILayerMouseEvent,
@@ -5,16 +8,11 @@ import {
   IPolygonFeature,
   IPolygonStyle,
 } from '../typings';
-import { ILayer, PolygonLayer } from '@antv/l7';
-import { featureCollection } from '@turf/turf';
-import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
 
 export class PolygonRender extends BaseRender<IPolygonFeature, IPolygonStyle> {
   getLayers(): ILayer[] {
-    const { normal, hover, active, style } = this.style;
-    const polygonLayer = new PolygonLayer({
-      blend: 'normal',
-    });
+    const { normal, hover, active, style, options } = this.style;
+    const polygonLayer = new PolygonLayer(options ?? {});
 
     polygonLayer
       .source(featureCollection([]))

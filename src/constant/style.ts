@@ -1,3 +1,4 @@
+import { ILayerConfig } from '@antv/l7';
 import {
   IPointStyle,
   IPointStyleItem,
@@ -8,6 +9,10 @@ import {
 export const NORMAL_COLOR = '#1990FF';
 
 export const ACTIVE_COLOR = '#ED9D48';
+
+export const DEFAULT_COMMON_OPTIONS: Partial<ILayerConfig> = {
+  blend: 'normal',
+};
 
 export const DEFAULT_POINT_NORMAL_STYLE: IPointStyleItem = {
   color: NORMAL_COLOR,
@@ -34,6 +39,7 @@ export const DEFAULT_MID_POINT_STYLE: IPointStyleItem = {
 };
 
 export const DEFAULT_POINT_STYLE: IPointStyle = {
+  options: DEFAULT_COMMON_OPTIONS,
   normal: DEFAULT_POINT_NORMAL_STYLE,
   hover: {
     ...DEFAULT_POINT_NORMAL_STYLE,
@@ -48,6 +54,7 @@ export const DEFAULT_POINT_STYLE: IPointStyle = {
 };
 
 export const DEFAULT_NODE_STYLE: IPointStyle = {
+  options: DEFAULT_COMMON_OPTIONS,
   normal: DEFAULT_NODE_NORMAL_STYLE,
   hover: {
     ...DEFAULT_NODE_NORMAL_STYLE,
@@ -70,6 +77,7 @@ export const DEFAULT_TEXT_NORMAL_STYLE: ITextStyleItem = {
 export const DEFAULT_STYLE: IStyle = {
   point: DEFAULT_NODE_STYLE,
   line: {
+    options: DEFAULT_COMMON_OPTIONS,
     normal: {
       color: NORMAL_COLOR,
       size: 2,
@@ -85,6 +93,7 @@ export const DEFAULT_STYLE: IStyle = {
     style: {},
   },
   polygon: {
+    options: DEFAULT_COMMON_OPTIONS,
     normal: {
       color: NORMAL_COLOR,
     },
@@ -99,9 +108,11 @@ export const DEFAULT_STYLE: IStyle = {
     },
   },
   midPoint: {
+    options: DEFAULT_COMMON_OPTIONS,
     normal: DEFAULT_MID_POINT_STYLE,
   },
   dashLine: {
+    options: DEFAULT_COMMON_OPTIONS,
     normal: {
       color: ACTIVE_COLOR,
       size: 2,
@@ -112,6 +123,7 @@ export const DEFAULT_STYLE: IStyle = {
     },
   },
   text: {
+    options: DEFAULT_COMMON_OPTIONS,
     normal: DEFAULT_TEXT_NORMAL_STYLE,
     active: {
       ...DEFAULT_TEXT_NORMAL_STYLE,
@@ -124,3 +136,5 @@ export const DEFAULT_STYLE: IStyle = {
     },
   },
 };
+
+console.log(DEFAULT_STYLE);

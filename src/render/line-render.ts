@@ -1,16 +1,14 @@
-import { BaseRender } from './base-render';
-import { ILayerMouseEvent, ILineFeature, ILineStyle } from '../typings';
 import { ILayer, LineLayer } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
 import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
+import { ILayerMouseEvent, ILineFeature, ILineStyle } from '../typings';
+import { BaseRender } from './base-render';
 
 export class LineRender extends BaseRender<ILineFeature, ILineStyle> {
   getLayers(): ILayer[] {
-    const { normal, hover, active, style } = this.style;
+    const { normal, hover, active, style, options } = this.style;
 
-    const layer = new LineLayer({
-      blend: 'normal',
-    })
+    const layer = new LineLayer(options ?? {})
       .source(featureCollection([]))
       .size('isHover*isActive', (isHover: boolean, isActive: boolean) => {
         return isActive ? active.size : isHover ? hover.size : normal.size;
