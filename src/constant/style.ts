@@ -136,5 +136,3 @@ export const DEFAULT_STYLE: IStyle = {
     },
   },
 };
-
-console.log(DEFAULT_STYLE);
