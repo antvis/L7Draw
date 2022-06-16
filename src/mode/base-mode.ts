@@ -357,7 +357,9 @@ export abstract class BaseMode<
     this.scene.setMapStatus({
       doubleClickZoom: false,
     });
-    this.emit(DrawerEvent.enable, this);
+    setTimeout(() => {
+      this.emit(DrawerEvent.enable, this);
+    }, 0);
   }
 
   /**
@@ -374,7 +376,9 @@ export abstract class BaseMode<
     this.scene.setMapStatus({
       doubleClickZoom: true,
     });
-    this.emit(DrawerEvent.disable, this);
+    setTimeout(() => {
+      this.emit(DrawerEvent.disable, this);
+    }, 0);
   }
 
   /**

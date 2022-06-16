@@ -430,4 +430,41 @@ export abstract class PolygonMode<
     this.bindMidPointRenderEvent = this.bindMidPointRenderEvent.bind(this);
     this.bindPolygonRenderEvent = this.bindPolygonRenderEvent.bind(this);
   }
+
+  disable() {
+    super.disable();
+    let features = this.getPolygonData();
+    if (this.drawPolygon) {
+      features = features.filter((feature) => !feature.properties.isDraw);
+      this.source.setData({
+        point: [],
+        dashLine: [],
+        midPoint: [],
+      });
+      this.setLineData((features) => {
+        return features.filter((feature) => {
+          return !feature.properties.isDraw;
+        });
+      });
+      this.setTextData((features) => {
+        return features.filter((feature) => {
+          return !feature.properties.isActive;
+        });
+      });
+    }
+    if (this.editPolygon) {
+      this.handlePolygonUnClick(this.editPolygon);
+    }
+    this.setPolygonData(
+      features.map((feature) => {
+        feature.properties = {
+          ...feature.properties,
+          isDrag: false,
+          isActive: false,
+          isHover: false,
+        };
+        return feature;
+      }),
+    );
+  }
 }
