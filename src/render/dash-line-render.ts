@@ -1,18 +1,16 @@
-import { LayerRender } from './layer-render';
-import { IDashLineFeature, IDashLineStyle } from '../typings';
 import { ILayer, LineLayer } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
+import { IDashLineFeature, IDashLineStyle } from '../typings';
+import { LayerRender } from './layer-render';
 
 export class DashLineRender extends LayerRender<
   IDashLineFeature,
   IDashLineStyle
 > {
   getLayers(): ILayer[] {
-    const { normal, style } = this.style;
+    const { normal, style, options } = this.style;
 
-    const layer = new LineLayer({
-      blend: 'normal',
-    })
+    const layer = new LineLayer(options ?? {})
       .source(featureCollection([]))
       .size(normal.size)
       .color(normal.color)

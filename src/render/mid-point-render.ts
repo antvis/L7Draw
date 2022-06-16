@@ -1,19 +1,17 @@
-import { LayerRender } from './layer-render';
 import { ILayer, PointLayer } from '@antv/l7';
-import { ILayerMouseEvent, IMidPointFeature, IMidPointStyle } from '../typings';
 import { featureCollection } from '@turf/turf';
 import { LayerEvent, RenderEvent } from '../constant';
+import { ILayerMouseEvent, IMidPointFeature, IMidPointStyle } from '../typings';
+import { LayerRender } from './layer-render';
 
 export class MidPointRender extends LayerRender<
   IMidPointFeature,
   IMidPointStyle
 > {
   getLayers(): ILayer[] {
-    const { normal, style } = this.style;
+    const { normal, style, options } = this.style;
     const { shape, size, color, borderColor, borderWidth } = normal;
-    const layer = new PointLayer({
-      blend: 'normal',
-    })
+    const layer = new PointLayer(options ?? {})
       .source(featureCollection([]))
       .size(size)
       .color(color)

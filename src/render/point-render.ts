@@ -1,20 +1,18 @@
-import { LayerRender } from './layer-render';
 import { ILayer, PointLayer } from '@antv/l7';
+import { featureCollection } from '@turf/turf';
+import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
 import {
   ILayerMouseEvent,
   IPointFeature,
   IPointStyle,
   ISceneMouseEvent,
 } from '../typings';
-import { featureCollection } from '@turf/turf';
-import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
+import { LayerRender } from './layer-render';
 
 export class PointRender extends LayerRender<IPointFeature, IPointStyle> {
   getLayers(): ILayer[] {
-    const { normal, hover, active, style } = this.style;
-    const layer = new PointLayer({
-      blend: 'normal',
-    })
+    const { normal, hover, active, style, options } = this.style;
+    const layer = new PointLayer(options ?? {})
       .source(featureCollection([]))
       .size('isHover*isActive', (isHover: boolean, isActive: boolean) => {
         return isActive ? active.size : isHover ? hover.size : normal.size;

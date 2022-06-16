@@ -1,9 +1,10 @@
-import { ILayer } from '@antv/l7';
+import { ILayer, ILayerConfig } from '@antv/l7';
 
 /**
  * Style的基类
  */
 export interface IBaseStyle<ItemType = any> {
+  options?: Partial<ILayerConfig>;
   normal: ItemType;
   style?: any;
   callback?: (layers: ILayer[]) => void; // 初始化图层之后的回调
