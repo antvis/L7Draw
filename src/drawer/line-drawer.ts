@@ -1,3 +1,8 @@
+import { Scene } from '@antv/l7';
+import { coordAll, Feature, LineString } from '@turf/turf';
+import { last } from 'lodash';
+import { DrawerEvent, RenderEvent } from '../constant';
+import { ILineModeOptions, LineMode } from '../mode';
 import {
   DeepPartial,
   ILayerMouseEvent,
@@ -7,10 +12,6 @@ import {
   IRenderType,
   ISceneMouseEvent,
 } from '../typings';
-import { coordAll, Feature, LineString } from '@turf/turf';
-import { Scene } from '@antv/l7';
-import { DrawerEvent } from '../constant';
-import { ILineModeOptions, LineMode } from '../mode';
 import {
   createDashLine,
   createPointFeature,
@@ -18,7 +19,6 @@ import {
   getPosition,
   isSameFeature,
 } from '../utils';
-import { last } from 'lodash';
 
 export type ILineDrawerOptions = ILineModeOptions<Feature<LineString>>;
 
@@ -26,6 +26,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<ILineDrawerOptions>) {
     super(scene, options);
 
+    this.sceneRender.on(RenderEvent.dblClick, this.drawLineFinish);
     this.bindPointRenderEvent();
     this.bindSceneEvent();
     this.bindMidPointRenderEvent();
@@ -67,21 +68,27 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     return ['line', 'dashLine', 'midPoint', 'point', 'text'];
   }
 
+  drawLineFinish = () => {
+    const drawLine = this.drawLine;
+    const nodes = drawLine?.properties.nodes ?? [];
+    if (!drawLine || nodes?.length <= 1) {
+      return;
+    }
+    this.setEditLine(drawLine);
+    const { autoFocus, editable } = this.options;
+    if (!autoFocus || !editable) {
+      this.handleLineUnClick(drawLine);
+    }
+    this.emit(DrawerEvent.add, drawLine, this.getLineData());
+  };
+
   onPointClick(e: ILayerMouseEvent<IPointFeature>) {
     const drawLine = this.drawLine;
     const nodes = drawLine?.properties.nodes ?? [];
-    if (!drawLine || nodes.length <= 1) {
-      return;
-    }
     const feature = e.feature!;
     if (isSameFeature(feature, last(nodes))) {
       setTimeout(() => {
-        this.setEditLine(drawLine);
-        const { autoFocus, editable } = this.options;
-        if (!autoFocus || !editable) {
-          this.handleLineUnClick(drawLine);
-        }
-        this.emit(DrawerEvent.add, drawLine, this.getLineData());
+        this.drawLineFinish();
       }, 0);
     } else {
       const [lng, lat] = feature.geometry.coordinates;
@@ -172,15 +179,19 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   }
 
   bindEnableEvent(): void {
+    this.enableSceneRenderAction();
     this.enablePointRenderAction();
     this.enableLineRenderAction();
     this.enableMidPointRenderAction();
+    this.sceneRender.enableDblClick();
   }
 
   unbindEnableEvent(): void {
+    this.disableSceneRenderAction();
     this.disablePointRenderAction();
     this.disableLineRenderAction();
     this.disableMidPointRenderAction();
+    this.sceneRender.disableDblClick();
   }
 
   bindThis() {

@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import { cloneDeep, fromPairs } from 'lodash';
 import { DEFAULT_SOURCE_DATA, SourceEvent } from '../constant';
-import { BaseRender } from '../render';
+import { LayerRender } from '../render';
 import {
   FeatureUpdater,
   IBaseFeature,
@@ -166,7 +166,7 @@ export class Source extends EventEmitter<SourceEvent> {
    * 获取对应renderType类型的render实例，如果没有获取到则代表
    * @param type
    */
-  getRender<R extends BaseRender = BaseRender>(
+  getRender<R extends LayerRender = LayerRender>(
     type: IRenderType,
   ): R | undefined {
     return this.render[type] as R | undefined;

@@ -1,10 +1,10 @@
-import { BaseRender } from './base-render';
+import { LayerRender } from './layer-render';
 import { ILayer, PointLayer } from '@antv/l7';
 import { ILayerMouseEvent, IMidPointFeature, IMidPointStyle } from '../typings';
 import { featureCollection } from '@turf/turf';
 import { LayerEvent, RenderEvent } from '../constant';
 
-export class MidPointRender extends BaseRender<
+export class MidPointRender extends LayerRender<
   IMidPointFeature,
   IMidPointStyle
 > {

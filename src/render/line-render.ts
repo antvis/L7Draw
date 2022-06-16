@@ -1,10 +1,10 @@
-import { BaseRender } from './base-render';
+import { LayerRender } from './layer-render';
 import { ILayerMouseEvent, ILineFeature, ILineStyle } from '../typings';
 import { ILayer, LineLayer } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
 import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
 
-export class LineRender extends BaseRender<ILineFeature, ILineStyle> {
+export class LineRender extends LayerRender<ILineFeature, ILineStyle> {
   getLayers(): ILayer[] {
     const { normal, hover, active, style } = this.style;
 
@@ -77,6 +77,6 @@ export class LineRender extends BaseRender<ILineFeature, ILineStyle> {
   }
 
   disableUnClick() {
-    this.layers[0].on(LayerEvent.unclick, this.onUnClick);
+    this.layers[0].off(LayerEvent.unclick, this.onUnClick);
   }
 }

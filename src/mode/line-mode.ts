@@ -1,5 +1,5 @@
 import { coordAll, Feature, featureCollection, Position } from '@turf/turf';
-import { DEFAULT_DISTANCE_OPTIONS, RenderEvent, SceneEvent } from '../constant';
+import { DEFAULT_DISTANCE_OPTIONS, RenderEvent } from '../constant';
 import { LineRender } from '../render';
 import {
   DeepPartial,
@@ -87,7 +87,10 @@ export abstract class LineMode<
   }
 
   bindSceneEvent() {
-    this.scene.on(SceneEvent.mousemove, this.onSceneMouseMove.bind(this));
+    this.sceneRender.on(
+      RenderEvent.mousemove,
+      this.onSceneMouseMove.bind(this),
+    );
   }
 
   bindPointRenderEvent() {
@@ -539,6 +542,18 @@ export abstract class LineMode<
       this.setEditLine(editLine);
       return newNode;
     }
+  }
+
+  enableSceneRenderAction() {
+    this.sceneRender.enableDrag();
+    this.sceneRender.enableMouseMove();
+    this.sceneRender.enableDblClick();
+  }
+
+  disableSceneRenderAction() {
+    this.sceneRender.disableDrag();
+    this.sceneRender.disableMouseMove();
+    this.sceneRender.disableDblClick();
   }
 
   enableLineRenderAction() {

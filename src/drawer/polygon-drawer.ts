@@ -1,7 +1,7 @@
 import { Scene } from '@antv/l7';
 import { coordAll, Feature, Polygon } from '@turf/turf';
 import { first, last } from 'lodash';
-import { DrawerEvent } from '../constant';
+import { DrawerEvent, RenderEvent } from '../constant';
 import { IPolygonModeOptions, PolygonMode } from '../mode';
 import {
   DeepPartial,
@@ -26,6 +26,8 @@ export type IPolygonDrawerOptions = IPolygonModeOptions<Feature<Polygon>>;
 export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<IPolygonDrawerOptions>) {
     super(scene, options);
+
+    this.sceneRender.on(RenderEvent.dblClick, this.drawPolygonFinish);
     this.bindPointRenderEvent();
     this.bindSceneEvent();
     this.bindMidPointRenderEvent();
@@ -107,6 +109,22 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     return feature;
   }
 
+  drawPolygonFinish = () => {
+    const drawPolygon = this.drawPolygon;
+    const nodes = drawPolygon?.properties.nodes ?? [];
+    if (!drawPolygon || nodes.length < 3) {
+      return;
+    }
+    drawPolygon.properties.isDraw = false;
+    this.syncPolygonNodes(drawPolygon, nodes);
+    this.setEditPolygon(drawPolygon);
+    const { autoFocus, editable } = this.options;
+    if (!autoFocus || !editable) {
+      this.handlePolygonUnClick(drawPolygon);
+    }
+    this.emit(DrawerEvent.add, drawPolygon, this.getPolygonData());
+  };
+
   onPointClick(e: ILayerMouseEvent<IPointFeature>) {
     const drawPolygon = this.drawPolygon;
     const feature = e.feature!;
@@ -122,14 +140,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
         isSameFeature(last(nodes), feature))
     ) {
       setTimeout(() => {
-        drawPolygon.properties.isDraw = false;
-        this.syncPolygonNodes(drawPolygon, nodes);
-        this.setEditPolygon(drawPolygon);
-        const { autoFocus, editable } = this.options;
-        if (!autoFocus || !editable) {
-          this.handlePolygonUnClick(drawPolygon);
-        }
-        this.emit(DrawerEvent.add, drawPolygon, this.getPolygonData());
+        this.drawPolygonFinish();
       }, 0);
     } else {
       const [lng, lat] = feature.geometry.coordinates;
