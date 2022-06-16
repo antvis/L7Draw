@@ -77,6 +77,6 @@ export class PolygonRender extends LayerRender<IPolygonFeature, IPolygonStyle> {
   }
 
   disableUnClick() {
-    this.layers[0].on(LayerEvent.unclick, this.onUnClick);
+    this.layers[0].off(LayerEvent.unclick, this.onUnClick);
   }
 }

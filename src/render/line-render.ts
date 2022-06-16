@@ -75,6 +75,6 @@ export class LineRender extends LayerRender<ILineFeature, ILineStyle> {
   }
 
   disableUnClick() {
-    this.layers[0].on(LayerEvent.unclick, this.onUnClick);
+    this.layers[0].off(LayerEvent.unclick, this.onUnClick);
   }
 }
