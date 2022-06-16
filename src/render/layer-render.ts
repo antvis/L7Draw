@@ -4,7 +4,7 @@ import { EventEmitter } from 'eventemitter3';
 import { RenderEvent } from '../constant';
 import { IBaseFeature, IBaseStyle, IRenderOptions } from '../typings';
 
-export abstract class BaseRender<
+export abstract class LayerRender<
   F extends IBaseFeature = IBaseFeature,
   S extends IBaseStyle = IBaseStyle,
 > extends EventEmitter<RenderEvent> {

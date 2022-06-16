@@ -1,9 +1,9 @@
+import { LayerRender } from './layer-render';
+import { ITextFeature, ITextStyle } from '../typings';
 import { ILayer, PointLayer } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
-import { ITextFeature, ITextStyle } from '../typings';
-import { BaseRender } from './base-render';
 
-export class TextRender extends BaseRender<ITextFeature, ITextStyle> {
+export class TextRender extends LayerRender<ITextFeature, ITextStyle> {
   getLayers(): ILayer[] {
     const { normal, active, style, options } = this.style;
     const layer = new PointLayer(options ?? {})

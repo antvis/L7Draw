@@ -1,9 +1,9 @@
+import { LayerRender } from './layer-render';
+import { IDashLineFeature, IDashLineStyle } from '../typings';
 import { ILayer, LineLayer } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
-import { IDashLineFeature, IDashLineStyle } from '../typings';
-import { BaseRender } from './base-render';
 
-export class DashLineRender extends BaseRender<
+export class DashLineRender extends LayerRender<
   IDashLineFeature,
   IDashLineStyle
 > {

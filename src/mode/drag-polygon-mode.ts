@@ -1,7 +1,7 @@
 import { Scene } from '@antv/l7';
 import { Feature } from '@turf/turf';
 import { first, last } from 'lodash';
-import { DrawerEvent, SceneEvent } from '../constant';
+import { DrawerEvent, RenderEvent, SceneEvent } from '../constant';
 import {
   DeepPartial,
   ILayerMouseEvent,
@@ -270,8 +270,8 @@ export abstract class DragPolygonMode<
     super.bindEnableEvent();
 
     if (this.options.createByDrag) {
-      this.scene.on(SceneEvent.dragstart, this.onSceneDragStart);
-      this.scene.on(SceneEvent.dragend, this.onSceneDragEnd);
+      this.sceneRender.on(RenderEvent.dragstart, this.onSceneDragStart);
+      this.sceneRender.on(RenderEvent.dragend, this.onSceneDragEnd);
 
       this.scene.setMapStatus({
         dragEnable: false,

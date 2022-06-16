@@ -1,13 +1,13 @@
+import { LayerRender } from './layer-render';
 import { ILayer, PointLayer } from '@antv/l7';
-import { featureCollection } from '@turf/turf';
-import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
 import {
   ILayerMouseEvent,
   IPointFeature,
   IPointStyle,
   ISceneMouseEvent,
 } from '../typings';
-import { BaseRender } from './base-render';
+import { featureCollection } from '@turf/turf';
+import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
 
 export class PointRender extends BaseRender<IPointFeature, IPointStyle> {
   getLayers(): ILayer[] {
