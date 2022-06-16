@@ -212,6 +212,11 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
         dashLine: [],
         midPoint: [],
       });
+      this.setTextData((features) => {
+        return features.filter((feature) => {
+          return !feature.properties.isActive;
+        });
+      });
     }
     if (this.editLine) {
       this.handleLineUnClick(this.editLine);
