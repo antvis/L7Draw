@@ -1,7 +1,7 @@
-import { LayerRender } from './layer-render';
-import { ITextFeature, ITextStyle } from '../typings';
 import { ILayer, PointLayer } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
+import { ITextFeature, ITextStyle } from '../typings';
+import { LayerRender } from './layer-render';
 
 export class TextRender extends LayerRender<ITextFeature, ITextStyle> {
   getLayers(): ILayer[] {
