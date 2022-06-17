@@ -12,6 +12,7 @@ export const ACTIVE_COLOR = '#ED9D48';
 
 export const DEFAULT_COMMON_OPTIONS: Partial<ILayerConfig> = {
   blend: 'normal',
+  pickingBuffer: 5,
 };
 
 export const DEFAULT_POINT_NORMAL_STYLE: IPointStyleItem = {

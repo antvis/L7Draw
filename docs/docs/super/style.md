@@ -2,9 +2,9 @@
 title: 样式
 order: 1
 group:
-  title: 配置
+  title: 高级
   order: 2
-  path: /common
+  path: /super
 ---
 
 # 说明
