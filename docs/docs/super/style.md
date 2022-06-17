@@ -7,7 +7,7 @@ group:
   path: /super
 ---
 
-# 说明
+## 说明
 
 图层样式主要分为六个类型：
 
@@ -58,7 +58,7 @@ const drawer = new CircleDrawer(scene, {
 });
 ```
 
-# 配置
+## 配置
 
 在使用 Drawer 进行绘制过程中时，可以覆盖内置的图层样式。开发者只需要填写对应需要覆盖的单个项，在 Drawer 内部会对开发者传入的 style 和内置的默认 style 进行深覆盖，其余无需覆盖的样式可以无需填写。
 
@@ -125,7 +125,7 @@ const drawer = new CircleDrawer(scene, {
 });
 ```
 
-# 默认值
+## 默认值
 
 ```json
 {

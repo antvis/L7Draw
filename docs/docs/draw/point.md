@@ -7,11 +7,11 @@ group:
   path: /draw
 ---
 
-# 说明
+## 说明
 
 `PointDrawer` 用于在地图上绘制点数据。
 
-# 示例
+## 示例
 
 ```tsx | pure
 import { DrawerEvent, PointDrawer } from '@antv/l7-draw';
@@ -30,7 +30,7 @@ drawer.on(DrawerEvent.change, (pointList) => {
 });
 ```
 
-# 配置
+## 配置
 
 options 配置是 Drawer 实例化的时候，作为第二个参数传入，所有的 options 配置均不是必传项。
 
@@ -43,11 +43,11 @@ options 配置是 Drawer 实例化的时候，作为第二个参数传入，所�
 | style     | 绘制时不同状态下的样式，详情可见 [样式](/docs/super/style)                 | IStyleItem                           | -      | [使用图片示例](/example/point/image), [自定义样式示例](/example/point/style) |
 | history   | 回退、重做、历史记录等相关配置，详情可见 [回退/重做](/docs/super/history) | [History 配置](/docs/super/history) | -      | -                                                                            |
 
-# 方法
+## 方法
 
 <embed src="../method.md"></embed>
 
-# 事件
+## 事件
 
 [监听事件示例](/example/point/event)
 
