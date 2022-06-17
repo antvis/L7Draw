@@ -87,15 +87,13 @@ export abstract class BaseMode<
     });
     this.cursor = new Cursor(scene, this.options.cursor);
 
-    this.emit(DrawerEvent.init, this);
+    const initData = this.options.initData;
+    if (initData) {
+      this.setData(initData);
+    }
+    this.saveHistory();
 
-    setTimeout(() => {
-      const initData = this.options.initData;
-      if (initData) {
-        this.setData(initData);
-      }
-      this.saveHistory();
-    }, 0);
+    this.emit(DrawerEvent.init, this);
   }
 
   /**
@@ -161,6 +159,7 @@ export abstract class BaseMode<
     this.on(DrawerEvent.add, this.emitChangeEvent);
     this.on(DrawerEvent.edit, this.emitChangeEvent);
     this.on(DrawerEvent.remove, this.emitChangeEvent);
+    this.on(DrawerEvent.clear, this.emitChangeEvent);
     this.on(DrawerEvent.addNode, this.saveHistory);
     this.scene.on(SceneEvent.mousemove, this.saveMouseLngLat);
 
@@ -180,6 +179,7 @@ export abstract class BaseMode<
     this.off(DrawerEvent.add, this.emitChangeEvent);
     this.off(DrawerEvent.edit, this.emitChangeEvent);
     this.off(DrawerEvent.remove, this.emitChangeEvent);
+    this.off(DrawerEvent.clear, this.emitChangeEvent);
     this.off(DrawerEvent.addNode, this.saveHistory);
     this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
 
@@ -296,6 +296,7 @@ export abstract class BaseMode<
     for (const renderType of renderTypeList) {
       const Render = RENDER_MAP[renderType];
       const style = this.options.style[renderType];
+      // @ts-ignore
       renderMap[renderType] = new Render(this.scene, {
         // @ts-ignore
         style,
@@ -386,6 +387,7 @@ export abstract class BaseMode<
    */
   clear(disable = false) {
     this.source.clear();
+    this.emit(DrawerEvent.clear, this);
     if (disable) {
       this.disable();
     }

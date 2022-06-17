@@ -87,9 +87,9 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     const nodes = drawLine?.properties.nodes ?? [];
     const feature = e.feature!;
     if (isSameFeature(feature, last(nodes))) {
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         this.drawLineFinish();
-      }, 0);
+      });
     } else {
       const [lng, lat] = feature.geometry.coordinates;
       e.lngLat = {
