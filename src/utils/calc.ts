@@ -1,4 +1,17 @@
 import {
+  along,
+  area,
+  center,
+  centerOfMass,
+  distance,
+  Feature,
+  featureCollection,
+  length,
+  LineString,
+  point,
+  Polygon,
+} from '@turf/turf';
+import {
   IAreaOptions,
   IDashLineFeature,
   IDistanceOptions,
@@ -6,19 +19,6 @@ import {
   ITextFeature,
   ITextProperties,
 } from '../typings';
-import {
-  Feature,
-  LineString,
-  length,
-  along,
-  point,
-  distance,
-  center,
-  featureCollection,
-  Polygon,
-  centerOfMass,
-  area,
-} from '@turf/turf';
 import { getUuid } from './feature';
 
 /**

@@ -1,4 +1,3 @@
-
 # L7 Draw
 
 > A drawing package for L7

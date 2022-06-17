@@ -1,12 +1,12 @@
-import { IRenderType } from '../typings';
 import {
-  LineRender,
-  PointRender,
-  TextRender,
-  MidPointRender,
-  PolygonRender,
   DashLineRender,
+  LineRender,
+  MidPointRender,
+  PointRender,
+  PolygonRender,
+  TextRender,
 } from '../render';
+import { IRenderType } from '../typings';
 
 /**
  * renderType与render的映射
