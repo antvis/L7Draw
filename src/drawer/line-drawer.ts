@@ -201,4 +201,36 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     this.bindLineRenderEvent = this.bindLineRenderEvent.bind(this);
     this.bindMidPointRenderEvent = this.bindMidPointRenderEvent.bind(this);
   }
+
+  disable() {
+    super.disable();
+    let features = this.getLineData();
+    if (this.drawLine) {
+      features = features.filter((feature) => !feature.properties.isDraw);
+      this.source.setData({
+        point: [],
+        dashLine: [],
+        midPoint: [],
+      });
+      this.setTextData((features) => {
+        return features.filter((feature) => {
+          return !feature.properties.isActive;
+        });
+      });
+    }
+    if (this.editLine) {
+      this.handleLineUnClick(this.editLine);
+    }
+    this.setLineData(
+      features.map((feature) => {
+        feature.properties = {
+          ...feature.properties,
+          isDrag: false,
+          isActive: false,
+          isHover: false,
+        };
+        return feature;
+      }),
+    );
+  }
 }
