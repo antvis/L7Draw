@@ -1,6 +1,6 @@
 import { Scene } from '@antv/l7';
-import { ILayerMouseEvent, ILngLat, ISceneMouseEvent } from '../typings';
 import { Position } from '@turf/turf';
+import { ILayerMouseEvent, ILngLat, ISceneMouseEvent } from '../typings';
 
 // @ts-ignore
 export const isDev = process.env.NODE_ENV === 'development';

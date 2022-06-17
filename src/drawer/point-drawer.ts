@@ -1,3 +1,6 @@
+import { Scene } from '@antv/l7';
+import { Feature, Point } from '@turf/turf';
+import { DEFAULT_POINT_STYLE, DrawerEvent } from '../constant';
 import { PointMode } from '../mode';
 import {
   DeepPartial,
@@ -7,10 +10,7 @@ import {
   IRenderType,
   ISceneMouseEvent,
 } from '../typings';
-import { Scene } from '@antv/l7';
 import { getDefaultPointProperties } from '../utils';
-import { DEFAULT_POINT_STYLE, DrawerEvent } from '../constant';
-import { Feature, Point } from '@turf/turf';
 
 export type IPointDrawerOptions = IBaseModeOptions<Feature<Point>>;
 

@@ -1,5 +1,12 @@
+import {
+  coordAll,
+  featureCollection,
+  lineString,
+  point,
+  Position,
+} from '@turf/turf';
+import { first } from 'lodash';
 import { v4 } from 'uuid';
-import { isDev } from './common';
 import {
   IBaseFeature,
   ILineFeature,
@@ -10,9 +17,7 @@ import {
   IPolygonProperties,
   IRenderType,
 } from '../typings';
-import { coordAll, featureCollection, lineString, Position } from '@turf/turf';
-import { point } from '@turf/turf';
-import { first } from 'lodash';
+import { isDev } from './common';
 
 /**
  * 获取feature唯一id

@@ -1,4 +1,6 @@
-import { BaseMode } from './base-mode';
+import { Position } from '@turf/turf';
+import { RenderEvent } from '../constant';
+import { PointRender } from '../render';
 import {
   FeatureUpdater,
   IBaseModeOptions,
@@ -13,9 +15,7 @@ import {
   transLngLat2Position,
   updateTargetFeature,
 } from '../utils';
-import { Position } from '@turf/turf';
-import { RenderEvent } from '../constant';
-import { PointRender } from '../render';
+import { BaseMode } from './base-mode';
 
 export abstract class PointMode<
   T extends IBaseModeOptions,

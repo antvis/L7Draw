@@ -1,4 +1,6 @@
-import { Feature } from '@turf/turf';
+import { center, Feature, featureCollection } from '@turf/turf';
+import { RenderEvent } from '../constant';
+import { MidPointRender } from '../render';
 import {
   DeepPartial,
   FeatureUpdater,
@@ -8,11 +10,8 @@ import {
   IMidPointFeature,
   IPointFeature,
 } from '../typings';
-import { PointMode } from './point-mode';
-import { MidPointRender } from '../render';
-import { center, featureCollection } from '@turf/turf';
 import { getUuid } from '../utils';
-import { RenderEvent } from '../constant';
+import { PointMode } from './point-mode';
 
 export interface IMidPointModeOptions<F extends Feature = Feature>
   extends IBaseModeOptions<F> {
