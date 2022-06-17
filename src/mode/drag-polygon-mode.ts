@@ -150,9 +150,9 @@ export abstract class DragPolygonMode<
     const position = getPosition(e);
     const feature = this.handleCreatePoint(position);
     if (drawPolygon) {
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         this.handleLastNodeCreate(feature);
-      }, 0);
+      });
     } else {
       this.handleFirstNodeCreate(feature);
     }

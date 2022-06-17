@@ -9,6 +9,7 @@ export enum DrawerEvent {
   add = 'add',
   edit = 'edit',
   remove = 'remove',
+  clear = 'clear',
   change = 'change',
   dragStart = 'dragStart',
   dragging = 'dragging',

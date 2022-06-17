@@ -139,9 +139,9 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
       (isSameFeature(first(nodes), feature) ||
         isSameFeature(last(nodes), feature))
     ) {
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         this.drawPolygonFinish();
-      }, 0);
+      });
     } else {
       const [lng, lat] = feature.geometry.coordinates;
       e.lngLat = {
