@@ -10,6 +10,8 @@ hide: true
 | clear            | 清空绘制数据                                                                   | (disable: boolean) => void               |
 | enable           | 开启绘制                                                                       | () => void                               |
 | disable          | 关闭绘制                                                                       | () => void                               |
+| show             | 显示该 Drawer 下所有图层                                                       | () => void                               |
+| hide             | 隐藏该 Drawer 下所有图层                                                       | () => void                               |
 | getIsEnable      | 判断当前 Drawer 是否在绘制状态                                                 | () => boolean                            |
 | saveHistory      | 保存当前绘制数据到历史记录中，下次回退将重置到此次保存的数据状态               | () => SourceData                         |
 | revertHistory    | 回退至上一次保存的历史记录                                                     | () => SourceData or undefined            |

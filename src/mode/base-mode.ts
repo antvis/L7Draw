@@ -388,6 +388,24 @@ export abstract class BaseMode<
   }
 
   /**
+   * 显示该Drawer下所有图层
+   */
+  show() {
+    return Object.values(this.render).forEach((render) => {
+      render.show();
+    });
+  }
+
+  /**
+   * 隐藏该Drawer下所有图层
+   */
+  hide() {
+    return Object.values(this.render).forEach((render) => {
+      render.hide();
+    });
+  }
+
+  /**
    * 销毁当前Drawer
    */
   destroy() {
