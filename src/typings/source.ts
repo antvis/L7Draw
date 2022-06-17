@@ -1,4 +1,11 @@
-import { PointRender } from '../render';
+import {
+  DashLineRender,
+  LineRender,
+  MidPointRender,
+  PointRender,
+  PolygonRender,
+  TextRender,
+} from '../render';
 import {
   IDashLineFeature,
   ILineFeature,
@@ -30,17 +37,11 @@ export type HistoryConfig = {
  */
 export type RenderMap = Partial<{
   point: PointRender;
-  line: any;
-  polygon: any;
-  midPoint: any;
-  dashLine: any;
-  text: any;
-  // point?: PointRender;
-  // line?: LineRender;
-  // polygon?: PolygonRender;
-  // midPoint?: PointRender;
-  // dashLine?: LineRender;
-  // text?: TextRender;
+  line: LineRender;
+  polygon: PolygonRender;
+  midPoint: MidPointRender;
+  dashLine: DashLineRender;
+  text: TextRender;
 }>;
 
 /**
