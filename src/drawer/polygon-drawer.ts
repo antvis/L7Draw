@@ -1,7 +1,7 @@
 import { Scene } from '@antv/l7';
 import { coordAll, Feature, Polygon } from '@turf/turf';
 import { first, last } from 'lodash';
-import { DrawerEvent, RenderEvent } from '../constant';
+import { DrawEvent, RenderEvent } from '../constant';
 import { IPolygonModeOptions, PolygonMode } from '../mode';
 import {
   DeepPartial,
@@ -100,7 +100,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
         this.handleCreatePolygon([feature], drawLine);
       }
       this.emit(
-        DrawerEvent.addNode,
+        DrawEvent.addNode,
         feature,
         drawPolygon,
         this.getPolygonData(),
@@ -122,7 +122,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     if (!autoFocus || !editable) {
       this.handlePolygonUnClick(drawPolygon);
     }
-    this.emit(DrawerEvent.add, drawPolygon, this.getPolygonData());
+    this.emit(DrawEvent.add, drawPolygon, this.getPolygonData());
   };
 
   onPointClick(e: ILayerMouseEvent<IPointFeature>) {
@@ -187,7 +187,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
         dragPolygon,
         lineNodes.slice(0, lineNodes.length - 1),
       );
-      this.emit(DrawerEvent.dragging, dragPolygon, this.getPolygonData());
+      this.emit(DrawEvent.dragging, dragPolygon, this.getPolygonData());
     }
     return feature;
   }
@@ -198,9 +198,9 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     const feature = super.onMidPointClick(e);
     const editPolygon = this.editPolygon;
     if (feature && editPolygon) {
-      this.emit(DrawerEvent.edit, editPolygon, this.getPolygonData());
+      this.emit(DrawEvent.edit, editPolygon, this.getPolygonData());
       this.emit(
-        DrawerEvent.addNode,
+        DrawEvent.addNode,
         feature,
         editPolygon,
         this.getPolygonData(),

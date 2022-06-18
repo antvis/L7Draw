@@ -20,9 +20,9 @@ group:
 ## 示例
 
 ```tsx | pure
-import { PointDrawer } from '@antv/l7-draw';
+import { DrawPoint } from '@antv/l7-draw';
 
-const drawer = new PointDrawer(scene, {
+const drawer = new DrawPoint(scene, {
   keyboard: {
     revert: ['command + z', 'ctrl + z'], // 覆盖默认回退快捷键按键
     remove: false, // false表示关闭当前删除快捷键功能

@@ -29,8 +29,8 @@ Drawer 内部将根据不同的绘制物的类型和状态映射到对应的样�
 除了三种状态以外，每种 style 类型还暴露了 L7 Layer 原生的构造器参数 [options](https://l7.antv.vision/zh/docs/api/base#options-%E9%85%8D%E7%BD%AE%E9%A1%B9) 和 [style](https://l7.antv.vision/zh/docs/api/base#style) 配置参数，同时开发者还可以使用 callback 回调方法，直接获取到 L7 Layer 的实例进行操作，详细的参数配置以[L7 官网](https://l7.antv.vision/zh/docs/api/base#options-%E9%85%8D%E7%BD%AE%E9%A1%B9)为准。
 
 ```tsx | pure
-import { CircleDrawer } from '@antv/l7-draw';
-const drawer = new CircleDrawer(scene, {
+import { DrawCircle } from '@antv/l7-draw';
+const drawer = new DrawCircle(scene, {
   style: {
     point: {
       // options会被传入L7 Layer的构造器参数中
@@ -65,10 +65,10 @@ const drawer = new CircleDrawer(scene, {
 ```tsx | pure
 // 覆盖主题色示例
 
-import { CircleDrawer } from '@antv/l7-draw';
+import { DrawCircle } from '@antv/l7-draw';
 
 const overwriteColor = '#541DAB';
-const drawer = new CircleDrawer(scene, {
+const drawer = new DrawCircle(scene, {
   style: {
     point: {
       normal: {

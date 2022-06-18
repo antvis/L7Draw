@@ -8,7 +8,7 @@ import {
   DEFAULT_HISTORY_CONFIG,
   DEFAULT_KEYBOARD_CONFIG,
   DEFAULT_STYLE,
-  DrawerEvent,
+  DrawEvent,
   RENDER_MAP,
   SceneEvent,
 } from '../constant';
@@ -29,7 +29,7 @@ import { getLngLat, isSameFeature } from '../utils';
 
 export abstract class BaseMode<
   O extends IBaseModeOptions,
-> extends EventEmitter<DrawerEvent> {
+> extends EventEmitter<DrawEvent> {
   /**
    * L7 场景实例，在构造器中传入
    */
@@ -93,7 +93,7 @@ export abstract class BaseMode<
     }
     this.saveHistory();
 
-    this.emit(DrawerEvent.init, this);
+    this.emit(DrawEvent.init, this);
   }
 
   /**
@@ -156,11 +156,11 @@ export abstract class BaseMode<
    * 监听通用事件
    */
   bindCommonEvent() {
-    this.on(DrawerEvent.add, this.emitChangeEvent);
-    this.on(DrawerEvent.edit, this.emitChangeEvent);
-    this.on(DrawerEvent.remove, this.emitChangeEvent);
-    this.on(DrawerEvent.clear, this.emitChangeEvent);
-    this.on(DrawerEvent.addNode, this.saveHistory);
+    this.on(DrawEvent.add, this.emitChangeEvent);
+    this.on(DrawEvent.edit, this.emitChangeEvent);
+    this.on(DrawEvent.remove, this.emitChangeEvent);
+    this.on(DrawEvent.clear, this.emitChangeEvent);
+    this.on(DrawEvent.addNode, this.saveHistory);
     this.scene.on(SceneEvent.mousemove, this.saveMouseLngLat);
 
     // 快捷键绑定
@@ -176,11 +176,11 @@ export abstract class BaseMode<
    * 监听通用事件
    */
   unbindCommonEvent() {
-    this.off(DrawerEvent.add, this.emitChangeEvent);
-    this.off(DrawerEvent.edit, this.emitChangeEvent);
-    this.off(DrawerEvent.remove, this.emitChangeEvent);
-    this.off(DrawerEvent.clear, this.emitChangeEvent);
-    this.off(DrawerEvent.addNode, this.saveHistory);
+    this.off(DrawEvent.add, this.emitChangeEvent);
+    this.off(DrawEvent.edit, this.emitChangeEvent);
+    this.off(DrawEvent.remove, this.emitChangeEvent);
+    this.off(DrawEvent.clear, this.emitChangeEvent);
+    this.off(DrawEvent.addNode, this.saveHistory);
     this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
 
     // 快捷键解绑
@@ -207,7 +207,7 @@ export abstract class BaseMode<
    * 触发change事件，同时触发保存数据备份
    */
   emitChangeEvent() {
-    this.emit(DrawerEvent.change, this.getData());
+    this.emit(DrawEvent.change, this.getData());
     this.saveHistory();
   }
 
@@ -268,7 +268,7 @@ export abstract class BaseMode<
     const data = this.getData();
     // @ts-ignore
     this.setData(data.filter((item) => !isSameFeature(target, item)));
-    this.emit(DrawerEvent.remove, target, this.getData());
+    this.emit(DrawEvent.remove, target, this.getData());
   }
 
   /**
@@ -359,7 +359,7 @@ export abstract class BaseMode<
       doubleClickZoom: false,
     });
     setTimeout(() => {
-      this.emit(DrawerEvent.enable, this);
+      this.emit(DrawEvent.enable, this);
     }, 0);
   }
 
@@ -378,7 +378,7 @@ export abstract class BaseMode<
       doubleClickZoom: true,
     });
     setTimeout(() => {
-      this.emit(DrawerEvent.disable, this);
+      this.emit(DrawEvent.disable, this);
     }, 0);
   }
 
@@ -387,7 +387,7 @@ export abstract class BaseMode<
    */
   clear(disable = false) {
     this.source.clear();
-    this.emit(DrawerEvent.clear, this);
+    this.emit(DrawEvent.clear, this);
     if (disable) {
       this.disable();
     }
@@ -420,6 +420,6 @@ export abstract class BaseMode<
     Object.values(this.render).forEach((render) => {
       render.destroy();
     });
-    this.emit(DrawerEvent.destroy, this);
+    this.emit(DrawEvent.destroy, this);
   }
 }

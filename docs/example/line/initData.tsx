@@ -1,5 +1,5 @@
 import { Scene } from '@antv/l7';
-import { DrawerEvent, LineDrawer } from '@antv/l7-draw';
+import { DrawEvent, DrawLine } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import React, { useEffect, useState } from 'react';
 import { lineList } from './mock';
@@ -7,7 +7,7 @@ import { lineList } from './mock';
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [lineDrawer, setLineDrawer] = useState<LineDrawer | null>(null);
+  const [lineDrawer, setLineDrawer] = useState<DrawLine | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -20,13 +20,13 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new LineDrawer(scene, {
+      const drawer = new DrawLine(scene, {
         initData: lineList,
       });
       setLineDrawer(drawer);
       drawer.enable();
 
-      drawer.on(DrawerEvent.add, (e) => {});
+      drawer.on(DrawEvent.add, (e) => {});
     });
   }, []);
 

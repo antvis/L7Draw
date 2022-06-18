@@ -1,5 +1,5 @@
 import { Scene } from '@antv/l7';
-import { PolygonDrawer } from '@antv/l7-draw';
+import { DrawPolygon } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [polygonDrawer, setPolygonDrawer] = useState<PolygonDrawer | null>(
+  const [polygonDrawer, setPolygonDrawer] = useState<DrawPolygon | null>(
     null,
   );
 
@@ -23,7 +23,7 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new PolygonDrawer(scene, {
+      const drawer = new DrawPolygon(scene, {
         // distanceText: {},
       });
       setPolygonDrawer(drawer);

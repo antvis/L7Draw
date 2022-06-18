@@ -16,9 +16,9 @@ group:
 距离文本配置是在各个 Drawer 的 areaText 字段来进行配置的
 
 ```tsx | pure
-import { PointDrawer } from '@antv/l7-draw';
+import { DrawPoint } from '@antv/l7-draw';
 
-const drawer = new PointDrawer(scene, {
+const drawer = new DrawPoint(scene, {
   areaText: {
     showOnNormal: true,
     showOnActive: true,

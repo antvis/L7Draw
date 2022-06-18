@@ -9,15 +9,15 @@ group:
 
 ## 说明
 
-`PointDrawer` 用于在地图上绘制点数据。
+`DrawPoint` 用于在地图上绘制点数据。
 
 ## 示例
 
 ```tsx | pure
-import { DrawerEvent, PointDrawer } from '@antv/l7-draw';
+import { DrawEvent, DrawPoint } from '@antv/l7-draw';
 
 // 实例化
-const drawer = new PointDrawer(scene, {
+const drawer = new DrawPoint(scene, {
   autoFocus: false,
   //  ....
 });
@@ -25,7 +25,7 @@ const drawer = new PointDrawer(scene, {
 drawer.enable();
 
 // 监听绘制事件
-drawer.on(DrawerEvent.change, (pointList) => {
+drawer.on(DrawEvent.change, (pointList) => {
   console.log(pointList);
 });
 ```
@@ -53,14 +53,14 @@ options 配置是 Drawer 实例化的时候，作为第二个参数传入，所�
 
 | 名称                  | 说明                 | 类型                                                                             |
 | --------------------- | -------------------- | -------------------------------------------------------------------------------- |
-| DrawerEvent.init      | 初始化完成           | (drawer: PointDrawer) => void                                                    |
-| DrawerEvent.destroy   | 销毁完成             | (drawer: PointDrawer) => void                                                    |
-| DrawerEvent.enable    | 启用绘制/编辑的回调  | (drawer: PointDrawer) => void                                                    |
-| DrawerEvent.disable   | 禁用绘制/编辑的回调  | (drawer: PointDrawer) => void                                                    |
-| DrawerEvent.add       | 添加后的回调         | (newFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void  |
-| DrawerEvent.edit      | 编辑(位移结束)的回调 | (editFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void |
-| DrawerEvent.remove    | 删除后的回调         | (editFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void |
-| DrawerEvent.change    | 添加和编辑的回调     | (featureList: Feature&lt;Point&gt;[]) => void                                    |
-| DrawerEvent.dragStart | 开始拖拽的回调       | (dragFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void |
-| DrawerEvent.dragging  | 拖拽中的回调         | (dragFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void |
-| DrawerEvent.dragEnd   | 拖拽结束的回调       | (dragFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void |
+| DrawEvent.init      | 初始化完成           | (drawer: DrawPoint) => void                                                    |
+| DrawEvent.destroy   | 销毁完成             | (drawer: DrawPoint) => void                                                    |
+| DrawEvent.enable    | 启用绘制/编辑的回调  | (drawer: DrawPoint) => void                                                    |
+| DrawEvent.disable   | 禁用绘制/编辑的回调  | (drawer: DrawPoint) => void                                                    |
+| DrawEvent.add       | 添加后的回调         | (newFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void  |
+| DrawEvent.edit      | 编辑(位移结束)的回调 | (editFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void |
+| DrawEvent.remove    | 删除后的回调         | (editFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void |
+| DrawEvent.change    | 添加和编辑的回调     | (featureList: Feature&lt;Point&gt;[]) => void                                    |
+| DrawEvent.dragStart | 开始拖拽的回调       | (dragFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void |
+| DrawEvent.dragging  | 拖拽中的回调         | (dragFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void |
+| DrawEvent.dragEnd   | 拖拽结束的回调       | (dragFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void |

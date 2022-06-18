@@ -6,7 +6,7 @@ import {
   lineString,
 } from '@turf/turf';
 import { first, isEqual, last } from 'lodash';
-import { DEFAULT_AREA_OPTIONS, DrawerEvent, RenderEvent } from '../constant';
+import { DEFAULT_AREA_OPTIONS, DrawEvent, RenderEvent } from '../constant';
 import { PolygonRender } from '../render';
 import {
   DeepPartial,
@@ -313,7 +313,7 @@ export abstract class PolygonMode<
       this.setEditPolygon(polygon, {
         isDrag: true,
       });
-      this.emit(DrawerEvent.dragStart, polygon, this.getPolygonData());
+      this.emit(DrawEvent.dragStart, polygon, this.getPolygonData());
     }
     return line;
   }
@@ -327,8 +327,8 @@ export abstract class PolygonMode<
     const dragPolygon = this.dragPolygon;
     if (feature && dragPolygon) {
       dragPolygon.properties.isDrag = false;
-      this.emit(DrawerEvent.dragEnd, dragPolygon, this.getPolygonData());
-      this.emit(DrawerEvent.edit, dragPolygon, this.getPolygonData());
+      this.emit(DrawEvent.dragEnd, dragPolygon, this.getPolygonData());
+      this.emit(DrawEvent.edit, dragPolygon, this.getPolygonData());
     }
     return feature;
   }
@@ -361,7 +361,7 @@ export abstract class PolygonMode<
     }
     const polygon = e.feature!;
     this.previousPosition = getPosition(e);
-    this.emit(DrawerEvent.dragStart, polygon, this.getPolygonData());
+    this.emit(DrawEvent.dragStart, polygon, this.getPolygonData());
     return this.handlePolygonDragStart(polygon);
   }
 
@@ -385,7 +385,7 @@ export abstract class PolygonMode<
     const editPolygon = this.editPolygon;
     const feature = super.onPointDragEnd(e);
     if (feature && editPolygon) {
-      this.emit(DrawerEvent.edit, editPolygon, this.getPolygonData());
+      this.emit(DrawEvent.edit, editPolygon, this.getPolygonData());
     }
     return feature;
   }

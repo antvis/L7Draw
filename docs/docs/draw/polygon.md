@@ -9,15 +9,15 @@ group:
 
 ## 说明
 
-`PolygonDrawer` 用于在地图上绘制面数据。
+`DrawPolygon` 用于在地图上绘制面数据。
 
 ## 示例
 
 ```tsx | pure
-import { DrawerEvent, PolygonDrawer } from '@antv/l7-draw';
+import { DrawEvent, DrawPolygon } from '@antv/l7-draw';
 
 // 实例化
-const drawer = new PolygonDrawer(scene, {
+const drawer = new DrawPolygon(scene, {
   autoFocus: false,
   //  ....
 });
@@ -25,7 +25,7 @@ const drawer = new PolygonDrawer(scene, {
 drawer.enable();
 
 // 监听绘制事件
-drawer.on(DrawerEvent.change, (polygonList) => {
+drawer.on(DrawEvent.change, (polygonList) => {
   console.log(polygonList);
 });
 ```
@@ -56,15 +56,15 @@ options 配置是 Drawer 实例化的时候，作为第二个参数传入，所�
 
 | 名称                  | 说明                 | 类型                                                                                                               |
 | --------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| DrawerEvent.init      | 初始化完成           | (drawer: PolygonDrawer) => void                                                                                    |
-| DrawerEvent.destroy   | 销毁完成             | (drawer: PolygonDrawer) => void                                                                                    |
-| DrawerEvent.enable    | 启用绘制/编辑的回调  | (drawer: PolygonDrawer) => void                                                                                    |
-| DrawerEvent.disable   | 禁用绘制/编辑的回调  | (drawer: PolygonDrawer) => void                                                                                    |
-| DrawerEvent.add       | 添加后的回调         | (newFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void                                |
-| DrawerEvent.edit      | 编辑(位移结束)的回调 | (editFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void                               |
-| DrawerEvent.remove    | 删除后的回调         | (editFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void                               |
-| DrawerEvent.addNode   | 添加结点             | (newNode: Feature&lt;Point&gt;,editFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void |
-| DrawerEvent.change    | 添加和编辑的回调     | (featureList: Feature&lt;Polygon&gt;[]) => void                                                                    |
-| DrawerEvent.dragStart | 开始拖拽的回调       | (dragFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void                               |
-| DrawerEvent.dragging  | 拖拽中的回调         | (dragFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void                               |
-| DrawerEvent.dragEnd   | 拖拽结束的回调       | (dragFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void                               |
+| DrawEvent.init      | 初始化完成           | (drawer: DrawPolygon) => void                                                                                    |
+| DrawEvent.destroy   | 销毁完成             | (drawer: DrawPolygon) => void                                                                                    |
+| DrawEvent.enable    | 启用绘制/编辑的回调  | (drawer: DrawPolygon) => void                                                                                    |
+| DrawEvent.disable   | 禁用绘制/编辑的回调  | (drawer: DrawPolygon) => void                                                                                    |
+| DrawEvent.add       | 添加后的回调         | (newFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void                                |
+| DrawEvent.edit      | 编辑(位移结束)的回调 | (editFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void                               |
+| DrawEvent.remove    | 删除后的回调         | (editFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void                               |
+| DrawEvent.addNode   | 添加结点             | (newNode: Feature&lt;Point&gt;,editFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void |
+| DrawEvent.change    | 添加和编辑的回调     | (featureList: Feature&lt;Polygon&gt;[]) => void                                                                    |
+| DrawEvent.dragStart | 开始拖拽的回调       | (dragFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void                               |
+| DrawEvent.dragging  | 拖拽中的回调         | (dragFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void                               |
+| DrawEvent.dragEnd   | 拖拽结束的回调       | (dragFeature: Feature&lt;Polygon&gt;, featureList: Feature&lt;Polygon&gt;[]) => void                               |
