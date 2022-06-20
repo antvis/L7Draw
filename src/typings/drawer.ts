@@ -32,6 +32,7 @@ export interface IBaseModeOptions<F extends Feature = Feature> {
   style: IStyle;
   cursor: ICursor;
   initData?: F[];
+  disableEditable: boolean;
   editable: boolean;
   autoFocus: boolean;
   addMultiple: boolean;
