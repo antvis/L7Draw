@@ -7,9 +7,7 @@ import React, { useEffect, useState } from 'react';
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [polygonDrawer, setPolygonDrawer] = useState<DrawPolygon | null>(
-    null,
-  );
+  const [polygonDrawer, setPolygonDrawer] = useState<DrawPolygon | null>(null);
 
   useEffect(() => {
     const scene = new Scene({

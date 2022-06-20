@@ -16,7 +16,7 @@ group:
 ## 示例
 
 ```tsx | pure
-import {DrawCircle, DrawEvent} from '@antv/l7-draw';
+import { DrawCircle, DrawEvent } from '@antv/l7-draw';
 
 // 实例化
 const drawer = new DrawCircle(scene, {
