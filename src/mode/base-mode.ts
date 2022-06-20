@@ -28,7 +28,7 @@ import {
 import { getLngLat, isSameFeature } from '../utils';
 
 export abstract class BaseMode<
-  O extends IBaseModeOptions,
+  O extends IBaseModeOptions = IBaseModeOptions,
 > extends EventEmitter<DrawEvent> {
   /**
    * L7 场景实例，在构造器中传入
@@ -304,7 +304,7 @@ export abstract class BaseMode<
    * 根据用户传入的options返回通用的options默认配置
    * @param options
    */
-  getCommonOptions<F extends Feature = Feature>(options: DeepPartial<O>): O {
+  getCommonOptions<F extends Feature = Feature>(options: DeepPartial<IBaseModeOptions>): IBaseModeOptions {
     return {
       initData: [] as F[],
       autoFocus: true,
@@ -314,7 +314,7 @@ export abstract class BaseMode<
       multiple: true,
       history: cloneDeep(DEFAULT_HISTORY_CONFIG),
       keyboard: cloneDeep(DEFAULT_KEYBOARD_CONFIG),
-    } as unknown as O;
+    } as IBaseModeOptions;
   }
 
   /**

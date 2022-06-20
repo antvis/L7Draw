@@ -21,6 +21,7 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     this.bindPointRenderEvent();
   }
 
+  // @ts-ignore
   getDefaultOptions(options: DeepPartial<IPointDrawerOptions>) {
     const defaultOptions = this.getCommonOptions(options);
     defaultOptions.style.point = DEFAULT_POINT_STYLE;
