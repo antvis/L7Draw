@@ -34,6 +34,7 @@ export interface IBaseModeOptions<F extends Feature = Feature> {
   initData?: F[];
   editable: boolean;
   autoFocus: boolean;
+  addMultiple: boolean;
   multiple: boolean;
   history: HistoryConfig | false;
   keyboard: KeyBoardConfig | false;

@@ -7,4 +7,10 @@ group:
   order: 3
 ---
 
-<code src="./multiple.tsx" compact="true" defaultShowCode="true"></code>
+## 单次 enable 最多绘制一个
+
+<code src="./addMultiple.tsx" compact="true"></code>
+
+## 始终最多绘制一个
+
+<code src="./multiple.tsx" compact="true"></code>

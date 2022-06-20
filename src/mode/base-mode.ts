@@ -8,6 +8,7 @@ import {
   DEFAULT_HISTORY_CONFIG,
   DEFAULT_KEYBOARD_CONFIG,
   DEFAULT_STYLE,
+  DrawerEvent,
   DrawEvent,
   RENDER_MAP,
   SceneEvent,
@@ -67,23 +68,38 @@ export abstract class BaseMode<
    */
   protected sceneRender: SceneRender;
 
+  /**
+   * 光标在地图上的经纬度位置
+   * @protected
+   */
   protected mouseLngLat: ILngLat = {
     lng: 0,
     lat: 0,
   };
 
   /**
+   * 本次enable添加的绘制物个数
+   * @protected
+   */
+  protected addCount = 0;
+
+  /**
    * 当期是否可以添加新的绘制物
    */
   get addable() {
     const data = this.getData();
-    if (this.options.multiple) {
+    const { addMultiple, multiple } = this.options;
+    const drawItem = data.find((item) => item.properties.isDraw);
+    if ((multiple && addMultiple) || drawItem) {
       return true;
     }
-    if (data.find((item) => item.properties.isDraw)) {
-      return true;
+    if (!multiple && data.length >= 1) {
+      return false;
     }
-    return data.length < 1;
+    if (!addMultiple && this.addCount >= 1) {
+      return false;
+    }
+    return true;
   }
 
   constructor(scene: Scene, options: DeepPartial<O>) {
@@ -158,6 +174,9 @@ export abstract class BaseMode<
 
   bindCommonEvent() {
     this.on(DrawEvent.add, this.emitChangeEvent);
+    this.on(DrawerEvent.add, () => {
+      this.addCount++;
+    });
     this.on(DrawEvent.edit, this.emitChangeEvent);
     this.on(DrawEvent.remove, this.emitChangeEvent);
     this.on(DrawEvent.clear, this.emitChangeEvent);
@@ -330,6 +349,7 @@ export abstract class BaseMode<
       multiple: true,
       history: cloneDeep(DEFAULT_HISTORY_CONFIG),
       keyboard: cloneDeep(DEFAULT_KEYBOARD_CONFIG),
+      addMultiple: true,
     } as IBaseModeOptions;
   }
 
@@ -361,6 +381,7 @@ export abstract class BaseMode<
     this.scene.setMapStatus({
       doubleClickZoom: false,
     });
+    this.addCount = 0;
     setTimeout(() => {
       this.emit(DrawEvent.enable, this);
     }, 0);
@@ -379,6 +400,7 @@ export abstract class BaseMode<
     this.scene.setMapStatus({
       doubleClickZoom: true,
     });
+    this.addCount = 0;
     setTimeout(() => {
       this.emit(DrawEvent.disable, this);
     }, 0);
