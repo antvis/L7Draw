@@ -13,12 +13,18 @@ import { DrawEvent } from '../constant';
 import { DragPolygonMode, IDragPolygonModeOptions } from '../mode';
 import {
   DeepPartial,
+  ILineFeature,
   ILineProperties,
   IPointFeature,
   IPolygonFeature,
   ISceneMouseEvent,
 } from '../typings';
-import { createLineFeature, createPointFeature, isSameFeature } from '../utils';
+import {
+  createLineFeature,
+  createPointFeature,
+  getDefaultPolygonProperties,
+  isSameFeature,
+} from '../utils';
 
 export type IRectDrawerOptions = IDragPolygonModeOptions<Feature<Polygon>>;
 
@@ -35,14 +41,32 @@ export class RectDrawer extends DragPolygonMode<IRectDrawerOptions> {
   // @ts-ignore
   setData(data: Feature<Polygon>[]) {
     const result = data.map((feature) => {
-      const [lng1, lat1, lng2, lat2] = bbox(feature);
-      const startNode = createPointFeature([lng1, lat1]);
-      const endNode = createPointFeature([lng2, lat2]);
+      feature.properties = {
+        ...getDefaultPolygonProperties(),
+        ...(feature.properties ?? {}),
+      };
+      let nodes: [IPointFeature, IPointFeature] | undefined =
+        feature.properties.nodes;
+      if (nodes?.length !== 2) {
+        const [lng1, lat1, lng2, lat2] = bbox(feature);
+        nodes = [
+          createPointFeature([lng1, lat1]),
+          createPointFeature([lng2, lat2]),
+        ];
+        feature.properties.nodes = nodes;
+      }
+      const [startNode, endNode] = nodes;
       const isActive = !!feature.properties?.isActive;
-      const line = this.handleCreatePolygonLine(startNode, endNode, {
-        isActive,
-      });
+
+      let line: ILineFeature | undefined = feature.properties.line;
+      if (!line) {
+        line = this.handleCreatePolygonLine(startNode, endNode, {
+          isActive,
+        });
+        feature.properties.line = line;
+      }
       return this.handleCreatePolygon([startNode, endNode], line, {
+        ...feature.properties,
         isActive,
       });
     });
