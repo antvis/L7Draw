@@ -268,7 +268,6 @@ export abstract class DragPolygonMode<
 
   bindEnableEvent() {
     super.bindEnableEvent();
-
     if (this.options.createByDrag) {
       this.sceneRender.on(RenderEvent.dragstart, this.onSceneDragStart);
       this.sceneRender.on(RenderEvent.dragend, this.onSceneDragEnd);

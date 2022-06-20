@@ -406,6 +406,7 @@ export abstract class PolygonMode<
   }
 
   bindEnableEvent(): void {
+    super.bindEnableEvent();
     this.enableSceneRenderAction();
     this.enablePointRenderAction();
     this.enableLineRenderAction();
@@ -414,6 +415,7 @@ export abstract class PolygonMode<
   }
 
   unbindEnableEvent(): void {
+    super.unbindEnableEvent();
     this.disableSceneRenderAction();
     this.disablePointRenderAction();
     this.disableLineRenderAction();

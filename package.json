@@ -1,6 +1,6 @@
 {
   "name": "@antv/l7-draw",
-  "version": "3.0.0-alpha.10",
+  "version": "3.0.0-alpha.13",
   "description": "A drawing package for L7",
   "license": "MIT",
   "scripts": {

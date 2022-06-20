@@ -179,6 +179,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   }
 
   bindEnableEvent(): void {
+    super.bindEnableEvent();
     this.enableSceneRenderAction();
     this.enablePointRenderAction();
     this.enableLineRenderAction();
@@ -187,6 +188,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   }
 
   unbindEnableEvent(): void {
+    super.unbindEnableEvent();
     this.disableSceneRenderAction();
     this.disablePointRenderAction();
     this.disableLineRenderAction();
