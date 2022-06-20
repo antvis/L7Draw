@@ -72,6 +72,20 @@ export abstract class BaseMode<
     lat: 0,
   };
 
+  /**
+   * 当期是否可以添加新的绘制物
+   */
+  get addable() {
+    const data = this.getData();
+    if (this.options.multiple) {
+      return true;
+    }
+    if (data.find((item) => item.properties.isDraw)) {
+      return true;
+    }
+    return data.length < 1;
+  }
+
   constructor(scene: Scene, options: DeepPartial<O>) {
     super();
     this.bindThis();
@@ -304,7 +318,9 @@ export abstract class BaseMode<
    * 根据用户传入的options返回通用的options默认配置
    * @param options
    */
-  getCommonOptions<F extends Feature = Feature>(options: DeepPartial<IBaseModeOptions>): IBaseModeOptions {
+  getCommonOptions<F extends Feature = Feature>(
+    options: DeepPartial<IBaseModeOptions>,
+  ): IBaseModeOptions {
     return {
       initData: [] as F[],
       autoFocus: true,
@@ -329,7 +345,7 @@ export abstract class BaseMode<
    * 重置光标到常规状态
    */
   resetCursor() {
-    this.setCursor('draw');
+    this.setCursor(this.addable ? 'draw' : null);
   }
 
   /**

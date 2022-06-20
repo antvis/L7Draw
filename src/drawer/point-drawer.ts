@@ -60,7 +60,7 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   }
 
   onPointCreate(e: ILayerMouseEvent<IPointFeature>): IPointFeature | undefined {
-    if (this.getPointData().length >= 1 && !this.options.multiple) {
+    if (!this.addable) {
       this.setPointData((features) => {
         return features.map((feature) => {
           feature.properties = {

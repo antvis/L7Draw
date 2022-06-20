@@ -73,12 +73,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
   }
 
   onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {
-    if (
-      (!this.options.multiple &&
-        !this.drawPolygon &&
-        this.getPolygonData().length >= 1) ||
-      this.dragPoint
-    ) {
+    if (!this.addable || this.dragPoint) {
       return;
     }
     const feature = super.onPointCreate(e);
@@ -99,12 +94,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
       } else if (drawLine) {
         this.handleCreatePolygon([feature], drawLine);
       }
-      this.emit(
-        DrawEvent.addNode,
-        feature,
-        drawPolygon,
-        this.getPolygonData(),
-      );
+      this.emit(DrawEvent.addNode, feature, drawPolygon, this.getPolygonData());
     }
     return feature;
   }
@@ -199,12 +189,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     const editPolygon = this.editPolygon;
     if (feature && editPolygon) {
       this.emit(DrawEvent.edit, editPolygon, this.getPolygonData());
-      this.emit(
-        DrawEvent.addNode,
-        feature,
-        editPolygon,
-        this.getPolygonData(),
-      );
+      this.emit(DrawEvent.addNode, feature, editPolygon, this.getPolygonData());
     }
     return feature;
   }
