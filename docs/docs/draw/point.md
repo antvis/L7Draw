@@ -2,9 +2,9 @@
 title: 点
 order: 1
 group:
-title: 绘制
-order: 1
-path: /draw
+  title: 绘制
+  order: 1
+  path: /draw
 ---
 
 ## 说明
