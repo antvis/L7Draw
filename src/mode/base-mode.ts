@@ -93,6 +93,7 @@ export abstract class BaseMode<
     }
     this.saveHistory();
 
+    this.bindCommonEvent();
     this.emit(DrawEvent.init, this);
   }
 
@@ -106,16 +107,6 @@ export abstract class BaseMode<
    * @param options
    */
   abstract getDefaultOptions(options: DeepPartial<O>): O;
-
-  /**
-   * 监听事件
-   */
-  abstract bindEnableEvent(): void;
-
-  /**
-   * 解除监听事件
-   */
-  abstract unbindEnableEvent(): void;
 
   /**
    * 获取数据
@@ -149,18 +140,20 @@ export abstract class BaseMode<
     this.redoHistory = this.redoHistory.bind(this);
     this.removeActiveItem = this.removeActiveItem.bind(this);
     this.bindCommonEvent = this.bindCommonEvent.bind(this);
-    this.unbindCommonEvent = this.unbindCommonEvent.bind(this);
   }
 
-  /**
-   * 监听通用事件
-   */
   bindCommonEvent() {
     this.on(DrawEvent.add, this.emitChangeEvent);
     this.on(DrawEvent.edit, this.emitChangeEvent);
     this.on(DrawEvent.remove, this.emitChangeEvent);
     this.on(DrawEvent.clear, this.emitChangeEvent);
     this.on(DrawEvent.addNode, this.saveHistory);
+  }
+
+  /**
+   * 监听通用事件
+   */
+  bindEnableEvent() {
     this.scene.on(SceneEvent.mousemove, this.saveMouseLngLat);
 
     // 快捷键绑定
@@ -175,12 +168,7 @@ export abstract class BaseMode<
   /**
    * 监听通用事件
    */
-  unbindCommonEvent() {
-    this.off(DrawEvent.add, this.emitChangeEvent);
-    this.off(DrawEvent.edit, this.emitChangeEvent);
-    this.off(DrawEvent.remove, this.emitChangeEvent);
-    this.off(DrawEvent.clear, this.emitChangeEvent);
-    this.off(DrawEvent.addNode, this.saveHistory);
+  unbindEnableEvent() {
     this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
 
     // 快捷键解绑
@@ -354,7 +342,6 @@ export abstract class BaseMode<
     this.isEnable = true;
     this.resetCursor();
     this.bindEnableEvent();
-    this.bindCommonEvent();
     this.scene.setMapStatus({
       doubleClickZoom: false,
     });
@@ -373,7 +360,6 @@ export abstract class BaseMode<
     this.isEnable = false;
     this.setCursor(null);
     this.unbindEnableEvent();
-    this.unbindCommonEvent();
     this.scene.setMapStatus({
       doubleClickZoom: true,
     });

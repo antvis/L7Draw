@@ -28,10 +28,12 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   }
 
   bindEnableEvent(): void {
+    super.bindEnableEvent();
     this.enablePointRenderAction();
   }
 
   unbindEnableEvent(): void {
+    super.unbindEnableEvent();
     this.disablePointRenderAction();
   }
 
