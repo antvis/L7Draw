@@ -2,19 +2,21 @@
 title: 点
 order: 1
 group:
-  title: 绘制
-  order: 1
-  path: /draw
+title: 绘制
+order: 1
+path: /draw
 ---
 
 ## 说明
 
 `DrawPoint` 用于在地图上绘制点数据。
 
+![](https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*Upr_Qr1aEk4AAAAAAAAAAAAAARQnAQ)
+
 ## 示例
 
 ```tsx | pure
-import { DrawEvent, DrawPoint } from '@antv/l7-draw';
+import {DrawEvent, DrawPoint} from '@antv/l7-draw';
 
 // 实例化
 const drawer = new DrawPoint(scene, {
@@ -34,13 +36,13 @@ drawer.on(DrawEvent.change, (pointList) => {
 
 options 配置是 Drawer 实例化的时候，作为第二个参数传入，所有的 options 配置均不是必传项。
 
-| 名称      | 说明                                                                       | 类型                                 | 默认值 | 示例                                                                         |
-| --------- | -------------------------------------------------------------------------- | ------------------------------------ | ------ | ---------------------------------------------------------------------------- |
-| initData  | 设置 Drawer 的初始数据                                                     | Feature&lt;Point&gt;[]               | []     | [初始化数据示例](/example/point/init-data)                                   |
-| multiple  | 是否支持绘制多个 Point                                                     | boolean                              | true   | [关闭绘制多个](/example/point/multiple)                                      |
-| autoFocus | 绘制 Point 后，新增的 Point 是否为激活态                                   | boolean                              | true   | [关闭自动激活示例](/example/point/auto-focus)                                |
-| editable  | 绘制的 Point 是否支持二次编辑（拖拽位移）                                  | boolean                              | true   | [禁用编辑示例](/example/point/editable)                                      |
-| style     | 绘制时不同状态下的样式，详情可见 [样式](/docs/super/style)                 | IStyleItem                           | -      | [使用图片示例](/example/point/image), [自定义样式示例](/example/point/style) |
+| 名称      | 说明                                                                      | 类型                                | 默认值 | 示例                                                                         |
+| --------- | ------------------------------------------------------------------------- | ----------------------------------- | ------ | ---------------------------------------------------------------------------- |
+| initData  | 设置 Drawer 的初始数据                                                    | Feature&lt;Point&gt;[]              | []     | [初始化数据示例](/example/point/init-data)                                   |
+| multiple  | 是否支持绘制多个 Point                                                    | boolean                             | true   | [关闭绘制多个](/example/point/multiple)                                      |
+| autoFocus | 绘制 Point 后，新增的 Point 是否为激活态                                  | boolean                             | true   | [关闭自动激活示例](/example/point/auto-focus)                                |
+| editable  | 绘制的 Point 是否支持二次编辑（拖拽位移）                                 | boolean                             | true   | [禁用编辑示例](/example/point/editable)                                      |
+| style     | 绘制时不同状态下的样式，详情可见 [样式](/docs/super/style)                | IStyleItem                          | -      | [使用图片示例](/example/point/image), [自定义样式示例](/example/point/style) |
 | history   | 回退、重做、历史记录等相关配置，详情可见 [回退/重做](/docs/super/history) | [History 配置](/docs/super/history) | -      | -                                                                            |
 
 ## 方法
@@ -51,12 +53,13 @@ options 配置是 Drawer 实例化的时候，作为第二个参数传入，所�
 
 [监听事件示例](/example/point/event)
 
-| 名称                  | 说明                 | 类型                                                                             |
-| --------------------- | -------------------- | -------------------------------------------------------------------------------- |
-| DrawEvent.init      | 初始化完成           | (drawer: DrawPoint) => void                                                    |
-| DrawEvent.destroy   | 销毁完成             | (drawer: DrawPoint) => void                                                    |
-| DrawEvent.enable    | 启用绘制/编辑的回调  | (drawer: DrawPoint) => void                                                    |
-| DrawEvent.disable   | 禁用绘制/编辑的回调  | (drawer: DrawPoint) => void                                                    |
+| 名称                | 说明                 | 类型                                                                             |
+| ------------------- | -------------------- | -------------------------------------------------------------------------------- |
+| DrawEvent.init      | 初始化完成           | (drawer: DrawPoint) => void                                                      |
+| DrawEvent.destroy   | 销毁完成             | (drawer: DrawPoint) => void                                                      |
+| DrawEvent.enable    | 启用绘制/编辑的回调  | (drawer: DrawPoint) => void                                                      |
+| DrawEvent.disable   | 禁用绘制/编辑的回调  | (drawer: DrawPoint) => void                                                      |
+| DrawEvent.clear     | 清空数据的回调       | (drawer: DrawPoint) => void                                                      |
 | DrawEvent.add       | 添加后的回调         | (newFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void  |
 | DrawEvent.edit      | 编辑(位移结束)的回调 | (editFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void |
 | DrawEvent.remove    | 删除后的回调         | (editFeature: Feature&lt;Point&gt;, featureList: Feature&lt;Point&gt;[]) => void |
