@@ -137,13 +137,8 @@ export abstract class DragPolygonMode<
   }
 
   onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {
-    const { multiple, createByDrag } = this.options;
-    if (
-      (!multiple && this.getPolygonData().length >= 1 && !this.drawPolygon) ||
-      this.dragPoint ||
-      this.editLine ||
-      createByDrag
-    ) {
+    const { createByDrag } = this.options;
+    if (!this.addable || this.dragPoint || this.editLine || createByDrag) {
       return;
     }
     const drawPolygon = this.drawPolygon;
@@ -218,14 +213,9 @@ export abstract class DragPolygonMode<
   }
 
   onSceneDragStart(e: ISceneMouseEvent) {
-    const { multiple, createByDrag } = this.options;
+    const { createByDrag } = this.options;
 
-    if (
-      !createByDrag ||
-      (!multiple && this.getPolygonData().length >= 1 && !this.drawPolygon) ||
-      this.dragPoint ||
-      this.editLine
-    ) {
+    if (!createByDrag || !this.addable || this.dragPoint || this.editLine) {
       return;
     }
     this.scene.setMapStatus({
@@ -235,10 +225,10 @@ export abstract class DragPolygonMode<
   }
 
   onSceneDragEnd(e: ISceneMouseEvent) {
-    const { multiple, createByDrag } = this.options;
+    const { createByDrag } = this.options;
     if (
       !createByDrag ||
-      (!multiple && this.getPolygonData().length >= 1 && !this.drawPolygon) ||
+      !this.addable ||
       this.dragPoint ||
       this.editLine ||
       !this.drawPolygon

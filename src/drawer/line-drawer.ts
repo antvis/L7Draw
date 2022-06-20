@@ -101,21 +101,12 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   }
 
   onPointCreate(e: ILayerMouseEvent) {
-    if (
-      !this.options.multiple &&
-      !this.drawLine &&
-      this.getLineData().length >= 1
-    ) {
+    if (!this.addable) {
       return;
     }
     const feature = super.onPointCreate(e);
     if (feature) {
-      this.emit(
-        DrawEvent.addNode,
-        feature,
-        this.drawLine,
-        this.getLineData(),
-      );
+      this.emit(DrawEvent.addNode, feature, this.drawLine, this.getLineData());
     }
     return feature;
   }

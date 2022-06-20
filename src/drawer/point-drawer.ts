@@ -21,6 +21,7 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     this.bindPointRenderEvent();
   }
 
+  // @ts-ignore
   getDefaultOptions(options: DeepPartial<IPointDrawerOptions>) {
     const defaultOptions = this.getCommonOptions(options);
     defaultOptions.style.point = DEFAULT_POINT_STYLE;
@@ -59,7 +60,7 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   }
 
   onPointCreate(e: ILayerMouseEvent<IPointFeature>): IPointFeature | undefined {
-    if (this.getPointData().length >= 1 && !this.options.multiple) {
+    if (!this.addable) {
       this.setPointData((features) => {
         return features.map((feature) => {
           feature.properties = {

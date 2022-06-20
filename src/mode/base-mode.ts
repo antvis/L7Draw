@@ -8,6 +8,7 @@ import {
   DEFAULT_HISTORY_CONFIG,
   DEFAULT_KEYBOARD_CONFIG,
   DEFAULT_STYLE,
+  DrawerEvent,
   DrawEvent,
   RENDER_MAP,
   SceneEvent,
@@ -28,7 +29,7 @@ import {
 import { getLngLat, isSameFeature } from '../utils';
 
 export abstract class BaseMode<
-  O extends IBaseModeOptions,
+  O extends IBaseModeOptions = IBaseModeOptions,
 > extends EventEmitter<DrawEvent> {
   /**
    * L7 场景实例，在构造器中传入
@@ -67,10 +68,39 @@ export abstract class BaseMode<
    */
   protected sceneRender: SceneRender;
 
+  /**
+   * 光标在地图上的经纬度位置
+   * @protected
+   */
   protected mouseLngLat: ILngLat = {
     lng: 0,
     lat: 0,
   };
+
+  /**
+   * 本次enable添加的绘制物个数
+   * @protected
+   */
+  protected addCount = 0;
+
+  /**
+   * 当期是否可以添加新的绘制物
+   */
+  get addable() {
+    const data = this.getData();
+    const { addMultiple, multiple } = this.options;
+    const drawItem = data.find((item) => item.properties.isDraw);
+    if ((multiple && addMultiple) || drawItem) {
+      return true;
+    }
+    if (!multiple && data.length >= 1) {
+      return false;
+    }
+    if (!addMultiple && this.addCount >= 1) {
+      return false;
+    }
+    return true;
+  }
 
   constructor(scene: Scene, options: DeepPartial<O>) {
     super();
@@ -144,6 +174,9 @@ export abstract class BaseMode<
 
   bindCommonEvent() {
     this.on(DrawEvent.add, this.emitChangeEvent);
+    this.on(DrawerEvent.add, () => {
+      this.addCount++;
+    });
     this.on(DrawEvent.edit, this.emitChangeEvent);
     this.on(DrawEvent.remove, this.emitChangeEvent);
     this.on(DrawEvent.clear, this.emitChangeEvent);
@@ -304,7 +337,9 @@ export abstract class BaseMode<
    * 根据用户传入的options返回通用的options默认配置
    * @param options
    */
-  getCommonOptions<F extends Feature = Feature>(options: DeepPartial<O>): O {
+  getCommonOptions<F extends Feature = Feature>(
+    options: DeepPartial<IBaseModeOptions>,
+  ): IBaseModeOptions {
     return {
       initData: [] as F[],
       autoFocus: true,
@@ -314,7 +349,8 @@ export abstract class BaseMode<
       multiple: true,
       history: cloneDeep(DEFAULT_HISTORY_CONFIG),
       keyboard: cloneDeep(DEFAULT_KEYBOARD_CONFIG),
-    } as unknown as O;
+      addMultiple: true,
+    } as IBaseModeOptions;
   }
 
   /**
@@ -329,7 +365,7 @@ export abstract class BaseMode<
    * 重置光标到常规状态
    */
   resetCursor() {
-    this.setCursor('draw');
+    this.setCursor(this.addable ? 'draw' : null);
   }
 
   /**
@@ -345,6 +381,7 @@ export abstract class BaseMode<
     this.scene.setMapStatus({
       doubleClickZoom: false,
     });
+    this.addCount = 0;
     setTimeout(() => {
       this.emit(DrawEvent.enable, this);
     }, 0);
@@ -363,6 +400,7 @@ export abstract class BaseMode<
     this.scene.setMapStatus({
       doubleClickZoom: true,
     });
+    this.addCount = 0;
     setTimeout(() => {
       this.emit(DrawEvent.disable, this);
     }, 0);

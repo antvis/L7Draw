@@ -30,6 +30,7 @@ export abstract class MidPointMode<
   }
 
   getCommonOptions(options: DeepPartial<T>): T {
+    // @ts-ignore
     return {
       ...super.getCommonOptions(options),
       showMidPoint: true,

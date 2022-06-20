@@ -1,13 +1,14 @@
 import { Scene } from '@antv/l7';
-import { DrawLine } from '@antv/l7-draw';
+import { DrawRect } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
+import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import React, { useEffect, useState } from 'react';
 
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [lineDrawer, setLineDrawer] = useState<DrawLine | null>(null);
+  const [rectDrawer, setRectDrawer] = useState<DrawRect | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -20,16 +21,21 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new DrawLine(scene, {
-        autoFocus: false,
+      const drawer = new DrawRect(scene, {
+        addMultiple: false,
       });
-      setLineDrawer(drawer);
+      setRectDrawer(drawer);
       drawer.enable();
     });
   }, []);
 
   return (
     <div>
+      <div style={{ padding: 8 }}>
+        <Button onClick={() => rectDrawer?.enable()}>启用</Button>
+        <Button onClick={() => rectDrawer?.disable()}>禁用</Button>
+        <Button onClick={() => rectDrawer?.clear()}>清空</Button>
+      </div>
       <div id={id} style={{ height: 400, position: 'relative' }} />
     </div>
   );
