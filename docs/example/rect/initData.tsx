@@ -1,5 +1,5 @@
 import { Scene } from '@antv/l7';
-import { DrawerEvent, RectDrawer } from '@antv/l7-draw';
+import { DrawEvent, DrawRect } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import React, { useEffect, useState } from 'react';
 import { rectList } from './mock';
@@ -7,7 +7,7 @@ import { rectList } from './mock';
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [rectDrawer, setRectDrawer] = useState<RectDrawer | null>(null);
+  const [rectDrawer, setRectDrawer] = useState<DrawRect | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -20,7 +20,7 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new RectDrawer(scene, {
+      const drawer = new DrawRect(scene, {
         initData: rectList,
       });
       setRectDrawer(drawer);
@@ -32,7 +32,7 @@ const Demo: React.FC = () => {
       //   ])
       // }, 1000)
 
-      drawer.on(DrawerEvent.add, (e) => {});
+      drawer.on(DrawEvent.add, (e) => {});
     });
   }, []);
 

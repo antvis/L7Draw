@@ -1,5 +1,5 @@
 import { Scene } from '@antv/l7';
-import { PolygonDrawer } from '@antv/l7-draw';
+import { DrawPolygon } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import 'antd/dist/antd.css';
 import React, { useEffect, useState } from 'react';
@@ -8,9 +8,7 @@ import { polygonList } from './mock';
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [polygonDrawer, setPolygonDrawer] = useState<PolygonDrawer | null>(
-    null,
-  );
+  const [polygonDrawer, setPolygonDrawer] = useState<DrawPolygon | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -23,7 +21,7 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new PolygonDrawer(scene, {
+      const drawer = new DrawPolygon(scene, {
         initData: polygonList,
         editable: false,
       });

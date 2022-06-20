@@ -1,12 +1,12 @@
 import { Scene } from '@antv/l7';
-import { PointDrawer } from '@antv/l7-draw';
+import { DrawPoint } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import React, { useEffect, useState } from 'react';
 
 const Demo: React.FC = () => {
-  const [pointDrawer, setPointDrawer] = useState<PointDrawer | null>(null);
+  const [pointDrawer, setPointDrawer] = useState<DrawPoint | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -19,7 +19,7 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new PointDrawer(scene, {});
+      const drawer = new DrawPoint(scene, {});
       setPointDrawer(drawer);
       drawer.enable();
     });

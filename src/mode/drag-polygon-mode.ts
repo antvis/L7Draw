@@ -1,7 +1,7 @@
 import { Scene } from '@antv/l7';
 import { Feature } from '@turf/turf';
 import { first, last } from 'lodash';
-import { DrawerEvent, RenderEvent, SceneEvent } from '../constant';
+import { DrawEvent, RenderEvent, SceneEvent } from '../constant';
 import {
   DeepPartial,
   ILayerMouseEvent,
@@ -106,7 +106,7 @@ export abstract class DragPolygonMode<
       }),
     );
     this.emit(
-      DrawerEvent.addNode,
+      DrawEvent.addNode,
       firstNode,
       this.drawPolygon,
       this.getPolygonData(),
@@ -125,10 +125,10 @@ export abstract class DragPolygonMode<
     if (!(autoFocus && editable)) {
       this.handlePolygonUnClick(drawPolygon);
     }
-    this.emit(DrawerEvent.add, drawPolygon, this.getPolygonData());
+    this.emit(DrawEvent.add, drawPolygon, this.getPolygonData());
 
     this.emit(
-      DrawerEvent.addNode,
+      DrawEvent.addNode,
       drawPolygon.properties.nodes[1],
       this.drawPolygon,
       this.getPolygonData(),

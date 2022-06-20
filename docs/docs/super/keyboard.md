@@ -2,12 +2,12 @@
 title: 快捷键
 order: 6
 group:
-  title: 配置
+  title: 高级
   order: 2
-  path: /common
+  path: /super
 ---
 
-# 说明
+## 说明
 
 为了方便用户快速编辑绘制物，Drawer 中内置了一系列快捷键。
 
@@ -17,12 +17,12 @@ group:
 
 用户可以选择关闭部分快捷键功能，或者自定义快捷键的按键。
 
-# 示例
+## 示例
 
 ```tsx | pure
-import { PointDrawer } from '@antv/l7-draw';
+import { DrawPoint } from '@antv/l7-draw';
 
-const drawer = new PointDrawer(scene, {
+const drawer = new DrawPoint(scene, {
   keyboard: {
     revert: ['command + z', 'ctrl + z'], // 覆盖默认回退快捷键按键
     remove: false, // false表示关闭当前删除快捷键功能
@@ -41,7 +41,7 @@ drawer.redoHistory();
 drawer.removeActiveItem();
 ```
 
-# 配置
+## 配置
 
 | 名称   | 说明                 | 类型              | 默认值                                      |
 | ------ | -------------------- | ----------------- | ------------------------------------------- |

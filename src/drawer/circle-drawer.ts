@@ -8,7 +8,7 @@ import {
   Feature,
   Polygon,
 } from '@turf/turf';
-import { DrawerEvent } from '../constant';
+import { DrawEvent } from '../constant';
 import { DragPolygonMode, IDragPolygonModeOptions } from '../mode';
 import {
   DeepPartial,
@@ -194,7 +194,7 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
       this.setEditPolygon(dragPolygon, {
         isDrag: true,
       });
-      this.emit(DrawerEvent.dragging, dragPolygon, this.getPolygonData());
+      this.emit(DrawEvent.dragging, dragPolygon, this.getPolygonData());
     }
     return feature;
   }

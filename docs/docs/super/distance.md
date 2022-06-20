@@ -2,23 +2,23 @@
 title: 距离
 order: 3
 group:
-  title: 配置
+  title: 高级
   order: 2
-  path: /common
+  path: /super
 ---
 
-# 说明
+## 说明
 
 用于展示线段真实的距离长度
 
-# 示例
+## 示例
 
 距离文本配置是在各个 Drawer 的 distanceText 字段来进行配置的
 
 ```tsx | pure
-import { PointDrawer } from '@antv/l7-draw';
+import { DrawPoint } from '@antv/l7-draw';
 
-const drawer = new PointDrawer(scene, {
+const drawer = new DrawPoint(scene, {
   distanceText: {
     total: false,
     showOnDash: true,
@@ -37,7 +37,7 @@ const drawer = new PointDrawer(scene, {
 });
 ```
 
-# 配置
+## 配置
 
 | 名称         | 说明                                     | 类型                       | 默认值              |
 | ------------ | ---------------------------------------- | -------------------------- | ------------------- |

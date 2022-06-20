@@ -9,7 +9,7 @@ import {
   Position,
 } from '@turf/turf';
 import { cloneDeep, isEqual } from 'lodash';
-import { DrawerEvent } from '../constant';
+import { DrawEvent } from '../constant';
 import { DragPolygonMode, IDragPolygonModeOptions } from '../mode';
 import {
   DeepPartial,
@@ -143,7 +143,7 @@ export class RectDrawer extends DragPolygonMode<IRectDrawerOptions> {
       this.setEditPolygon(dragPolygon, {
         isDrag: true,
       });
-      this.emit(DrawerEvent.dragging, dragPolygon, this.getPolygonData());
+      this.emit(DrawEvent.dragging, dragPolygon, this.getPolygonData());
     }
     return feature;
   }
