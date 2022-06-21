@@ -79,6 +79,7 @@ export class SceneRender extends EventEmitter<RenderEvent> {
   }
 
   enableDblClick() {
+    this.disableDblClick();
     this.scene.on(SceneEvent.mousedown, this.onDblClick);
   }
 
