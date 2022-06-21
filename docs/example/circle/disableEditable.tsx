@@ -4,7 +4,7 @@ import { GaodeMapV2 } from '@antv/l7-maps';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import React, { useEffect, useState } from 'react';
-import {circleList} from "./mock";
+import { circleList } from './mock';
 
 const id = String(Math.random());
 
