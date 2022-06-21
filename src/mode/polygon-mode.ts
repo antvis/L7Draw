@@ -400,6 +400,9 @@ export abstract class PolygonMode<
   }
 
   disablePolygonRenderAction() {
+    if (this.options.disableEditable) {
+      return;
+    }
     this.polygonRender?.disableUnClick();
     this.polygonRender?.disableHover();
     this.polygonRender?.disableDrag();

@@ -551,6 +551,9 @@ export abstract class LineMode<
   }
 
   disableSceneRenderAction() {
+    if (this.options.disableEditable) {
+      return;
+    }
     this.sceneRender.disableDrag();
     this.sceneRender.disableMouseMove();
     this.sceneRender.disableDblClick();
@@ -566,6 +569,9 @@ export abstract class LineMode<
   }
 
   disableLineRenderAction() {
+    if (this.options.disableEditable) {
+      return;
+    }
     this.lineRender?.disableUnClick();
     this.lineRender?.disableHover();
     this.lineRender?.disableDrag();
