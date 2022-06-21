@@ -47,6 +47,7 @@ export class LineRender extends LayerRender<ILineFeature, ILineStyle> {
   };
 
   enableHover = () => {
+    this.disableHover();
     this.layers[0]?.on(LayerEvent.mousemove, this.onMouseMove);
     this.layers[0]?.on(LayerEvent.mouseout, this.onMouseOut);
   };

@@ -9,3 +9,4 @@ package.json
 dist
 es
 lib
+docs-dist

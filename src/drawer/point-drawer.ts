@@ -114,16 +114,18 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
 
   disable() {
     super.disable();
-    this.setPointData((features) => {
-      return features.map((feature) => {
-        feature.properties = {
-          ...feature.properties,
-          isDrag: false,
-          isActive: false,
-          isHover: false,
-        };
-        return feature;
+    if (!this.options.disableEditable) {
+      this.setPointData((features) => {
+        return features.map((feature) => {
+          feature.properties = {
+            ...feature.properties,
+            isDrag: false,
+            isActive: false,
+            isHover: false,
+          };
+          return feature;
+        });
       });
-    });
+    }
   }
 }

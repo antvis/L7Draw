@@ -400,6 +400,9 @@ export abstract class PolygonMode<
   }
 
   disablePolygonRenderAction() {
+    if (this.options.disableEditable) {
+      return;
+    }
     this.polygonRender?.disableUnClick();
     this.polygonRender?.disableHover();
     this.polygonRender?.disableDrag();
@@ -435,38 +438,40 @@ export abstract class PolygonMode<
 
   disable() {
     super.disable();
-    let features = this.getPolygonData();
-    if (this.drawPolygon) {
-      features = features.filter((feature) => !feature.properties.isDraw);
-      this.source.setData({
-        point: [],
-        dashLine: [],
-        midPoint: [],
-      });
-      this.setLineData((features) => {
-        return features.filter((feature) => {
-          return !feature.properties.isDraw;
+    if (!this.options.disableEditable) {
+      let features = this.getPolygonData();
+      if (this.drawPolygon) {
+        features = features.filter((feature) => !feature.properties.isDraw);
+        this.source.setData({
+          point: [],
+          dashLine: [],
+          midPoint: [],
         });
-      });
-      this.setTextData((features) => {
-        return features.filter((feature) => {
-          return !feature.properties.isActive;
+        this.setLineData((features) => {
+          return features.filter((feature) => {
+            return !feature.properties.isDraw;
+          });
         });
-      });
+        this.setTextData((features) => {
+          return features.filter((feature) => {
+            return !feature.properties.isActive;
+          });
+        });
+      }
+      if (this.editPolygon) {
+        this.handlePolygonUnClick(this.editPolygon);
+      }
+      this.setPolygonData(
+        features.map((feature) => {
+          feature.properties = {
+            ...feature.properties,
+            isDrag: false,
+            isActive: false,
+            isHover: false,
+          };
+          return feature;
+        }),
+      );
     }
-    if (this.editPolygon) {
-      this.handlePolygonUnClick(this.editPolygon);
-    }
-    this.setPolygonData(
-      features.map((feature) => {
-        feature.properties = {
-          ...feature.properties,
-          isDrag: false,
-          isActive: false,
-          isHover: false,
-        };
-        return feature;
-      }),
-    );
   }
 }

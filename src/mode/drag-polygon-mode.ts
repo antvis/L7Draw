@@ -1,7 +1,7 @@
 import { Scene } from '@antv/l7';
 import { Feature } from '@turf/turf';
 import { first, last } from 'lodash';
-import { DrawEvent, RenderEvent, SceneEvent } from '../constant';
+import { DrawEvent, RenderEvent } from '../constant';
 import {
   DeepPartial,
   ILayerMouseEvent,
@@ -99,9 +99,6 @@ export abstract class DragPolygonMode<
             isDraw: true,
             isActive: true,
           };
-        },
-        otherHandler: (feature) => {
-          feature.properties.isActive = false;
         },
       }),
     );
@@ -256,26 +253,41 @@ export abstract class DragPolygonMode<
     this.resetCursor();
   }
 
+  bindSceneDragEvent() {
+    this.unbindSceneDragEvent();
+    this.sceneRender.on(RenderEvent.dragstart, this.onSceneDragStart);
+    this.sceneRender.on(RenderEvent.dragend, this.onSceneDragEnd);
+
+    this.scene.setMapStatus({
+      dragEnable: false,
+    });
+  }
+
+  unbindSceneDragEvent() {
+    this.sceneRender.off(RenderEvent.dragstart, this.onSceneDragStart);
+    this.sceneRender.off(RenderEvent.dragend, this.onSceneDragEnd);
+    this.scene.setMapStatus({
+      dragEnable: true,
+    });
+  }
+
   bindEnableEvent() {
     super.bindEnableEvent();
     if (this.options.createByDrag) {
-      this.sceneRender.on(RenderEvent.dragstart, this.onSceneDragStart);
-      this.sceneRender.on(RenderEvent.dragend, this.onSceneDragEnd);
-
-      this.scene.setMapStatus({
-        dragEnable: false,
-      });
+      this.bindSceneDragEvent();
     }
   }
 
   unbindEnableEvent() {
     super.unbindEnableEvent();
     if (this.options.createByDrag) {
-      this.scene.off(SceneEvent.dragstart, this.onSceneDragStart);
-      this.scene.off(SceneEvent.dragend, this.onSceneDragEnd);
-      this.scene.setMapStatus({
-        dragEnable: true,
-      });
+      this.unbindSceneDragEvent();
     }
+  }
+
+  bindThis() {
+    super.bindThis();
+    this.onSceneDragStart = this.onSceneDragStart.bind(this);
+    this.onSceneDragEnd = this.onSceneDragEnd.bind(this);
   }
 }

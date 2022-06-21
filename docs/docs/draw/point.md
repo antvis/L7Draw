@@ -36,15 +36,16 @@ drawer.on(DrawEvent.change, (pointList) => {
 
 options 配置是 Drawer 实例化的时候，作为第二个参数传入，所有的 options 配置均不是必传项。
 
-| 名称        | 说明                                                                      | 类型                                | 默认值 | 示例                                                                         |
-| ----------- | ------------------------------------------------------------------------- | ----------------------------------- | ------ | ---------------------------------------------------------------------------- |
-| initData    | 设置 Drawer 的初始数据                                                    | Feature&lt;Point&gt;[]              | []     | [初始化数据示例](/example/point/init-data)                                   |
-| addMultiple | 关闭后，Draw 中一次 enable，最多只能绘制一个 Point 绘制物                 | boolean                             | true   | [关闭绘制多个 1](/example/point/multiple#单次-enable-最多绘制一个)           |
-| multiple    | 关闭后，Draw 中始终最多只能绘制一个 Point 绘制物                          | boolean                             | true   | [关闭绘制多个 2](/example/point/multiple#始终最多绘制一个)                   |
-| autoFocus   | 绘制 Point 后，新增的 Point 是否为激活态                                  | boolean                             | true   | [关闭自动激活示例](/example/point/auto-focus)                                |
-| editable    | 绘制的 Point 是否支持二次编辑（拖拽位移）                                 | boolean                             | true   | [禁用编辑示例](/example/point/editable)                                      |
-| style       | 绘制时不同状态下的样式，详情可见 [样式](/docs/super/style)                | IStyleItem                          | -      | [使用图片示例](/example/point/image), [自定义样式示例](/example/point/style) |
-| history     | 回退、重做、历史记录等相关配置，详情可见 [回退/重做](/docs/super/history) | [History 配置](/docs/super/history) | -      | -                                                                            |
+| 名称            | 说明                                                                      | 类型                                | 默认值 | 示例                                                                         |
+| --------------- | ------------------------------------------------------------------------- | ----------------------------------- | ------ | ---------------------------------------------------------------------------- |
+| initData        | 设置 Drawer 的初始数据                                                    | Feature&lt;Point&gt;[]              | []     | [初始化数据示例](/example/point/init-data)                                   |
+| disableEditable | disable 禁用状态下是否支持编辑                                            | boolean                             | false  | [禁用状态下可编辑](/example/point/disable-editable)                          |
+| addMultiple     | 关闭后，Draw 中一次 enable，最多只能绘制一个 Point 绘制物                 | boolean                             | true   | [关闭绘制多个 1](/example/point/multiple#单次-enable-最多绘制一个)           |
+| multiple        | 关闭后，Draw 中始终最多只能绘制一个 Point 绘制物                          | boolean                             | true   | [关闭绘制多个 2](/example/point/multiple#始终最多绘制一个)                   |
+| autoFocus       | 绘制 Point 后，新增的 Point 是否为激活态                                  | boolean                             | true   | [关闭自动激活示例](/example/point/auto-focus)                                |
+| editable        | 绘制的 Point 是否支持二次编辑（拖拽位移）                                 | boolean                             | true   | [禁用编辑示例](/example/point/editable)                                      |
+| style           | 绘制时不同状态下的样式，详情可见 [样式](/docs/super/style)                | IStyleItem                          | -      | [使用图片示例](/example/point/image), [自定义样式示例](/example/point/style) |
+| history         | 回退、重做、历史记录等相关配置，详情可见 [回退/重做](/docs/super/history) | [History 配置](/docs/super/history) | -      | -                                                                            |
 
 ## 方法
 

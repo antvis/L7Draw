@@ -49,6 +49,7 @@ export class PolygonRender extends LayerRender<IPolygonFeature, IPolygonStyle> {
   };
 
   enableHover = () => {
+    this.disableHover();
     this.layers[0]?.on(LayerEvent.mousemove, this.onMouseMove);
     this.layers[0]?.on(LayerEvent.mouseout, this.onMouseOut);
   };

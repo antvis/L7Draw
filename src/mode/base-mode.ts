@@ -90,6 +90,9 @@ export abstract class BaseMode<
     const data = this.getData();
     const { addMultiple, multiple } = this.options;
     const drawItem = data.find((item) => item.properties.isDraw);
+    if (!this.isEnable) {
+      return false;
+    }
     if ((multiple && addMultiple) || drawItem) {
       return true;
     }
@@ -125,6 +128,9 @@ export abstract class BaseMode<
 
     this.bindCommonEvent();
     this.emit(DrawEvent.init, this);
+    if (this.options.disableEditable) {
+      this.bindEnableEvent();
+    }
   }
 
   /**
@@ -170,6 +176,8 @@ export abstract class BaseMode<
     this.redoHistory = this.redoHistory.bind(this);
     this.removeActiveItem = this.removeActiveItem.bind(this);
     this.bindCommonEvent = this.bindCommonEvent.bind(this);
+    this.bindEnableEvent = this.bindEnableEvent.bind(this);
+    this.unbindEnableEvent = this.unbindEnableEvent.bind(this);
   }
 
   bindCommonEvent() {
@@ -187,9 +195,32 @@ export abstract class BaseMode<
    * 监听通用事件
    */
   bindEnableEvent() {
+    this.scene.setMapStatus({
+      doubleClickZoom: false,
+    });
+    this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
     this.scene.on(SceneEvent.mousemove, this.saveMouseLngLat);
 
-    // 快捷键绑定
+    this.unbindKeyboardEvent();
+    this.bindKeyboardEvent();
+  }
+
+  /**
+   * 监听通用事件
+   */
+  unbindEnableEvent() {
+    if (this.options.disableEditable) {
+      return;
+    }
+    this.scene.setMapStatus({
+      doubleClickZoom: true,
+    });
+    this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
+    this.unbindKeyboardEvent();
+  }
+
+  // 快捷键绑定
+  bindKeyboardEvent() {
     const { revert, redo, remove } = this.options.keyboard || {};
     remove && Mousetrap.bind(remove, this.removeActiveItem);
     if (this.options.history) {
@@ -198,13 +229,8 @@ export abstract class BaseMode<
     }
   }
 
-  /**
-   * 监听通用事件
-   */
-  unbindEnableEvent() {
-    this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
-
-    // 快捷键解绑
+  // 快捷键解绑
+  unbindKeyboardEvent() {
     const { revert, redo, remove } = this.options.keyboard || {};
     remove && Mousetrap.unbind(remove);
     if (this.options.history) {
@@ -350,6 +376,7 @@ export abstract class BaseMode<
       history: cloneDeep(DEFAULT_HISTORY_CONFIG),
       keyboard: cloneDeep(DEFAULT_KEYBOARD_CONFIG),
       addMultiple: true,
+      disableEditable: false,
     } as IBaseModeOptions;
   }
 
@@ -365,7 +392,7 @@ export abstract class BaseMode<
    * 重置光标到常规状态
    */
   resetCursor() {
-    this.setCursor(this.addable ? 'draw' : null);
+    this.setCursor(this.isEnable && this.addable ? 'draw' : null);
   }
 
   /**
@@ -378,9 +405,6 @@ export abstract class BaseMode<
     this.isEnable = true;
     this.resetCursor();
     this.bindEnableEvent();
-    this.scene.setMapStatus({
-      doubleClickZoom: false,
-    });
     this.addCount = 0;
     setTimeout(() => {
       this.emit(DrawEvent.enable, this);
@@ -397,9 +421,6 @@ export abstract class BaseMode<
     this.isEnable = false;
     this.setCursor(null);
     this.unbindEnableEvent();
-    this.scene.setMapStatus({
-      doubleClickZoom: true,
-    });
     this.addCount = 0;
     setTimeout(() => {
       this.emit(DrawEvent.disable, this);

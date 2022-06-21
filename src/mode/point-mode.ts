@@ -253,7 +253,9 @@ export abstract class PointMode<
 
   enablePointRenderAction() {
     const { editable } = this.options;
-    this.pointRender?.enableCreate();
+    if (this.isEnable) {
+      this.pointRender?.enableCreate();
+    }
     this.pointRender?.enableClick();
     if (editable) {
       this.pointRender?.enableHover();
@@ -263,6 +265,9 @@ export abstract class PointMode<
 
   disablePointRenderAction() {
     this.pointRender?.disableCreate();
+    if (this.options.disableEditable) {
+      return;
+    }
     this.pointRender?.disableHover();
     this.pointRender?.disableDrag();
     this.pointRender?.disableClick();
