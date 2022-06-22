@@ -21,6 +21,14 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     this.bindPointRenderEvent();
   }
 
+  protected get dragItem() {
+    return this.dragPoint;
+  }
+
+  protected get editItem() {
+    return this.editPoint;
+  }
+
   // @ts-ignore
   getDefaultOptions(options: DeepPartial<IPointDrawerOptions>) {
     const defaultOptions = this.getCommonOptions(options);

@@ -40,6 +40,14 @@ export interface IPolygonModeOptions<F extends Feature = Feature>
 export abstract class PolygonMode<
   T extends IPolygonModeOptions,
 > extends LineMode<T> {
+  protected get dragItem() {
+    return this.dragPolygon;
+  }
+
+  protected get editItem() {
+    return this.editPolygon;
+  }
+
   /**
    * 获取polygon类型对应的render
    * @protected
