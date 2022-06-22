@@ -72,21 +72,18 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint-staged",
+      "pre-commit": "lint-staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
   "lint-staged": {
-    "*.{js,jsx,less,md,json}": [
-      "prettier --write",
-      "git add"
+    "*.less": "stylelint --fix",
+    "*.{ts,tsx}": "eslint --fix",
+    "*.{ts,tsx,md,json}": [
+      "prettier --write"
     ],
     "*.ts?(x)": [
-      "prettier --parser=typescript --write",
-      "git add"
+      "prettier --parser=typescript --write"
     ]
   },
   "keywords": [
