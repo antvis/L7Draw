@@ -15,8 +15,8 @@
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
-    "ci": "run-s prettier build",
-    "prepublishOnly": "npm run prettier && npm run build"
+    "ci": "npm run prettier && npm run build",
+    "prepublishOnly": "npm run ci"
   },
   "files": [
     "dist",
