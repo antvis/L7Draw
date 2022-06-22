@@ -15,7 +15,8 @@
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
-    "prepublishOnly": "npm run prettier && npm run build"
+    "ci": "npm run prettier && npm run build",
+    "prepublishOnly": "npm run ci"
   },
   "files": [
     "dist",
@@ -72,21 +73,18 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint-staged",
+      "pre-commit": "lint-staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
   "lint-staged": {
-    "*.{js,jsx,less,md,json}": [
-      "prettier --write",
-      "git add"
+    "*.less": "stylelint --fix",
+    "*.{ts,tsx}": "eslint --fix",
+    "*.{ts,tsx,md,json}": [
+      "prettier --write"
     ],
     "*.ts?(x)": [
-      "prettier --parser=typescript --write",
-      "git add"
+      "prettier --parser=typescript --write"
     ]
   },
   "keywords": [

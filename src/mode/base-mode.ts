@@ -134,6 +134,13 @@ export abstract class BaseMode<
   }
 
   /**
+   * 获取当前options配置的方法
+   */
+  getOptions() {
+    return this.options;
+  }
+
+  /**
    * 获取当前Drawer需要用到的render类型数据，避免创建无效的Render
    */
   abstract getRenderTypes(): IRenderType[];
