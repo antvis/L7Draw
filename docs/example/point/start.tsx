@@ -12,7 +12,7 @@ const Demo: React.FC = () => {
     const scene = new Scene({
       id: 'map',
       map: new GaodeMapV2({
-        center: [120.13858795166014, 30.247204606534158],
+        center: [120.151634, 30.244831],
         pitch: 0,
         style: 'dark',
         zoom: 10,
@@ -22,6 +22,13 @@ const Demo: React.FC = () => {
       const drawer = new DrawPoint(scene, {});
       setPointDrawer(drawer);
       drawer.enable();
+
+      scene.on('zoomchange', (e) => {
+        console.log(scene.getZoom());
+      });
+      scene.on('dragend', (e) => {
+        console.log(scene.getCenter());
+      });
     });
   }, []);
 
