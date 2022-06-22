@@ -1,7 +1,13 @@
 import { ILayer, LineLayer } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
+import { debounce } from 'lodash';
 import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
-import { ILayerMouseEvent, ILineFeature, ILineStyle } from '../typings';
+import {
+  ILayerMouseEvent,
+  ILineFeature,
+  ILineStyle,
+  ISceneMouseEvent,
+} from '../typings';
 import { LayerRender } from './layer-render';
 
 export class LineRender extends LayerRender<ILineFeature, ILineStyle> {
@@ -38,9 +44,9 @@ export class LineRender extends LayerRender<ILineFeature, ILineStyle> {
     this.emit(RenderEvent.dragging, e);
   };
 
-  onDragEnd = (e: ILayerMouseEvent<ILineFeature>) => {
+  onDragEnd = debounce((e: ISceneMouseEvent) => {
     this.emit(RenderEvent.dragend, e);
-  };
+  }, 0);
 
   onUnClick = (e: ILayerMouseEvent<ILineFeature>) => {
     this.emit(RenderEvent.unclick, e);
@@ -62,12 +68,14 @@ export class LineRender extends LayerRender<ILineFeature, ILineStyle> {
     this.layers[0].on(LayerEvent.mousedown, this.onMouseDown);
     this.scene.on(SceneEvent.dragging, this.onDragging);
     this.scene.on(SceneEvent.mouseup, this.onDragEnd);
+    this.scene.on(SceneEvent.dragend, this.onDragEnd);
   }
 
   disableDrag() {
     this.layers[0].off(LayerEvent.mousedown, this.onMouseDown);
     this.scene.off(SceneEvent.dragging, this.onDragging);
     this.scene.off(SceneEvent.mouseup, this.onDragEnd);
+    this.scene.off(SceneEvent.dragend, this.onDragEnd);
   }
 
   enableUnClick() {
