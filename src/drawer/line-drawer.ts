@@ -33,6 +33,14 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     this.bindLineRenderEvent();
   }
 
+  protected get dragItem() {
+    return this.dragLine;
+  }
+
+  protected get editItem() {
+    return this.editLine;
+  }
+
   // @ts-ignore
   setData(lines: Feature<LineString>[]) {
     const lineFeatures = lines.map((line) => {

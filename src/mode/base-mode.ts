@@ -133,11 +133,29 @@ export abstract class BaseMode<
     }
   }
 
+  protected abstract get dragItem(): Feature | null | undefined;
+
+  protected abstract get editItem(): Feature | null | undefined;
+
   /**
    * 获取当前options配置的方法
    */
   getOptions() {
     return this.options;
+  }
+
+  /**
+   * 获取当前激活的绘制项
+   */
+  getEditItem() {
+    return this.editItem;
+  }
+
+  /**
+   * 获取当前正在被拖拽的绘制项
+   */
+  getDragItem() {
+    return this.dragItem;
   }
 
   /**
