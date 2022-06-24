@@ -11,7 +11,7 @@ group:
 
 `DrawRect` 用于在地图上绘制矩形数据。
 
-![](https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*FivOQocQ_z0AAAAAAAAAAAAAARQnAQ)
+<img src="https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*zvXVRKGy6joAAAAAAAAAAAAAARQnAQ" width="300" />
 
 ## 示例
 

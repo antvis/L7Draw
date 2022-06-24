@@ -11,7 +11,7 @@ group:
 
 `DrawPolygon` 用于在地图上绘制面数据。
 
-![](https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*wZtETYw6xPIAAAAAAAAAAAAAARQnAQ)
+<img src="https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*PEWMTJnCKcYAAAAAAAAAAAAAARQnAQ" width="300" />
 
 ## 示例
 

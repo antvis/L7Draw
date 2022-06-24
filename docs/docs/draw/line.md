@@ -11,7 +11,7 @@ group:
 
 `DrawLine` 用于在地图上绘制线数据。
 
-![](https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*6N6qTqn137YAAAAAAAAAAAAAARQnAQ)
+<img src="https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*QHhySoSASjsAAAAAAAAAAAAAARQnAQ" width="300" />
 
 ## 示例
 

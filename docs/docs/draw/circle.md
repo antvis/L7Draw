@@ -11,7 +11,7 @@ group:
 
 `DrawCircle` 用于在地图上绘制圆数据。
 
-![](https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*HDoNSp9qt3gAAAAAAAAAAAAAARQnAQ)
+<img src="https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*yTQwS6d0RngAAAAAAAAAAAAAARQnAQ" width="300" />
 
 ## 示例
 

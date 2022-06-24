@@ -11,7 +11,7 @@ group:
 
 `DrawPoint` 用于在地图上绘制点数据。
 
-![](https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*Upr_Qr1aEk4AAAAAAAAAAAAAARQnAQ)
+<img src="https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*dGjSSLNam8gAAAAAAAAAAAAAARQnAQ" width="300" />
 
 ## 示例
 
