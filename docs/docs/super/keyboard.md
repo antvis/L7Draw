@@ -1,6 +1,6 @@
 ---
 title: 快捷键
-order: 6
+order: 4
 group:
   title: 高级
   order: 2
@@ -9,7 +9,7 @@ group:
 
 ## 说明
 
-为了方便用户快速编辑绘制物，Drawer 中内置了一系列快捷键。
+为了方便用户快速编辑绘制物，Draw 中内置了一系列快捷键。
 
 - 回退：回退至上一次历史记录，默认使用 `command/ctrl + z`。
 - 重做：撤销上一次回退，默认使用 `command/ctrl + shift + z`。
@@ -37,14 +37,14 @@ drawer.revertHistory();
 // 重做
 drawer.redoHistory();
 
-// 删除
+// 删除当前激活的绘制物
 drawer.removeActiveItem();
 ```
 
 ## 配置
 
-| 名称   | 说明                 | 类型              | 默认值                                      |
-| ------ | -------------------- | ----------------- | ------------------------------------------- |
-| revert | 回退至上一次历史记录 | string[] or false | ['command + z', 'ctrl + z']                 |
-| redo   | 撤销上一次回退       | string[] or false | ['command + shift + z', 'ctrl + shift + z'] |
-| remove | 删除当前激活的绘制物 | string[] or false | ['del', 'backspace']                        |
+| 名称   | 说明                 | 类型                    | 默认值                                      |
+| ------ | -------------------- | ----------------------- | ------------------------------------------- |
+| revert | 回退至上一次历史记录 | `string[]` &#124; `false` | `['command + z', 'ctrl + z']`                 |
+| redo   | 撤销上一次回退       | `string[]` &#124; `false` | `['command + shift + z', 'ctrl + shift + z']` |
+| remove | 删除当前激活的绘制物 | `string[]` &#124; `false` | `['del', 'backspace']`                        |

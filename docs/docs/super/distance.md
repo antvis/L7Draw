@@ -1,6 +1,6 @@
 ---
 title: 距离
-order: 3
+order: 2
 group:
   title: 高级
   order: 2
@@ -13,7 +13,7 @@ group:
 
 ## 示例
 
-距离文本配置是在各个 Drawer 的 distanceText 字段来进行配置的
+距离文本配置是在各个 Draw 的 distanceText 字段来进行配置的
 
 ```tsx | pure
 import { DrawPoint } from '@antv/l7-draw';
@@ -39,10 +39,10 @@ const drawer = new DrawPoint(scene, {
 
 ## 配置
 
-| 名称         | 说明                                     | 类型                       | 默认值              |
-| ------------ | ---------------------------------------- | -------------------------- | ------------------- |
-| total        | 是否展示线段总长度，但是分段距离会不展示 | boolean                    | false               |
-| showOnDash   | 是否展示虚线的长度                       | boolean                    | true                |
-| showOnActive | 是否在编辑状态下展示                     | boolean                    | true                |
-| showOnNormal | 是否在非编辑状态下展示                   | boolean                    | true                |
-| format       | 格式化距离长度的函数                     | (meters: number) => string | [见上述示例](#示例) |
+| 名称           | 说明                   | 类型                           | 默认值                    |
+|--------------|----------------------|------------------------------|------------------------|
+| total        | 是否展示线段总长度，但是分段距离会不展示 | `boolean`                    | `false`                |
+| showOnDash   | 是否展示虚线的长度            | `boolean`                    | `true`                 |
+| showOnActive | 是否在编辑状态下展示           | `boolean`                    | `true`                 |
+| showOnNormal | 是否在非编辑状态下展示          | `boolean`                    | `true`                 |
+| format       | 格式化距离长度的函数           | `(meters: number) => string` | [见示例中的 format 方法](#示例) |
