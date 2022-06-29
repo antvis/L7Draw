@@ -74,7 +74,7 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
     const {
       showOnNormal,
       showOnActive,
-      showOnDash,
+      showDashDistance,
       format,
       showTotalDistance,
     } = distanceConfig;
@@ -83,7 +83,7 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
       ...this.getDashLineDistanceTexts(this.getDashLineData(), {
         showTotalDistance: true,
         format,
-        showOnDash,
+        showDashDistance,
       }),
       ...this.getLineDistanceTexts(this.getLineData(), {
         showTotalDistance,

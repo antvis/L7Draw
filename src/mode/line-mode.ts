@@ -112,10 +112,10 @@ export abstract class LineMode<
     {
       showTotalDistance,
       format,
-      showOnDash,
-    }: Pick<IDistanceOptions, 'showTotalDistance' | 'format' | 'showOnDash'>,
+      showDashDistance,
+    }: Pick<IDistanceOptions, 'showTotalDistance' | 'format' | 'showDashDistance'>,
   ): ITextFeature[] {
-    return showOnDash
+    return showDashDistance
       ? dashLines
           .map((dashLine) => {
             return calcDistanceTextsByLine(
@@ -188,7 +188,7 @@ export abstract class LineMode<
     const {
       showOnNormal,
       showOnActive,
-      showOnDash,
+      showDashDistance,
       format,
       showTotalDistance,
     } = distanceConfig;
@@ -197,7 +197,7 @@ export abstract class LineMode<
       ...this.getDashLineDistanceTexts(this.getDashLineData(), {
         showTotalDistance: false,
         format,
-        showOnDash,
+        showDashDistance,
       }),
       ...this.getLineDistanceTexts(this.getLineData(), {
         showTotalDistance,

@@ -7,7 +7,7 @@ import {
 
 export const DEFAULT_DISTANCE_OPTIONS: IDistanceOptions = {
   showTotalDistance: false,
-  showOnDash: true,
+  showDashDistance: true,
   showOnActive: true,
   showOnNormal: true,
   format: (meters) => {
