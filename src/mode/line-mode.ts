@@ -120,7 +120,7 @@ export abstract class LineMode<
           .map((dashLine) => {
             return calcDistanceTextsByLine(
               dashLine,
-              { showTotalDistance: showTotalDistance, format },
+              { showTotalDistance, format },
               { isActive: true, type: 'dash' },
             );
           })
@@ -151,7 +151,7 @@ export abstract class LineMode<
           .map((line) =>
             calcDistanceTextsByLine(
               line,
-              { showTotalDistance: showTotalDistance, format },
+              { showTotalDistance, format },
               { isActive: true },
             ),
           )
@@ -166,7 +166,12 @@ export abstract class LineMode<
 
       textList.push(
         ...normalLines
-          .map((line) => calcDistanceTextsByLine(line, { showTotalDistance: showTotalDistance, format }))
+          .map((line) =>
+            calcDistanceTextsByLine(line, {
+              showTotalDistance,
+              format,
+            }),
+          )
           .flat(),
       );
     }
@@ -180,8 +185,13 @@ export abstract class LineMode<
       return [];
     }
     const textList: ITextFeature[] = [];
-    const { showOnNormal, showOnActive, showOnDash, format, showTotalDistance } =
-      distanceConfig;
+    const {
+      showOnNormal,
+      showOnActive,
+      showOnDash,
+      format,
+      showTotalDistance,
+    } = distanceConfig;
 
     textList.push(
       ...this.getDashLineDistanceTexts(this.getDashLineData(), {
@@ -190,7 +200,7 @@ export abstract class LineMode<
         showOnDash,
       }),
       ...this.getLineDistanceTexts(this.getLineData(), {
-        showTotalDistance: showTotalDistance,
+        showTotalDistance,
         format,
         showOnActive,
         showOnNormal,
