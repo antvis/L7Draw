@@ -31,7 +31,7 @@ export type KeyBoardConfig = Partial<{
 export interface IBaseModeOptions<F extends Feature = Feature> {
   style: IStyle;
   cursor: ICursor;
-  initData?: F[];
+  initialData?: F[];
   disableEditable: boolean;
   editable: boolean;
   autoFocus: boolean;

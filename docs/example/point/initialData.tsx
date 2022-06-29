@@ -1,13 +1,13 @@
 import { Scene } from '@antv/l7';
-import { DrawCircle, DrawEvent } from '@antv/l7-draw';
+import { DrawPoint } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import React, { useEffect, useState } from 'react';
-import { circleList } from './mock';
+import { pointList } from './mock';
 
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [circleDrawer, setCircleDrawer] = useState<DrawCircle | null>(null);
+  const [pointDrawer, setPointDrawer] = useState<DrawPoint | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -20,19 +20,11 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new DrawCircle(scene, {
-        initData: circleList,
+      const drawer = new DrawPoint(scene, {
+        initialData: pointList,
       });
-      setCircleDrawer(drawer);
+      setPointDrawer(drawer);
       drawer.enable();
-
-      // setTimeout(() => {
-      //   drawer.setData([
-      //     rectList[2]
-      //   ])
-      // }, 1000)
-
-      drawer.on(DrawEvent.add, (e) => {});
     });
   }, []);
 

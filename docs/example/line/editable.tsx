@@ -22,7 +22,7 @@ const Demo: React.FC = () => {
     scene.on('loaded', () => {
       const drawer = new DrawLine(scene, {
         editable: false, // 禁用编辑
-        initData: lineList,
+        initialData: lineList,
       });
       setLineDrawer(drawer);
       drawer.enable();

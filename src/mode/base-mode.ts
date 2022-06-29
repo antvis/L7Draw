@@ -120,9 +120,9 @@ export abstract class BaseMode<
     });
     this.cursor = new Cursor(scene, this.options.cursor);
 
-    const initData = this.options.initData;
-    if (initData) {
-      this.setData(initData);
+    const initialData = this.options.initialData;
+    if (initialData) {
+      this.setData(initialData);
     }
     this.saveHistory();
 
@@ -392,7 +392,7 @@ export abstract class BaseMode<
     options: DeepPartial<IBaseModeOptions>,
   ): IBaseModeOptions {
     return {
-      initData: [] as F[],
+      initialData: [] as F[],
       autoFocus: true,
       cursor: cloneDeep(DEFAULT_CURSOR_MAP),
       editable: true,

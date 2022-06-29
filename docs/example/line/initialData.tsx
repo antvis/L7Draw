@@ -21,7 +21,7 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new DrawLine(scene, {
-        initData: lineList,
+        initialData: lineList,
       });
       setLineDrawer(drawer);
       drawer.enable();

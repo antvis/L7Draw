@@ -32,7 +32,7 @@ const Demo: React.FC = () => {
         color: '#a03dff',
       };
       const drawer = new DrawPolygon(scene, {
-        initData: polygon,
+        initialData: polygon,
         style: {
           point: {
             normal: overwriteStyle,
