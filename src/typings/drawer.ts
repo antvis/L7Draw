@@ -47,8 +47,7 @@ export interface IBaseModeOptions<F extends Feature = Feature> {
 export interface IDistanceOptions {
   showTotalDistance: boolean;
   showDashDistance: boolean;
-  showOnNormal: boolean;
-  showOnActive: boolean;
+  showWhen: ('normal' | 'active')[];
   format: (meters: number) => string;
 }
 
@@ -57,6 +56,5 @@ export interface IDistanceOptions {
  */
 export interface IAreaOptions {
   format: (squareMeters: number) => string;
-  showOnNormal: boolean;
-  showOnActive: boolean;
+  showWhen: ('normal' | 'active')[];
 }

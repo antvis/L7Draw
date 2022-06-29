@@ -136,15 +136,11 @@ export abstract class LineMode<
     {
       showTotalDistance,
       format,
-      showOnNormal,
-      showOnActive,
-    }: Pick<
-      IDistanceOptions,
-      'showTotalDistance' | 'format' | 'showOnNormal' | 'showOnActive'
-    >,
+      showWhen,
+    }: Pick<IDistanceOptions, 'showTotalDistance' | 'format' | 'showWhen'>,
   ) {
     const textList: ITextFeature[] = [];
-    if (showOnActive) {
+    if (showWhen.includes('active')) {
       const activeLines = lines.filter(
         (line) => line.properties.isActive && line.properties.nodes.length > 1,
       );
@@ -162,7 +158,7 @@ export abstract class LineMode<
       );
     }
 
-    if (showOnNormal) {
+    if (showWhen.includes('normal')) {
       const normalLines = lines.filter(
         (line) => !line.properties.isActive && line.properties.nodes.length > 1,
       );
@@ -188,13 +184,8 @@ export abstract class LineMode<
       return [];
     }
     const textList: ITextFeature[] = [];
-    const {
-      showOnNormal,
-      showOnActive,
-      showDashDistance,
-      format,
-      showTotalDistance,
-    } = distanceConfig;
+    const { showWhen, showDashDistance, format, showTotalDistance } =
+      distanceConfig;
 
     textList.push(
       ...this.getDashLineDistanceTexts(this.getDashLineData(), {
@@ -205,8 +196,7 @@ export abstract class LineMode<
       ...this.getLineDistanceTexts(this.getLineData(), {
         showTotalDistance,
         format,
-        showOnActive,
-        showOnNormal,
+        showWhen,
       }),
     );
 

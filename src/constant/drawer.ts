@@ -8,8 +8,7 @@ import {
 export const DEFAULT_DISTANCE_OPTIONS: IDistanceOptions = {
   showTotalDistance: false,
   showDashDistance: true,
-  showOnActive: true,
-  showOnNormal: true,
+  showWhen: ['normal', 'active'],
   format: (meters) => {
     if (meters >= 1000) {
       return +(meters / 1000).toFixed(2) + 'km';
@@ -20,8 +19,7 @@ export const DEFAULT_DISTANCE_OPTIONS: IDistanceOptions = {
 };
 
 export const DEFAULT_AREA_OPTIONS: IAreaOptions = {
-  showOnNormal: true,
-  showOnActive: true,
+  showWhen: ['normal', 'active'],
   format: (squareMeters: number) => {
     return squareMeters > 1000000
       ? `${+(squareMeters / 1000000).toFixed(2)}km²`

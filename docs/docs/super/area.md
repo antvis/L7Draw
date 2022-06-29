@@ -22,8 +22,7 @@ import { DrawPoint } from '@antv/l7-draw';
 
 const drawer = new DrawPoint(scene, {
   areaConfig: {
-    showOnNormal: true,
-    showOnActive: true,
+    showWhen: ['normal', 'active'],
     format: (squareMeters: number) => {
       return squareMeters > 1000000
         ? `${+(squareMeters / 1000000).toFixed(2)}km²`
@@ -37,8 +36,7 @@ const drawer = new DrawPoint(scene, {
 
 ## 配置
 
-| 名称         | 说明                   | 类型                               | 默认值                          |
-| ------------ | ---------------------- | ---------------------------------- | ------------------------------- |
-| showOnActive | 是否在编辑状态下展示   | `boolean`                          | `true`                          |
-| showOnNormal | 是否在非编辑状态下展示 | `boolean`                          | `true`                          |
-| format       | 格式化面积平方米的函数 | `(squareMeters: number) => string` | [见示例中的 format 方法](#示例) |
+| 名称     | 说明                                             | 类型                               | 默认值                          |
+| -------- | ------------------------------------------------ | ---------------------------------- | ------------------------------- |
+| showWhen | 在何种绘制状态下展示，目前支持普通态和激活态展示 | `(normal &#124; active)[]`         | `true`                          |
+| format   | 格式化面积平方米的函数                           | `(squareMeters: number) => string` | [见示例中的 format 方法](#示例) |
