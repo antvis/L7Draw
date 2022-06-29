@@ -11,6 +11,8 @@ group:
 
 用于展示面真实的面积
 
+<img src="https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*TlNrTrEYaoAAAAAAAAAAAAAAARQnAQ" width="300" />
+
 ## 示例
 
 距离文本配置是在各个 Draw 的 areaText 字段来进行配置的

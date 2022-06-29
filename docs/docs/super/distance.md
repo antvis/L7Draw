@@ -11,6 +11,8 @@ group:
 
 用于展示线段真实的距离长度
 
+<img src="https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*phM1SKhldcQAAAAAAAAAAAAAARQnAQ" width="300" />
+
 ## 示例
 
 距离文本配置是在各个 Draw 的 distanceText 字段来进行配置的

@@ -13,6 +13,8 @@ group:
 
 _后期 Draw 会内置几套绘制主题，以适应不同底图样式下的绘制呈现效果。_
 
+<img src="https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*pmHES4IvoqUAAAAAAAAAAAAAARQnAQ" width="300" />
+
 ## 示例
 
 在使用 Draw 进行绘制过程中时，可以覆盖内置的图层样式。开发者只需要填写对应需要覆盖的单个项，在 Draw 内部会对开发者传入的 style 和内置的默认 style 进行深覆盖，其余无需覆盖的样式可以无需填写。
