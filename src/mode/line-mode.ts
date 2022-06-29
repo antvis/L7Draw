@@ -113,7 +113,10 @@ export abstract class LineMode<
       showTotalDistance,
       format,
       showDashDistance,
-    }: Pick<IDistanceOptions, 'showTotalDistance' | 'format' | 'showDashDistance'>,
+    }: Pick<
+      IDistanceOptions,
+      'showTotalDistance' | 'format' | 'showDashDistance'
+    >,
   ): ITextFeature[] {
     return showDashDistance
       ? dashLines
