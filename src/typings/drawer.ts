@@ -45,7 +45,7 @@ export interface IBaseModeOptions<F extends Feature = Feature> {
  * 距离文案配置
  */
 export interface IDistanceOptions {
-  total: boolean;
+  showTotalDistance: boolean;
   showOnDash: boolean;
   showOnNormal: boolean;
   showOnActive: boolean;

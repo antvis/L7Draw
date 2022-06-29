@@ -6,7 +6,7 @@ import {
 } from '../typings';
 
 export const DEFAULT_DISTANCE_OPTIONS: IDistanceOptions = {
-  total: false,
+  showTotalDistance: false,
   showOnDash: true,
   showOnActive: true,
   showOnNormal: true,

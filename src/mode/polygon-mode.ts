@@ -34,7 +34,7 @@ import { ILineModeOptions, LineMode } from './line-mode';
 
 export interface IPolygonModeOptions<F extends Feature = Feature>
   extends ILineModeOptions<F> {
-  areaText: false | IAreaOptions;
+  areaConfig: false | IAreaOptions;
 }
 
 export abstract class PolygonMode<
@@ -94,20 +94,20 @@ export abstract class PolygonMode<
   getDefaultOptions(options: DeepPartial<T>): T {
     const newOptions: T = {
       ...super.getDefaultOptions(options),
-      areaText: false,
+      areaConfig: false,
     };
-    if (options.areaText) {
-      newOptions.areaText = {
+    if (options.areaConfig) {
+      newOptions.areaConfig = {
         ...DEFAULT_AREA_OPTIONS,
-        ...options.areaText,
+        ...options.areaConfig,
       };
     }
     return newOptions;
   }
 
   getAreaTexts(polygons: IPolygonFeature[]): ITextFeature[] {
-    const { areaText } = this.options;
-    if (!areaText) {
+    const { areaConfig } = this.options;
+    if (!areaConfig) {
       return [];
     }
     const textList: ITextFeature[] = [];
@@ -120,7 +120,7 @@ export abstract class PolygonMode<
         calcAreaText(
           feature,
           {
-            format: areaText.format,
+            format: areaConfig.format,
           },
           {
             isActive: feature.properties.isActive,

@@ -15,14 +15,14 @@ group:
 
 ## 示例
 
-距离文本配置是在各个 Draw 的 distanceText 字段来进行配置的
+距离文本配置是在各个 Draw 的 distanceConfig 字段来进行配置的
 
 ```tsx | pure
 import { DrawPoint } from '@antv/l7-draw';
 
 const drawer = new DrawPoint(scene, {
-  distanceText: {
-    total: false,
+  distanceConfig: {
+    showTotalDistance: false,
     showOnDash: true,
     showOnActive: true,
     showOnNormal: true,
@@ -35,7 +35,7 @@ const drawer = new DrawPoint(scene, {
     },
   },
   // 传false表示不展示文本，默认也为false
-  // distanceText: false,
+  // distanceConfig: false,
 });
 ```
 
@@ -43,7 +43,7 @@ const drawer = new DrawPoint(scene, {
 
 | 名称         | 说明                                     | 类型                         | 默认值                          |
 | ------------ | ---------------------------------------- | ---------------------------- | ------------------------------- |
-| total        | 是否展示线段总长度，但是分段距离会不展示 | `boolean`                    | `false`                         |
+| showTotalDistance        | 是否展示线段总长度，但是分段距离会不展示 | `boolean`                    | `false`                         |
 | showOnDash   | 是否展示虚线的长度                       | `boolean`                    | `true`                          |
 | showOnActive | 是否在编辑状态下展示                     | `boolean`                    | `true`                          |
 | showOnNormal | 是否在非编辑状态下展示                   | `boolean`                    | `true`                          |

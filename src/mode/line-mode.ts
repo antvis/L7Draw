@@ -28,7 +28,7 @@ import { IMidPointModeOptions, MidPointMode } from './mid-point-mode';
 
 export interface ILineModeOptions<F extends Feature = Feature>
   extends IMidPointModeOptions<F> {
-  distanceText: false | IDistanceOptions;
+  distanceConfig: false | IDistanceOptions;
 }
 
 export abstract class LineMode<
@@ -75,12 +75,12 @@ export abstract class LineMode<
     const newOptions: T = {
       ...this.getCommonOptions(options),
       showMidPoint: true,
-      distanceText: false,
+      distanceConfig: false,
     };
-    if (options.distanceText) {
-      newOptions.distanceText = {
+    if (options.distanceConfig) {
+      newOptions.distanceConfig = {
         ...DEFAULT_DISTANCE_OPTIONS,
-        ...newOptions.distanceText,
+        ...newOptions.distanceConfig,
       };
     }
     return newOptions;
@@ -110,17 +110,17 @@ export abstract class LineMode<
   getDashLineDistanceTexts(
     dashLines: IDashLineFeature[],
     {
-      total,
+      showTotalDistance,
       format,
       showOnDash,
-    }: Pick<IDistanceOptions, 'total' | 'format' | 'showOnDash'>,
+    }: Pick<IDistanceOptions, 'showTotalDistance' | 'format' | 'showOnDash'>,
   ): ITextFeature[] {
     return showOnDash
       ? dashLines
           .map((dashLine) => {
             return calcDistanceTextsByLine(
               dashLine,
-              { total, format },
+              { showTotalDistance: showTotalDistance, format },
               { isActive: true, type: 'dash' },
             );
           })
@@ -131,13 +131,13 @@ export abstract class LineMode<
   getLineDistanceTexts(
     lines: ILineFeature[],
     {
-      total,
+      showTotalDistance,
       format,
       showOnNormal,
       showOnActive,
     }: Pick<
       IDistanceOptions,
-      'total' | 'format' | 'showOnNormal' | 'showOnActive'
+      'showTotalDistance' | 'format' | 'showOnNormal' | 'showOnActive'
     >,
   ) {
     const textList: ITextFeature[] = [];
@@ -151,7 +151,7 @@ export abstract class LineMode<
           .map((line) =>
             calcDistanceTextsByLine(
               line,
-              { total, format },
+              { showTotalDistance: showTotalDistance, format },
               { isActive: true },
             ),
           )
@@ -166,7 +166,7 @@ export abstract class LineMode<
 
       textList.push(
         ...normalLines
-          .map((line) => calcDistanceTextsByLine(line, { total, format }))
+          .map((line) => calcDistanceTextsByLine(line, { showTotalDistance: showTotalDistance, format }))
           .flat(),
       );
     }
@@ -175,22 +175,22 @@ export abstract class LineMode<
   }
 
   getDistanceTexts(): ITextFeature[] {
-    const { distanceText } = this.options;
-    if (!distanceText) {
+    const { distanceConfig } = this.options;
+    if (!distanceConfig) {
       return [];
     }
     const textList: ITextFeature[] = [];
-    const { showOnNormal, showOnActive, showOnDash, format, total } =
-      distanceText;
+    const { showOnNormal, showOnActive, showOnDash, format, showTotalDistance } =
+      distanceConfig;
 
     textList.push(
       ...this.getDashLineDistanceTexts(this.getDashLineData(), {
-        total: false,
+        showTotalDistance: false,
         format,
         showOnDash,
       }),
       ...this.getLineDistanceTexts(this.getLineData(), {
-        total,
+        showTotalDistance: showTotalDistance,
         format,
         showOnActive,
         showOnNormal,

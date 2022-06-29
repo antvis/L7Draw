@@ -15,13 +15,13 @@ group:
 
 ## 示例
 
-距离文本配置是在各个 Draw 的 areaText 字段来进行配置的
+距离文本配置是在各个 Draw 的 areaConfig 字段来进行配置的
 
 ```tsx | pure
 import { DrawPoint } from '@antv/l7-draw';
 
 const drawer = new DrawPoint(scene, {
-  areaText: {
+  areaConfig: {
     showOnNormal: true,
     showOnActive: true,
     format: (squareMeters: number) => {
@@ -31,7 +31,7 @@ const drawer = new DrawPoint(scene, {
     },
   },
   // 传false表示不展示文本，默认也为false
-  // areaText: false,
+  // areaConfig: false,
 });
 ```
 

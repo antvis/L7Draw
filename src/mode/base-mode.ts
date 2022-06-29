@@ -183,7 +183,7 @@ export abstract class BaseMode<
   /**
    * 获取当前是否为编辑态
    */
-  getIsEnable() {
+  getEnabled() {
     return this.isEnable;
   }
 
