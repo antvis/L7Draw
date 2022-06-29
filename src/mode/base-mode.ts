@@ -491,5 +491,10 @@ export abstract class BaseMode<
       render.destroy();
     });
     this.emit(DrawEvent.destroy, this);
+    setTimeout(() => {
+      Object.values(DrawEvent).forEach((EventName) => {
+        this.removeAllListeners(EventName);
+      });
+    }, 0);
   }
 }
