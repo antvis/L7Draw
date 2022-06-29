@@ -22,7 +22,7 @@ import { DrawEvent, DrawRect } from '@antv/l7-draw';
 
 // 实例化
 const drawer = new DrawRect(scene, {
-  autoFocus: false,
+  autoActive: false,
   //  ....
 });
 // 开启绘制
@@ -40,11 +40,11 @@ options 配置是 Draw 实例化的时候，作为第二个参数传入，所有
 
 | 名称            | 说明                                                                                                                 | 类型                                                 | 默认值  | 示例                                                              |
 | --------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ------- | ----------------------------------------------------------------- |
-| initialData        | 设置 Draw 的初始数据，`GeoJSON` 类型中的 [Polygon](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.6) 数组 | `Feature[]`                                          | `[]`    | [初始化数据示例](/example/rect/init-data)                         |
+| initialData     | 设置 Draw 的初始数据，`GeoJSON` 类型中的 [Polygon](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.6) 数组 | `Feature[]`                                          | `[]`    | [初始化数据示例](/example/rect/init-data)                         |
 | createByDrag    | 是否支持拖拽创建                                                                                                     | `boolean`                                            | `false` | [通过拖拽创建](/example/rect/create-by-drag)                      |
 | distanceText    | 距离文本相关配置                                                                                                     | `false` &#124; [Distance](/docs/super/distance#配置) | `false` | [展示距离和面积](/example/rect/area)                              |
 | areaText        | 面积文本相关配置                                                                                                     | `false` &#124; [Area](/docs/super/area#配置)         | `false` | [展示距离和面积](/example/rect/area)                              |
-| autoFocus       | 绘制 Polygon 后，新增的 Polygon 是否为激活态                                                                         | `boolean`                                            | `true`  | [关闭自动激活示例](/example/rect/auto-focus)                      |
+| autoActive       | 绘制 Polygon 后，新增的 Polygon 是否为激活态                                                                         | `boolean`                                            | `true`  | [关闭自动激活示例](/example/rect/auto-focus)                      |
 | editable        | 绘制的 Polygon 是否支持二次编辑（拖拽位移）                                                                          | `boolean`                                            | `true`  | [禁用编辑示例](/example/rect/editable)                            |
 | style           | Polygon 在不同状态下的样式                                                                                           | [Style](/docs/super/style#配置)                      | -       | -                                                                 |
 | keyboard        | 自定义快捷键瑟是否开启，以及对应的按键                                                                               | [Keyboard](/docs/super/keyboard#配置)                | -       | -                                                                 |

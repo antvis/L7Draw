@@ -21,7 +21,7 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new DrawRect(scene, {
-        autoFocus: false,
+        autoActive: false,
       });
       setRectDrawer(drawer);
       drawer.enable();

@@ -1,5 +1,5 @@
 import { Scene } from '@antv/l7';
-import { DrawPolygon } from '@antv/l7-draw';
+import { DrawCircle } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import 'antd/dist/antd.css';
 import React, { useEffect, useState } from 'react';
@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [polygonDrawer, setPolygonDrawer] = useState<DrawPolygon | null>(null);
+  const [circleDrawer, setCircleDrawer] = useState<DrawCircle | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -20,10 +20,10 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new DrawPolygon(scene, {
-        autoFocus: false,
+      const drawer = new DrawCircle(scene, {
+        autoActive: false,
       });
-      setPolygonDrawer(drawer);
+      setCircleDrawer(drawer);
       drawer.enable();
     });
   }, []);

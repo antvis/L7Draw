@@ -393,7 +393,7 @@ export abstract class BaseMode<
   ): IBaseModeOptions {
     return {
       initialData: [] as F[],
-      autoFocus: true,
+      autoActive: true,
       cursor: cloneDeep(DEFAULT_CURSOR_MAP),
       editable: true,
       style: cloneDeep(DEFAULT_STYLE),

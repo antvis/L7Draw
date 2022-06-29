@@ -84,7 +84,7 @@ export abstract class PointMode<
    * @param position
    */
   handleCreatePoint(position: Position): IPointFeature {
-    const { autoFocus, editable } = this.options;
+    const { autoActive, editable } = this.options;
     const newFeature = createPointFeature(position);
     this.setPointData((oldData) => {
       return updateTargetFeature<IPointFeature>({
@@ -94,7 +94,7 @@ export abstract class PointMode<
           item.properties = {
             ...item.properties,
             isHover: editable,
-            isActive: autoFocus && editable,
+            isActive: autoActive && editable,
           };
         },
         otherHandler: (item) => {

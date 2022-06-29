@@ -7,4 +7,4 @@ group:
   order: 2
 ---
 
-<code src="./autoFocus.tsx" compact="true" defaultShowCode="true"></code>
+<code src="./autoActive.tsx" compact="true" defaultShowCode="true"></code>

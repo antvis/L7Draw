@@ -83,8 +83,8 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
       return;
     }
     this.setEditLine(drawLine);
-    const { autoFocus, editable } = this.options;
-    if (!autoFocus || !editable) {
+    const { autoActive, editable } = this.options;
+    if (!autoActive || !editable) {
       this.handleLineUnClick(drawLine);
     }
     this.emit(DrawEvent.add, drawLine, this.getLineData());

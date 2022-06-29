@@ -1,5 +1,5 @@
 import { Scene } from '@antv/l7';
-import { DrawPoint } from '@antv/l7-draw';
+import { DrawLine } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import 'antd/dist/antd.css';
 import React, { useEffect, useState } from 'react';
@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 const id = String(Math.random());
 
 const Demo: React.FC = () => {
-  const [pointDrawer, setPointDrawer] = useState<DrawPoint | null>(null);
+  const [lineDrawer, setLineDrawer] = useState<DrawLine | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
@@ -20,10 +20,10 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new DrawPoint(scene, {
-        autoFocus: false,
+      const drawer = new DrawLine(scene, {
+        autoActive: false,
       });
-      setPointDrawer(drawer);
+      setLineDrawer(drawer);
       drawer.enable();
     });
   }, []);

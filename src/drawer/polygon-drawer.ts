@@ -108,8 +108,8 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     drawPolygon.properties.isDraw = false;
     this.syncPolygonNodes(drawPolygon, nodes);
     this.setEditPolygon(drawPolygon);
-    const { autoFocus, editable } = this.options;
-    if (!autoFocus || !editable) {
+    const { autoActive, editable } = this.options;
+    if (!autoActive || !editable) {
       this.handlePolygonUnClick(drawPolygon);
     }
     this.emit(DrawEvent.add, drawPolygon, this.getPolygonData());

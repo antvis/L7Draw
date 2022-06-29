@@ -38,7 +38,7 @@ const Demo: React.FC = () => {
     scene.on('loaded', () => {
       setScene(scene);
       const drawer = new DrawLine(scene, {
-        autoFocus: false,
+        autoActive: false,
         multiple: true,
         distanceText: {
           total: true,
