@@ -40,7 +40,7 @@ const Demo: React.FC = () => {
       const drawer = new DrawLine(scene, {
         autoActive: false,
         multiple: true,
-        distanceConfig: {
+        distanceOptions: {
           showTotalDistance: true,
         },
         style: {

@@ -20,8 +20,8 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new DrawCircle(scene, {
-        distanceConfig: {},
-        areaConfig: {},
+        distanceOptions: {},
+        areaOptions: {},
       });
       setCircleDrawer(drawer);
       drawer.enable();

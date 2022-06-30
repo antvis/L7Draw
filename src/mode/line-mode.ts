@@ -28,7 +28,7 @@ import { IMidPointModeOptions, MidPointMode } from './mid-point-mode';
 
 export interface ILineModeOptions<F extends Feature = Feature>
   extends IMidPointModeOptions<F> {
-  distanceConfig: false | IDistanceOptions;
+  distanceOptions: false | IDistanceOptions;
 }
 
 export abstract class LineMode<
@@ -75,12 +75,12 @@ export abstract class LineMode<
     const newOptions: T = {
       ...this.getCommonOptions(options),
       showMidPoint: true,
-      distanceConfig: false,
+      distanceOptions: false,
     };
-    if (options.distanceConfig) {
-      newOptions.distanceConfig = {
+    if (options.distanceOptions) {
+      newOptions.distanceOptions = {
         ...DEFAULT_DISTANCE_OPTIONS,
-        ...newOptions.distanceConfig,
+        ...newOptions.distanceOptions,
       };
     }
     return newOptions;
@@ -179,13 +179,13 @@ export abstract class LineMode<
   }
 
   getDistanceTexts(): ITextFeature[] {
-    const { distanceConfig } = this.options;
-    if (!distanceConfig) {
+    const { distanceOptions } = this.options;
+    if (!distanceOptions) {
       return [];
     }
     const textList: ITextFeature[] = [];
     const { showWhen, showDashDistance, format, showTotalDistance } =
-      distanceConfig;
+      distanceOptions;
 
     textList.push(
       ...this.getDashLineDistanceTexts(this.getDashLineData(), {

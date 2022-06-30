@@ -35,7 +35,7 @@ export interface ICircleDistanceOptions extends IDistanceOptions {
 export interface ICircleDrawerOptions
   extends IDragPolygonModeOptions<Feature<Polygon>> {
   circleSteps: number;
-  distanceConfig: ICircleDistanceOptions;
+  distanceOptions: ICircleDistanceOptions;
 }
 
 export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
@@ -52,10 +52,10 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
     options: DeepPartial<ICircleDrawerOptions>,
   ): ICircleDrawerOptions {
     const newOptions = super.getDefaultOptions(options);
-    if (newOptions.distanceConfig) {
-      newOptions.distanceConfig.showTotalDistance = true;
-      if (newOptions.distanceConfig.showOnRadius === undefined) {
-        newOptions.distanceConfig.showOnRadius = true;
+    if (newOptions.distanceOptions) {
+      newOptions.distanceOptions.showTotalDistance = true;
+      if (newOptions.distanceOptions.showOnRadius === undefined) {
+        newOptions.distanceOptions.showOnRadius = true;
       }
     }
     return {
@@ -66,13 +66,13 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
   }
 
   getDistanceTexts(): ITextFeature[] {
-    const { distanceConfig } = this.options;
-    if (!distanceConfig) {
+    const { distanceOptions } = this.options;
+    if (!distanceOptions) {
       return [];
     }
     const textList: ITextFeature[] = [];
     const { showWhen, showDashDistance, format, showTotalDistance } =
-      distanceConfig;
+      distanceOptions;
 
     textList.push(
       ...this.getDashLineDistanceTexts(this.getDashLineData(), {

@@ -20,8 +20,8 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new DrawRect(scene, {
-        distanceConfig: {},
-        areaConfig: {},
+        distanceOptions: {},
+        areaOptions: {},
       });
       setRectDrawer(drawer);
       drawer.enable();
