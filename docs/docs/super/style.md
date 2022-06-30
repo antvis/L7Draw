@@ -198,7 +198,8 @@ export interface ITextStyle extends IBaseStyle {
 {
   "point": {
     "options": {
-      "blend": "normal"
+      "blend": "normal",
+      "pickingBuffer": 5
     },
     "normal": {
       "color": "#ED9D48",
@@ -218,11 +219,14 @@ export interface ITextStyle extends IBaseStyle {
       "size": 8,
       "borderColor": "#ffffff"
     },
-    "style": {}
+    "style": {
+      "strokeWidth": 2
+    }
   },
   "line": {
     "options": {
-      "blend": "normal"
+      "blend": "normal",
+      "pickingBuffer": 5
     },
     "normal": {
       "color": "#1990FF",
@@ -240,7 +244,8 @@ export interface ITextStyle extends IBaseStyle {
   },
   "polygon": {
     "options": {
-      "blend": "normal"
+      "blend": "normal",
+      "pickingBuffer": 5
     },
     "normal": {
       "color": "#1990FF"
@@ -257,7 +262,8 @@ export interface ITextStyle extends IBaseStyle {
   },
   "midPoint": {
     "options": {
-      "blend": "normal"
+      "blend": "normal",
+      "pickingBuffer": 5
     },
     "normal": {
       "shape": "circle",
@@ -268,7 +274,8 @@ export interface ITextStyle extends IBaseStyle {
   },
   "dashLine": {
     "options": {
-      "blend": "normal"
+      "blend": "normal",
+      "pickingBuffer": 5
     },
     "normal": {
       "color": "#ED9D48",
@@ -281,7 +288,8 @@ export interface ITextStyle extends IBaseStyle {
   },
   "text": {
     "options": {
-      "blend": "normal"
+      "blend": "normal",
+      "pickingBuffer": 5
     },
     "normal": {
       "color": "#1990FF",
@@ -295,8 +303,9 @@ export interface ITextStyle extends IBaseStyle {
     },
     "style": {
       "fontWeight": "800",
-      "textOffset": [0, 14],
-      "textAllowOverlap": true
+      "textOffset": [0, 18],
+      "textAllowOverlap": true,
+      "strokeWidth": 2
     }
   }
 }
