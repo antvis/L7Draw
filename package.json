@@ -1,6 +1,6 @@
 {
   "name": "@antv/l7-draw",
-  "version": "3.0.0-alpha.16",
+  "version": "3.0.0",
   "description": "A drawing package for L7",
   "license": "MIT",
   "scripts": {
@@ -11,7 +11,7 @@
     "analyze": "ANALYZE=1 dumi build",
     "build": "father-build",
     "deploy": "npm run docs:build && npm run docs:deploy",
-    "release": "npm run build && npm publish --tag alpha",
+    "release": "npm run build && npm publish",
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
