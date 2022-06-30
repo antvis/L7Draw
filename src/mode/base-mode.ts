@@ -126,7 +126,7 @@ export abstract class BaseMode<
     this.saveHistory();
 
     this.bindCommonEvent();
-    this.emit(DrawEvent.init, this);
+    this.emit(DrawEvent.Init, this);
     if (this.options.disableEditable) {
       this.bindEnableEvent();
     }
@@ -205,14 +205,14 @@ export abstract class BaseMode<
   }
 
   bindCommonEvent() {
-    this.on(DrawEvent.add, this.emitChangeEvent);
-    this.on(DrawEvent.add, () => {
+    this.on(DrawEvent.Add, this.emitChangeEvent);
+    this.on(DrawEvent.Add, () => {
       this.addCount++;
     });
-    this.on(DrawEvent.edit, this.emitChangeEvent);
-    this.on(DrawEvent.remove, this.emitChangeEvent);
-    this.on(DrawEvent.clear, this.emitChangeEvent);
-    this.on(DrawEvent.addNode, this.saveHistory);
+    this.on(DrawEvent.Edit, this.emitChangeEvent);
+    this.on(DrawEvent.Remove, this.emitChangeEvent);
+    this.on(DrawEvent.Clear, this.emitChangeEvent);
+    this.on(DrawEvent.AddNode, this.saveHistory);
   }
 
   /**
@@ -222,8 +222,8 @@ export abstract class BaseMode<
     this.scene.setMapStatus({
       doubleClickZoom: false,
     });
-    this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
-    this.scene.on(SceneEvent.mousemove, this.saveMouseLngLat);
+    this.scene.off(SceneEvent.Mousemove, this.saveMouseLngLat);
+    this.scene.on(SceneEvent.Mousemove, this.saveMouseLngLat);
 
     this.unbindKeyboardEvent();
     this.bindKeyboardEvent();
@@ -239,7 +239,7 @@ export abstract class BaseMode<
     this.scene.setMapStatus({
       doubleClickZoom: true,
     });
-    this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
+    this.scene.off(SceneEvent.Mousemove, this.saveMouseLngLat);
     this.unbindKeyboardEvent();
   }
 
@@ -278,7 +278,7 @@ export abstract class BaseMode<
    * 触发change事件，同时触发保存数据备份
    */
   emitChangeEvent() {
-    this.emit(DrawEvent.change, this.getData());
+    this.emit(DrawEvent.Change, this.getData());
     this.saveHistory();
   }
 
@@ -339,7 +339,7 @@ export abstract class BaseMode<
     const data = this.getData();
     // @ts-ignore
     this.setData(data.filter((item) => !isSameFeature(target, item)));
-    this.emit(DrawEvent.remove, target, this.getData());
+    this.emit(DrawEvent.Remove, target, this.getData());
   }
 
   /**
@@ -431,7 +431,7 @@ export abstract class BaseMode<
     this.bindEnableEvent();
     this.addCount = 0;
     setTimeout(() => {
-      this.emit(DrawEvent.enable, this);
+      this.emit(DrawEvent.Enable, this);
     }, 0);
   }
 
@@ -447,7 +447,7 @@ export abstract class BaseMode<
     this.unbindEnableEvent();
     this.addCount = 0;
     setTimeout(() => {
-      this.emit(DrawEvent.disable, this);
+      this.emit(DrawEvent.Disable, this);
     }, 0);
   }
 
@@ -456,7 +456,7 @@ export abstract class BaseMode<
    */
   clear(disable = false) {
     this.source.clear();
-    this.emit(DrawEvent.clear, this);
+    this.emit(DrawEvent.Clear, this);
     if (disable) {
       this.disable();
     }
@@ -489,7 +489,7 @@ export abstract class BaseMode<
     Object.values(this.render).forEach((render) => {
       render.destroy();
     });
-    this.emit(DrawEvent.destroy, this);
+    this.emit(DrawEvent.Destroy, this);
     setTimeout(() => {
       Object.values(DrawEvent).forEach((EventName) => {
         this.removeAllListeners(EventName);

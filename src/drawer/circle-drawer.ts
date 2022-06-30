@@ -214,7 +214,7 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
       this.setEditPolygon(dragPolygon, {
         isDrag: true,
       });
-      this.emit(DrawEvent.dragging, dragPolygon, this.getPolygonData());
+      this.emit(DrawEvent.Dragging, dragPolygon, this.getPolygonData());
     }
     return feature;
   }

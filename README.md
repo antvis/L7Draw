@@ -39,7 +39,7 @@ scene.on('loaded', () => {
   draw.enable();
 
   // 监听 Draw 的事件
-  draw.on(DrawEvent.add, (newPoint) => {
+  draw.on(DrawEvent.Add, (newPoint) => {
     console.log(newPoint);
   });
 });

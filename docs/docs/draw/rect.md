@@ -29,7 +29,7 @@ const drawer = new DrawRect(scene, {
 drawer.enable();
 
 // 监听绘制事件
-drawer.on(DrawEvent.change, (rectList) => {
+drawer.on(DrawEvent.Change, (rectList) => {
   console.log(rectList);
 });
 ```

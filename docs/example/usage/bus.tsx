@@ -88,7 +88,7 @@ const Demo: React.FC = () => {
       setLineDrawer(drawer);
       drawer.enable();
 
-      drawer.on(DrawEvent.add, (newLine) => {
+      drawer.on(DrawEvent.Add, (newLine) => {
         const positions = coordAll(newLine);
         const firstPosition = first(positions)!;
         const lastPosition = last(positions)!;

@@ -2,81 +2,81 @@
  * Drawer事件枚举
  */
 export enum DrawEvent {
-  init = 'init',
-  destroy = 'destroy',
-  enable = 'enable',
-  disable = 'disable',
-  add = 'add',
-  edit = 'edit',
-  remove = 'remove',
-  clear = 'clear',
-  change = 'change',
-  dragStart = 'dragStart',
-  dragging = 'dragging',
-  dragEnd = 'dragEnd',
-  addNode = 'addNode',
+  Init = 'init',
+  Destroy = 'destroy',
+  Enable = 'enable',
+  Disable = 'disable',
+  Add = 'add',
+  Edit = 'edit',
+  Remove = 'remove',
+  Clear = 'clear',
+  Change = 'change',
+  DragStart = 'dragStart',
+  Dragging = 'dragging',
+  DragEnd = 'dragEnd',
+  AddNode = 'addNode',
 }
 
 /**
  * Source事件枚举
  */
 export enum SourceEvent {
-  change = 'change',
-  update = 'update',
+  Change = 'change',
+  Update = 'update',
 }
 
 /**
  * Render事件枚举
  */
 export enum RenderEvent {
-  click = 'click',
-  unclick = 'unclick',
-  dragstart = 'dragstart',
-  mousemove = 'mousemove',
-  mouseout = 'mouseout',
-  dragging = 'dragging',
-  dragend = 'dragend',
-  dblClick = 'dblClick',
+  Click = 'click',
+  UnClick = 'unclick',
+  Dragstart = 'dragstart',
+  Mousemove = 'mousemove',
+  Mouseout = 'mouseout',
+  Dragging = 'dragging',
+  Dragend = 'dragend',
+  DblClick = 'dblClick',
 }
 
 /**
  * L7 Layer 事件名枚举
  */
 export enum LayerEvent {
-  mousedown = 'mousedown',
-  mouseup = 'mouseup',
-  click = 'click',
-  unclick = 'unclick',
-  dblclick = 'dblclick',
-  mousemove = 'mousemove',
-  mouseover = 'mouseover',
-  mouseenter = 'mouseenter',
-  mouseleave = 'mouseleave',
-  mouseout = 'mouseout',
-  contextmenu = 'contextmenu',
+  Mousedown = 'mousedown',
+  Mouseup = 'mouseup',
+  Click = 'click',
+  UnClick = 'unclick',
+  Dblclick = 'dblclick',
+  Mousemove = 'mousemove',
+  Mouseover = 'mouseover',
+  Mouseenter = 'mouseenter',
+  Mouseleave = 'mouseleave',
+  Mouseout = 'mouseout',
+  Contextmenu = 'contextmenu',
 }
 
 /**
  * L7 Scene 事件名枚举
  */
 export enum SceneEvent {
-  loaded = 'loaded',
-  mapMove = 'mapmove',
-  moveStart = 'movestart',
-  moveEnd = 'moveend',
-  zoomChange = 'zoomchange',
-  zoomStart = 'zoomstart',
-  zoomEnd = 'zoomend',
-  click = 'click',
-  dblclick = 'dblclick',
-  mousemove = 'mousemove',
-  mousewheel = 'mousewheel',
-  mouseover = 'mouseover',
-  mouseout = 'mouseout',
-  mouseup = 'mouseup',
-  mousedown = 'mousedown',
-  contextmenu = 'contextmenu',
-  dragstart = 'dragstart',
-  dragging = 'dragging',
-  dragend = 'dragend',
+  Loaded = 'loaded',
+  MapMove = 'mapmove',
+  MoveStart = 'movestart',
+  MoveEnd = 'moveend',
+  ZoomChange = 'zoomchange',
+  ZoomStart = 'zoomstart',
+  ZoomEnd = 'zoomend',
+  Click = 'click',
+  Dblclick = 'dblclick',
+  Mousemove = 'mousemove',
+  Mousewheel = 'mousewheel',
+  Mouseover = 'mouseover',
+  Mouseout = 'mouseout',
+  Mouseup = 'mouseup',
+  Mousedown = 'mousedown',
+  Contextmenu = 'contextmenu',
+  Dragstart = 'dragstart',
+  Dragging = 'dragging',
+  Dragend = 'dragend',
 }

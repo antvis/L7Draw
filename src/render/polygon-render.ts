@@ -27,61 +27,61 @@ export class PolygonRender extends LayerRender<IPolygonFeature, IPolygonStyle> {
   }
 
   onMouseMove = (e: ILayerMouseEvent<ILineFeature>) => {
-    this.emit(RenderEvent.mousemove, e);
+    this.emit(RenderEvent.Mousemove, e);
   };
 
   onMouseOut = (e: ILayerMouseEvent<ILineFeature>) => {
-    this.emit(RenderEvent.mouseout, e);
+    this.emit(RenderEvent.Mouseout, e);
   };
 
   onMouseDown = (e: ILayerMouseEvent<ILineFeature>) => {
-    this.emit(RenderEvent.dragstart, e);
+    this.emit(RenderEvent.Dragstart, e);
   };
 
   onDragging = (e: ILayerMouseEvent<ILineFeature>) => {
-    this.emit(RenderEvent.dragging, e);
+    this.emit(RenderEvent.Dragging, e);
   };
 
   onDragEnd = debounce((e: ISceneMouseEvent) => {
-    this.emit(RenderEvent.dragend, e);
+    this.emit(RenderEvent.Dragend, e);
   }, 0);
 
   onUnClick = (e: ILayerMouseEvent<ILineFeature>) => {
-    this.emit(RenderEvent.unclick, e);
+    this.emit(RenderEvent.UnClick, e);
   };
 
   enableHover = () => {
     this.disableHover();
-    this.layers[0]?.on(LayerEvent.mousemove, this.onMouseMove);
-    this.layers[0]?.on(LayerEvent.mouseout, this.onMouseOut);
+    this.layers[0]?.on(LayerEvent.Mousemove, this.onMouseMove);
+    this.layers[0]?.on(LayerEvent.Mouseout, this.onMouseOut);
   };
 
   disableHover = () => {
-    this.layers[0]?.off(LayerEvent.mousemove, this.onMouseMove);
-    this.layers[0]?.off(LayerEvent.mouseout, this.onMouseOut);
+    this.layers[0]?.off(LayerEvent.Mousemove, this.onMouseMove);
+    this.layers[0]?.off(LayerEvent.Mouseout, this.onMouseOut);
   };
 
   enableDrag() {
     this.disableDrag();
-    this.layers[0].on(LayerEvent.mousedown, this.onMouseDown);
-    this.scene.on(SceneEvent.dragging, this.onDragging);
-    this.scene.on(SceneEvent.mouseup, this.onDragEnd);
-    this.scene.on(SceneEvent.dragend, this.onDragEnd);
+    this.layers[0].on(LayerEvent.Mousedown, this.onMouseDown);
+    this.scene.on(SceneEvent.Dragging, this.onDragging);
+    this.scene.on(SceneEvent.Mouseup, this.onDragEnd);
+    this.scene.on(SceneEvent.Dragend, this.onDragEnd);
   }
 
   disableDrag() {
-    this.layers[0].off(LayerEvent.mousedown, this.onMouseDown);
-    this.scene.off(SceneEvent.dragging, this.onDragging);
-    this.scene.off(SceneEvent.mouseup, this.onDragEnd);
-    this.scene.off(SceneEvent.dragend, this.onDragEnd);
+    this.layers[0].off(LayerEvent.Mousedown, this.onMouseDown);
+    this.scene.off(SceneEvent.Dragging, this.onDragging);
+    this.scene.off(SceneEvent.Mouseup, this.onDragEnd);
+    this.scene.off(SceneEvent.Dragend, this.onDragEnd);
   }
 
   enableUnClick() {
     this.disableUnClick();
-    this.layers[0].on(LayerEvent.unclick, this.onUnClick);
+    this.layers[0].on(LayerEvent.UnClick, this.onUnClick);
   }
 
   disableUnClick() {
-    this.layers[0].off(LayerEvent.unclick, this.onUnClick);
+    this.layers[0].off(LayerEvent.UnClick, this.onUnClick);
   }
 }

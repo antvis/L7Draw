@@ -24,42 +24,42 @@ const Demo: React.FC = () => {
       drawer.enable();
 
       // 监听添加LineString的事件
-      drawer.on(DrawEvent.add, (newLine, lineList) => {
+      drawer.on(DrawEvent.Add, (newLine, lineList) => {
         console.log('add', newLine, lineList);
       });
 
       // 监听编辑LineString(拖拽结束)的事件
-      drawer.on(DrawEvent.edit, (editLine, lineList) => {
+      drawer.on(DrawEvent.Edit, (editLine, lineList) => {
         console.log('edit', editLine, lineList);
       });
 
       // 监听删除 LineString 的事件
-      drawer.on(DrawEvent.remove, (removePolygon, polygonList) => {
+      drawer.on(DrawEvent.Remove, (removePolygon, polygonList) => {
         console.log('remove', removePolygon, polygonList);
       });
 
       // 监听添加结点的事件
-      drawer.on(DrawEvent.addNode, (node, editLine, lineList) => {
+      drawer.on(DrawEvent.AddNode, (node, editLine, lineList) => {
         console.log('addNode', node, editLine, lineList);
       });
 
       // LineString数据发生变更时触发，等价于同时监听add和edit事件
-      drawer.on(DrawEvent.change, (lineList) => {
+      drawer.on(DrawEvent.Change, (lineList) => {
         console.log('change', lineList);
       });
 
       // 拖拽开始
-      drawer.on(DrawEvent.dragStart, (editLine, lineList) => {
+      drawer.on(DrawEvent.DragStart, (editLine, lineList) => {
         console.log('dragStart', editLine, lineList);
       });
 
       // 拖拽中
-      drawer.on(DrawEvent.dragging, (editLine, lineList) => {
+      drawer.on(DrawEvent.Dragging, (editLine, lineList) => {
         console.log('dragging', editLine, lineList);
       });
 
       // 拖拽结束
-      drawer.on(DrawEvent.dragEnd, (editLine, lineList) => {
+      drawer.on(DrawEvent.DragEnd, (editLine, lineList) => {
         console.log('dragEnd', editLine, lineList);
       });
     });

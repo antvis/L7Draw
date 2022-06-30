@@ -103,7 +103,7 @@ export abstract class DragPolygonMode<
       }),
     );
     this.emit(
-      DrawEvent.addNode,
+      DrawEvent.AddNode,
       firstNode,
       this.drawPolygon,
       this.getPolygonData(),
@@ -122,10 +122,10 @@ export abstract class DragPolygonMode<
     if (!(autoActive && editable)) {
       this.handlePolygonUnClick(drawPolygon);
     }
-    this.emit(DrawEvent.add, drawPolygon, this.getPolygonData());
+    this.emit(DrawEvent.Add, drawPolygon, this.getPolygonData());
 
     this.emit(
-      DrawEvent.addNode,
+      DrawEvent.AddNode,
       drawPolygon.properties.nodes[1],
       this.drawPolygon,
       this.getPolygonData(),
@@ -255,8 +255,8 @@ export abstract class DragPolygonMode<
 
   bindSceneDragEvent() {
     this.unbindSceneDragEvent();
-    this.sceneRender.on(RenderEvent.dragstart, this.onSceneDragStart);
-    this.sceneRender.on(RenderEvent.dragend, this.onSceneDragEnd);
+    this.sceneRender.on(RenderEvent.Dragstart, this.onSceneDragStart);
+    this.sceneRender.on(RenderEvent.Dragend, this.onSceneDragEnd);
 
     this.scene.setMapStatus({
       dragEnable: false,
@@ -264,8 +264,8 @@ export abstract class DragPolygonMode<
   }
 
   unbindSceneDragEvent() {
-    this.sceneRender.off(RenderEvent.dragstart, this.onSceneDragStart);
-    this.sceneRender.off(RenderEvent.dragend, this.onSceneDragEnd);
+    this.sceneRender.off(RenderEvent.Dragstart, this.onSceneDragStart);
+    this.sceneRender.off(RenderEvent.Dragend, this.onSceneDragEnd);
     this.scene.setMapStatus({
       dragEnable: true,
     });

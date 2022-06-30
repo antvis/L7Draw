@@ -247,19 +247,19 @@ export abstract class PolygonMode<
 
   bindPolygonRenderEvent() {
     this.polygonRender?.on(
-      RenderEvent.unclick,
+      RenderEvent.UnClick,
       this.onPolygonUnClick.bind(this),
     );
     this.polygonRender?.on(
-      RenderEvent.mousemove,
+      RenderEvent.Mousemove,
       this.onPolygonHover.bind(this),
     );
     this.polygonRender?.on(
-      RenderEvent.mouseout,
+      RenderEvent.Mouseout,
       this.onPolygonUnHover.bind(this),
     );
     this.polygonRender?.on(
-      RenderEvent.dragstart,
+      RenderEvent.Dragstart,
       this.onPolygonDragStart.bind(this),
     );
     // this.polygonRender?.on(
@@ -344,7 +344,7 @@ export abstract class PolygonMode<
       this.setEditPolygon(polygon, {
         isDrag: true,
       });
-      this.emit(DrawEvent.dragStart, polygon, this.getPolygonData());
+      this.emit(DrawEvent.DragStart, polygon, this.getPolygonData());
     }
     return line;
   }
@@ -358,8 +358,8 @@ export abstract class PolygonMode<
     const dragPolygon = this.dragPolygon;
     if (feature && dragPolygon) {
       dragPolygon.properties.isDrag = false;
-      this.emit(DrawEvent.dragEnd, dragPolygon, this.getPolygonData());
-      this.emit(DrawEvent.edit, dragPolygon, this.getPolygonData());
+      this.emit(DrawEvent.DragEnd, dragPolygon, this.getPolygonData());
+      this.emit(DrawEvent.Edit, dragPolygon, this.getPolygonData());
     }
     return feature;
   }
@@ -392,7 +392,7 @@ export abstract class PolygonMode<
     }
     const polygon = e.feature!;
     this.previousPosition = getPosition(e);
-    this.emit(DrawEvent.dragStart, polygon, this.getPolygonData());
+    this.emit(DrawEvent.DragStart, polygon, this.getPolygonData());
     return this.handlePolygonDragStart(polygon);
   }
 
@@ -416,7 +416,7 @@ export abstract class PolygonMode<
     const editPolygon = this.editPolygon;
     const feature = super.onPointDragEnd(e);
     if (feature && editPolygon) {
-      this.emit(DrawEvent.edit, editPolygon, this.getPolygonData());
+      this.emit(DrawEvent.Edit, editPolygon, this.getPolygonData());
     }
     return feature;
   }

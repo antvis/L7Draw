@@ -29,7 +29,7 @@ const drawer = new DrawCircle(scene, {
 drawer.enable();
 
 // 监听绘制事件
-drawer.on(DrawEvent.change, (circleList) => {
+drawer.on(DrawEvent.Change, (circleList) => {
   console.log(circleList);
 });
 ```

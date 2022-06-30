@@ -88,23 +88,23 @@ export abstract class LineMode<
 
   bindSceneEvent() {
     this.sceneRender.on(
-      RenderEvent.mousemove,
+      RenderEvent.Mousemove,
       this.onSceneMouseMove.bind(this),
     );
   }
 
   bindPointRenderEvent() {
     super.bindPointRenderEvent();
-    this.pointRender?.on(RenderEvent.click, this.onPointClick.bind(this));
+    this.pointRender?.on(RenderEvent.Click, this.onPointClick.bind(this));
   }
 
   bindLineRenderEvent() {
-    this.lineRender?.on(RenderEvent.unclick, this.onLineUnClick.bind(this));
-    this.lineRender?.on(RenderEvent.mousemove, this.onLineMouseMove.bind(this));
-    this.lineRender?.on(RenderEvent.mouseout, this.onLineMouseOut.bind(this));
-    this.lineRender?.on(RenderEvent.dragstart, this.onLineDragStart.bind(this));
-    this.lineRender?.on(RenderEvent.dragging, this.onLineDragging.bind(this));
-    this.lineRender?.on(RenderEvent.dragend, this.onLineDragEnd.bind(this));
+    this.lineRender?.on(RenderEvent.UnClick, this.onLineUnClick.bind(this));
+    this.lineRender?.on(RenderEvent.Mousemove, this.onLineMouseMove.bind(this));
+    this.lineRender?.on(RenderEvent.Mouseout, this.onLineMouseOut.bind(this));
+    this.lineRender?.on(RenderEvent.Dragstart, this.onLineDragStart.bind(this));
+    this.lineRender?.on(RenderEvent.Dragging, this.onLineDragging.bind(this));
+    this.lineRender?.on(RenderEvent.Dragend, this.onLineDragEnd.bind(this));
   }
 
   getDashLineDistanceTexts(

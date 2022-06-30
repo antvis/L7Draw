@@ -29,7 +29,7 @@ const drawer = new DrawPolygon(scene, {
 drawer.enable();
 
 // 监听绘制事件
-drawer.on(DrawEvent.change, (polygonList) => {
+drawer.on(DrawEvent.Change, (polygonList) => {
   console.log(polygonList);
 });
 ```
