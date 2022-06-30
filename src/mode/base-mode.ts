@@ -198,7 +198,7 @@ export abstract class BaseMode<
     this.onSceneMouseMove = this.onSceneMouseMove.bind(this);
     this.revertHistory = this.revertHistory.bind(this);
     this.redoHistory = this.redoHistory.bind(this);
-    this.removeActiveItem = this.removeActiveItem.bind(this);
+    this.removeActiveFeature = this.removeActiveFeature.bind(this);
     this.bindCommonEvent = this.bindCommonEvent.bind(this);
     this.bindEnableEvent = this.bindEnableEvent.bind(this);
     this.unbindEnableEvent = this.unbindEnableEvent.bind(this);
@@ -246,7 +246,7 @@ export abstract class BaseMode<
   // 快捷键绑定
   bindKeyboardEvent() {
     const { revert, redo, remove } = this.options.keyboard || {};
-    remove && Mousetrap.bind(remove, this.removeActiveItem);
+    remove && Mousetrap.bind(remove, this.removeActiveFeature);
     if (this.options.history) {
       revert && Mousetrap.bind(revert, this.revertHistory);
       redo && Mousetrap.bind(redo, this.redoHistory);
@@ -319,14 +319,13 @@ export abstract class BaseMode<
   /**
    * 删除当前active的绘制物
    */
-  removeActiveItem() {
+  removeActiveFeature() {
     const activeItem = this.getData().find((item) => {
-      // @ts-ignore
       const { isActive, isDraw } = item.properties;
       return isActive || isDraw;
     });
     if (activeItem) {
-      this.removeItem(activeItem);
+      this.removeFeature(activeItem);
     }
     return activeItem;
   }
@@ -335,7 +334,7 @@ export abstract class BaseMode<
    * 删除指定
    * @param target
    */
-  removeItem<F extends IBaseFeature = IBaseFeature>(target: F) {
+  removeFeature<F extends Feature>(target: F) {
     const data = this.getData();
     // @ts-ignore
     this.setData(data.filter((item) => !isSameFeature(target, item)));

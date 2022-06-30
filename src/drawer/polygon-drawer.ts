@@ -35,7 +35,6 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     this.bindPolygonRenderEvent();
   }
 
-  // @ts-ignore
   setData(data: Feature<Polygon>[]) {
     const polygonFeatures = data.map((polygon) => {
       polygon.properties = {

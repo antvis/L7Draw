@@ -38,7 +38,7 @@ drawer.revertHistory();
 drawer.redoHistory();
 
 // 删除当前激活的绘制物
-drawer.removeActiveItem();
+drawer.removeActiveFeature();
 ```
 
 ## 配置

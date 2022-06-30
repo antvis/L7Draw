@@ -13,9 +13,8 @@ hide: true
 | show             | 显示该 Draw 下所有的绘制物                                       | `() => void`                        |
 | hide             | 隐藏该 Draw 下所有的绘制物                                       | `() => void`                        |
 | getEnabled       | 判断当前 Draw 是否在绘制状态                                     | `() => boolean`                     |
-| saveHistory      | 保存当前绘制状态到历史记录中，下次回退将重置到此次保存的绘制状态 | `() => SourceData`                  |
 | revertHistory    | 回退至上一次保存的绘制状态                                       | `() => SourceData &#124; undefined` |
 | redoHistory      | 重置到上一次回退                                                 | `() => SourceData &#124; undefined` |
-| removeActiveItem | 删除当前激活状态的绘制物                                         | `() => Feature`                     |
-| removeItem       | 删除指定绘制物                                                   | `(feature: Feature) => void`        |
+| removeActiveFeature | 删除当前激活状态的绘制物                                         | `() => Feature`                     |
+| removeFeature       | 删除指定绘制物                                                   | `(feature: Feature) => void`        |
 | destroy          | 销毁当前 Draw 实例                                               | `() => void`                        |

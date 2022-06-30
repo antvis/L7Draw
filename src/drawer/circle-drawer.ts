@@ -90,7 +90,6 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
     return textList;
   }
 
-  // @ts-ignore
   setData(data: Feature<Polygon>[]) {
     const result = data.map((feature) => {
       feature.properties = {

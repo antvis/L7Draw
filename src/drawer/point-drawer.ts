@@ -50,7 +50,6 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     return ['point'];
   }
 
-  // @ts-ignore
   setData(points: Feature<Point>[]) {
     this.setPointData(
       points.map((point) => {
