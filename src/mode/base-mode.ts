@@ -87,18 +87,15 @@ export abstract class BaseMode<
    */
   get addable() {
     const data = this.getData();
-    const { addMultiple, multiple } = this.options;
+    const { multiple } = this.options;
     const drawItem = data.find((item) => item.properties.isDraw);
     if (!this.isEnable) {
       return false;
     }
-    if ((multiple && addMultiple) || drawItem) {
+    if (multiple || drawItem) {
       return true;
     }
-    if (!multiple && data.length >= 1) {
-      return false;
-    }
-    if (!addMultiple && this.addCount >= 1) {
+    if (!multiple && this.addCount >= 1) {
       return false;
     }
     return true;
@@ -398,7 +395,6 @@ export abstract class BaseMode<
       multiple: true,
       history: cloneDeep(DEFAULT_HISTORY_CONFIG),
       keyboard: cloneDeep(DEFAULT_KEYBOARD_CONFIG),
-      addMultiple: true,
       disableEditable: false,
     } as IBaseModeOptions;
   }

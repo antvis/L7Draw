@@ -48,8 +48,7 @@ options 配置是 Draw 实例化的时候，作为第二个参数传入，所有
 | style           | LineString 在不同状态下的样式                                                                                           | [Style](/docs/super/style#配置)                      | -       | -                                                                 |
 | keyboard        | 自定义快捷键瑟是否开启，以及对应的按键                                                                                  | [Keyboard](/docs/super/keyboard#配置)                | -       | -                                                                 |
 | history         | 保存历史绘制数据的相关配置，涉及到回退操作的最大操作次数                                                                | [History](/docs/super/history#配置)                  | -       | -                                                                 |
-| multiple        | Draw 中是否最多支持绘制多个 LineString                                                                                  | `boolean`                                            | `true`  | [关闭绘制多个 1](/example/line/multiple#始终最多绘制一个)         |
-| addMultiple     | 每次调用 `enable` 时，Draw 中是否支持绘制多个 LineString                                                                | `boolean`                                            | `true`  | [关闭绘制多个 2](/example/line/multiple#单次-enable-最多绘制一个) |
+| multiple        | Draw 中是否最多支持绘制多个 LineString                                                                                  | `boolean`                                            | `true`  | [禁止绘制多个](/example/line/multiple#始终最多绘制一个)         |
 | disableEditable | 未开启绘制的状态下，是否支持编辑操作                                                                                    | `boolean`                                            | `false` | [禁用状态下可编辑](/example/line/disable-editable)                |
 
 ## 方法
