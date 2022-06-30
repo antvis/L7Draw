@@ -1,0 +1,8 @@
+node_modules
+dist
+coverage
+scripts
+dist
+es
+lib
+docs-dist
