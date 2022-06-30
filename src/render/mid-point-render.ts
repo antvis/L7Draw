@@ -10,7 +10,7 @@ export class MidPointRender extends LayerRender<
 > {
   getLayers(): ILayer[] {
     const { normal, style, options } = this.style;
-    const { shape, size, color, borderColor, borderWidth } = normal;
+    const { shape, size, color, borderColor } = normal;
     const layer = new PointLayer(options ?? {})
       .source(featureCollection([]))
       .size(size)
@@ -18,7 +18,6 @@ export class MidPointRender extends LayerRender<
       .shape(shape)
       .style({
         stroke: borderColor,
-        strokeWidth: borderWidth,
         ...style,
       });
 

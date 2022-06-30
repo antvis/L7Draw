@@ -22,12 +22,12 @@ export class TextRender extends LayerRender<ITextFeature, ITextStyle> {
             return isActive ? active.borderColor : normal.borderColor;
           },
         ],
-        strokeWidth: [
-          'isActive',
-          (isActive: boolean) => {
-            return isActive ? active.borderWidth : normal.borderWidth;
-          },
-        ],
+        // strokeWidth: [
+        //   'isActive',
+        //   (isActive: boolean) => {
+        //     return isActive ? active.borderWidth : normal.borderWidth;
+        //   },
+        // ],
         ...style,
       });
 

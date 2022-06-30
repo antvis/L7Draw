@@ -71,12 +71,8 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
       return [];
     }
     const textList: ITextFeature[] = [];
-    const {
-      showWhen,
-      showDashDistance,
-      format,
-      showTotalDistance,
-    } = distanceConfig;
+    const { showWhen, showDashDistance, format, showTotalDistance } =
+      distanceConfig;
 
     textList.push(
       ...this.getDashLineDistanceTexts(this.getDashLineData(), {

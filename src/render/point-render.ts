@@ -35,7 +35,6 @@ export class PointRender extends LayerRender<IPointFeature, IPointStyle> {
               : normal.borderColor;
           },
         ],
-        strokeWidth: 2,
         // strokeWidth: [
         //   'isHover*isActive',
         //   (isHover: boolean, isActive: boolean) => {
