@@ -413,7 +413,15 @@ export abstract class LineMode<
     const dragPoint = super.onPointDragging(e);
     const editLine = this.editLine;
     if (editLine && dragPoint) {
-      this.syncLineNodes(editLine, editLine.properties.nodes);
+      this.syncLineNodes(
+        editLine,
+        editLine.properties.nodes.map((node) => {
+          if (isSameFeature(dragPoint, node)) {
+            return dragPoint;
+          }
+          return node;
+        }),
+      );
       this.setEditLine(editLine);
     }
     return dragPoint;

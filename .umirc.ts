@@ -1,6 +1,6 @@
 import { defineConfig } from 'dumi';
 
-const prefixPath = 'l7-draw-2.0-site';
+const prefixPath = 'L7-draw';
 
 export default defineConfig({
   title: 'L7Draw',

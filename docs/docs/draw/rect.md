@@ -50,7 +50,6 @@ options 配置是 Draw 实例化的时候，作为第二个参数传入，所有
 | style           | Polygon 在不同状态下的样式                                                                                           | [Style](/docs/super/style#配置)                      | -       | -                                                       |
 | keyboard        | 自定义快捷键瑟是否开启，以及对应的按键                                                                               | [Keyboard](/docs/super/keyboard#配置)                | -       | -                                                       |
 | history         | 保存历史绘制数据的相关配置，涉及到回退操作的最大操作次数                                                             | [History](/docs/super/history#配置)                  | -       | -                                                       |
-| disableEditable | disable 禁用状态下是否支持编辑                                                                                       | `boolean`                                            | `false` | [禁用状态下可编辑](/example/rect/disable-editable)      |
 
 ## 方法
 
