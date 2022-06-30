@@ -1,7 +1,7 @@
 /**
  * Drawer事件枚举
  */
-export enum DrawerEvent {
+export enum DrawEvent {
   init = 'init',
   destroy = 'destroy',
   enable = 'enable',

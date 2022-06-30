@@ -8,7 +8,6 @@ import {
   DEFAULT_HISTORY_CONFIG,
   DEFAULT_KEYBOARD_CONFIG,
   DEFAULT_STYLE,
-  DrawerEvent,
   DrawEvent,
   RENDER_MAP,
   SceneEvent,
@@ -207,7 +206,7 @@ export abstract class BaseMode<
 
   bindCommonEvent() {
     this.on(DrawEvent.add, this.emitChangeEvent);
-    this.on(DrawerEvent.add, () => {
+    this.on(DrawEvent.add, () => {
       this.addCount++;
     });
     this.on(DrawEvent.edit, this.emitChangeEvent);
