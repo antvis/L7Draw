@@ -1,4 +1,4 @@
-# L7 Draw
+# L7Draw
 
 > 基于 [L7](https://l7.antv.vision/zh) 封装的地理绘制库
 
@@ -39,7 +39,7 @@ scene.on('loaded', () => {
   draw.enable();
 
   // 监听 Draw 的事件
-  draw.on(DrawEvent.add, (newPoint) => {
+  draw.on(DrawEvent.Add, (newPoint) => {
     console.log(newPoint);
   });
 });

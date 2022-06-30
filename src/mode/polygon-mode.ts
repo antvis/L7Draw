@@ -34,7 +34,7 @@ import { ILineModeOptions, LineMode } from './line-mode';
 
 export interface IPolygonModeOptions<F extends Feature = Feature>
   extends ILineModeOptions<F> {
-  areaText: false | IAreaOptions;
+  areaOptions: false | IAreaOptions;
 }
 
 export abstract class PolygonMode<
@@ -94,40 +94,63 @@ export abstract class PolygonMode<
   getDefaultOptions(options: DeepPartial<T>): T {
     const newOptions: T = {
       ...super.getDefaultOptions(options),
-      areaText: false,
+      areaOptions: false,
     };
-    if (options.areaText) {
-      newOptions.areaText = {
+    if (options.areaOptions) {
+      newOptions.areaOptions = {
         ...DEFAULT_AREA_OPTIONS,
-        ...options.areaText,
+        ...options.areaOptions,
       };
     }
     return newOptions;
   }
 
   getAreaTexts(polygons: IPolygonFeature[]): ITextFeature[] {
-    const { areaText } = this.options;
-    if (!areaText) {
+    const { areaOptions } = this.options;
+    if (!areaOptions) {
       return [];
     }
+    const { format, showWhen } = areaOptions;
     const textList: ITextFeature[] = [];
     const polygonData = polygons.filter(
       (feature) => feature.geometry.coordinates[0].length >= 4,
     );
 
-    polygonData.forEach((feature) => {
-      textList.push(
-        calcAreaText(
-          feature,
-          {
-            format: areaText.format,
-          },
-          {
-            isActive: feature.properties.isActive,
-          },
-        ),
-      );
-    });
+    if (showWhen.includes('active')) {
+      polygonData
+        .filter((feature) => feature.properties.isActive)
+        .forEach((feature) => {
+          textList.push(
+            calcAreaText(
+              feature,
+              {
+                format,
+              },
+              {
+                isActive: true,
+              },
+            ),
+          );
+        });
+    }
+
+    if (showWhen.includes('normal')) {
+      polygonData
+        .filter((feature) => !feature.properties.isActive)
+        .forEach((feature) => {
+          textList.push(
+            calcAreaText(
+              feature,
+              {
+                format,
+              },
+              {
+                isActive: false,
+              },
+            ),
+          );
+        });
+    }
 
     return textList;
   }
@@ -224,19 +247,19 @@ export abstract class PolygonMode<
 
   bindPolygonRenderEvent() {
     this.polygonRender?.on(
-      RenderEvent.unclick,
+      RenderEvent.UnClick,
       this.onPolygonUnClick.bind(this),
     );
     this.polygonRender?.on(
-      RenderEvent.mousemove,
+      RenderEvent.Mousemove,
       this.onPolygonHover.bind(this),
     );
     this.polygonRender?.on(
-      RenderEvent.mouseout,
+      RenderEvent.Mouseout,
       this.onPolygonUnHover.bind(this),
     );
     this.polygonRender?.on(
-      RenderEvent.dragstart,
+      RenderEvent.Dragstart,
       this.onPolygonDragStart.bind(this),
     );
     // this.polygonRender?.on(
@@ -321,7 +344,7 @@ export abstract class PolygonMode<
       this.setEditPolygon(polygon, {
         isDrag: true,
       });
-      this.emit(DrawEvent.dragStart, polygon, this.getPolygonData());
+      this.emit(DrawEvent.DragStart, polygon, this.getPolygonData());
     }
     return line;
   }
@@ -335,8 +358,8 @@ export abstract class PolygonMode<
     const dragPolygon = this.dragPolygon;
     if (feature && dragPolygon) {
       dragPolygon.properties.isDrag = false;
-      this.emit(DrawEvent.dragEnd, dragPolygon, this.getPolygonData());
-      this.emit(DrawEvent.edit, dragPolygon, this.getPolygonData());
+      this.emit(DrawEvent.DragEnd, dragPolygon, this.getPolygonData());
+      this.emit(DrawEvent.Edit, dragPolygon, this.getPolygonData());
     }
     return feature;
   }
@@ -369,7 +392,7 @@ export abstract class PolygonMode<
     }
     const polygon = e.feature!;
     this.previousPosition = getPosition(e);
-    this.emit(DrawEvent.dragStart, polygon, this.getPolygonData());
+    this.emit(DrawEvent.DragStart, polygon, this.getPolygonData());
     return this.handlePolygonDragStart(polygon);
   }
 
@@ -393,7 +416,7 @@ export abstract class PolygonMode<
     const editPolygon = this.editPolygon;
     const feature = super.onPointDragEnd(e);
     if (feature && editPolygon) {
-      this.emit(DrawEvent.edit, editPolygon, this.getPolygonData());
+      this.emit(DrawEvent.Edit, editPolygon, this.getPolygonData());
     }
     return feature;
   }

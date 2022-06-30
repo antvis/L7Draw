@@ -24,37 +24,37 @@ const Demo: React.FC = () => {
       drawer.enable();
 
       // 监听添加Polygon的事件
-      drawer.on(DrawEvent.add, (newPolygon, polygonList) => {
+      drawer.on(DrawEvent.Add, (newPolygon, polygonList) => {
         console.log('add', newPolygon, polygonList);
       });
 
       // 监听编辑Polygon(拖拽结束)的事件
-      drawer.on(DrawEvent.edit, (editPolygon, polygonList) => {
+      drawer.on(DrawEvent.Edit, (editPolygon, polygonList) => {
         console.log('edit', editPolygon, polygonList);
       });
 
       // 监听删除 Polygon 的事件
-      drawer.on(DrawEvent.remove, (removePolygon, polygonList) => {
+      drawer.on(DrawEvent.Remove, (removePolygon, polygonList) => {
         console.log('remove', removePolygon, polygonList);
       });
 
       // Polygon数据发生变更时触发，等价于同时监听add和edit事件
-      drawer.on(DrawEvent.change, (polygonList) => {
+      drawer.on(DrawEvent.Change, (polygonList) => {
         console.log('change', polygonList);
       });
 
       // 拖拽开始
-      drawer.on(DrawEvent.dragStart, (editPolygon, polygonList) => {
+      drawer.on(DrawEvent.DragStart, (editPolygon, polygonList) => {
         console.log('dragStart', editPolygon, polygonList);
       });
 
       // 拖拽中
-      drawer.on(DrawEvent.dragging, (editPolygon, polygonList) => {
+      drawer.on(DrawEvent.Dragging, (editPolygon, polygonList) => {
         console.log('dragging', editPolygon, polygonList);
       });
 
       // 拖拽结束
-      drawer.on(DrawEvent.dragEnd, (editPolygon, polygonList) => {
+      drawer.on(DrawEvent.DragEnd, (editPolygon, polygonList) => {
         console.log('dragEnd', editPolygon, polygonList);
       });
     });

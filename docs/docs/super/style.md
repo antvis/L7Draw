@@ -13,6 +13,8 @@ group:
 
 _后期 Draw 会内置几套绘制主题，以适应不同底图样式下的绘制呈现效果。_
 
+<img src="https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*pmHES4IvoqUAAAAAAAAAAAAAARQnAQ" width="300" />
+
 ## 示例
 
 在使用 Draw 进行绘制过程中时，可以覆盖内置的图层样式。开发者只需要填写对应需要覆盖的单个项，在 Draw 内部会对开发者传入的 style 和内置的默认 style 进行深覆盖，其余无需覆盖的样式可以无需填写。
@@ -109,7 +111,6 @@ export interface IPointStyleItem {
   color: string; // 填充色
   shape: string; // 形状
   size: number; // 大小
-  borderWidth: number; // 边框宽度
   borderColor: string; // 边框颜色
 }
 
@@ -157,7 +158,6 @@ export interface IPointStyleItem {
   color: string; // 填充色
   shape: string; // 形状
   size: number; // 大小
-  borderWidth: number; // 边框宽度
   borderColor: string; // 边框颜色
 }
 
@@ -198,34 +198,35 @@ export interface ITextStyle extends IBaseStyle {
 {
   "point": {
     "options": {
-      "blend": "normal"
+      "blend": "normal",
+      "pickingBuffer": 5
     },
     "normal": {
       "color": "#ED9D48",
       "shape": "circle",
       "size": 6,
-      "borderColor": "#ffffff",
-      "borderWidth": 2
+      "borderColor": "#ffffff"
     },
     "hover": {
       "color": "#ED9D48",
       "shape": "circle",
       "size": 8,
-      "borderColor": "#ffffff",
-      "borderWidth": 2
+      "borderColor": "#ffffff"
     },
     "active": {
       "color": "#ED9D48",
       "shape": "circle",
       "size": 8,
-      "borderColor": "#ffffff",
-      "borderWidth": 2
+      "borderColor": "#ffffff"
     },
-    "style": {}
+    "style": {
+      "strokeWidth": 2
+    }
   },
   "line": {
     "options": {
-      "blend": "normal"
+      "blend": "normal",
+      "pickingBuffer": 5
     },
     "normal": {
       "color": "#1990FF",
@@ -243,7 +244,8 @@ export interface ITextStyle extends IBaseStyle {
   },
   "polygon": {
     "options": {
-      "blend": "normal"
+      "blend": "normal",
+      "pickingBuffer": 5
     },
     "normal": {
       "color": "#1990FF"
@@ -260,19 +262,20 @@ export interface ITextStyle extends IBaseStyle {
   },
   "midPoint": {
     "options": {
-      "blend": "normal"
+      "blend": "normal",
+      "pickingBuffer": 5
     },
     "normal": {
       "shape": "circle",
       "size": 6,
       "color": "#ED9D48",
-      "borderColor": "#ffffff",
-      "borderWidth": 0
+      "borderColor": "#ffffff"
     }
   },
   "dashLine": {
     "options": {
-      "blend": "normal"
+      "blend": "normal",
+      "pickingBuffer": 5
     },
     "normal": {
       "color": "#ED9D48",
@@ -285,24 +288,24 @@ export interface ITextStyle extends IBaseStyle {
   },
   "text": {
     "options": {
-      "blend": "normal"
+      "blend": "normal",
+      "pickingBuffer": 5
     },
     "normal": {
       "color": "#1990FF",
       "size": 12,
-      "borderColor": "#ffffff",
-      "borderWidth": 0.5
+      "borderColor": "#ffffff"
     },
     "active": {
       "color": "#ED9D48",
       "size": 12,
-      "borderColor": "#ffffff",
-      "borderWidth": 0.5
+      "borderColor": "#ffffff"
     },
     "style": {
       "fontWeight": "800",
-      "textOffset": [0, 14],
-      "textAllowOverlap": true
+      "textOffset": [0, 18],
+      "textAllowOverlap": true,
+      "strokeWidth": 2
     }
   }
 }

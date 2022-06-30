@@ -97,7 +97,7 @@ export class Source extends EventEmitter<SourceEvent> {
         this.timeout = requestAnimationFrame(() => this.updateDiffData());
       }
 
-      this.emit(SourceEvent.change, {
+      this.emit(SourceEvent.Change, {
         data: this.data,
       });
     }
@@ -138,7 +138,7 @@ export class Source extends EventEmitter<SourceEvent> {
         return +a.properties.isActive - +b.properties.isActive;
       }),
     });
-    this.emit(SourceEvent.change, this.data);
+    this.emit(SourceEvent.Change, this.data);
     return data;
   }
 
@@ -156,7 +156,7 @@ export class Source extends EventEmitter<SourceEvent> {
           this.getRender(renderType)?.setData(renderData);
         }
       });
-      this.emit(SourceEvent.update, this.data, this.diffData);
+      this.emit(SourceEvent.Update, this.data, this.diffData);
       this.diffData = {};
       this.timeout = null;
     }

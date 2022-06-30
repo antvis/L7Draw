@@ -8,7 +8,6 @@ import {
   DEFAULT_HISTORY_CONFIG,
   DEFAULT_KEYBOARD_CONFIG,
   DEFAULT_STYLE,
-  DrawerEvent,
   DrawEvent,
   RENDER_MAP,
   SceneEvent,
@@ -88,18 +87,15 @@ export abstract class BaseMode<
    */
   get addable() {
     const data = this.getData();
-    const { addMultiple, multiple } = this.options;
+    const { multiple } = this.options;
     const drawItem = data.find((item) => item.properties.isDraw);
     if (!this.isEnable) {
       return false;
     }
-    if ((multiple && addMultiple) || drawItem) {
+    if (multiple || drawItem) {
       return true;
     }
-    if (!multiple && data.length >= 1) {
-      return false;
-    }
-    if (!addMultiple && this.addCount >= 1) {
+    if (!multiple && this.addCount >= 1) {
       return false;
     }
     return true;
@@ -120,14 +116,14 @@ export abstract class BaseMode<
     });
     this.cursor = new Cursor(scene, this.options.cursor);
 
-    const initData = this.options.initData;
-    if (initData) {
-      this.setData(initData);
+    const initialData = this.options.initialData;
+    if (initialData) {
+      this.setData(initialData);
     }
     this.saveHistory();
 
     this.bindCommonEvent();
-    this.emit(DrawEvent.init, this);
+    this.emit(DrawEvent.Init, this);
     if (this.options.disableEditable) {
       this.bindEnableEvent();
     }
@@ -183,7 +179,7 @@ export abstract class BaseMode<
   /**
    * 获取当前是否为编辑态
    */
-  getIsEnable() {
+  getEnabled() {
     return this.isEnable;
   }
 
@@ -199,21 +195,21 @@ export abstract class BaseMode<
     this.onSceneMouseMove = this.onSceneMouseMove.bind(this);
     this.revertHistory = this.revertHistory.bind(this);
     this.redoHistory = this.redoHistory.bind(this);
-    this.removeActiveItem = this.removeActiveItem.bind(this);
+    this.removeActiveFeature = this.removeActiveFeature.bind(this);
     this.bindCommonEvent = this.bindCommonEvent.bind(this);
     this.bindEnableEvent = this.bindEnableEvent.bind(this);
     this.unbindEnableEvent = this.unbindEnableEvent.bind(this);
   }
 
   bindCommonEvent() {
-    this.on(DrawEvent.add, this.emitChangeEvent);
-    this.on(DrawerEvent.add, () => {
+    this.on(DrawEvent.Add, this.emitChangeEvent);
+    this.on(DrawEvent.Add, () => {
       this.addCount++;
     });
-    this.on(DrawEvent.edit, this.emitChangeEvent);
-    this.on(DrawEvent.remove, this.emitChangeEvent);
-    this.on(DrawEvent.clear, this.emitChangeEvent);
-    this.on(DrawEvent.addNode, this.saveHistory);
+    this.on(DrawEvent.Edit, this.emitChangeEvent);
+    this.on(DrawEvent.Remove, this.emitChangeEvent);
+    this.on(DrawEvent.Clear, this.emitChangeEvent);
+    this.on(DrawEvent.AddNode, this.saveHistory);
   }
 
   /**
@@ -223,8 +219,8 @@ export abstract class BaseMode<
     this.scene.setMapStatus({
       doubleClickZoom: false,
     });
-    this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
-    this.scene.on(SceneEvent.mousemove, this.saveMouseLngLat);
+    this.scene.off(SceneEvent.Mousemove, this.saveMouseLngLat);
+    this.scene.on(SceneEvent.Mousemove, this.saveMouseLngLat);
 
     this.unbindKeyboardEvent();
     this.bindKeyboardEvent();
@@ -240,14 +236,14 @@ export abstract class BaseMode<
     this.scene.setMapStatus({
       doubleClickZoom: true,
     });
-    this.scene.off(SceneEvent.mousemove, this.saveMouseLngLat);
+    this.scene.off(SceneEvent.Mousemove, this.saveMouseLngLat);
     this.unbindKeyboardEvent();
   }
 
   // 快捷键绑定
   bindKeyboardEvent() {
     const { revert, redo, remove } = this.options.keyboard || {};
-    remove && Mousetrap.bind(remove, this.removeActiveItem);
+    remove && Mousetrap.bind(remove, this.removeActiveFeature);
     if (this.options.history) {
       revert && Mousetrap.bind(revert, this.revertHistory);
       redo && Mousetrap.bind(redo, this.redoHistory);
@@ -279,7 +275,7 @@ export abstract class BaseMode<
    * 触发change事件，同时触发保存数据备份
    */
   emitChangeEvent() {
-    this.emit(DrawEvent.change, this.getData());
+    this.emit(DrawEvent.Change, this.getData());
     this.saveHistory();
   }
 
@@ -320,14 +316,13 @@ export abstract class BaseMode<
   /**
    * 删除当前active的绘制物
    */
-  removeActiveItem() {
+  removeActiveFeature() {
     const activeItem = this.getData().find((item) => {
-      // @ts-ignore
       const { isActive, isDraw } = item.properties;
       return isActive || isDraw;
     });
     if (activeItem) {
-      this.removeItem(activeItem);
+      this.removeFeature(activeItem);
     }
     return activeItem;
   }
@@ -336,11 +331,11 @@ export abstract class BaseMode<
    * 删除指定
    * @param target
    */
-  removeItem<F extends IBaseFeature = IBaseFeature>(target: F) {
+  removeFeature<F extends Feature>(target: F) {
     const data = this.getData();
     // @ts-ignore
     this.setData(data.filter((item) => !isSameFeature(target, item)));
-    this.emit(DrawEvent.remove, target, this.getData());
+    this.emit(DrawEvent.Remove, target, this.getData());
   }
 
   /**
@@ -392,15 +387,14 @@ export abstract class BaseMode<
     options: DeepPartial<IBaseModeOptions>,
   ): IBaseModeOptions {
     return {
-      initData: [] as F[],
-      autoFocus: true,
+      initialData: [] as F[],
+      autoActive: true,
       cursor: cloneDeep(DEFAULT_CURSOR_MAP),
       editable: true,
       style: cloneDeep(DEFAULT_STYLE),
       multiple: true,
       history: cloneDeep(DEFAULT_HISTORY_CONFIG),
       keyboard: cloneDeep(DEFAULT_KEYBOARD_CONFIG),
-      addMultiple: true,
       disableEditable: false,
     } as IBaseModeOptions;
   }
@@ -432,7 +426,7 @@ export abstract class BaseMode<
     this.bindEnableEvent();
     this.addCount = 0;
     setTimeout(() => {
-      this.emit(DrawEvent.enable, this);
+      this.emit(DrawEvent.Enable, this);
     }, 0);
   }
 
@@ -448,7 +442,7 @@ export abstract class BaseMode<
     this.unbindEnableEvent();
     this.addCount = 0;
     setTimeout(() => {
-      this.emit(DrawEvent.disable, this);
+      this.emit(DrawEvent.Disable, this);
     }, 0);
   }
 
@@ -457,7 +451,7 @@ export abstract class BaseMode<
    */
   clear(disable = false) {
     this.source.clear();
-    this.emit(DrawEvent.clear, this);
+    this.emit(DrawEvent.Clear, this);
     if (disable) {
       this.disable();
     }
@@ -490,6 +484,11 @@ export abstract class BaseMode<
     Object.values(this.render).forEach((render) => {
       render.destroy();
     });
-    this.emit(DrawEvent.destroy, this);
+    this.emit(DrawEvent.Destroy, this);
+    setTimeout(() => {
+      Object.values(DrawEvent).forEach((EventName) => {
+        this.removeAllListeners(EventName);
+      });
+    }, 0);
   }
 }

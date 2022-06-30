@@ -26,7 +26,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<ILineDrawerOptions>) {
     super(scene, options);
 
-    this.sceneRender.on(RenderEvent.dblClick, this.drawLineFinish);
+    this.sceneRender.on(RenderEvent.DblClick, this.drawLineFinish);
     this.bindPointRenderEvent();
     this.bindSceneEvent();
     this.bindMidPointRenderEvent();
@@ -41,7 +41,6 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     return this.editLine;
   }
 
-  // @ts-ignore
   setData(lines: Feature<LineString>[]) {
     const lineFeatures = lines.map((line) => {
       line.properties = {
@@ -83,11 +82,11 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
       return;
     }
     this.setEditLine(drawLine);
-    const { autoFocus, editable } = this.options;
-    if (!autoFocus || !editable) {
+    const { autoActive, editable } = this.options;
+    if (!autoActive || !editable) {
       this.handleLineUnClick(drawLine);
     }
-    this.emit(DrawEvent.add, drawLine, this.getLineData());
+    this.emit(DrawEvent.Add, drawLine, this.getLineData());
   };
 
   onPointClick(e: ILayerMouseEvent<IPointFeature>) {
@@ -114,7 +113,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     }
     const feature = super.onPointCreate(e);
     if (feature) {
-      this.emit(DrawEvent.addNode, feature, this.drawLine, this.getLineData());
+      this.emit(DrawEvent.AddNode, feature, this.drawLine, this.getLineData());
     }
     return feature;
   }
@@ -123,7 +122,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     const editLine = this.editLine;
     const feature = super.onPointDragEnd(e);
     if (editLine && feature) {
-      this.emit(DrawEvent.edit, editLine, this.getLineData());
+      this.emit(DrawEvent.Edit, editLine, this.getLineData());
     }
     return feature;
   }
@@ -131,7 +130,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   onLineDragStart(e: ILayerMouseEvent<ILineFeature>) {
     const feature = super.onLineDragStart(e);
     if (feature) {
-      this.emit(DrawEvent.dragStart, feature, this.getLineData());
+      this.emit(DrawEvent.DragStart, feature, this.getLineData());
     }
     return feature;
   }
@@ -139,7 +138,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   onLineDragging(e: ISceneMouseEvent) {
     const feature = super.onLineDragging(e);
     if (feature) {
-      this.emit(DrawEvent.dragging, feature, this.getLineData());
+      this.emit(DrawEvent.Dragging, feature, this.getLineData());
     }
     return feature;
   }
@@ -147,8 +146,8 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   onLineDragEnd(e: ISceneMouseEvent): ILineFeature | undefined {
     const feature = super.onLineDragEnd(e);
     if (feature) {
-      this.emit(DrawEvent.dragEnd, feature, this.getLineData());
-      this.emit(DrawEvent.edit, feature, this.getLineData());
+      this.emit(DrawEvent.DragEnd, feature, this.getLineData());
+      this.emit(DrawEvent.Edit, feature, this.getLineData());
     }
     return feature;
   }
@@ -159,8 +158,8 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     const editLine = this.editLine;
     const feature = super.onMidPointClick(e);
     if (editLine && feature) {
-      this.emit(DrawEvent.edit, editLine, this.getLineData());
-      this.emit(DrawEvent.addNode, feature, editLine, this.getLineData());
+      this.emit(DrawEvent.Edit, editLine, this.getLineData());
+      this.emit(DrawEvent.AddNode, feature, editLine, this.getLineData());
     }
     return feature;
   }

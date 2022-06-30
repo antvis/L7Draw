@@ -28,9 +28,38 @@ const Demo: React.FC = () => {
     }
 
     scene.on('loaded', () => {
+      const overwriteStyle = {
+        color: '#a03dff',
+      };
       const drawer = new DrawPolygon(scene, {
-        showMidPoint: false,
         initialData: polygon,
+        style: {
+          point: {
+            normal: overwriteStyle,
+            hover: overwriteStyle,
+            active: overwriteStyle,
+          },
+          line: {
+            normal: overwriteStyle,
+            hover: overwriteStyle,
+            active: overwriteStyle,
+          },
+          polygon: {
+            normal: overwriteStyle,
+            hover: overwriteStyle,
+            active: overwriteStyle,
+          },
+          midPoint: {
+            normal: overwriteStyle,
+          },
+          dashLine: {
+            normal: overwriteStyle,
+          },
+          text: {
+            normal: overwriteStyle,
+            active: overwriteStyle,
+          },
+        },
       });
       setPolygonDrawer(drawer);
       drawer.enable();

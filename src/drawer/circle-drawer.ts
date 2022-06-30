@@ -35,7 +35,7 @@ export interface ICircleDistanceOptions extends IDistanceOptions {
 export interface ICircleDrawerOptions
   extends IDragPolygonModeOptions<Feature<Polygon>> {
   circleSteps: number;
-  distanceText: ICircleDistanceOptions;
+  distanceOptions: ICircleDistanceOptions;
 }
 
 export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
@@ -52,10 +52,10 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
     options: DeepPartial<ICircleDrawerOptions>,
   ): ICircleDrawerOptions {
     const newOptions = super.getDefaultOptions(options);
-    if (newOptions.distanceText) {
-      newOptions.distanceText.total = true;
-      if (newOptions.distanceText.showOnRadius === undefined) {
-        newOptions.distanceText.showOnRadius = true;
+    if (newOptions.distanceOptions) {
+      newOptions.distanceOptions.showTotalDistance = true;
+      if (newOptions.distanceOptions.showOnRadius === undefined) {
+        newOptions.distanceOptions.showOnRadius = true;
       }
     }
     return {
@@ -66,32 +66,30 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
   }
 
   getDistanceTexts(): ITextFeature[] {
-    const { distanceText } = this.options;
-    if (!distanceText) {
+    const { distanceOptions } = this.options;
+    if (!distanceOptions) {
       return [];
     }
     const textList: ITextFeature[] = [];
-    const { showOnNormal, showOnActive, showOnDash, format, total } =
-      distanceText;
+    const { showWhen, showDashDistance, format, showTotalDistance } =
+      distanceOptions;
 
     textList.push(
       ...this.getDashLineDistanceTexts(this.getDashLineData(), {
-        total: true,
+        showTotalDistance: true,
         format,
-        showOnDash,
+        showDashDistance,
       }),
       ...this.getLineDistanceTexts(this.getLineData(), {
-        total,
+        showTotalDistance,
         format,
-        showOnActive,
-        showOnNormal,
+        showWhen,
       }),
     );
 
     return textList;
   }
 
-  // @ts-ignore
   setData(data: Feature<Polygon>[]) {
     const result = data.map((feature) => {
       feature.properties = {
@@ -215,7 +213,7 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
       this.setEditPolygon(dragPolygon, {
         isDrag: true,
       });
-      this.emit(DrawEvent.dragging, dragPolygon, this.getPolygonData());
+      this.emit(DrawEvent.Dragging, dragPolygon, this.getPolygonData());
     }
     return feature;
   }

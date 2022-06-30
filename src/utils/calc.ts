@@ -37,17 +37,20 @@ export const getLineCenterPoint = (feature: Feature<LineString>) => {
 /**
  * 返回线段对应的距离文本
  * @param feature
- * @param total
+ * @param showTotalDistance
  * @param format
  * @param properties
  */
 export const calcDistanceTextsByLine = (
   feature: ILineFeature | IDashLineFeature,
-  { total, format }: Pick<IDistanceOptions, 'total' | 'format'>,
+  {
+    showTotalDistance,
+    format,
+  }: Pick<IDistanceOptions, 'showTotalDistance' | 'format'>,
   properties: Partial<ITextProperties> = {},
 ) => {
   const textList: ITextFeature[] = [];
-  if (total) {
+  if (showTotalDistance) {
     const text = getLineCenterPoint(feature) as ITextFeature;
     const meters = length(feature, {
       units: 'meters',

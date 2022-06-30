@@ -23,7 +23,7 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new DrawRect(scene, {
-        initData: rectList,
+        initialData: rectList,
         // createByDrag: true,
         disableEditable: true,
       });

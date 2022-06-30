@@ -65,18 +65,18 @@ export abstract class PointMode<
    * 绑定点Render相关事件
    */
   bindPointRenderEvent() {
-    this.pointRender?.on(RenderEvent.unclick, this.onPointCreate.bind(this));
+    this.pointRender?.on(RenderEvent.UnClick, this.onPointCreate.bind(this));
     this.pointRender?.on(
-      RenderEvent.mousemove,
+      RenderEvent.Mousemove,
       this.onPointMouseMove.bind(this),
     );
-    this.pointRender?.on(RenderEvent.mouseout, this.onPointMouseOut.bind(this));
+    this.pointRender?.on(RenderEvent.Mouseout, this.onPointMouseOut.bind(this));
     this.pointRender?.on(
-      RenderEvent.dragstart,
+      RenderEvent.Dragstart,
       this.onPointDragStart.bind(this),
     );
-    this.pointRender?.on(RenderEvent.dragging, this.onPointDragging.bind(this));
-    this.pointRender?.on(RenderEvent.dragend, this.onPointDragEnd.bind(this));
+    this.pointRender?.on(RenderEvent.Dragging, this.onPointDragging.bind(this));
+    this.pointRender?.on(RenderEvent.Dragend, this.onPointDragEnd.bind(this));
   }
 
   /**
@@ -84,7 +84,7 @@ export abstract class PointMode<
    * @param position
    */
   handleCreatePoint(position: Position): IPointFeature {
-    const { autoFocus, editable } = this.options;
+    const { autoActive, editable } = this.options;
     const newFeature = createPointFeature(position);
     this.setPointData((oldData) => {
       return updateTargetFeature<IPointFeature>({
@@ -94,7 +94,7 @@ export abstract class PointMode<
           item.properties = {
             ...item.properties,
             isHover: editable,
-            isActive: autoFocus && editable,
+            isActive: autoActive && editable,
           };
         },
         otherHandler: (item) => {

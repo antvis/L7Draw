@@ -38,13 +38,13 @@ export abstract class MidPointMode<
   }
 
   bindMidPointRenderEvent() {
-    this.midPointRender?.on(RenderEvent.click, this.onMidPointClick.bind(this));
+    this.midPointRender?.on(RenderEvent.Click, this.onMidPointClick.bind(this));
     this.midPointRender?.on(
-      RenderEvent.mousemove,
+      RenderEvent.Mousemove,
       this.onMidPointHover.bind(this),
     );
     this.midPointRender?.on(
-      RenderEvent.mouseout,
+      RenderEvent.Mouseout,
       this.onMidPointUnHover.bind(this),
     );
   }

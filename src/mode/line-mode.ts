@@ -28,7 +28,7 @@ import { IMidPointModeOptions, MidPointMode } from './mid-point-mode';
 
 export interface ILineModeOptions<F extends Feature = Feature>
   extends IMidPointModeOptions<F> {
-  distanceText: false | IDistanceOptions;
+  distanceOptions: false | IDistanceOptions;
 }
 
 export abstract class LineMode<
@@ -75,12 +75,12 @@ export abstract class LineMode<
     const newOptions: T = {
       ...this.getCommonOptions(options),
       showMidPoint: true,
-      distanceText: false,
+      distanceOptions: false,
     };
-    if (options.distanceText) {
-      newOptions.distanceText = {
+    if (options.distanceOptions) {
+      newOptions.distanceOptions = {
         ...DEFAULT_DISTANCE_OPTIONS,
-        ...newOptions.distanceText,
+        ...newOptions.distanceOptions,
       };
     }
     return newOptions;
@@ -88,39 +88,42 @@ export abstract class LineMode<
 
   bindSceneEvent() {
     this.sceneRender.on(
-      RenderEvent.mousemove,
+      RenderEvent.Mousemove,
       this.onSceneMouseMove.bind(this),
     );
   }
 
   bindPointRenderEvent() {
     super.bindPointRenderEvent();
-    this.pointRender?.on(RenderEvent.click, this.onPointClick.bind(this));
+    this.pointRender?.on(RenderEvent.Click, this.onPointClick.bind(this));
   }
 
   bindLineRenderEvent() {
-    this.lineRender?.on(RenderEvent.unclick, this.onLineUnClick.bind(this));
-    this.lineRender?.on(RenderEvent.mousemove, this.onLineMouseMove.bind(this));
-    this.lineRender?.on(RenderEvent.mouseout, this.onLineMouseOut.bind(this));
-    this.lineRender?.on(RenderEvent.dragstart, this.onLineDragStart.bind(this));
-    this.lineRender?.on(RenderEvent.dragging, this.onLineDragging.bind(this));
-    this.lineRender?.on(RenderEvent.dragend, this.onLineDragEnd.bind(this));
+    this.lineRender?.on(RenderEvent.UnClick, this.onLineUnClick.bind(this));
+    this.lineRender?.on(RenderEvent.Mousemove, this.onLineMouseMove.bind(this));
+    this.lineRender?.on(RenderEvent.Mouseout, this.onLineMouseOut.bind(this));
+    this.lineRender?.on(RenderEvent.Dragstart, this.onLineDragStart.bind(this));
+    this.lineRender?.on(RenderEvent.Dragging, this.onLineDragging.bind(this));
+    this.lineRender?.on(RenderEvent.Dragend, this.onLineDragEnd.bind(this));
   }
 
   getDashLineDistanceTexts(
     dashLines: IDashLineFeature[],
     {
-      total,
+      showTotalDistance,
       format,
-      showOnDash,
-    }: Pick<IDistanceOptions, 'total' | 'format' | 'showOnDash'>,
+      showDashDistance,
+    }: Pick<
+      IDistanceOptions,
+      'showTotalDistance' | 'format' | 'showDashDistance'
+    >,
   ): ITextFeature[] {
-    return showOnDash
+    return showDashDistance
       ? dashLines
           .map((dashLine) => {
             return calcDistanceTextsByLine(
               dashLine,
-              { total, format },
+              { showTotalDistance, format },
               { isActive: true, type: 'dash' },
             );
           })
@@ -131,17 +134,13 @@ export abstract class LineMode<
   getLineDistanceTexts(
     lines: ILineFeature[],
     {
-      total,
+      showTotalDistance,
       format,
-      showOnNormal,
-      showOnActive,
-    }: Pick<
-      IDistanceOptions,
-      'total' | 'format' | 'showOnNormal' | 'showOnActive'
-    >,
+      showWhen,
+    }: Pick<IDistanceOptions, 'showTotalDistance' | 'format' | 'showWhen'>,
   ) {
     const textList: ITextFeature[] = [];
-    if (showOnActive) {
+    if (showWhen.includes('active')) {
       const activeLines = lines.filter(
         (line) => line.properties.isActive && line.properties.nodes.length > 1,
       );
@@ -151,7 +150,7 @@ export abstract class LineMode<
           .map((line) =>
             calcDistanceTextsByLine(
               line,
-              { total, format },
+              { showTotalDistance, format },
               { isActive: true },
             ),
           )
@@ -159,14 +158,19 @@ export abstract class LineMode<
       );
     }
 
-    if (showOnNormal) {
+    if (showWhen.includes('normal')) {
       const normalLines = lines.filter(
         (line) => !line.properties.isActive && line.properties.nodes.length > 1,
       );
 
       textList.push(
         ...normalLines
-          .map((line) => calcDistanceTextsByLine(line, { total, format }))
+          .map((line) =>
+            calcDistanceTextsByLine(line, {
+              showTotalDistance,
+              format,
+            }),
+          )
           .flat(),
       );
     }
@@ -175,25 +179,24 @@ export abstract class LineMode<
   }
 
   getDistanceTexts(): ITextFeature[] {
-    const { distanceText } = this.options;
-    if (!distanceText) {
+    const { distanceOptions } = this.options;
+    if (!distanceOptions) {
       return [];
     }
     const textList: ITextFeature[] = [];
-    const { showOnNormal, showOnActive, showOnDash, format, total } =
-      distanceText;
+    const { showWhen, showDashDistance, format, showTotalDistance } =
+      distanceOptions;
 
     textList.push(
       ...this.getDashLineDistanceTexts(this.getDashLineData(), {
-        total: false,
+        showTotalDistance: false,
         format,
-        showOnDash,
+        showDashDistance,
       }),
       ...this.getLineDistanceTexts(this.getLineData(), {
-        total,
+        showTotalDistance,
         format,
-        showOnActive,
-        showOnNormal,
+        showWhen,
       }),
     );
 

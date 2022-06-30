@@ -35,7 +35,6 @@ export class PointRender extends LayerRender<IPointFeature, IPointStyle> {
               : normal.borderColor;
           },
         ],
-        strokeWidth: 2,
         // strokeWidth: [
         //   'isHover*isActive',
         //   (isHover: boolean, isActive: boolean) => {
@@ -53,74 +52,74 @@ export class PointRender extends LayerRender<IPointFeature, IPointStyle> {
   }
 
   onCreate = (e: ILayerMouseEvent) => {
-    this.emit(RenderEvent.unclick, e);
+    this.emit(RenderEvent.UnClick, e);
   };
 
   onMouseMove = (e: ILayerMouseEvent) => {
-    this.emit(RenderEvent.mousemove, e);
+    this.emit(RenderEvent.Mousemove, e);
   };
 
   onMouseOut = (e: ILayerMouseEvent) => {
-    this.emit(RenderEvent.mouseout, e);
+    this.emit(RenderEvent.Mouseout, e);
   };
 
   onMouseDown = (e: ILayerMouseEvent) => {
-    this.emit(RenderEvent.dragstart, e);
+    this.emit(RenderEvent.Dragstart, e);
   };
 
   onDragging = (e: ISceneMouseEvent) => {
-    this.emit(RenderEvent.dragging, e);
+    this.emit(RenderEvent.Dragging, e);
   };
 
   onDragEnd = debounce((e: ISceneMouseEvent) => {
-    this.emit(RenderEvent.dragend, e);
+    this.emit(RenderEvent.Dragend, e);
   }, 0);
 
   onClick = (e: ILayerMouseEvent) => {
-    this.emit(RenderEvent.click, e);
+    this.emit(RenderEvent.Click, e);
   };
 
   enableCreate() {
     this.disableCreate();
-    this.layers[0].on(LayerEvent.unclick, this.onCreate);
+    this.layers[0].on(LayerEvent.UnClick, this.onCreate);
   }
 
   disableCreate() {
-    this.layers[0].off(LayerEvent.unclick, this.onCreate);
+    this.layers[0].off(LayerEvent.UnClick, this.onCreate);
   }
 
   enableHover() {
     this.disableHover();
-    this.layers[0]?.on(LayerEvent.mousemove, this.onMouseMove);
-    this.layers[0]?.on(LayerEvent.mouseout, this.onMouseOut);
+    this.layers[0]?.on(LayerEvent.Mousemove, this.onMouseMove);
+    this.layers[0]?.on(LayerEvent.Mouseout, this.onMouseOut);
   }
 
   disableHover() {
-    this.layers[0]?.off(LayerEvent.mousemove, this.onMouseMove);
-    this.layers[0]?.off(LayerEvent.mouseout, this.onMouseOut);
+    this.layers[0]?.off(LayerEvent.Mousemove, this.onMouseMove);
+    this.layers[0]?.off(LayerEvent.Mouseout, this.onMouseOut);
   }
 
   enableDrag() {
     this.disableDrag();
-    this.layers[0].on(LayerEvent.mousedown, this.onMouseDown);
-    this.scene.on(SceneEvent.dragging, this.onDragging);
-    this.scene.on(SceneEvent.mouseup, this.onDragEnd);
-    this.scene.on(SceneEvent.dragend, this.onDragEnd);
+    this.layers[0].on(LayerEvent.Mousedown, this.onMouseDown);
+    this.scene.on(SceneEvent.Dragging, this.onDragging);
+    this.scene.on(SceneEvent.Mouseup, this.onDragEnd);
+    this.scene.on(SceneEvent.Dragend, this.onDragEnd);
   }
 
   disableDrag() {
-    this.layers[0].off(LayerEvent.mousedown, this.onMouseDown);
-    this.scene.off(SceneEvent.dragging, this.onDragging);
-    this.scene.off(SceneEvent.mouseup, this.onDragEnd);
-    this.scene.off(SceneEvent.dragend, this.onDragEnd);
+    this.layers[0].off(LayerEvent.Mousedown, this.onMouseDown);
+    this.scene.off(SceneEvent.Dragging, this.onDragging);
+    this.scene.off(SceneEvent.Mouseup, this.onDragEnd);
+    this.scene.off(SceneEvent.Dragend, this.onDragEnd);
   }
 
   enableClick() {
     this.disableClick();
-    this.layers[0].on(LayerEvent.click, this.onClick);
+    this.layers[0].on(LayerEvent.Click, this.onClick);
   }
 
   disableClick() {
-    this.layers[0].off(LayerEvent.click, this.onClick);
+    this.layers[0].off(LayerEvent.Click, this.onClick);
   }
 }

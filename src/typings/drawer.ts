@@ -31,11 +31,10 @@ export type KeyBoardConfig = Partial<{
 export interface IBaseModeOptions<F extends Feature = Feature> {
   style: IStyle;
   cursor: ICursor;
-  initData?: F[];
+  initialData?: F[];
   disableEditable: boolean;
   editable: boolean;
-  autoFocus: boolean;
-  addMultiple: boolean;
+  autoActive: boolean;
   multiple: boolean;
   history: HistoryConfig | false;
   keyboard: KeyBoardConfig | false;
@@ -45,10 +44,9 @@ export interface IBaseModeOptions<F extends Feature = Feature> {
  * 距离文案配置
  */
 export interface IDistanceOptions {
-  total: boolean;
-  showOnDash: boolean;
-  showOnNormal: boolean;
-  showOnActive: boolean;
+  showTotalDistance: boolean;
+  showDashDistance: boolean;
+  showWhen: ('normal' | 'active')[];
   format: (meters: number) => string;
 }
 
@@ -57,6 +55,5 @@ export interface IDistanceOptions {
  */
 export interface IAreaOptions {
   format: (squareMeters: number) => string;
-  showOnNormal: boolean;
-  showOnActive: boolean;
+  showWhen: ('normal' | 'active')[];
 }

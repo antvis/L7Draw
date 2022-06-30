@@ -20,7 +20,7 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new DrawLine(scene, {
-        distanceText: {},
+        distanceOptions: {},
       });
       setLineDrawer(drawer);
       drawer.enable();

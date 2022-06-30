@@ -35,58 +35,58 @@ export class SceneRender extends EventEmitter<RenderEvent> {
         Math.abs(x - oldX) < 5 &&
         Math.abs(y - oldY) < 5
       ) {
-        this.emit(RenderEvent.dblClick, e);
+        this.emit(RenderEvent.DblClick, e);
       }
     }
     this.previousClick = { x, y, time };
   };
 
   onMouseMove = (e: ISceneMouseEvent) => {
-    this.emit(RenderEvent.mousemove, e);
+    this.emit(RenderEvent.Mousemove, e);
   };
 
   onMouseDown = (e: ISceneMouseEvent) => {
-    this.emit(RenderEvent.dragstart, e);
+    this.emit(RenderEvent.Dragstart, e);
   };
 
   onDragging = (e: ISceneMouseEvent) => {
-    this.emit(RenderEvent.dragging, e);
+    this.emit(RenderEvent.Dragging, e);
   };
 
   onDragEnd = debounce((e: ISceneMouseEvent) => {
-    this.emit(RenderEvent.dragend, e);
+    this.emit(RenderEvent.Dragend, e);
   }, 0);
 
   enableDrag() {
     this.disableDrag();
-    this.scene.on(SceneEvent.mousedown, this.onMouseDown);
-    this.scene.on(SceneEvent.dragging, this.onDragging);
-    this.scene.on(SceneEvent.mouseup, this.onDragEnd);
-    this.scene.on(SceneEvent.dragend, this.onDragEnd);
+    this.scene.on(SceneEvent.Mousedown, this.onMouseDown);
+    this.scene.on(SceneEvent.Dragging, this.onDragging);
+    this.scene.on(SceneEvent.Mouseup, this.onDragEnd);
+    this.scene.on(SceneEvent.Dragend, this.onDragEnd);
   }
 
   disableDrag() {
-    this.scene.off(SceneEvent.mousedown, this.onMouseDown);
-    this.scene.off(SceneEvent.dragging, this.onDragging);
-    this.scene.off(SceneEvent.mouseup, this.onDragEnd);
-    this.scene.off(SceneEvent.dragend, this.onDragEnd);
+    this.scene.off(SceneEvent.Mousedown, this.onMouseDown);
+    this.scene.off(SceneEvent.Dragging, this.onDragging);
+    this.scene.off(SceneEvent.Mouseup, this.onDragEnd);
+    this.scene.off(SceneEvent.Dragend, this.onDragEnd);
   }
 
   enableMouseMove() {
     this.disableMouseMove();
-    this.scene.on(SceneEvent.mousemove, this.onMouseMove);
+    this.scene.on(SceneEvent.Mousemove, this.onMouseMove);
   }
 
   disableMouseMove() {
-    this.scene.off(SceneEvent.mousemove, this.onMouseMove);
+    this.scene.off(SceneEvent.Mousemove, this.onMouseMove);
   }
 
   enableDblClick() {
     this.disableDblClick();
-    this.scene.on(SceneEvent.mousedown, this.onDblClick);
+    this.scene.on(SceneEvent.Mousedown, this.onDblClick);
   }
 
   disableDblClick() {
-    this.scene.on(SceneEvent.mousedown, this.onDblClick);
+    this.scene.on(SceneEvent.Mousedown, this.onDblClick);
   }
 }

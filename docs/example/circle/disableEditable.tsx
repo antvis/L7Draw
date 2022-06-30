@@ -23,7 +23,7 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new DrawCircle(scene, {
-        initData: circleList,
+        initialData: circleList,
         disableEditable: true,
       });
       setCircleDrawer(drawer);

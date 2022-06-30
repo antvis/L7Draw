@@ -20,7 +20,7 @@ export const DEFAULT_POINT_NORMAL_STYLE: IPointStyleItem = {
   shape: 'circle',
   size: 6,
   borderColor: '#ffffff',
-  borderWidth: 2,
+  // borderWidth: 2,
 };
 
 export const DEFAULT_NODE_NORMAL_STYLE: IPointStyleItem = {
@@ -28,7 +28,7 @@ export const DEFAULT_NODE_NORMAL_STYLE: IPointStyleItem = {
   shape: 'circle',
   size: 6,
   borderColor: '#ffffff',
-  borderWidth: 2,
+  // borderWidth: 2,
 };
 
 export const DEFAULT_MID_POINT_STYLE: IPointStyleItem = {
@@ -36,7 +36,7 @@ export const DEFAULT_MID_POINT_STYLE: IPointStyleItem = {
   size: 6,
   color: ACTIVE_COLOR,
   borderColor: '#ffffff',
-  borderWidth: 0,
+  // borderWidth: 0,
 };
 
 export const DEFAULT_POINT_STYLE: IPointStyle = {
@@ -51,7 +51,9 @@ export const DEFAULT_POINT_STYLE: IPointStyle = {
     size: 8,
     color: ACTIVE_COLOR,
   },
-  style: {},
+  style: {
+    strokeWidth: 2,
+  },
 };
 
 export const DEFAULT_NODE_STYLE: IPointStyle = {
@@ -65,14 +67,16 @@ export const DEFAULT_NODE_STYLE: IPointStyle = {
     ...DEFAULT_NODE_NORMAL_STYLE,
     size: 8,
   },
-  style: {},
+  style: {
+    strokeWidth: 2,
+  },
 };
 
 export const DEFAULT_TEXT_NORMAL_STYLE: ITextStyleItem = {
   color: NORMAL_COLOR,
   size: 12,
   borderColor: '#ffffff',
-  borderWidth: 0.5,
+  // borderWidth: 0.5,
 };
 
 export const DEFAULT_STYLE: IStyle = {
@@ -132,8 +136,9 @@ export const DEFAULT_STYLE: IStyle = {
     },
     style: {
       fontWeight: '800',
-      textOffset: [0, DEFAULT_TEXT_NORMAL_STYLE.size + 2],
+      textOffset: [0, DEFAULT_TEXT_NORMAL_STYLE.size + 6],
       textAllowOverlap: true,
+      strokeWidth: 2,
     },
   },
 };

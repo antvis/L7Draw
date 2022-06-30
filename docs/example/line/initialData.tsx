@@ -1,8 +1,8 @@
 import { Scene } from '@antv/l7';
-import { DrawLine } from '@antv/l7-draw';
+import { DrawEvent, DrawLine } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
-import 'antd/dist/antd.css';
 import React, { useEffect, useState } from 'react';
+import { lineList } from './mock';
 
 const id = String(Math.random());
 
@@ -21,10 +21,12 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new DrawLine(scene, {
-        autoFocus: false,
+        initialData: lineList,
       });
       setLineDrawer(drawer);
       drawer.enable();
+
+      drawer.on(DrawEvent.Add, (e) => {});
     });
   }, []);
 

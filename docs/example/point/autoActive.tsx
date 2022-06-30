@@ -1,16 +1,17 @@
 import { Scene } from '@antv/l7';
 import { DrawPoint } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
-import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import React, { useEffect, useState } from 'react';
+
+const id = String(Math.random());
 
 const Demo: React.FC = () => {
   const [pointDrawer, setPointDrawer] = useState<DrawPoint | null>(null);
 
   useEffect(() => {
     const scene = new Scene({
-      id: 'map',
+      id,
       map: new GaodeMapV2({
         center: [120.151634, 30.244831],
         pitch: 0,
@@ -20,7 +21,7 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new DrawPoint(scene, {
-        addMultiple: false,
+        autoActive: false,
       });
       setPointDrawer(drawer);
       drawer.enable();
@@ -29,12 +30,7 @@ const Demo: React.FC = () => {
 
   return (
     <div>
-      <div style={{ padding: 8 }}>
-        <Button onClick={() => pointDrawer?.enable()}>启用</Button>
-        <Button onClick={() => pointDrawer?.disable()}>禁用</Button>
-        <Button onClick={() => pointDrawer?.clear()}>清空</Button>
-      </div>
-      <div id="map" style={{ height: 400, position: 'relative' }} />
+      <div id={id} style={{ height: 400, position: 'relative' }} />
     </div>
   );
 };

@@ -50,7 +50,6 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     return ['point'];
   }
 
-  // @ts-ignore
   setData(points: Feature<Point>[]) {
     this.setPointData(
       points.map((point) => {
@@ -85,20 +84,20 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     if (!newFeature) {
       return;
     }
-    this.emit(DrawEvent.add, newFeature, this.getData());
+    this.emit(DrawEvent.Add, newFeature, this.getData());
     return newFeature;
   }
 
   onPointDragStart(e: ILayerMouseEvent<IPointFeature>) {
     const dragPoint = super.onPointDragStart(e);
-    this.emit(DrawEvent.dragStart, dragPoint, this.getData());
+    this.emit(DrawEvent.DragStart, dragPoint, this.getData());
     return dragPoint;
   }
 
   onPointDragging(e: ISceneMouseEvent) {
     const dragPoint = super.onPointDragging(e);
     if (dragPoint && this.options.editable) {
-      this.emit(DrawEvent.dragging, dragPoint, this.getData());
+      this.emit(DrawEvent.Dragging, dragPoint, this.getData());
     }
     return dragPoint;
   }
@@ -106,8 +105,8 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   onPointDragEnd(e: ISceneMouseEvent) {
     const dragPoint = super.onPointDragEnd(e);
     if (dragPoint && this.options.editable) {
-      this.emit(DrawEvent.dragEnd, dragPoint, this.getData());
-      this.emit(DrawEvent.edit, dragPoint, this.getData());
+      this.emit(DrawEvent.DragEnd, dragPoint, this.getData());
+      this.emit(DrawEvent.Edit, dragPoint, this.getData());
     }
     return dragPoint;
   }

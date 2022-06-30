@@ -38,7 +38,6 @@ export class RectDrawer extends DragPolygonMode<IRectDrawerOptions> {
     this.bindPolygonRenderEvent();
   }
 
-  // @ts-ignore
   setData(data: Feature<Polygon>[]) {
     const result = data.map((feature) => {
       feature.properties = {
@@ -167,7 +166,7 @@ export class RectDrawer extends DragPolygonMode<IRectDrawerOptions> {
       this.setEditPolygon(dragPolygon, {
         isDrag: true,
       });
-      this.emit(DrawEvent.dragging, dragPolygon, this.getPolygonData());
+      this.emit(DrawEvent.Dragging, dragPolygon, this.getPolygonData());
     }
     return feature;
   }

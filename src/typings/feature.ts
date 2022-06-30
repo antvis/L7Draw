@@ -1,19 +1,18 @@
 import {
-  Feature,
-  GeometryObject,
-  LineString,
-  Point,
-  Polygon,
-} from '@turf/turf';
+  Geometry,
+  GeometryCollection,
+} from '@turf/helpers/dist/js/lib/geojson';
+import { Feature, LineString, Point, Polygon } from '@turf/turf';
 
 export interface IBaseProperties {
   id: string;
   isDraw?: boolean;
+  isActive?: boolean;
+  [key: string]: any;
 }
 
-// @ts-ignore
 export interface IBaseFeature<
-  G extends GeometryObject = GeometryObject,
+  G extends Geometry | GeometryCollection = Geometry,
   P extends IBaseProperties = IBaseProperties,
 > extends Feature {
   type: 'Feature';
@@ -24,7 +23,6 @@ export interface IBaseFeature<
 // 点类型
 export interface IPointProperties extends IBaseProperties {
   isHover?: boolean;
-  isActive?: boolean;
   isDrag?: boolean;
   createTime: number;
 }
@@ -35,7 +33,6 @@ export type IPointFeature = IBaseFeature<Point, IPointProperties>;
 export interface ILineProperties extends IBaseProperties {
   nodes: IPointFeature[];
   isHover?: boolean;
-  isActive?: boolean;
   isDrag?: boolean;
   createTime: number;
 }
@@ -47,7 +44,6 @@ export interface IPolygonProperties extends IBaseProperties {
   nodes: IPointFeature[];
   line: ILineFeature;
   isHover?: boolean;
-  isActive?: boolean;
   isDrag?: boolean;
   createTime: number;
 }
@@ -71,7 +67,6 @@ export interface ITextProperties extends IBaseProperties {
   type: 'distance' | 'totalDistance' | 'dash' | 'area';
   text: string;
   meters: number;
-  isActive: boolean;
 }
 
 // 文本Feature类型

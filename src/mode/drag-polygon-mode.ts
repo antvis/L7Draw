@@ -47,10 +47,10 @@ export abstract class DragPolygonMode<
       ...super.getDefaultOptions(options),
       showMidPoint: false,
       createByDrag: false,
-      autoFocus: false,
+      autoActive: false,
     };
     if (options.createByDrag) {
-      newOptions.autoFocus = false;
+      newOptions.autoActive = false;
     }
     return newOptions;
   }
@@ -103,7 +103,7 @@ export abstract class DragPolygonMode<
       }),
     );
     this.emit(
-      DrawEvent.addNode,
+      DrawEvent.AddNode,
       firstNode,
       this.drawPolygon,
       this.getPolygonData(),
@@ -112,20 +112,20 @@ export abstract class DragPolygonMode<
   }
 
   handleLastNodeCreate(lastNode: IPointFeature) {
-    const { autoFocus, editable } = this.options;
+    const { autoActive, editable } = this.options;
     const drawPolygon = this.drawPolygon;
     if (!drawPolygon) {
       return lastNode;
     }
     this.setLineData((features) => [...features, drawPolygon.properties.line]);
     this.setEditPolygon(drawPolygon);
-    if (!(autoFocus && editable)) {
+    if (!(autoActive && editable)) {
       this.handlePolygonUnClick(drawPolygon);
     }
-    this.emit(DrawEvent.add, drawPolygon, this.getPolygonData());
+    this.emit(DrawEvent.Add, drawPolygon, this.getPolygonData());
 
     this.emit(
-      DrawEvent.addNode,
+      DrawEvent.AddNode,
       drawPolygon.properties.nodes[1],
       this.drawPolygon,
       this.getPolygonData(),
@@ -255,8 +255,8 @@ export abstract class DragPolygonMode<
 
   bindSceneDragEvent() {
     this.unbindSceneDragEvent();
-    this.sceneRender.on(RenderEvent.dragstart, this.onSceneDragStart);
-    this.sceneRender.on(RenderEvent.dragend, this.onSceneDragEnd);
+    this.sceneRender.on(RenderEvent.Dragstart, this.onSceneDragStart);
+    this.sceneRender.on(RenderEvent.Dragend, this.onSceneDragEnd);
 
     this.scene.setMapStatus({
       dragEnable: false,
@@ -264,8 +264,8 @@ export abstract class DragPolygonMode<
   }
 
   unbindSceneDragEvent() {
-    this.sceneRender.off(RenderEvent.dragstart, this.onSceneDragStart);
-    this.sceneRender.off(RenderEvent.dragend, this.onSceneDragEnd);
+    this.sceneRender.off(RenderEvent.Dragstart, this.onSceneDragStart);
+    this.sceneRender.off(RenderEvent.Dragend, this.onSceneDragEnd);
     this.scene.setMapStatus({
       dragEnable: true,
     });

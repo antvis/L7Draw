@@ -27,7 +27,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<IPolygonDrawerOptions>) {
     super(scene, options);
 
-    this.sceneRender.on(RenderEvent.dblClick, this.drawPolygonFinish);
+    this.sceneRender.on(RenderEvent.DblClick, this.drawPolygonFinish);
     this.bindPointRenderEvent();
     this.bindSceneEvent();
     this.bindMidPointRenderEvent();
@@ -35,7 +35,6 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     this.bindPolygonRenderEvent();
   }
 
-  // @ts-ignore
   setData(data: Feature<Polygon>[]) {
     const polygonFeatures = data.map((polygon) => {
       polygon.properties = {
@@ -94,7 +93,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
       } else if (drawLine) {
         this.handleCreatePolygon([feature], drawLine);
       }
-      this.emit(DrawEvent.addNode, feature, drawPolygon, this.getPolygonData());
+      this.emit(DrawEvent.AddNode, feature, drawPolygon, this.getPolygonData());
     }
     return feature;
   }
@@ -108,11 +107,11 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     drawPolygon.properties.isDraw = false;
     this.syncPolygonNodes(drawPolygon, nodes);
     this.setEditPolygon(drawPolygon);
-    const { autoFocus, editable } = this.options;
-    if (!autoFocus || !editable) {
+    const { autoActive, editable } = this.options;
+    if (!autoActive || !editable) {
       this.handlePolygonUnClick(drawPolygon);
     }
-    this.emit(DrawEvent.add, drawPolygon, this.getPolygonData());
+    this.emit(DrawEvent.Add, drawPolygon, this.getPolygonData());
   };
 
   onPointClick(e: ILayerMouseEvent<IPointFeature>) {
@@ -177,7 +176,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
         dragPolygon,
         lineNodes.slice(0, lineNodes.length - 1),
       );
-      this.emit(DrawEvent.dragging, dragPolygon, this.getPolygonData());
+      this.emit(DrawEvent.Dragging, dragPolygon, this.getPolygonData());
     }
     return feature;
   }
@@ -188,8 +187,8 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     const feature = super.onMidPointClick(e);
     const editPolygon = this.editPolygon;
     if (feature && editPolygon) {
-      this.emit(DrawEvent.edit, editPolygon, this.getPolygonData());
-      this.emit(DrawEvent.addNode, feature, editPolygon, this.getPolygonData());
+      this.emit(DrawEvent.Edit, editPolygon, this.getPolygonData());
+      this.emit(DrawEvent.AddNode, feature, editPolygon, this.getPolygonData());
     }
     return feature;
   }

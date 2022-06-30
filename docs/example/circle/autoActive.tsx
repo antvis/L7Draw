@@ -1,7 +1,6 @@
 import { Scene } from '@antv/l7';
 import { DrawCircle } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
-import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import React, { useEffect, useState } from 'react';
 
@@ -21,7 +20,9 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const drawer = new DrawCircle(scene, {});
+      const drawer = new DrawCircle(scene, {
+        autoActive: false,
+      });
       setCircleDrawer(drawer);
       drawer.enable();
     });
@@ -29,11 +30,6 @@ const Demo: React.FC = () => {
 
   return (
     <div>
-      <div style={{ padding: 8 }}>
-        <Button onClick={() => circleDrawer?.enable()}>启用</Button>
-        <Button onClick={() => circleDrawer?.disable()}>禁用</Button>
-        <Button onClick={() => circleDrawer?.clear()}>清空</Button>
-      </div>
       <div id={id} style={{ height: 400, position: 'relative' }} />
     </div>
   );
