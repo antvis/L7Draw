@@ -110,24 +110,47 @@ export abstract class PolygonMode<
     if (!areaConfig) {
       return [];
     }
+    const { format, showWhen } = areaConfig;
     const textList: ITextFeature[] = [];
     const polygonData = polygons.filter(
       (feature) => feature.geometry.coordinates[0].length >= 4,
     );
 
-    polygonData.forEach((feature) => {
-      textList.push(
-        calcAreaText(
-          feature,
-          {
-            format: areaConfig.format,
-          },
-          {
-            isActive: feature.properties.isActive,
-          },
-        ),
-      );
-    });
+    if (showWhen.includes('active')) {
+      polygonData
+        .filter((feature) => feature.properties.isActive)
+        .forEach((feature) => {
+          textList.push(
+            calcAreaText(
+              feature,
+              {
+                format,
+              },
+              {
+                isActive: true,
+              },
+            ),
+          );
+        });
+    }
+
+    if (showWhen.includes('normal')) {
+      polygonData
+        .filter((feature) => !feature.properties.isActive)
+        .forEach((feature) => {
+          textList.push(
+            calcAreaText(
+              feature,
+              {
+                format,
+              },
+              {
+                isActive: false,
+              },
+            ),
+          );
+        });
+    }
 
     return textList;
   }
