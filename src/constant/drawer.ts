@@ -3,6 +3,7 @@ import {
   IAreaOptions,
   IDistanceOptions,
   KeyBoardConfig,
+  PopupOptions,
 } from '../typings';
 
 export const DEFAULT_DISTANCE_OPTIONS: IDistanceOptions = {
@@ -35,4 +36,8 @@ export const DEFAULT_KEYBOARD_CONFIG: KeyBoardConfig = {
   remove: ['del', 'backspace'],
   revert: ['command+z', 'ctrl+z'],
   redo: ['command+shift+z', 'ctrl+shift+z'],
+};
+
+export const DEFAULT_POPUP_CONFIG: PopupOptions = {
+
 };
