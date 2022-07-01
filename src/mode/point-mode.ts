@@ -253,7 +253,7 @@ export abstract class PointMode<
 
   enablePointRenderAction() {
     const { editable } = this.options;
-    if (this.isEnable) {
+    if (this.enabled) {
       this.pointRender?.enableCreate();
     }
     this.pointRender?.enableClick();

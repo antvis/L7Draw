@@ -25,7 +25,7 @@ import { IPolygonModeOptions, PolygonMode } from './polygon-mode';
 
 export interface IDragPolygonModeOptions<F extends Feature = Feature>
   extends IPolygonModeOptions<F> {
-  createByDrag: boolean;
+  trigger: 'click' | 'drag';
 }
 
 export abstract class DragPolygonMode<
@@ -42,17 +42,21 @@ export abstract class DragPolygonMode<
     return this.drawPolygon?.properties.line;
   }
 
+  get isDragTrigger() {
+    return this.options.trigger === 'drag';
+  }
+
+  get isClickTrigger() {
+    return this.options.trigger === 'click';
+  }
+
   getDefaultOptions(options: DeepPartial<T>): T {
-    const newOptions = {
+    return {
       ...super.getDefaultOptions(options),
       showMidPoint: false,
-      createByDrag: false,
+      trigger: 'click',
       autoActive: false,
     };
-    if (options.createByDrag) {
-      newOptions.autoActive = false;
-    }
-    return newOptions;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -134,8 +138,12 @@ export abstract class DragPolygonMode<
   }
 
   onPointCreate(e: ILayerMouseEvent): IPointFeature | undefined {
-    const { createByDrag } = this.options;
-    if (!this.addable || this.dragPoint || this.editLine || createByDrag) {
+    if (
+      !this.addable ||
+      this.dragPoint ||
+      this.editLine ||
+      !this.isClickTrigger
+    ) {
       return;
     }
     const drawPolygon = this.drawPolygon;
@@ -210,9 +218,12 @@ export abstract class DragPolygonMode<
   }
 
   onSceneDragStart(e: ISceneMouseEvent) {
-    const { createByDrag } = this.options;
-
-    if (!createByDrag || !this.addable || this.dragPoint || this.editLine) {
+    if (
+      !this.isDragTrigger ||
+      !this.addable ||
+      this.dragPoint ||
+      this.editLine
+    ) {
       return;
     }
     this.scene.setMapStatus({
@@ -222,9 +233,8 @@ export abstract class DragPolygonMode<
   }
 
   onSceneDragEnd(e: ISceneMouseEvent) {
-    const { createByDrag } = this.options;
     if (
-      !createByDrag ||
+      !this.isDragTrigger ||
       !this.addable ||
       this.dragPoint ||
       this.editLine ||
@@ -273,14 +283,14 @@ export abstract class DragPolygonMode<
 
   bindEnableEvent() {
     super.bindEnableEvent();
-    if (this.options.createByDrag) {
+    if (this.isDragTrigger) {
       this.bindSceneDragEvent();
     }
   }
 
   unbindEnableEvent() {
     super.unbindEnableEvent();
-    if (this.options.createByDrag) {
+    if (this.isDragTrigger) {
       this.unbindSceneDragEvent();
     }
   }

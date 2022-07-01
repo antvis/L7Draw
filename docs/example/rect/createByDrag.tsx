@@ -21,7 +21,7 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new DrawRect(scene, {
-        createByDrag: true,
+        trigger: 'drag',
       });
       setRectDrawer(drawer);
       drawer.enable();

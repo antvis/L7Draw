@@ -59,7 +59,7 @@ export abstract class BaseMode<
   /**
    * 当前Drawer是否为开启绘制状态
    */
-  protected isEnable = false;
+  protected enabled = false;
 
   /**
    * scene相关事件管理
@@ -89,7 +89,7 @@ export abstract class BaseMode<
     const data = this.getData();
     const { multiple } = this.options;
     const drawItem = data.find((item) => item.properties.isDraw);
-    if (!this.isEnable) {
+    if (!this.enabled) {
       return false;
     }
     if (multiple || drawItem) {
@@ -179,8 +179,8 @@ export abstract class BaseMode<
   /**
    * 获取当前是否为编辑态
    */
-  getEnabled() {
-    return this.isEnable;
+  isEnable() {
+    return this.enabled;
   }
 
   /**
@@ -293,7 +293,7 @@ export abstract class BaseMode<
    * 回退至上一次数据备份
    */
   revertHistory() {
-    if (!this.isEnable || !this.options.history) {
+    if (!this.enabled || !this.options.history) {
       return;
     }
     if (this.source.revertHistory()) {
@@ -305,7 +305,7 @@ export abstract class BaseMode<
    * 重做回退之前的数据备份
    */
   redoHistory() {
-    if (!this.isEnable || !this.options.history) {
+    if (!this.enabled || !this.options.history) {
       return;
     }
     if (this.source.redoHistory()) {
@@ -411,17 +411,17 @@ export abstract class BaseMode<
    * 重置光标到常规状态
    */
   resetCursor() {
-    this.setCursor(this.isEnable && this.addable ? 'draw' : null);
+    this.setCursor(this.enabled && this.addable ? 'draw' : null);
   }
 
   /**
    * 启用Drawer
    */
   enable() {
-    if (this.isEnable) {
+    if (this.enabled) {
       return;
     }
-    this.isEnable = true;
+    this.enabled = true;
     this.resetCursor();
     this.bindEnableEvent();
     this.addCount = 0;
@@ -434,10 +434,10 @@ export abstract class BaseMode<
    * 禁用Drawer
    */
   disable() {
-    if (!this.isEnable) {
+    if (!this.enabled) {
       return;
     }
-    this.isEnable = false;
+    this.enabled = false;
     this.setCursor(null);
     this.unbindEnableEvent();
     this.addCount = 0;

@@ -12,7 +12,7 @@ hide: true
 | clear               | 清空绘制数据                 | `(disable: boolean) => void`        |
 | show                | 显示该 Draw 下所有的绘制物   | `() => void`                        |
 | hide                | 隐藏该 Draw 下所有的绘制物   | `() => void`                        |
-| getEnabled          | 判断当前 Draw 是否在绘制状态 | `() => boolean`                     |
+| isEnable            | 判断当前 Draw 是否在绘制状态 | `() => boolean`                     |
 | revertHistory       | 回退至上一次保存的绘制状态   | `() => SourceData &#124; undefined` |
 | redoHistory         | 重置到上一次回退             | `() => SourceData &#124; undefined` |
 | removeActiveFeature | 删除当前激活状态的绘制物     | `() => Feature`                     |
