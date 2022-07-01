@@ -1,6 +1,6 @@
 import EventEmitter from 'eventemitter3';
 import { cloneDeep, fromPairs } from 'lodash';
-import {DEFAULT_SOURCE_DATA, SourceEvent} from '../constant';
+import { DEFAULT_SOURCE_DATA, SourceEvent } from '../constant';
 import { LayerRender } from '../render';
 import {
   FeatureUpdater,
@@ -12,7 +12,9 @@ import {
 } from '../typings';
 import { History } from './history';
 
-export class Source extends EventEmitter<SourceEvent | keyof typeof SourceEvent> {
+export class Source extends EventEmitter<
+  SourceEvent | keyof typeof SourceEvent
+> {
   /**
    * 用于存储渲染器render映射
    * @protected
