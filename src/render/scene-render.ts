@@ -10,7 +10,9 @@ type PreviousClick = {
   y: number;
 };
 
-export class SceneRender extends EventEmitter<RenderEvent> {
+export class SceneRender extends EventEmitter<
+  RenderEvent | keyof typeof RenderEvent
+> {
   protected scene: Scene;
 
   protected previousClick?: PreviousClick;

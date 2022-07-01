@@ -7,7 +7,7 @@ import { IBaseFeature, IBaseStyle, IRenderOptions } from '../typings';
 export abstract class LayerRender<
   F extends IBaseFeature = IBaseFeature,
   S extends IBaseStyle = IBaseStyle,
-> extends EventEmitter<RenderEvent> {
+> extends EventEmitter<RenderEvent | keyof typeof RenderEvent> {
   /**
    * 地图场景Scene的实例
    */

@@ -29,7 +29,7 @@ import { getLngLat, isSameFeature } from '../utils';
 
 export abstract class BaseMode<
   O extends IBaseModeOptions = IBaseModeOptions,
-> extends EventEmitter<DrawEvent> {
+> extends EventEmitter<DrawEvent | keyof typeof DrawEvent> {
   /**
    * L7 场景实例，在构造器中传入
    */
