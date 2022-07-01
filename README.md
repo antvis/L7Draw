@@ -6,9 +6,9 @@
 
 ## 📚 文档
 
-[文档](https://antv.vision/L7-draw/docs/draw/point)
+[文档](https://antv.vision/L7Draw/docs/draw/point)
 
-[示例](https://antv.vision/L7-draw/example/point/start)
+[示例](https://antv.vision/L7Draw/example/point/start)
 
 ## 📦 安装
 
