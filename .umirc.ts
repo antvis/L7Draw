@@ -1,6 +1,6 @@
 import { defineConfig } from 'dumi';
 
-const prefixPath = 'L7-draw';
+const prefixPath = 'L7Draw';
 
 export default defineConfig({
   title: 'L7Draw',
@@ -37,11 +37,11 @@ export default defineConfig({
     },
     {
       title: 'Github',
-      path: 'https://github.com/antvis/L7-draw/tree/feat/refactor',
+      path: 'https://github.com/antvis/L7Draw',
     },
     // {
     //   title: '更新日志',
-    //   path: 'https://github.com/antvis/L7-draw/tree/feat/refactor',
+    //   path: 'https://github.com/antvis/L7Draw/tree/feat/refactor',
     // },
   ],
   // styles: ['https://cdn.bootcdn.net/ajax/libs/antd/4.20.2/antd.css'],

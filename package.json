@@ -7,7 +7,7 @@
     "prepare": "husky install",
     "start": "dumi dev",
     "docs:build": "dumi build",
-    "docs:deploy": "gh-pages -d docs-dist -o site",
+    "docs:deploy": "gh-pages -d docs-dist",
     "analyze": "ANALYZE=1 dumi build",
     "build": "father-build",
     "deploy": "npm run docs:build && npm run docs:deploy",
