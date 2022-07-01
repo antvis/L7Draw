@@ -176,6 +176,15 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     this.setTextData(this.getAllTexts());
   }
 
+  setActiveFeature(target: Feature | string | null | undefined) {
+    const targetFeature = this.getTargetFeature(target);
+    if (targetFeature) {
+      this.setEditLine(targetFeature as ILineFeature);
+    } else {
+      this.handleLineUnClick(this.editLine!);
+    }
+  }
+
   bindEnableEvent(): void {
     super.bindEnableEvent();
     this.enableSceneRenderAction();

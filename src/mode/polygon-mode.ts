@@ -467,6 +467,15 @@ export abstract class PolygonMode<
     this.bindPolygonRenderEvent = this.bindPolygonRenderEvent.bind(this);
   }
 
+  setActiveFeature(target: Feature | string | null | undefined) {
+    const targetFeature = this.getTargetFeature(target);
+    if (targetFeature) {
+      this.setEditPolygon(targetFeature as IPolygonFeature);
+    } else {
+      this.handlePolygonUnClick(this.editPolygon!);
+    }
+  }
+
   disable() {
     super.disable();
     if (!this.options.disableEditable) {
