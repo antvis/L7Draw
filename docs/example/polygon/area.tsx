@@ -20,12 +20,8 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new DrawPolygon(scene, {
-        distanceOptions: {
-          showWhen: ['active'],
-        },
-        areaOptions: {
-          showWhen: ['active'],
-        },
+        distanceOptions: {},
+        areaOptions: {},
       });
       setPolygonDrawer(drawer);
       drawer.enable();

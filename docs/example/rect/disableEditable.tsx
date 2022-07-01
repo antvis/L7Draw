@@ -24,7 +24,6 @@ const Demo: React.FC = () => {
     scene.on('loaded', () => {
       const drawer = new DrawRect(scene, {
         initialData: rectList,
-        // createByDrag: true,
         disableEditable: true,
       });
       setRectDrawer(drawer);

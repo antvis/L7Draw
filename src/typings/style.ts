@@ -23,7 +23,7 @@ export interface IPointStyleItem {
   shape: string;
   size: number;
   // borderWidth: number;
-  borderColor: string;
+  stroke: string;
 }
 
 /**

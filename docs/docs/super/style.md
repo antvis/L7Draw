@@ -111,7 +111,7 @@ export interface IPointStyleItem {
   color: string; // 填充色
   shape: string; // 形状
   size: number; // 大小
-  borderColor: string; // 边框颜色
+  stroke: string; // 边框颜色
 }
 
 export interface IPointStyle extends IBaseStyle {
@@ -158,7 +158,7 @@ export interface IPointStyleItem {
   color: string; // 填充色
   shape: string; // 形状
   size: number; // 大小
-  borderColor: string; // 边框颜色
+  stroke: string; // 边框颜色
 }
 
 export interface IMidPointStyle extends IBaseStyle {
@@ -205,19 +205,19 @@ export interface ITextStyle extends IBaseStyle {
       "color": "#ED9D48",
       "shape": "circle",
       "size": 6,
-      "borderColor": "#ffffff"
+      "stroke": "#ffffff"
     },
     "hover": {
       "color": "#ED9D48",
       "shape": "circle",
       "size": 8,
-      "borderColor": "#ffffff"
+      "stroke": "#ffffff"
     },
     "active": {
       "color": "#ED9D48",
       "shape": "circle",
       "size": 8,
-      "borderColor": "#ffffff"
+      "stroke": "#ffffff"
     },
     "style": {
       "strokeWidth": 2
@@ -269,7 +269,7 @@ export interface ITextStyle extends IBaseStyle {
       "shape": "circle",
       "size": 6,
       "color": "#ED9D48",
-      "borderColor": "#ffffff"
+      "stroke": "#ffffff"
     }
   },
   "dashLine": {
@@ -294,12 +294,12 @@ export interface ITextStyle extends IBaseStyle {
     "normal": {
       "color": "#1990FF",
       "size": 12,
-      "borderColor": "#ffffff"
+      "stroke": "#ffffff"
     },
     "active": {
       "color": "#ED9D48",
       "size": 12,
-      "borderColor": "#ffffff"
+      "stroke": "#ffffff"
     },
     "style": {
       "fontWeight": "800",
