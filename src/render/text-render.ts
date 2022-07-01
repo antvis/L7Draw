@@ -19,7 +19,7 @@ export class TextRender extends LayerRender<ITextFeature, ITextStyle> {
         stroke: [
           'isActive',
           (isActive: boolean) => {
-            return isActive ? active.borderColor : normal.borderColor;
+            return isActive ? active.stroke : normal.stroke;
           },
         ],
         // strokeWidth: [

@@ -29,10 +29,10 @@ export class PointRender extends LayerRender<IPointFeature, IPointStyle> {
           'isHover*isActive',
           (isHover: boolean, isActive: boolean) => {
             return isActive
-              ? active.borderColor
+              ? active.stroke
               : isHover
-              ? hover.borderColor
-              : normal.borderColor;
+              ? hover.stroke
+              : normal.stroke;
           },
         ],
         // strokeWidth: [
