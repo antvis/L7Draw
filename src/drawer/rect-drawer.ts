@@ -80,7 +80,7 @@ export class RectDrawer extends DragPolygonMode<IRectDrawerOptions> {
     this.setTextData(this.getAllTexts());
 
     if (this.editPolygon) {
-      this.setEditPolygon(this.editPolygon);
+      this.setActivePolygon(this.editPolygon);
     }
   }
 
@@ -163,7 +163,7 @@ export class RectDrawer extends DragPolygonMode<IRectDrawerOptions> {
     if (feature && dragPolygon) {
       const lineNodes = dragPolygon.properties.line.properties.nodes;
       this.syncPolygonNodes(dragPolygon, [lineNodes[0], lineNodes[2]]);
-      this.setEditPolygon(dragPolygon, {
+      this.setActivePolygon(dragPolygon, {
         isDrag: true,
       });
       this.emit(DrawEvent.Dragging, dragPolygon, this.getPolygonData());

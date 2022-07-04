@@ -251,7 +251,7 @@ export abstract class LineMode<
     return line;
   }
 
-  setEditLine(line: ILineFeature, properties: Partial<ILineProperties> = {}) {
+  setActiveLine(line: ILineFeature, properties: Partial<ILineProperties> = {}) {
     this.setLineData((features) =>
       updateTargetFeature({
         target: line,
@@ -292,16 +292,24 @@ export abstract class LineMode<
     return line;
   }
 
-  handleLineUnClick(link: ILineFeature) {
+  clearActiveLine() {
     this.source.setData({
       point: [],
       line: this.getLineData().map((feature) => {
-        feature.properties.isActive = false;
+        feature.properties = {
+          ...feature.properties,
+          isActive: false,
+          isHover: false,
+        };
         return feature;
       }),
       midPoint: [],
       text: this.getAllTexts(),
     });
+  }
+
+  handleLineUnClick(link: ILineFeature) {
+    this.clearActiveLine();
     return link;
   }
 
@@ -340,7 +348,7 @@ export abstract class LineMode<
   }
 
   handleLineDragStart(line: ILineFeature) {
-    this.setEditLine(line, {
+    this.setActiveLine(line, {
       isDrag: true,
       isActive: true,
     });
@@ -362,7 +370,7 @@ export abstract class LineMode<
       ];
     });
     this.syncLineNodes(line, nodes);
-    this.setEditLine(line, {
+    this.setActiveLine(line, {
       isDrag: true,
     });
     this.setCursor('lineDrag');
@@ -422,7 +430,7 @@ export abstract class LineMode<
           return node;
         }),
       );
-      this.setEditLine(editLine);
+      this.setActiveLine(editLine);
     }
     return dragPoint;
   }
@@ -550,7 +558,7 @@ export abstract class LineMode<
       nodes.splice(endIndex, 0, newNode);
       editLine.geometry.coordinates = coordAll(featureCollection(nodes));
       this.syncLineNodes(editLine, nodes);
-      this.setEditLine(editLine);
+      this.setActiveLine(editLine);
       return newNode;
     }
   }

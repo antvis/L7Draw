@@ -63,7 +63,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     this.setTextData(this.getAllTexts());
 
     if (this.editLine) {
-      this.setEditLine(this.editLine);
+      this.setActiveLine(this.editLine);
     }
   }
 
@@ -81,7 +81,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     if (!drawLine || nodes?.length <= 1) {
       return;
     }
-    this.setEditLine(drawLine);
+    this.setActiveLine(drawLine);
     const { autoActive, editable } = this.options;
     if (!autoActive || !editable) {
       this.handleLineUnClick(drawLine);
@@ -179,9 +179,9 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   setActiveFeature(target: Feature | string | null | undefined) {
     const targetFeature = this.getTargetFeature(target);
     if (targetFeature) {
-      this.setEditLine(targetFeature as ILineFeature);
+      this.setActiveLine(targetFeature as ILineFeature);
     } else {
-      this.handleLineUnClick(this.editLine!);
+      this.clearActiveLine();
     }
   }
 
