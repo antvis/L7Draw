@@ -1,7 +1,7 @@
 import { Scene } from '@antv/l7';
 import { Feature } from '@turf/turf';
 import EventEmitter from 'eventemitter3';
-import { cloneDeep, debounce, merge } from 'lodash';
+import { cloneDeep, debounce, isEqual, merge } from 'lodash';
 import Mousetrap from 'mousetrap';
 import {
   DEFAULT_CURSOR_MAP,
@@ -199,6 +199,7 @@ export abstract class BaseMode<
     this.bindCommonEvent = this.bindCommonEvent.bind(this);
     this.bindEnableEvent = this.bindEnableEvent.bind(this);
     this.unbindEnableEvent = this.unbindEnableEvent.bind(this);
+    this.setActiveFeature = this.setActiveFeature.bind(this);
   }
 
   bindCommonEvent() {
@@ -313,6 +314,29 @@ export abstract class BaseMode<
     }
   }
 
+  // 传入 Feature 或者 id 获取当前数据中的目标 Feature
+  getTargetFeature(target: Feature | string | null | undefined) {
+    let targetFeature: IBaseFeature | null = null;
+    if (target) {
+      const data = this.getData();
+      targetFeature =
+        data.find(
+          (feature) =>
+            feature.properties.id ===
+            (typeof target === 'string' ? target : target.properties?.id),
+        ) ?? null;
+      if (!targetFeature && target instanceof Object) {
+        targetFeature =
+          data.find((feature) => isEqual(target.geometry, feature.geometry)) ??
+          null;
+      }
+    }
+    return targetFeature;
+  }
+
+  // 设置激活的 Feature
+  abstract setActiveFeature(target: Feature | string | null | undefined): void;
+
   /**
    * 删除当前active的绘制物
    */
@@ -331,11 +355,16 @@ export abstract class BaseMode<
    * 删除指定
    * @param target
    */
-  removeFeature<F extends Feature>(target: F) {
+  removeFeature(target: Feature | string) {
     const data = this.getData();
-    // @ts-ignore
-    this.setData(data.filter((item) => !isSameFeature(target, item)));
-    this.emit(DrawEvent.Remove, target, this.getData());
+    const targetFeature = this.getTargetFeature(target);
+    if (targetFeature) {
+      // @ts-ignore
+      this.setData(
+        data.filter((feature) => !isSameFeature(targetFeature, feature)),
+      );
+      this.emit(DrawEvent.Remove, target, this.getData());
+    }
   }
 
   /**

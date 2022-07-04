@@ -67,7 +67,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     this.setTextData(this.getAllTexts());
 
     if (this.editPolygon) {
-      this.setEditPolygon(this.editPolygon);
+      this.setActivePolygon(this.editPolygon);
     }
   }
 
@@ -106,7 +106,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     }
     drawPolygon.properties.isDraw = false;
     this.syncPolygonNodes(drawPolygon, nodes);
-    this.setEditPolygon(drawPolygon);
+    this.setActivePolygon(drawPolygon);
     const { autoActive, editable } = this.options;
     if (!autoActive || !editable) {
       this.handlePolygonUnClick(drawPolygon);
@@ -162,7 +162,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
       }
       super.onPointDragging(e);
       this.syncPolygonNodes(editPolygon, nodes);
-      this.setEditPolygon(editPolygon);
+      this.setActivePolygon(editPolygon);
     }
     return feature;
   }

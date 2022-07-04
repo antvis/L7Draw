@@ -122,7 +122,7 @@ export abstract class DragPolygonMode<
       return lastNode;
     }
     this.setLineData((features) => [...features, drawPolygon.properties.line]);
-    this.setEditPolygon(drawPolygon);
+    this.setActivePolygon(drawPolygon);
     if (!(autoActive && editable)) {
       this.handlePolygonUnClick(drawPolygon);
     }
@@ -159,11 +159,11 @@ export abstract class DragPolygonMode<
     return feature;
   }
 
-  setEditPolygon(
+  setActivePolygon(
     polygon: IPolygonFeature,
     properties: Partial<IPolygonProperties> = {},
   ) {
-    this.setEditLine(polygon.properties.line, properties);
+    this.setActiveLine(polygon.properties.line, properties);
     this.setPolygonData((features) => {
       return updateTargetFeature({
         target: polygon,
@@ -212,7 +212,7 @@ export abstract class DragPolygonMode<
           return node;
         }),
       );
-      this.setEditPolygon(editPolygon);
+      this.setActivePolygon(editPolygon);
     }
     return feature;
   }

@@ -10,7 +10,7 @@ import {
   IRenderType,
   ISceneMouseEvent,
 } from '../typings';
-import { getDefaultPointProperties } from '../utils';
+import { getDefaultPointProperties, isSameFeature } from '../utils';
 
 export type IPointDrawerOptions = IBaseModeOptions<Feature<Point>>;
 
@@ -118,6 +118,16 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onSceneMouseMove(e: ISceneMouseEvent): void {}
+
+  setActiveFeature(target: Feature | string | null | undefined) {
+    const targetFeature = this.getTargetFeature(target);
+    this.setPointData((oldData) =>
+      oldData.map((feature) => {
+        feature.properties.isActive = isSameFeature(targetFeature, feature);
+        return feature;
+      }),
+    );
+  }
 
   disable() {
     super.disable();
