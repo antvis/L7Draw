@@ -2,7 +2,7 @@
 
 # API
 
-[API 文档](https://antv.vision/L7-draw)
+[API 文档](https://antv.vision/l7draw-2.x-site)
 
 ## Getting Started
 
