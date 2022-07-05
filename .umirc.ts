@@ -7,8 +7,8 @@ export default defineConfig({
   logo:
     'https://gw.alipayobjects.com/mdn/rms_23a451/afts/img/A*GANRQqq6r2EAAAAAAAAAAAAAARQnAQ',
   outputPath: 'docs-dist',
-  publicPath: '/L7-draw/',
-  base: '/L7-draw/',
+  publicPath: '/l7draw-2.x-site/',
+  base: '/l7draw-2.x-site/',
 
   // more config: https://d.umijs.org/config
 });
