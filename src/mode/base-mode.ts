@@ -508,16 +508,14 @@ export abstract class BaseMode<
    * 销毁当前Drawer
    */
   destroy() {
-    this.disable();
-    this.clear(true);
     Object.values(this.render).forEach((render) => {
       render.destroy();
     });
-    this.emit(DrawEvent.Destroy, this);
     setTimeout(() => {
       Object.values(DrawEvent).forEach((EventName) => {
         this.removeAllListeners(EventName);
       });
     }, 0);
+    this.emit(DrawEvent.Destroy, this);
   }
 }
