@@ -300,7 +300,6 @@ export abstract class PolygonMode<
     properties: Partial<IPolygonProperties> = {},
   ) {
     this.setActiveLine(polygon.properties.line, properties);
-    this.setPointData(polygon.properties.nodes);
     this.setPolygonData((features) =>
       updateTargetFeature({
         target: polygon,
