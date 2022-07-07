@@ -10,6 +10,7 @@ import {
   DEFAULT_STYLE,
   DrawEvent,
   RENDER_MAP,
+  RenderEvent,
   SceneEvent,
 } from '../constant';
 import { Cursor } from '../interactive';
@@ -510,6 +511,12 @@ export abstract class BaseMode<
   destroy() {
     Object.values(this.render).forEach((render) => {
       render.destroy();
+    });
+    Object.values(RenderEvent).forEach((EventName) => {
+      Object.values(this.render).forEach((render) => {
+        render.removeAllListeners(EventName);
+      });
+      this.sceneRender.removeAllListeners(EventName);
     });
     setTimeout(() => {
       Object.values(DrawEvent).forEach((EventName) => {
