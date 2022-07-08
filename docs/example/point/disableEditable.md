@@ -1,5 +1,6 @@
 ---
 title: 禁用状态下可编辑
+hide: true
 order: 3
 group:
   path: /point
