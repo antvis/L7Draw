@@ -184,6 +184,8 @@ export abstract class BaseMode<
    */
   abstract setData(data: Feature[]): void;
 
+  abstract setHelper(type: string | null): void;
+
   /**
    * 获取当前是否为编辑态
    */
@@ -434,6 +436,7 @@ export abstract class BaseMode<
       keyboard: cloneDeep(DEFAULT_KEYBOARD_CONFIG),
       disableEditable: false,
       popup: true,
+      helper: {},
     } as IBaseModeOptions;
   }
 
