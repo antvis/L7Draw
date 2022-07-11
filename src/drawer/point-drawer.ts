@@ -113,7 +113,6 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   onPointMouseOut(e: ILayerMouseEvent<IPointFeature>) {
     const feature = super.onPointMouseOut(e);
     this.setHelper(this.addable ? 'draw' : null);
-
     return feature;
   }
 
@@ -170,7 +169,7 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   disable() {
     super.disable();
     if (!this.options.disableEditable) {
-      this.popup?.setContent(null);
+      this.setHelper(null);
       this.setPointData((features) => {
         return features.map((feature) => {
           feature.properties = {

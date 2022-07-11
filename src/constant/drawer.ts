@@ -47,4 +47,5 @@ export const DEFAULT_POPUP_CONFIG: PopupOptions = {
   plugins: [followCursor],
   trigger: 'manual',
   hideOnClick: false,
+  theme: 'light',
 };

@@ -8,6 +8,7 @@ import {
   IDistanceOptions,
   ILayerMouseEvent,
   ILineFeature,
+  ILineHelperOptions,
   ILineProperties,
   ILngLat,
   IMidPointFeature,
@@ -25,10 +26,12 @@ import {
   updateTargetFeature,
 } from '../utils';
 import { IMidPointModeOptions, MidPointMode } from './mid-point-mode';
+import { DEFAULT_LINE_HELPER_CONFIG } from '../constant/helper';
 
 export interface ILineModeOptions<F extends Feature = Feature>
   extends IMidPointModeOptions<F> {
   distanceOptions: false | IDistanceOptions;
+  helper: ILineHelperOptions;
 }
 
 export abstract class LineMode<
@@ -76,6 +79,7 @@ export abstract class LineMode<
       ...this.getCommonOptions(options),
       showMidPoint: true,
       distanceOptions: false,
+      helper: DEFAULT_LINE_HELPER_CONFIG,
     };
     if (options.distanceOptions) {
       newOptions.distanceOptions = {
@@ -84,6 +88,10 @@ export abstract class LineMode<
       };
     }
     return newOptions;
+  }
+
+  setHelper(type: keyof ILineHelperOptions | null) {
+    this.popup?.setContent(type ? this.options.helper[type] : null);
   }
 
   bindSceneEvent() {
@@ -414,6 +422,7 @@ export abstract class LineMode<
     if (!editLine) {
       return;
     }
+    this.setHelper('pointDrag');
     return super.onPointDragStart(e);
   }
 
@@ -445,6 +454,7 @@ export abstract class LineMode<
           return feature;
         });
       });
+      this.setHelper('pointHover');
       return dragPoint;
     }
   }
@@ -493,6 +503,32 @@ export abstract class LineMode<
       return;
     }
     return this.handleLineDragEnd(dragLine);
+  }
+
+  onPointMouseMove(e: ILayerMouseEvent<IPointFeature>) {
+    const feature = super.onPointMouseMove(e);
+    if (!this.dragLine && !this.drawLine && !this.dragPoint) {
+      this.setHelper('pointHover');
+    }
+    return feature;
+  }
+
+  onPointMouseOut(e: ILayerMouseEvent<IPointFeature>) {
+    const feature = super.onPointMouseOut(e);
+    if (!this.dragLine && !this.drawLine && !this.dragPoint) {
+      this.setHelper(this.addable ? 'draw' : null);
+    }
+    return feature;
+  }
+
+  onMidPointHover(e: ILayerMouseEvent<IMidPointFeature>) {
+    super.onMidPointHover(e);
+    this.setHelper('midPointHover');
+  }
+
+  onMidPointUnHover(e: ILayerMouseEvent<IMidPointFeature>) {
+    super.onMidPointUnHover(e);
+    this.setHelper(null);
   }
 
   onPointClick(e: ILayerMouseEvent<IPointFeature>) {}
@@ -554,7 +590,9 @@ export abstract class LineMode<
     if (startIndex > -1 && endIndex > -1) {
       const newNode = createPointFeature(feature.geometry.coordinates, {
         isDrag: true,
+        isHover: true,
       });
+      this.setHelper('pointDrag');
       nodes.splice(endIndex, 0, newNode);
       editLine.geometry.coordinates = coordAll(featureCollection(nodes));
       this.syncLineNodes(editLine, nodes);
