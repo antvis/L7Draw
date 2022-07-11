@@ -36,6 +36,15 @@ export default defineConfig({
       ],
     },
     {
+      title: '历史版本',
+      children: [
+        {
+          title: '2.x',
+          path: 'https://antv.vision/l7draw-2.x-site/',
+        },
+      ],
+    },
+    {
       title: 'Github',
       path: 'https://github.com/antvis/L7Draw',
     },

@@ -12,7 +12,9 @@ import {
 } from '../typings';
 import { History } from './history';
 
-export class Source extends EventEmitter<SourceEvent> {
+export class Source extends EventEmitter<
+  SourceEvent | keyof typeof SourceEvent
+> {
   /**
    * 用于存储渲染器render映射
    * @protected

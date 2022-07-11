@@ -197,13 +197,7 @@ export abstract class PolygonMode<
   }
 
   handlePolygonUnClick(polygon: IPolygonFeature) {
-    this.setPolygonData((features) => {
-      return features.map((feature) => {
-        feature.properties.isActive = false;
-        return feature;
-      });
-    });
-    this.handleLineUnClick(polygon.properties.line);
+    this.clearActivePolygon();
     return polygon;
   }
 
@@ -235,7 +229,7 @@ export abstract class PolygonMode<
   }
 
   handlePolygonDragStart(polygon: IPolygonFeature) {
-    this.setEditPolygon(polygon, {
+    this.setActivePolygon(polygon, {
       isDrag: true,
     });
     this.scene.setMapStatus({
@@ -301,12 +295,11 @@ export abstract class PolygonMode<
     return polygon;
   }
 
-  setEditPolygon(
+  setActivePolygon(
     polygon: IPolygonFeature,
     properties: Partial<IPolygonProperties> = {},
   ) {
-    this.setEditLine(polygon.properties.line, properties);
-    this.setPointData(polygon.properties.nodes);
+    this.setActiveLine(polygon.properties.line, properties);
     this.setPolygonData((features) =>
       updateTargetFeature({
         target: polygon,
@@ -335,13 +328,27 @@ export abstract class PolygonMode<
     return polygon;
   }
 
+  clearActivePolygon() {
+    this.setPolygonData((features) => {
+      return features.map((feature) => {
+        feature.properties = {
+          ...feature.properties,
+          isActive: false,
+          isHover: false,
+        };
+        return feature;
+      });
+    });
+    this.clearActiveLine();
+  }
+
   onLineDragStart(e: ILayerMouseEvent<ILineFeature>) {
     const line = super.onLineDragStart(e);
     const polygon = this.getPolygonData().find((feature) =>
       isSameFeature(feature.properties.line, line),
     );
     if (polygon) {
-      this.setEditPolygon(polygon, {
+      this.setActivePolygon(polygon, {
         isDrag: true,
       });
       this.emit(DrawEvent.DragStart, polygon, this.getPolygonData());
@@ -407,7 +414,7 @@ export abstract class PolygonMode<
         editPolygon,
         lineNodes.slice(0, lineNodes.length - 1),
       );
-      this.setEditPolygon(editPolygon);
+      this.setActivePolygon(editPolygon);
     }
     return feature;
   }
@@ -465,6 +472,15 @@ export abstract class PolygonMode<
     this.bindLineRenderEvent = this.bindLineRenderEvent.bind(this);
     this.bindMidPointRenderEvent = this.bindMidPointRenderEvent.bind(this);
     this.bindPolygonRenderEvent = this.bindPolygonRenderEvent.bind(this);
+  }
+
+  setActiveFeature(target: Feature | string | null | undefined) {
+    const targetFeature = this.getTargetFeature(target);
+    if (targetFeature) {
+      this.setActivePolygon(targetFeature as IPolygonFeature);
+    } else {
+      this.clearActivePolygon();
+    }
   }
 
   disable() {

@@ -136,7 +136,7 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
     this.setTextData(this.getAllTexts());
 
     if (this.editPolygon) {
-      this.setEditPolygon(this.editPolygon);
+      this.setActivePolygon(this.editPolygon);
     }
   }
 
@@ -210,7 +210,7 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
         ];
       });
       this.syncPolygonNodes(dragPolygon, dragPolygon.properties.nodes);
-      this.setEditPolygon(dragPolygon, {
+      this.setActivePolygon(dragPolygon, {
         isDrag: true,
       });
       this.emit(DrawEvent.Dragging, dragPolygon, this.getPolygonData());
