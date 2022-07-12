@@ -452,7 +452,7 @@ export abstract class BaseMode<
    * 重置光标到常规状态
    */
   resetCursor() {
-    this.setCursor(this.enabled && this.addable ? 'draw' : null);
+    this.setCursor(this.addable ? 'draw' : null);
   }
 
   /**

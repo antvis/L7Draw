@@ -471,12 +471,18 @@ export abstract class LineMode<
     if (this.drawLine) {
       return;
     }
+    if (!this.dragLine && !this.drawLine && this.options.editable) {
+      this.setHelper('lineHover');
+    }
     return this.handleLineHover(e.feature!);
   }
 
   onLineMouseOut(e: ILayerMouseEvent<ILineFeature>) {
     if (this.drawLine) {
       return;
+    }
+    if (!this.dragLine && !this.drawLine) {
+      this.setHelper(this.addable ? 'draw' : null);
     }
     return this.handleLineUnHover(e.feature!);
   }
@@ -486,6 +492,7 @@ export abstract class LineMode<
       return;
     }
     this.previousPosition = getPosition(e);
+    this.setHelper('lineDrag');
     return this.handleLineDragStart(e.feature!);
   }
 
@@ -502,6 +509,7 @@ export abstract class LineMode<
     if (!dragLine) {
       return;
     }
+    this.setHelper('lineHover');
     return this.handleLineDragEnd(dragLine);
   }
 

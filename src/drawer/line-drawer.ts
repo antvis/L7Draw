@@ -87,7 +87,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
       this.handleLineUnClick(drawLine);
     }
     this.setHelper(
-      editable ? (autoActive ? 'pointHover' : 'lineHover') : 'draw',
+      editable && autoActive ? 'pointHover' : this.addable ? 'draw' : null,
     );
     this.emit(DrawEvent.Add, drawLine, this.getLineData());
   };
@@ -131,25 +131,9 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     return feature;
   }
 
-  onLineMouseMove(e: ILayerMouseEvent<ILineFeature>) {
-    if (!this.dragLine && !this.drawLine && this.options.editable) {
-      this.setHelper('lineHover');
-    }
-    return super.onLineMouseMove(e);
-  }
-
-  onLineMouseOut(e: ILayerMouseEvent<ILineFeature>) {
-    const feature = super.onLineMouseOut(e);
-    if (!this.dragLine && !this.drawLine) {
-      this.setHelper(this.addable ? 'draw' : null);
-    }
-    return feature;
-  }
-
   onLineDragStart(e: ILayerMouseEvent<ILineFeature>) {
     const feature = super.onLineDragStart(e);
     if (feature) {
-      this.setHelper('lineDrag');
       this.emit(DrawEvent.DragStart, feature, this.getLineData());
     }
     return feature;
@@ -166,7 +150,6 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   onLineDragEnd(e: ISceneMouseEvent): ILineFeature | undefined {
     const feature = super.onLineDragEnd(e);
     if (feature) {
-      this.setHelper('lineHover');
       this.emit(DrawEvent.DragEnd, feature, this.getLineData());
       this.emit(DrawEvent.Edit, feature, this.getLineData());
     }
@@ -241,8 +224,8 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
 
   disable() {
     super.disable();
+    this.setHelper(null);
     if (!this.options.disableEditable) {
-      this.setHelper(null);
       let features = this.getLineData();
       if (this.drawLine) {
         features = features.filter((feature) => !feature.properties.isDraw);

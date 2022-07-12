@@ -168,8 +168,8 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
 
   disable() {
     super.disable();
+    this.setHelper(null);
     if (!this.options.disableEditable) {
-      this.setHelper(null);
       this.setPointData((features) => {
         return features.map((feature) => {
           feature.properties = {

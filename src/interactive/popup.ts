@@ -27,37 +27,31 @@ export class Popup {
     scene.on(SceneEvent.Mouseout, this.onMouseOut);
   }
 
-  onMouseMove = debounce(
-    () => {
-      this.isMouseInner = true;
-      this.checkTippyShow();
-    },
-    16,
-    {
-      maxWait: 16,
-    },
-  );
+  onMouseMove = () => {
+    this.isMouseInner = true;
+    this.checkTippyShow();
+  };
 
-  onMouseOut = debounce(
-    () => {
-      this.isMouseInner = false;
-      this.checkTippyShow();
-    },
-    16,
-    {
-      maxWait: 16,
-    },
-  );
+  onMouseOut = () => {
+    this.isMouseInner = false;
+    this.checkTippyShow();
+  };
 
   getContent() {
     return this.content;
   }
 
-  setContent(content: string | null) {
-    this.content = content ?? '';
-    this.tippy.setContent(content ?? '');
-    this.checkTippyShow();
-  }
+  setContent = debounce(
+    (content: string | null) => {
+      this.content = content ?? '';
+      this.tippy.setContent(content ?? '');
+      this.checkTippyShow();
+    },
+    16,
+    {
+      maxWait: 16,
+    },
+  );
 
   checkTippyShow() {
     if (this.content && this.isMouseInner) {

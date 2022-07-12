@@ -90,6 +90,9 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
             drawPolygon.properties.nodes[0].geometry.coordinates,
           ]),
         ]);
+        if (drawPolygon.properties.nodes.length > 1) {
+          this.setHelper('drawFinish');
+        }
       } else if (drawLine) {
         this.handleCreatePolygon([feature], drawLine);
       }

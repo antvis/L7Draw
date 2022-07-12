@@ -17,6 +17,7 @@ import {
   IMidPointFeature,
   IPointFeature,
   IPolygonFeature,
+  IPolygonHelperOptions,
   IPolygonProperties,
   IRenderType,
   ISceneMouseEvent,
@@ -31,10 +32,12 @@ import {
   updateTargetFeature,
 } from '../utils';
 import { ILineModeOptions, LineMode } from './line-mode';
+import { DEFAULT_POLYGON_HELPER_CONFIG } from '../constant/helper';
 
 export interface IPolygonModeOptions<F extends Feature = Feature>
   extends ILineModeOptions<F> {
   areaOptions: false | IAreaOptions;
+  helper: IPolygonHelperOptions;
 }
 
 export abstract class PolygonMode<
@@ -91,10 +94,15 @@ export abstract class PolygonMode<
     return this.getPolygonData();
   }
 
+  setHelper(type: keyof IPolygonHelperOptions | null) {
+    this.popup?.setContent(type ? this.options.helper[type] : null);
+  }
+
   getDefaultOptions(options: DeepPartial<T>): T {
     const newOptions: T = {
       ...super.getDefaultOptions(options),
       areaOptions: false,
+      helper: DEFAULT_POLYGON_HELPER_CONFIG,
     };
     if (options.areaOptions) {
       newOptions.areaOptions = {
@@ -383,6 +391,9 @@ export abstract class PolygonMode<
     if (this.drawPolygon) {
       return;
     }
+    if (!this.dragPolygon) {
+      this.setHelper('polygonHover');
+    }
     return this.handlePolygonHover(e.feature!);
   }
 
@@ -390,6 +401,7 @@ export abstract class PolygonMode<
     if (this.drawPolygon) {
       return;
     }
+    this.setHelper(this.addable ? 'draw' : null);
     return this.handlePolygonUnHover();
   }
 
@@ -399,6 +411,7 @@ export abstract class PolygonMode<
     }
     const polygon = e.feature!;
     this.previousPosition = getPosition(e);
+    this.setHelper('polygonDrag');
     this.emit(DrawEvent.DragStart, polygon, this.getPolygonData());
     return this.handlePolygonDragStart(polygon);
   }
@@ -483,8 +496,16 @@ export abstract class PolygonMode<
     }
   }
 
+  enable() {
+    super.enable();
+    if (this.addable) {
+      this.setHelper('draw');
+    }
+  }
+
   disable() {
     super.disable();
+    this.setHelper(null);
     if (!this.options.disableEditable) {
       let features = this.getPolygonData();
       if (this.drawPolygon) {
