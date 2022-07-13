@@ -13,7 +13,7 @@ import {
   RenderEvent,
   SceneEvent,
 } from '../constant';
-import { Cursor } from '../interactive';
+import { Cursor, Popup } from '../interactive';
 import { SceneRender } from '../render';
 import { Source } from '../source';
 import {
@@ -24,6 +24,7 @@ import {
   ILngLat,
   IRenderType,
   ISceneMouseEvent,
+  PopupContent,
   RenderMap,
 } from '../typings';
 import { getLngLat, isSameFeature } from '../utils';
@@ -77,6 +78,8 @@ export abstract class BaseMode<
     lat: 0,
   };
 
+  protected popup?: Popup;
+
   /**
    * 本次enable添加的绘制物个数
    * @protected
@@ -99,6 +102,7 @@ export abstract class BaseMode<
     if (!multiple && this.addCount >= 1) {
       return false;
     }
+
     return true;
   }
 
@@ -117,12 +121,16 @@ export abstract class BaseMode<
     });
     this.cursor = new Cursor(scene, this.options.cursor);
 
-    const initialData = this.options.initialData;
+    const { initialData, popup } = this.options;
     if (initialData) {
       this.setData(initialData);
     }
-    this.saveHistory();
 
+    if (popup) {
+      this.popup = new Popup(scene, popup instanceof Object ? popup : {});
+    }
+
+    this.saveHistory();
     this.bindCommonEvent();
     this.emit(DrawEvent.Init, this);
     if (this.options.disableEditable) {
@@ -176,6 +184,16 @@ export abstract class BaseMode<
    * @param data
    */
   abstract setData(data: Feature[]): void;
+
+  setHelper(type: PopupContent | keyof O['helper'] | null) {
+    const { helper } = this.options;
+    if (!helper) {
+      return;
+    }
+    // @ts-ignore
+    const content = (type in helper ? helper[type] : type) ?? null;
+    this.popup?.setContent(content);
+  }
 
   /**
    * 获取当前是否为编辑态
@@ -426,6 +444,8 @@ export abstract class BaseMode<
       history: cloneDeep(DEFAULT_HISTORY_CONFIG),
       keyboard: cloneDeep(DEFAULT_KEYBOARD_CONFIG),
       disableEditable: false,
+      popup: true,
+      helper: {},
     } as IBaseModeOptions;
   }
 
@@ -441,7 +461,7 @@ export abstract class BaseMode<
    * 重置光标到常规状态
    */
   resetCursor() {
-    this.setCursor(this.enabled && this.addable ? 'draw' : null);
+    this.setCursor(this.addable ? 'draw' : null);
   }
 
   /**

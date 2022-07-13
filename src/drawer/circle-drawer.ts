@@ -13,6 +13,7 @@ import { DragPolygonMode, IDragPolygonModeOptions } from '../mode';
 import {
   DeepPartial,
   IDistanceOptions,
+  IDragPolygonHelperOptions,
   ILineFeature,
   ILineProperties,
   IPointFeature,
@@ -27,6 +28,7 @@ import {
   getPosition,
   isSameFeature,
 } from '../utils';
+import { DEFAULT_CIRCLE_HELPER_CONFIG } from '../constant/helper';
 
 export interface ICircleDistanceOptions extends IDistanceOptions {
   showOnRadius: boolean;
@@ -51,18 +53,24 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
   getDefaultOptions(
     options: DeepPartial<ICircleDrawerOptions>,
   ): ICircleDrawerOptions {
-    const newOptions = super.getDefaultOptions(options);
+    const newOptions = {
+      ...super.getDefaultOptions(options),
+      showMidPoint: false,
+      circleSteps: 60,
+    };
     if (newOptions.distanceOptions) {
       newOptions.distanceOptions.showTotalDistance = true;
       if (newOptions.distanceOptions.showOnRadius === undefined) {
         newOptions.distanceOptions.showOnRadius = true;
       }
     }
-    return {
-      ...newOptions,
-      showMidPoint: false,
-      circleSteps: 60,
-    };
+    if (newOptions.helper) {
+      newOptions.helper = {
+        ...(newOptions.helper as IDragPolygonHelperOptions),
+        ...DEFAULT_CIRCLE_HELPER_CONFIG,
+      };
+    }
+    return newOptions;
   }
 
   getDistanceTexts(): ITextFeature[] {
