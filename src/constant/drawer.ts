@@ -3,7 +3,9 @@ import {
   IAreaOptions,
   IDistanceOptions,
   KeyBoardConfig,
+  PopupOptions,
 } from '../typings';
+import { followCursor } from 'tippy.js';
 
 export const DEFAULT_DISTANCE_OPTIONS: IDistanceOptions = {
   showTotalDistance: false,
@@ -35,4 +37,15 @@ export const DEFAULT_KEYBOARD_CONFIG: KeyBoardConfig = {
   remove: ['del', 'backspace'],
   revert: ['command+z', 'ctrl+z'],
   redo: ['command+shift+z', 'ctrl+shift+z'],
+};
+
+export const DEFAULT_POPUP_CONFIG: PopupOptions = {
+  allowHTML: true,
+  followCursor: true,
+  placement: 'bottom-start',
+  offset: [-10, 20],
+  plugins: [followCursor],
+  trigger: 'manual',
+  hideOnClick: false,
+  theme: 'light',
 };

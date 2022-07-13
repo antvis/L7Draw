@@ -7,12 +7,17 @@ import {
   IBaseModeOptions,
   ILayerMouseEvent,
   IPointFeature,
+  IPointHelperOptions,
   IRenderType,
   ISceneMouseEvent,
 } from '../typings';
 import { getDefaultPointProperties, isSameFeature } from '../utils';
+import { DEFAULT_POINT_HELPER_CONFIG } from '../constant/helper';
+import { cloneDeep } from 'lodash';
 
-export type IPointDrawerOptions = IBaseModeOptions<Feature<Point>>;
+export interface IPointDrawerOptions extends IBaseModeOptions<Feature<Point>> {
+  helper: IPointHelperOptions | boolean;
+}
 
 export class PointDrawer extends PointMode<IPointDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<IPointDrawerOptions>) {
@@ -31,7 +36,10 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
 
   // @ts-ignore
   getDefaultOptions(options: DeepPartial<IPointDrawerOptions>) {
-    const defaultOptions = this.getCommonOptions(options);
+    const defaultOptions = {
+      ...this.getCommonOptions(options),
+      helper: cloneDeep(DEFAULT_POINT_HELPER_CONFIG),
+    };
     defaultOptions.style.point = DEFAULT_POINT_STYLE;
     return defaultOptions;
   }
@@ -84,12 +92,30 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     if (!newFeature) {
       return;
     }
+    if (this.options.editable) {
+      this.setHelper('pointHover');
+    }
     this.emit(DrawEvent.Add, newFeature, this.getData());
     return newFeature;
   }
 
+  onPointMouseMove(e: ILayerMouseEvent<IPointFeature>) {
+    const feature = super.onPointMouseMove(e);
+    if (this.options.editable && !this.dragPoint) {
+      this.setHelper('pointHover');
+    }
+    return feature;
+  }
+
+  onPointMouseOut(e: ILayerMouseEvent<IPointFeature>) {
+    const feature = super.onPointMouseOut(e);
+    this.setHelper(this.addable ? 'draw' : null);
+    return feature;
+  }
+
   onPointDragStart(e: ILayerMouseEvent<IPointFeature>) {
     const dragPoint = super.onPointDragStart(e);
+    this.setHelper('pointDrag');
     this.emit(DrawEvent.DragStart, dragPoint, this.getData());
     return dragPoint;
   }
@@ -105,6 +131,7 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   onPointDragEnd(e: ISceneMouseEvent) {
     const dragPoint = super.onPointDragEnd(e);
     if (dragPoint && this.options.editable) {
+      this.setHelper('pointHover');
       this.emit(DrawEvent.DragEnd, dragPoint, this.getData());
       this.emit(DrawEvent.Edit, dragPoint, this.getData());
     }
@@ -129,8 +156,16 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     );
   }
 
+  enable() {
+    super.enable();
+    if (this.addable) {
+      this.setHelper('draw');
+    }
+  }
+
   disable() {
     super.disable();
+    this.setHelper(null);
     if (!this.options.disableEditable) {
       this.setPointData((features) => {
         return features.map((feature) => {

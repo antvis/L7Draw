@@ -86,6 +86,11 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     if (!autoActive || !editable) {
       this.handleLineUnClick(drawLine);
     }
+    if (editable && autoActive) {
+      this.setHelper('pointHover');
+    } else {
+      this.setHelper(this.addable ? 'draw' : null);
+    }
     this.emit(DrawEvent.Add, drawLine, this.getLineData());
   };
 
@@ -113,6 +118,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     }
     const feature = super.onPointCreate(e);
     if (feature) {
+      this.setHelper('drawFinish');
       this.emit(DrawEvent.AddNode, feature, this.drawLine, this.getLineData());
     }
     return feature;
@@ -211,8 +217,16 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     this.bindMidPointRenderEvent = this.bindMidPointRenderEvent.bind(this);
   }
 
+  enable() {
+    super.enable();
+    if (this.addable) {
+      this.setHelper('draw');
+    }
+  }
+
   disable() {
     super.disable();
+    this.setHelper(null);
     if (!this.options.disableEditable) {
       let features = this.getLineData();
       if (this.drawLine) {
