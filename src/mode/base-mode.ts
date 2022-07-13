@@ -102,7 +102,7 @@ export abstract class BaseMode<
     if (!multiple && this.addCount >= 1) {
       return false;
     }
-    if (maxCount > 0 && this.getData().length >= maxCount) {
+    if (maxCount > 0 && data.length >= maxCount) {
       return false;
     }
     return true;
