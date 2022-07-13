@@ -1,7 +1,5 @@
 import { defineConfig } from 'dumi';
 
-const prefixPath = 'L7Draw';
-
 export default defineConfig({
   title: 'L7Draw',
   favicon:
@@ -55,8 +53,6 @@ export default defineConfig({
   ],
   // styles: ['https://cdn.bootcdn.net/ajax/libs/antd/4.20.2/antd.css'],
   outputPath: 'docs-dist',
-  publicPath: `/${prefixPath}/`,
-  base: `/${prefixPath}/`,
   devServer: {
     port: 8080,
   },
