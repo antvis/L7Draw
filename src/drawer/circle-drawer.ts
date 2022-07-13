@@ -159,6 +159,7 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
     const positions = coordAll(
       circle(startNode, dis, {
         units: 'meters',
+        steps: this.options.circleSteps,
       }),
     );
     const nodes = positions.map((position) => {
@@ -177,6 +178,7 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
     const positions = coordAll(
       circle(startNode, dis, {
         units: 'meters',
+        steps: this.options.circleSteps,
       }),
     );
 
