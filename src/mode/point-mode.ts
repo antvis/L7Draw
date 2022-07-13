@@ -265,9 +265,6 @@ export abstract class PointMode<
 
   disablePointRenderAction() {
     this.pointRender?.disableCreate();
-    if (this.options.disableEditable) {
-      return;
-    }
     this.pointRender?.disableHover();
     this.pointRender?.disableDrag();
     this.pointRender?.disableClick();
