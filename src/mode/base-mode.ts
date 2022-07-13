@@ -63,6 +63,9 @@ export abstract class BaseMode<
    */
   protected enabled = false;
 
+  // 在 enable 时传入，用于判断当前是否支持添加操作
+  protected allowCreate = false;
+
   /**
    * scene相关事件管理
    * @protected
@@ -93,7 +96,7 @@ export abstract class BaseMode<
     const data = this.getData();
     const { multiple, maxCount } = this.options;
     const drawItem = data.find((item) => item.properties.isDraw);
-    if (!this.enabled) {
+    if (!this.enabled || !this.allowCreate) {
       return false;
     }
     if ((multiple && maxCount <= 0) || drawItem) {
@@ -465,19 +468,16 @@ export abstract class BaseMode<
   }
 
   /**
-   * 启用Drawer
+   * 启用 Drawer
+   * @param allowCreate 是否支持添加操作
    */
-  enable() {
-    if (this.enabled) {
-      return;
-    }
-    this.enabled = true;
+  enable(allowCreate = true) {
+    this.allowCreate = allowCreate;
+    this.setHelper(this.addable ? 'draw' : null);
     this.resetCursor();
+    this.enabled = true;
     this.bindEnableEvent();
     this.addCount = 0;
-    if (this.addable) {
-      this.setHelper('draw');
-    }
     setTimeout(() => {
       this.emit(DrawEvent.Enable, this);
     }, 0);
@@ -487,9 +487,6 @@ export abstract class BaseMode<
    * 禁用Drawer
    */
   disable() {
-    if (!this.enabled) {
-      return;
-    }
     this.resetFeatures();
     this.enabled = false;
     this.setCursor(null);
