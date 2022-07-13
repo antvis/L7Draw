@@ -156,7 +156,7 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     );
   }
 
-  clearDrawAndActiveFeature() {
+  resetFeatures() {
     this.setPointData((features) => {
       return features.map((feature) => {
         feature.properties = {

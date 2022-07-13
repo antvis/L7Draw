@@ -191,7 +191,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     }
   }
 
-  clearDrawAndActiveFeature() {
+  resetFeatures() {
     let features = this.getLineData();
     if (this.drawLine) {
       features = features.filter((feature) => !feature.properties.isDraw);

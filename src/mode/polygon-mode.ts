@@ -489,7 +489,7 @@ export abstract class PolygonMode<
     }
   }
 
-  clearDrawAndActiveFeature() {
+  resetFeatures() {
     let features = this.getPolygonData();
     if (this.drawPolygon) {
       features = features.filter((feature) => !feature.properties.isDraw);
