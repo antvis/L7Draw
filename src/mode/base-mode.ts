@@ -351,7 +351,8 @@ export abstract class BaseMode<
   // 设置激活的 Feature
   abstract setActiveFeature(target: Feature | string | null | undefined): void;
 
-  abstract clearActiveFeature(): void;
+  // 清除当前正在绘制中的绘制物，同时将当前激活态的绘制物置为普通态
+  abstract clearDrawAndActiveFeature(): void;
 
   /**
    * 删除当前active的绘制物
@@ -486,7 +487,7 @@ export abstract class BaseMode<
     if (!this.enabled) {
       return;
     }
-    this.clearActiveFeature();
+    this.clearDrawAndActiveFeature();
     this.enabled = false;
     this.setCursor(null);
     this.unbindEnableEvent();
