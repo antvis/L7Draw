@@ -37,6 +37,7 @@ export interface IBaseModeOptions<F extends Feature = Feature> {
   autoActive: boolean;
   multiple: boolean;
   helper: any | boolean;
+  maxCount: number;
   popup: PopupOptions | boolean;
   history: HistoryConfig | false;
   keyboard: KeyBoardConfig | false;
