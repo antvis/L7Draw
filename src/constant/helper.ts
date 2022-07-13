@@ -8,15 +8,15 @@ import {
 export const DEFAULT_POINT_HELPER_CONFIG: IPointHelperOptions = {
   draw: '单击绘制点',
   pointHover: '可拖拽调整点位置',
-  pointDrag: '',
+  pointDrag: null,
 };
 
 export const DEFAULT_LINE_HELPER_CONFIG: ILineHelperOptions = {
   draw: '单击绘制首个节点',
   pointHover: '可拖拽调整节点位置',
-  pointDrag: '',
+  pointDrag: null,
   lineHover: '可拖拽调整线位置',
-  lineDrag: '',
+  lineDrag: null,
   midPointHover: '单击在该位置新增节点',
   drawFinish: '单击继续绘制，双击结束绘制',
 };
@@ -27,11 +27,11 @@ export const DEFAULT_POLYGON_HELPER_CONFIG: IPolygonHelperOptions = {
   drawFinish: '单击继续绘制，双击结束绘制',
   midPointHover: '单击在该位置新增节点',
   pointHover: '可拖拽调整节点位置',
-  pointDrag: '',
+  pointDrag: null,
   lineHover: '可拖拽调整面位置',
-  lineDrag: '',
+  lineDrag: null,
   polygonHover: '可拖拽调整面位置',
-  polygonDrag: '',
+  polygonDrag: null,
 };
 
 export const DEFAULT_DRAG_POLYGON_HELPER_CONFIg: IDragPolygonHelperOptions = {

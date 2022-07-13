@@ -13,6 +13,7 @@ import { DragPolygonMode, IDragPolygonModeOptions } from '../mode';
 import {
   DeepPartial,
   IDistanceOptions,
+  IDragPolygonHelperOptions,
   ILineFeature,
   ILineProperties,
   IPointFeature,
@@ -65,7 +66,7 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
     }
     if (newOptions.helper) {
       newOptions.helper = {
-        ...newOptions.helper,
+        ...(newOptions.helper as IDragPolygonHelperOptions),
         ...DEFAULT_CIRCLE_HELPER_CONFIG,
       };
     }

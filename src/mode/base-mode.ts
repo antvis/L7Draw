@@ -187,8 +187,11 @@ export abstract class BaseMode<
 
   setHelper(type: PopupContent | keyof O['helper'] | null) {
     const { helper } = this.options;
+    if (!helper) {
+      return;
+    }
     // @ts-ignore
-    const content = type ? helper[type] ?? type : null;
+    const content = (type in helper ? helper[type] : type) ?? null;
     this.popup?.setContent(content);
   }
 

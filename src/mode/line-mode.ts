@@ -32,7 +32,7 @@ import { cloneDeep } from 'lodash';
 export interface ILineModeOptions<F extends Feature = Feature>
   extends IMidPointModeOptions<F> {
   distanceOptions: false | IDistanceOptions;
-  helper: ILineHelperOptions;
+  helper: ILineHelperOptions | boolean;
 }
 
 export abstract class LineMode<

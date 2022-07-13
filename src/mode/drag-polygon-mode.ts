@@ -4,6 +4,7 @@ import { cloneDeep, first, last } from 'lodash';
 import { DrawEvent, RenderEvent } from '../constant';
 import {
   DeepPartial,
+  IDragPolygonHelperOptions,
   ILayerMouseEvent,
   ILineFeature,
   ILineProperties,
@@ -31,7 +32,7 @@ import {
 export interface IDragPolygonModeOptions<F extends Feature = Feature>
   extends IPolygonModeOptions<F> {
   trigger: 'click' | 'drag';
-  helper: IPolygonHelperOptions;
+  helper: IPolygonHelperOptions | boolean;
 }
 
 export abstract class DragPolygonMode<
@@ -66,7 +67,7 @@ export abstract class DragPolygonMode<
     };
     if (options.trigger === 'drag') {
       newOptions.helper = {
-        ...newOptions.helper,
+        ...(newOptions.helper as IDragPolygonHelperOptions),
         ...DEFAULT_TRIGGER_DRAG_HELPER_CONFIG,
       };
     }

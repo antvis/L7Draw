@@ -16,7 +16,7 @@ import { DEFAULT_POINT_HELPER_CONFIG } from '../constant/helper';
 import { cloneDeep } from 'lodash';
 
 export interface IPointDrawerOptions extends IBaseModeOptions<Feature<Point>> {
-  helper: IPointHelperOptions;
+  helper: IPointHelperOptions | boolean;
 }
 
 export class PointDrawer extends PointMode<IPointDrawerOptions> {

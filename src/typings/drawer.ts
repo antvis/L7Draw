@@ -37,7 +37,7 @@ export interface IBaseModeOptions<F extends Feature = Feature> {
   editable: boolean;
   autoActive: boolean;
   multiple: boolean;
-  helper: any;
+  helper: any | boolean;
   popup: PopupOptions | boolean;
   history: HistoryConfig | false;
   keyboard: KeyBoardConfig | false;
@@ -63,4 +63,4 @@ export interface IAreaOptions {
 
 export type PopupOptions = Partial<TippyProps>;
 
-export type PopupContent = Content;
+export type PopupContent = Content | null;

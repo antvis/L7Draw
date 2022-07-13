@@ -16,6 +16,7 @@ hide: true
 | removeActiveFeature | 删除当前激活状态的绘制物                                                                           | `() => void`                                                            |
 | removeFeature       | 删除目标 Feature ，将目标 Feature 设为激活态，可传目标 Feature 本身或其 `properties` 中 `id` 字段  | `(feature: Feature &#124; string) => void`                              |
 | isEnable            | 判断当前 Draw 是否在绘制状态                                                                       | `() => boolean`                                                         |
+| setHelper           | 设置当前绘制提示文案，建议通过配置进行自定义而非手动调用该方法                                     | `(content: string &#124; Element &#124; DocumentFragment) => boolean`   |
 | revertHistory       | 回退至上一次保存的绘制状态                                                                         | `() => SourceData &#124; undefined`                                     |
 | redoHistory         | 重置到上一次回退                                                                                   | `() => SourceData &#124; undefined`                                     |
 | destroy             | 销毁当前 Draw 实例                                                                                 | `() => void`                                                            |

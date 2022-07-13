@@ -37,7 +37,7 @@ import { DEFAULT_POLYGON_HELPER_CONFIG } from '../constant/helper';
 export interface IPolygonModeOptions<F extends Feature = Feature>
   extends ILineModeOptions<F> {
   areaOptions: false | IAreaOptions;
-  helper: IPolygonHelperOptions;
+  helper: IPolygonHelperOptions | boolean;
 }
 
 export abstract class PolygonMode<

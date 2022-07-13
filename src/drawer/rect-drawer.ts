@@ -13,6 +13,7 @@ import { DrawEvent } from '../constant';
 import { DragPolygonMode, IDragPolygonModeOptions } from '../mode';
 import {
   DeepPartial,
+  IDragPolygonHelperOptions,
   ILineFeature,
   ILineProperties,
   IPointFeature,
@@ -45,7 +46,7 @@ export class RectDrawer extends DragPolygonMode<IRectDrawerOptions> {
     const newOptions = super.getDefaultOptions(options);
     if (newOptions.helper) {
       newOptions.helper = {
-        ...newOptions.helper,
+        ...(newOptions.helper as IDragPolygonHelperOptions),
         ...DEFAULT_RECT_HELPER_CONFIG,
       };
     }
