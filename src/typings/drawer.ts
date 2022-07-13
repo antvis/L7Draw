@@ -63,4 +63,4 @@ export interface IAreaOptions {
 
 export type PopupOptions = Partial<TippyProps>;
 
-export type PopupContent = Content | null;
+export type PopupContent = Content | null | undefined;
