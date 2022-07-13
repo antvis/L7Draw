@@ -91,18 +91,20 @@ export abstract class BaseMode<
    */
   get addable() {
     const data = this.getData();
-    const { multiple } = this.options;
+    const { multiple, maxCount } = this.options;
     const drawItem = data.find((item) => item.properties.isDraw);
     if (!this.enabled) {
       return false;
     }
-    if (multiple || drawItem) {
+    if ((multiple && maxCount <= 0) || drawItem) {
       return true;
     }
     if (!multiple && this.addCount >= 1) {
       return false;
     }
-
+    if (maxCount > 0 && this.getData().length >= maxCount) {
+      return false;
+    }
     return true;
   }
 
@@ -446,6 +448,7 @@ export abstract class BaseMode<
       disableEditable: false,
       popup: true,
       helper: {},
+      maxCount: -1,
     } as IBaseModeOptions;
   }
 
