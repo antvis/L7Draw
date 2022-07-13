@@ -27,6 +27,7 @@ import {
 } from '../utils';
 import { IMidPointModeOptions, MidPointMode } from './mid-point-mode';
 import { DEFAULT_LINE_HELPER_CONFIG } from '../constant/helper';
+import { cloneDeep } from 'lodash';
 
 export interface ILineModeOptions<F extends Feature = Feature>
   extends IMidPointModeOptions<F> {
@@ -79,7 +80,7 @@ export abstract class LineMode<
       ...this.getCommonOptions(options),
       showMidPoint: true,
       distanceOptions: false,
-      helper: DEFAULT_LINE_HELPER_CONFIG,
+      helper: cloneDeep(DEFAULT_LINE_HELPER_CONFIG),
     };
     if (options.distanceOptions) {
       newOptions.distanceOptions = {
@@ -88,10 +89,6 @@ export abstract class LineMode<
       };
     }
     return newOptions;
-  }
-
-  setHelper(type: keyof ILineHelperOptions | null) {
-    this.popup?.setContent(type ? this.options.helper[type] : null);
   }
 
   bindSceneEvent() {

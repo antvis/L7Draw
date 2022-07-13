@@ -25,6 +25,7 @@ import {
   getDefaultPolygonProperties,
   isSameFeature,
 } from '../utils';
+import { DEFAULT_RECT_HELPER_CONFIG } from '../constant/helper';
 
 export type IRectDrawerOptions = IDragPolygonModeOptions<Feature<Polygon>>;
 
@@ -36,6 +37,19 @@ export class RectDrawer extends DragPolygonMode<IRectDrawerOptions> {
     this.bindMidPointRenderEvent();
     this.bindLineRenderEvent();
     this.bindPolygonRenderEvent();
+  }
+
+  getDefaultOptions(
+    options: DeepPartial<IRectDrawerOptions>,
+  ): IRectDrawerOptions {
+    const newOptions = super.getDefaultOptions(options);
+    if (newOptions.helper) {
+      newOptions.helper = {
+        ...newOptions.helper,
+        ...DEFAULT_RECT_HELPER_CONFIG,
+      };
+    }
+    return newOptions;
   }
 
   setData(data: Feature<Polygon>[]) {

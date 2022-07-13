@@ -90,11 +90,13 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
             drawPolygon.properties.nodes[0].geometry.coordinates,
           ]),
         ]);
-        if (drawPolygon.properties.nodes.length > 1) {
+        const nodeLength = drawPolygon.properties.nodes.length;
+        if (nodeLength > 1) {
           this.setHelper('drawFinish');
         }
       } else if (drawLine) {
         this.handleCreatePolygon([feature], drawLine);
+        this.setHelper('drawContinue');
       }
       this.emit(DrawEvent.AddNode, feature, drawPolygon, this.getPolygonData());
     }
@@ -113,6 +115,11 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     const { autoActive, editable } = this.options;
     if (!autoActive || !editable) {
       this.handlePolygonUnClick(drawPolygon);
+    }
+    if (editable) {
+      this.setHelper(autoActive ? 'pointHover' : 'polygonHover');
+    } else {
+      this.setHelper(this.addable ? 'draw' : null);
     }
     this.emit(DrawEvent.Add, drawPolygon, this.getPolygonData());
   };

@@ -1,5 +1,5 @@
 import { Feature } from '@turf/turf';
-import { Props as TippyProps } from 'tippy.js';
+import { Content, Props as TippyProps } from 'tippy.js';
 import { HistoryConfig } from './source';
 import { IStyle } from './style';
 
@@ -37,7 +37,7 @@ export interface IBaseModeOptions<F extends Feature = Feature> {
   editable: boolean;
   autoActive: boolean;
   multiple: boolean;
-  helper: Record<string, string>;
+  helper: any;
   popup: PopupOptions | boolean;
   history: HistoryConfig | false;
   keyboard: KeyBoardConfig | false;
@@ -62,3 +62,5 @@ export interface IAreaOptions {
 }
 
 export type PopupOptions = Partial<TippyProps>;
+
+export type PopupContent = Content;

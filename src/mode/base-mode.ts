@@ -24,6 +24,7 @@ import {
   ILngLat,
   IRenderType,
   ISceneMouseEvent,
+  PopupContent,
   RenderMap,
 } from '../typings';
 import { getLngLat, isSameFeature } from '../utils';
@@ -184,7 +185,12 @@ export abstract class BaseMode<
    */
   abstract setData(data: Feature[]): void;
 
-  abstract setHelper(type: string | null): void;
+  setHelper(type: PopupContent | keyof O['helper'] | null) {
+    const { helper } = this.options;
+    // @ts-ignore
+    const content = type ? helper[type] ?? type : null;
+    this.popup?.setContent(content);
+  }
 
   /**
    * 获取当前是否为编辑态

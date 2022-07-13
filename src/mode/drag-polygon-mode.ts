@@ -1,6 +1,6 @@
 import { Scene } from '@antv/l7';
 import { Feature } from '@turf/turf';
-import { first, last } from 'lodash';
+import { cloneDeep, first, last } from 'lodash';
 import { DrawEvent, RenderEvent } from '../constant';
 import {
   DeepPartial,
@@ -10,6 +10,7 @@ import {
   IMidPointFeature,
   IPointFeature,
   IPolygonFeature,
+  IPolygonHelperOptions,
   IPolygonProperties,
   ISceneMouseEvent,
 } from '../typings';
@@ -22,10 +23,15 @@ import {
   updateTargetFeature,
 } from '../utils';
 import { IPolygonModeOptions, PolygonMode } from './polygon-mode';
+import {
+  DEFAULT_TRIGGER_DRAG_HELPER_CONFIG,
+  DEFAULT_DRAG_POLYGON_HELPER_CONFIg,
+} from '../constant/helper';
 
 export interface IDragPolygonModeOptions<F extends Feature = Feature>
   extends IPolygonModeOptions<F> {
   trigger: 'click' | 'drag';
+  helper: IPolygonHelperOptions;
 }
 
 export abstract class DragPolygonMode<
@@ -51,12 +57,20 @@ export abstract class DragPolygonMode<
   }
 
   getDefaultOptions(options: DeepPartial<T>): T {
-    return {
+    const newOptions = {
       ...super.getDefaultOptions(options),
       showMidPoint: false,
       trigger: 'click',
       autoActive: false,
+      helper: cloneDeep(DEFAULT_DRAG_POLYGON_HELPER_CONFIg),
     };
+    if (options.trigger === 'drag') {
+      newOptions.helper = {
+        ...newOptions.helper,
+        ...DEFAULT_TRIGGER_DRAG_HELPER_CONFIG,
+      };
+    }
+    return newOptions;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -112,6 +126,7 @@ export abstract class DragPolygonMode<
       this.drawPolygon,
       this.getPolygonData(),
     );
+    this.setHelper('drawFinish');
     return firstNode;
   }
 
@@ -134,6 +149,12 @@ export abstract class DragPolygonMode<
       this.drawPolygon,
       this.getPolygonData(),
     );
+
+    if (editable) {
+      this.setHelper(autoActive ? 'pointHover' : 'polygonHover');
+    } else {
+      this.setHelper(this.addable ? 'draw' : null);
+    }
     return lastNode;
   }
 

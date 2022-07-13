@@ -86,9 +86,11 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     if (!autoActive || !editable) {
       this.handleLineUnClick(drawLine);
     }
-    this.setHelper(
-      editable && autoActive ? 'pointHover' : this.addable ? 'draw' : null,
-    );
+    if (editable && autoActive) {
+      this.setHelper('pointHover');
+    } else {
+      this.setHelper(this.addable ? 'draw' : null);
+    }
     this.emit(DrawEvent.Add, drawLine, this.getLineData());
   };
 

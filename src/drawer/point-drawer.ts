@@ -13,6 +13,7 @@ import {
 } from '../typings';
 import { getDefaultPointProperties, isSameFeature } from '../utils';
 import { DEFAULT_POINT_HELPER_CONFIG } from '../constant/helper';
+import { cloneDeep } from 'lodash';
 
 export interface IPointDrawerOptions extends IBaseModeOptions<Feature<Point>> {
   helper: IPointHelperOptions;
@@ -37,7 +38,7 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   getDefaultOptions(options: DeepPartial<IPointDrawerOptions>) {
     const defaultOptions = {
       ...this.getCommonOptions(options),
-      helper: DEFAULT_POINT_HELPER_CONFIG,
+      helper: cloneDeep(DEFAULT_POINT_HELPER_CONFIG),
     };
     defaultOptions.style.point = DEFAULT_POINT_STYLE;
     return defaultOptions;
@@ -55,10 +56,6 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
 
   getRenderTypes(): IRenderType[] {
     return ['point'];
-  }
-
-  setHelper(type: keyof IPointHelperOptions | null) {
-    this.popup?.setContent(type ? this.options.helper[type] : null);
   }
 
   setData(points: Feature<Point>[]) {

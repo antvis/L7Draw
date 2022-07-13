@@ -5,7 +5,7 @@ import {
   featureCollection,
   lineString,
 } from '@turf/turf';
-import { first, isEqual, last } from 'lodash';
+import { cloneDeep, first, isEqual, last } from 'lodash';
 import { DEFAULT_AREA_OPTIONS, DrawEvent, RenderEvent } from '../constant';
 import { PolygonRender } from '../render';
 import {
@@ -94,15 +94,11 @@ export abstract class PolygonMode<
     return this.getPolygonData();
   }
 
-  setHelper(type: keyof IPolygonHelperOptions | null) {
-    this.popup?.setContent(type ? this.options.helper[type] : null);
-  }
-
   getDefaultOptions(options: DeepPartial<T>): T {
     const newOptions: T = {
       ...super.getDefaultOptions(options),
       areaOptions: false,
-      helper: DEFAULT_POLYGON_HELPER_CONFIG,
+      helper: cloneDeep(DEFAULT_POLYGON_HELPER_CONFIG),
     };
     if (options.areaOptions) {
       newOptions.areaOptions = {

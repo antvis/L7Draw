@@ -1,14 +1,14 @@
 import Tippy, { Instance as TippyInstance } from 'tippy.js';
 import { Scene } from '@antv/l7';
 import { getMapDom } from '../utils';
-import { PopupOptions } from '../typings';
+import { PopupContent, PopupOptions } from '../typings';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light.css';
 import { DEFAULT_POPUP_CONFIG, SceneEvent } from '../constant';
 import { debounce } from 'lodash';
 
 export class Popup {
-  protected content = '';
+  protected content: PopupContent = '';
 
   protected tippy: TippyInstance;
 
@@ -42,7 +42,7 @@ export class Popup {
   }
 
   setContent = debounce(
-    (content: string | null) => {
+    (content: PopupContent | null) => {
       this.content = content ?? '';
       this.tippy.setContent(content ?? '');
       this.checkTippyShow();

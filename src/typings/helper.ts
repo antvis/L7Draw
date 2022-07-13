@@ -1,26 +1,22 @@
+import { PopupContent } from './drawer';
+
 export type IPointHelperOptions = {
-  draw: string;
-  pointHover: string;
-  pointDrag: string;
+  draw: PopupContent;
+  pointHover: PopupContent;
+  pointDrag: PopupContent;
 };
 
 export type ILineHelperOptions = IPointHelperOptions & {
-  lineHover: string;
-  lineDrag: string;
-  midPointHover: string;
-  drawFinish: string;
+  lineHover: PopupContent;
+  lineDrag: PopupContent;
+  midPointHover: PopupContent;
+  drawFinish: PopupContent;
 };
 
 export type IPolygonHelperOptions = ILineHelperOptions & {
-  polygonHover: string;
-  polygonDrag: string;
+  drawContinue: PopupContent;
+  polygonHover: PopupContent;
+  polygonDrag: PopupContent;
 };
 
-// export type IDragHelperOptions = {
-//   dragStart: string;
-//   dragEnd: string;
-// };
-
-// export type IRectHelperOptions = IPolygonHelperOptions & IDragHelperOptions;
-//
-// export type ICircleHelperOptions = IPolygonHelperOptions & IDragHelperOptions;
+export type IDragPolygonHelperOptions = IPolygonHelperOptions;
