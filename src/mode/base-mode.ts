@@ -133,9 +133,7 @@ export abstract class BaseMode<
     this.saveHistory();
     this.bindCommonEvent();
     this.emit(DrawEvent.Init, this);
-    if (this.options.disableEditable) {
-      this.bindEnableEvent();
-    }
+    this.bindEnableEvent();
   }
 
   protected abstract get dragItem(): Feature | null | undefined;
@@ -250,9 +248,6 @@ export abstract class BaseMode<
    * 监听通用事件
    */
   unbindEnableEvent() {
-    if (this.options.disableEditable) {
-      return;
-    }
     this.scene.setMapStatus({
       doubleClickZoom: true,
     });
@@ -356,6 +351,9 @@ export abstract class BaseMode<
   // 设置激活的 Feature
   abstract setActiveFeature(target: Feature | string | null | undefined): void;
 
+  // 清除当前正在绘制中的绘制物，同时将当前激活态的绘制物置为普通态
+  abstract resetFeatures(): void;
+
   /**
    * 删除当前active的绘制物
    */
@@ -443,7 +441,6 @@ export abstract class BaseMode<
       multiple: true,
       history: cloneDeep(DEFAULT_HISTORY_CONFIG),
       keyboard: cloneDeep(DEFAULT_KEYBOARD_CONFIG),
-      disableEditable: false,
       popup: true,
       helper: {},
     } as IBaseModeOptions;
@@ -475,6 +472,9 @@ export abstract class BaseMode<
     this.resetCursor();
     this.bindEnableEvent();
     this.addCount = 0;
+    if (this.addable) {
+      this.setHelper('draw');
+    }
     setTimeout(() => {
       this.emit(DrawEvent.Enable, this);
     }, 0);
@@ -487,10 +487,12 @@ export abstract class BaseMode<
     if (!this.enabled) {
       return;
     }
+    this.resetFeatures();
     this.enabled = false;
     this.setCursor(null);
     this.unbindEnableEvent();
     this.addCount = 0;
+    this.setHelper(null);
     setTimeout(() => {
       this.emit(DrawEvent.Disable, this);
     }, 0);

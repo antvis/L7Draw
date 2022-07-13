@@ -108,9 +108,6 @@ export abstract class MidPointMode<
   }
 
   disableMidPointRenderAction() {
-    if (this.options.disableEditable) {
-      return;
-    }
     this.midPointRender?.disableClick();
     this.midPointRender?.disableHover();
   }

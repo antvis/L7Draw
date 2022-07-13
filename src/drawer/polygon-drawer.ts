@@ -1,5 +1,5 @@
 import { Scene } from '@antv/l7';
-import { coordAll, Feature, Polygon } from '@turf/turf';
+import { coordAll, Feature, featureCollection, Polygon } from '@turf/turf';
 import { first, last } from 'lodash';
 import { DrawEvent, RenderEvent } from '../constant';
 import { IPolygonModeOptions, PolygonMode } from '../mode';
@@ -21,7 +21,10 @@ import {
   isSameFeature,
 } from '../utils';
 
-export type IPolygonDrawerOptions = IPolygonModeOptions<Feature<Polygon>>;
+export interface IPolygonDrawerOptions
+  extends IPolygonModeOptions<Feature<Polygon>> {
+  liveUpdate: boolean;
+}
 
 export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<IPolygonDrawerOptions>) {
@@ -33,6 +36,15 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     this.bindMidPointRenderEvent();
     this.bindLineRenderEvent();
     this.bindPolygonRenderEvent();
+  }
+
+  getDefaultOptions(
+    options: DeepPartial<IPolygonDrawerOptions>,
+  ): IPolygonDrawerOptions {
+    return {
+      ...super.getDefaultOptions(options),
+      liveUpdate: false,
+    };
   }
 
   setData(data: Feature<Polygon>[]) {
@@ -218,6 +230,13 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
       dashLineData.push(
         createDashLine([mousePosition, last(nodes)!.geometry.coordinates]),
       );
+    }
+    if (this.options.liveUpdate && nodes.length >= 2) {
+      const nodePositions = coordAll(featureCollection(nodes));
+      drawPolygon.geometry.coordinates = [
+        [...nodePositions, mousePosition, nodePositions[0]],
+      ];
+      this.setPolygonData(this.getPolygonData());
     }
     this.setDashLineData(dashLineData);
     this.setTextData(this.getAllTexts());

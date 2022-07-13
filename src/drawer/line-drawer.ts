@@ -191,6 +191,37 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     }
   }
 
+  resetFeatures() {
+    let features = this.getLineData();
+    if (this.drawLine) {
+      features = features.filter((feature) => !feature.properties.isDraw);
+      this.source.setData({
+        point: [],
+        dashLine: [],
+        midPoint: [],
+      });
+      this.setTextData((features) => {
+        return features.filter((feature) => {
+          return !feature.properties.isActive;
+        });
+      });
+    }
+    if (this.editLine) {
+      this.handleLineUnClick(this.editLine);
+    }
+    this.setLineData(
+      features.map((feature) => {
+        feature.properties = {
+          ...feature.properties,
+          isDrag: false,
+          isActive: false,
+          isHover: false,
+        };
+        return feature;
+      }),
+    );
+  }
+
   bindEnableEvent(): void {
     super.bindEnableEvent();
     this.enableSceneRenderAction();
@@ -215,47 +246,5 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     this.bindSceneEvent = this.bindSceneEvent.bind(this);
     this.bindLineRenderEvent = this.bindLineRenderEvent.bind(this);
     this.bindMidPointRenderEvent = this.bindMidPointRenderEvent.bind(this);
-  }
-
-  enable() {
-    super.enable();
-    if (this.addable) {
-      this.setHelper('draw');
-    }
-  }
-
-  disable() {
-    super.disable();
-    this.setHelper(null);
-    if (!this.options.disableEditable) {
-      let features = this.getLineData();
-      if (this.drawLine) {
-        features = features.filter((feature) => !feature.properties.isDraw);
-        this.source.setData({
-          point: [],
-          dashLine: [],
-          midPoint: [],
-        });
-        this.setTextData((features) => {
-          return features.filter((feature) => {
-            return !feature.properties.isActive;
-          });
-        });
-      }
-      if (this.editLine) {
-        this.handleLineUnClick(this.editLine);
-      }
-      this.setLineData(
-        features.map((feature) => {
-          feature.properties = {
-            ...feature.properties,
-            isDrag: false,
-            isActive: false,
-            isHover: false,
-          };
-          return feature;
-        }),
-      );
-    }
   }
 }
