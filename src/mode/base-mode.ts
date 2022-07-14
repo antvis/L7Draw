@@ -475,11 +475,11 @@ export abstract class BaseMode<
    */
   enable(allowCreate = true) {
     this.allowCreate = allowCreate;
-    this.setHelper(this.addable ? 'draw' : null);
-    this.resetCursor();
+    this.addCount = 0;
     this.enabled = true;
     this.bindEnableEvent();
-    this.addCount = 0;
+    this.resetCursor();
+    this.setHelper(this.addable ? 'draw' : null);
     setTimeout(() => {
       this.emit(DrawEvent.Enable, this);
     }, 0);
