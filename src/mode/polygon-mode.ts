@@ -285,16 +285,24 @@ export abstract class PolygonMode<
         return feature;
       });
     });
-    if (!isDraw) {
-      const lineNodes = line.properties.nodes;
-      const firstNode = first(lineNodes)!;
-      const lastNode = last(lineNodes)!;
+    if (!isSameFeature(this.drawPolygon, polygon)) {
+      const oldLineNodes = line.properties.nodes;
+      const newLineNodes = [...nodes];
+      const firstNode = first(newLineNodes)!;
+      if (oldLineNodes.length === nodes.length) {
+        newLineNodes.push(createPointFeature(firstNode.geometry.coordinates));
+      } else {
+        newLineNodes.push(last(oldLineNodes)!);
+      }
+      const lastNode = last(newLineNodes)!;
       if (
         !isEqual(firstNode.geometry.coordinates, lastNode.geometry.coordinates)
       ) {
-        lineNodes.push(createPointFeature(firstNode.geometry.coordinates));
-        this.syncLineNodes(line, lineNodes);
+        lastNode.geometry.coordinates = cloneDeep(
+          firstNode.geometry.coordinates,
+        );
       }
+      this.syncLineNodes(line, newLineNodes);
     }
     return polygon;
   }

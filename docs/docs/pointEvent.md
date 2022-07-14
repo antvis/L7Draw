@@ -11,7 +11,7 @@ hide: true
 | DrawEvent.Disable &#124; 'disable'     | 禁用绘制的事件                                         | `function(drawer: Draw)`                                   |
 | DrawEvent.Clear &#124; 'clear'         | 清空数据的事件                                         | `function(drawer: Draw)`                                   |
 | DrawEvent.Add &#124; 'add'             | 新增的事件                                             | `function(newFeature: Feature, featureList: Feature[])`    |
-| DrawEvent.Edit &#124; 'edit'           | 编辑(位移或顶点发生变更)的事件                         | `function(editFeature: Feature, featureList: Feature[])`   |
+| DrawEvent.Edit &#124; 'edit'           | 编辑(位移或节点发生变更)的事件                         | `function(editFeature: Feature, featureList: Feature[])`   |
 | DrawEvent.Remove &#124; 'remove'       | 删除的事件                                             | `function(deleteFeature: Feature, featureList: Feature[])` |
 | DrawEvent.DragStart &#124; 'dragStart' | 开始拖拽的事件                                         | `function(dragFeature: Feature, featureList: Feature[])`   |
 | DrawEvent.Dragging &#124; 'dragging'   | 拖拽中的事件                                           | `function(dragFeature: Feature, featureList: Feature[])`   |

@@ -241,4 +241,65 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     this.setDashLineData(dashLineData);
     this.setTextData(this.getAllTexts());
   }
+
+  removeNode(node: Feature | string, feature: Feature | string) {
+    const targetFeature = this.getTargetFeature(feature) as
+      | IPolygonFeature
+      | undefined;
+    const targetNode = this.getTargetFeature(
+      node,
+      targetFeature?.properties.nodes ?? [],
+    );
+    if (targetFeature && targetNode) {
+      const nodes = targetFeature?.properties.nodes ?? [];
+      if (nodes.length < 4) {
+        return;
+      }
+      this.syncPolygonNodes(
+        targetFeature,
+        nodes.filter((node) => !isSameFeature(targetNode, node)),
+      );
+      this.emit(
+        DrawEvent.RemoveNode,
+        targetNode,
+        targetFeature,
+        this.getLineData(),
+      );
+      this.emit(DrawEvent.Edit, targetFeature, this.getPolygonData());
+    }
+  }
+
+  onPointContextMenu(e: ILayerMouseEvent<IPointFeature>) {
+    const editPolygon = this.editPolygon;
+    let deleteNode = e.feature!;
+    const nodes = editPolygon?.properties.nodes ?? [];
+    if (!editPolygon || nodes.length < 4) {
+      return;
+    }
+    if (!nodes.find((node) => isSameFeature(node, deleteNode))) {
+      deleteNode = nodes[0];
+    }
+    this.removeNode(deleteNode, editPolygon);
+    return deleteNode;
+  }
+
+  bindPointRenderEvent() {
+    super.bindPointRenderEvent();
+    this.pointRender?.on(
+      RenderEvent.Contextmenu,
+      this.onPointContextMenu.bind(this),
+    );
+  }
+
+  enablePointRenderAction() {
+    super.enablePointRenderAction();
+    if (this.options.editable) {
+      this.pointRender?.enableContextMenu();
+    }
+  }
+
+  disablePointRenderAction() {
+    super.disablePointRenderAction();
+    this.pointRender?.disableContextMenu();
+  }
 }

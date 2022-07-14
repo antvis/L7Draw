@@ -43,6 +43,11 @@ const Demo: React.FC = () => {
         console.log('addNode', node, editLine, lineList);
       });
 
+      // 监听添加结点的事件
+      drawer.on(DrawEvent.RemoveNode, (node, editLine, lineList) => {
+        console.log('removeNode', node, editLine, lineList);
+      });
+
       // LineString数据发生变更时触发，等价于同时监听add和edit事件
       drawer.on(DrawEvent.Change, (lineList) => {
         console.log('change', lineList);

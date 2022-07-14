@@ -233,19 +233,19 @@ export abstract class BaseMode<
     this.on(DrawEvent.Remove, this.emitChangeEvent);
     this.on(DrawEvent.Clear, this.emitChangeEvent);
     this.on(DrawEvent.AddNode, this.saveHistory);
+    this.on(DrawEvent.RemoveNode, this.emitChangeEvent);
   }
 
   /**
    * 监听通用事件
    */
   bindEnableEvent() {
+    this.unbindKeyboardEvent();
     this.scene.setMapStatus({
       doubleClickZoom: false,
     });
-    this.scene.off(SceneEvent.Mousemove, this.saveMouseLngLat);
     this.scene.on(SceneEvent.Mousemove, this.saveMouseLngLat);
 
-    this.unbindKeyboardEvent();
     this.bindKeyboardEvent();
   }
 
@@ -334,10 +334,12 @@ export abstract class BaseMode<
   }
 
   // 传入 Feature 或者 id 获取当前数据中的目标 Feature
-  getTargetFeature(target: Feature | string | null | undefined) {
+  getTargetFeature(
+    target: Feature | string | null | undefined,
+    data = this.getData(),
+  ) {
     let targetFeature: IBaseFeature | null = null;
     if (target) {
-      const data = this.getData();
       targetFeature =
         data.find(
           (feature) =>
@@ -473,11 +475,11 @@ export abstract class BaseMode<
    */
   enable(allowCreate = true) {
     this.allowCreate = allowCreate;
-    this.setHelper(this.addable ? 'draw' : null);
-    this.resetCursor();
+    this.addCount = 0;
     this.enabled = true;
     this.bindEnableEvent();
-    this.addCount = 0;
+    this.resetCursor();
+    this.setHelper(this.addable ? 'draw' : null);
     setTimeout(() => {
       this.emit(DrawEvent.Enable, this);
     }, 0);

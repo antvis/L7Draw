@@ -251,6 +251,9 @@ export abstract class LineMode<
         return feature;
       });
     });
+    if (isSameFeature(this.editLine, line)) {
+      this.setMidPointData(this.getMidPointsByLine(line));
+    }
     this.setPointData(line.properties.nodes);
     this.setTextData(this.getAllTexts());
     return line;

@@ -15,6 +15,7 @@ export enum DrawEvent {
   Dragging = 'dragging',
   DragEnd = 'dragEnd',
   AddNode = 'addNode',
+  RemoveNode = 'removeNode',
 }
 
 /**
@@ -37,6 +38,7 @@ export enum RenderEvent {
   Dragging = 'dragging',
   Dragend = 'dragend',
   DblClick = 'dblClick',
+  Contextmenu = 'contextmenu',
 }
 
 /**
