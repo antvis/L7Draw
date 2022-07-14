@@ -1,5 +1,7 @@
 import { defineConfig } from 'dumi';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export default defineConfig({
   title: 'L7Draw',
   favicon:
@@ -56,5 +58,7 @@ export default defineConfig({
   devServer: {
     port: 8080,
   },
+  copy: isProduction ? ['docs/CNAME'] : [],
+  devtool: isProduction ? false : 'eval',
   // more config: https://d.umijs.org/config
 });
