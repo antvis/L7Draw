@@ -67,7 +67,7 @@ const drawer = new DrawPoint(scene, {
 - [point](#point)：结点，即作为 `DrawPoint` 中点的样式，也作为其他几类 Draw 中结点的样式。
 - [line](#line)：实线，即作为 `DrawLine` 中线的样式，也作为其他几类面 Draw 中边框的样式。
 - [polygon](#polygon)：多边形/面。
-- [midPoint](#midpoint)：线段中点，点击即可新增顶点。
+- [midPoint](#midpoint)：线段中点，点击即可新增节点。
 - [dashLine](#dashline)：虚线，一般在绘制过程中呈现。
 - [text](#text)：文本，一般用于表示距离和面积文案。
 

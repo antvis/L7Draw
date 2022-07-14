@@ -13,7 +13,7 @@ hide: true
 | DrawEvent.AddNode &#124; 'addNode'       | 添加结点                                               | `(newNode: Feature,editFeature: Feature, featureList: Feature[]) => void`    |
 | DrawEvent.RemoveNode &#124; 'removeNode' | 删除结点                                               | `(removeNode: Feature,editFeature: Feature, featureList: Feature[]) => void` |
 | DrawEvent.Add &#124; 'add'               | 新增的事件                                             | `function(newFeature: Feature, featureList: Feature[])`                      |
-| DrawEvent.Edit &#124; 'edit'             | 编辑(位移或顶点发生变更)的事件                         | `function(editFeature: Feature, featureList: Feature[])`                     |
+| DrawEvent.Edit &#124; 'edit'             | 编辑(位移或节点发生变更)的事件                         | `function(editFeature: Feature, featureList: Feature[])`                     |
 | DrawEvent.Remove &#124; 'remove'         | 删除的事件                                             | `function(deleteFeature: Feature, featureList: Feature[])`                   |
 | DrawEvent.DragStart &#124; 'dragStart'   | 开始拖拽的事件                                         | `function(dragFeature: Feature, featureList: Feature[])`                     |
 | DrawEvent.Dragging &#124; 'dragging'     | 拖拽中的事件                                           | `function(dragFeature: Feature, featureList: Feature[])`                     |
