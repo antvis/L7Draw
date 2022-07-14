@@ -75,6 +75,14 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     return ['line', 'dashLine', 'midPoint', 'point', 'text'];
   }
 
+  bindPointRenderEvent() {
+    super.bindPointRenderEvent();
+    this.pointRender?.on(
+      RenderEvent.Contextmenu,
+      this.onPointContextMenu.bind(this),
+    );
+  }
+
   drawLineFinish = () => {
     const drawLine = this.drawLine;
     const nodes = drawLine?.properties.nodes ?? [];
@@ -110,6 +118,44 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
       };
       this.onPointCreate(e);
     }
+  }
+
+  removeNode(node: Feature | string, feature: Feature | string) {
+    const targetFeature = this.getTargetFeature(feature) as
+      | ILineFeature
+      | undefined;
+    const targetNode = this.getTargetFeature(
+      node,
+      targetFeature?.properties.nodes ?? [],
+    );
+    if (targetFeature && targetNode) {
+      const nodes = targetFeature?.properties.nodes ?? [];
+      if (nodes.length < 3) {
+        return;
+      }
+      this.syncLineNodes(
+        targetFeature,
+        nodes.filter((node) => !isSameFeature(targetNode, node)),
+      );
+      this.emit(
+        DrawEvent.RemoveNode,
+        targetNode,
+        targetFeature,
+        this.getLineData(),
+      );
+      this.emit(DrawEvent.Edit, targetFeature, this.getLineData());
+    }
+  }
+
+  onPointContextMenu(e: ILayerMouseEvent<IPointFeature>) {
+    const editLine = this.editLine;
+    const deleteNode = e.feature!;
+    const nodes = editLine?.properties.nodes ?? [];
+    if (!editLine || nodes.length < 3) {
+      return;
+    }
+    this.removeNode(deleteNode, editLine);
+    return deleteNode;
   }
 
   onPointCreate(e: ILayerMouseEvent) {
@@ -220,6 +266,18 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
         return feature;
       }),
     );
+  }
+
+  enablePointRenderAction() {
+    super.enablePointRenderAction();
+    if (this.options.editable) {
+      this.pointRender?.enableContextMenu();
+    }
+  }
+
+  disablePointRenderAction() {
+    super.disablePointRenderAction();
+    this.pointRender?.disableContextMenu();
   }
 
   bindEnableEvent(): void {

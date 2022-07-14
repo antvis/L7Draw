@@ -79,6 +79,10 @@ export class PointRender extends LayerRender<IPointFeature, IPointStyle> {
     this.emit(RenderEvent.Click, e);
   };
 
+  onContextmenu = (e: ILayerMouseEvent) => {
+    this.emit(RenderEvent.Contextmenu, e);
+  };
+
   enableCreate() {
     this.disableCreate();
     this.layers[0].on(LayerEvent.UnClick, this.onCreate);
@@ -121,5 +125,14 @@ export class PointRender extends LayerRender<IPointFeature, IPointStyle> {
 
   disableClick() {
     this.layers[0].off(LayerEvent.Click, this.onClick);
+  }
+
+  enableContextMenu() {
+    this.disableContextMenu();
+    this.layers[0].on(LayerEvent.Contextmenu, this.onContextmenu);
+  }
+
+  disableContextMenu() {
+    this.layers[0].off(LayerEvent.Contextmenu, this.onContextmenu);
   }
 }
