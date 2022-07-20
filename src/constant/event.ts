@@ -84,6 +84,6 @@ export enum SceneEvent {
 }
 
 export enum ControlEvent {
-  DrawChange = 'drawChange',
-  DataChange = 'dataChange',
+  DrawChange = 'drawchange',
+  DataChange = 'datachange',
 }
