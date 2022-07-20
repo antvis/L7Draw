@@ -6,3 +6,4 @@ export * from './source';
 export * from './style';
 export * from './utils';
 export * from './helper';
+export * from './dom';

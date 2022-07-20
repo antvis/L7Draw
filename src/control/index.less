@@ -1,0 +1,41 @@
+@cls-prefix: l7-draw-control;
+@btn-size: 30px;
+@icon-size: 26px;
+
+.@{cls-prefix} {
+  display: flex;
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: 2px;
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: @btn-size;
+    height: @btn-size;
+    padding: 0;
+    text-align: center;
+    background: transparent;
+    border-width: 0 0 0 0;
+    border-right: 1px solid #e0e0e0;
+    outline: 0;
+    cursor: pointer;
+    &:hover {
+      background-color: #e5e5e5;
+    }
+    &:last-child {
+      border-bottom: 0;
+    }
+    .l7-draw-icon {
+      width: @icon-size;
+      height: @icon-size;
+      overflow: hidden;
+      fill: currentColor;
+    }
+    &--active {
+      svg {
+        color: #0370fe;
+      }
+    }
+  }
+}
