@@ -1,5 +1,5 @@
 ---
-title: 绘制控件
+title: 控件
 order: 7
 ---
 
