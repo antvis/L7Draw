@@ -4,7 +4,7 @@ order: 2
 group:
   path: /usage
   title: 使用场景
-  order: 6
+  order: 7
 ---
 
 <code src="./bus.tsx" compact="true" defaultShowCode="true"></code>

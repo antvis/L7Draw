@@ -1,6 +1,6 @@
 {
   "name": "@antv/l7-draw",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "A drawing package for L7",
   "license": "MIT",
   "scripts": {
@@ -69,7 +69,7 @@
     "yorkie": "^2.0.0"
   },
   "peerDependencies": {
-    "@antv/l7": "2.8.35"
+    "@antv/l7": "^2.8.35"
   },
   "husky": {
     "hooks": {

@@ -4,7 +4,7 @@ order: 1
 group:
   path: /usage
   title: 使用场景
-  order: 6
+  order: 7
 ---
 
 <code src="./tileMap.tsx" compact="true" defaultShowCode="true"></code>

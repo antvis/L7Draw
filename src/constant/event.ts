@@ -82,3 +82,8 @@ export enum SceneEvent {
   Dragging = 'dragging',
   Dragend = 'dragend',
 }
+
+export enum ControlEvent {
+  DrawChange = 'drawchange',
+  DataChange = 'datachange',
+}
