@@ -1,5 +1,5 @@
 import { Scene } from '@antv/l7';
-import { coordAll, Feature, featureCollection, Polygon } from '@turf/turf';
+import { coordAll, Feature, featureCollection, Polygon, Position } from '@turf/turf';
 import { first, last } from 'lodash';
 import { DrawEvent, RenderEvent } from '../constant';
 import { IPolygonModeOptions, PolygonMode } from '../mode';
@@ -18,12 +18,15 @@ import {
   createPointFeature,
   getDefaultPolygonProperties,
   getPosition,
+  getPiexPosition,
+  getSnap,
   isSameFeature,
 } from '../utils';
 
 export interface IPolygonDrawerOptions
   extends IPolygonModeOptions<Feature<Polygon>> {
   liveUpdate: boolean;
+  snapable:boolean;
 }
 
 export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
@@ -36,6 +39,17 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     this.bindMidPointRenderEvent();
     this.bindLineRenderEvent();
     this.bindPolygonRenderEvent();
+
+    //获取已绘制的features
+    const {snapable}=options
+    if(snapable){
+      this.snapFeatures=this.getData()
+      this.on(DrawEvent.Change, (polygonList) => {
+        //console.log('change', polygonList);
+        this.snapFeatures=polygonList
+      });
+      //console.log(this.getData())
+    }
   }
 
   getDefaultOptions(
@@ -87,6 +101,17 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     if (!this.addable || this.dragPoint) {
       return;
     }
+    let mousePosition = getPosition(e);
+    const mousePiexPosition:Position=[e.x,e.y]
+    const {snapable} =this.options
+    if(snapable){
+      // console.log(mousePiexPosition)
+      // console.log(this.snapFeatures)
+      mousePosition=getSnap(mousePiexPosition,mousePosition,this.snapFeatures,this.scene)
+      e.lngLat.lng = mousePosition[0]
+      e.lngLat.lat = mousePosition[1]
+    }
+
     const feature = super.onPointCreate(e);
     const drawPolygon = this.drawPolygon;
     const drawLine = this.drawLine;
@@ -214,14 +239,22 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     }
     return feature;
   }
-
+  snapFeatures:IPolygonFeature[]=[]
   onSceneMouseMove(e: ISceneMouseEvent) {
     const drawPolygon = this.drawPolygon;
     const nodes = drawPolygon?.properties.nodes ?? [];
     if (!drawPolygon || !nodes.length) {
       return;
     }
-    const mousePosition = getPosition(e);
+    let mousePosition = getPosition(e);
+    const mousePiexPosition= getPiexPosition(e);
+    const {snapable} =this.options
+    if(snapable){
+      // console.log(mousePiexPosition)
+      // console.log(this.snapFeatures)
+      mousePosition=getSnap(mousePiexPosition,mousePosition,this.snapFeatures,this.scene)
+    }
+    
     const dashLineData: IDashLineFeature[] = [];
     dashLineData.push(
       createDashLine([mousePosition, first(nodes)!.geometry.coordinates]),
