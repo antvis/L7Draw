@@ -1,4 +1,4 @@
-# L7Draw-1
+# L7Draw
 
 > 基于 [L7](https://l7.antv.vision/zh) 封装的地理绘制库
 
