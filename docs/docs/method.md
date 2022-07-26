@@ -13,6 +13,7 @@ hide: true
 | show                | 显示该 Draw 下所有的绘制物                                                                                                | `() => void`                                                            |
 | hide                | 隐藏该 Draw 下所有的绘制物                                                                                                | `() => void`                                                            |
 | setActiveFeature    | 将目标 Feature 设为激活态，可传目标 `Feature` 本身或其 `id`，传 `null` 或 `undefined` 则取消激活态                        | `(feature: Feature &#124; string &#124; null &#124; undefined) => void` |
+| getRenderLayers     | 获取不同渲染类型对应的 L7 原生图层                                                                                        | `() => { [key: RenderType]: ILayer[] }`                                 |
 | resetFeatures       | 清除当前正在绘制的绘制物，同时将激活的绘制物置为普通态                                                                    | `() => void`                                                            |
 | removeActiveFeature | 删除当前激活状态的绘制物                                                                                                  | `() => void`                                                            |
 | removeFeature       | 删除目标 Feature ，将目标 Feature 设为激活态，可传目标 Feature 本身或其 `properties` 中 `id` 字段                         | `(feature: Feature &#124; string) => void`                              |

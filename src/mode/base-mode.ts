@@ -1,7 +1,14 @@
 import { Scene } from '@antv/l7';
 import { Feature } from '@turf/turf';
 import EventEmitter from 'eventemitter3';
-import { cloneDeep, debounce, isEqual, merge } from 'lodash';
+import {
+  cloneDeep,
+  debounce,
+  fromPairs,
+  isEqual,
+  merge,
+  toPairs,
+} from 'lodash';
 import Mousetrap from 'mousetrap';
 import {
   DEFAULT_CURSOR_MAP,
@@ -331,6 +338,17 @@ export abstract class BaseMode<
     if (this.source.redoHistory()) {
       this.correctDrawItem();
     }
+  }
+
+  /**
+   * 获取 renderType 与对应 L7图层的键值对
+   */
+  getRenderLayers() {
+    return fromPairs(
+      toPairs(this.render).map(([renderType, render]) => {
+        return [renderType, render.getLayers()];
+      }),
+    );
   }
 
   // 传入 Feature 或者 id 获取当前数据中的目标 Feature
