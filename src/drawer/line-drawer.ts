@@ -222,8 +222,12 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
       return;
     }
     const lastNode = last(drawLine.properties.nodes)!;
+    let mousePosition = getPosition(e);
+    if (this.options.adsorbOptions) {
+      mousePosition = this.getAdsorbPosition(mousePosition) ?? mousePosition;
+    }
     this.setDashLineData([
-      createDashLine([getPosition(e), lastNode.geometry.coordinates]),
+      createDashLine([mousePosition, lastNode.geometry.coordinates]),
     ]);
     this.setTextData(this.getAllTexts());
   }

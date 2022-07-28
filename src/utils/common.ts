@@ -43,3 +43,20 @@ export const transLngLat2Position: (lngLat: ILngLat) => Position = ({
   lng,
   lat,
 }) => [lng, lat];
+
+/**
+ * 找到最小值的下标
+ * @param array
+ */
+export const findMinIndex = (array: number[]) => {
+  let maxValue = Number.MAX_SAFE_INTEGER;
+  let maxIndex = 0;
+  const length = array.length;
+  for (let index = 0; index < length; index++) {
+    if (array[index] < maxValue) {
+      maxValue = array[index];
+      maxIndex = index;
+    }
+  }
+  return maxIndex;
+};

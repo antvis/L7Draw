@@ -86,6 +86,18 @@ export abstract class PolygonMode<
     });
   }
 
+  getDragPolygon() {
+    return this.dragPolygon;
+  }
+
+  getDrawPolygon() {
+    return this.drawPolygon;
+  }
+
+  getEditPolygon() {
+    return this.editPolygon;
+  }
+
   getRenderTypes(): IRenderType[] {
     return ['polygon', 'line', 'dashLine', 'midPoint', 'point', 'text'];
   }

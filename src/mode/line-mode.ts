@@ -1,9 +1,14 @@
 import { coordAll, Feature, featureCollection, Position } from '@turf/turf';
-import { DEFAULT_DISTANCE_OPTIONS, RenderEvent } from '../constant';
+import {
+  DEFAULT_ADSORB_CONFIG,
+  DEFAULT_DISTANCE_OPTIONS,
+  RenderEvent,
+} from '../constant';
 import { LineRender } from '../render';
 import {
   DeepPartial,
   FeatureUpdater,
+  IAdsorbOptions,
   IDashLineFeature,
   IDistanceOptions,
   ILayerMouseEvent,
@@ -20,9 +25,14 @@ import {
   calcDistanceTextsByLine,
   createLineFeature,
   createPointFeature,
+  getAdsorbFeature,
+  getAdsorbLine,
+  getAdsorbPoint,
   getLngLat,
   getPosition,
   isSameFeature,
+  resetEventLngLat,
+  transLngLat2Position,
   updateTargetFeature,
 } from '../utils';
 import { IMidPointModeOptions, MidPointMode } from './mid-point-mode';
@@ -33,6 +43,7 @@ export interface ILineModeOptions<F extends Feature = Feature>
   extends IMidPointModeOptions<F> {
   distanceOptions: false | IDistanceOptions;
   helper: ILineHelperOptions | boolean;
+  adsorbOptions: IAdsorbOptions | false;
 }
 
 export abstract class LineMode<
@@ -75,6 +86,18 @@ export abstract class LineMode<
 
   protected previousPosition: Position = [0, 0];
 
+  getDragLine() {
+    return this.dragLine;
+  }
+
+  getDrawLine() {
+    return this.drawLine;
+  }
+
+  getEditLine() {
+    return this.editLine;
+  }
+
   getDefaultOptions(options: DeepPartial<T>): T {
     const newOptions: T = {
       ...this.getCommonOptions(options),
@@ -88,7 +111,38 @@ export abstract class LineMode<
         ...newOptions.distanceOptions,
       };
     }
+    if (options.adsorbOptions) {
+      newOptions.adsorbOptions = {
+        ...DEFAULT_ADSORB_CONFIG,
+        ...newOptions.adsorbOptions,
+      };
+    }
     return newOptions;
+  }
+
+  /**
+   * 获取 position 经过吸附作用后的 position，若无吸附效果则返回原始数据
+   * @param position
+   */
+  getAdsorbPosition(position: Position): Position | null {
+    const { adsorbOptions } = this.options;
+    if (typeof adsorbOptions === 'boolean') {
+      return position;
+    }
+    const scene = this.scene;
+    const { enablePointAdsorb, enableLineAdsorb, data } = adsorbOptions;
+    let adsorbPosition: Position | null = null;
+    const { points, lines } = getAdsorbFeature(data, this, position);
+
+    if (points.length && enablePointAdsorb) {
+      adsorbPosition = getAdsorbPoint(position, points, adsorbOptions, scene);
+    }
+
+    if (!adsorbPosition && lines.length && enableLineAdsorb) {
+      adsorbPosition = getAdsorbLine(position, lines, adsorbOptions, scene);
+    }
+
+    return adsorbPosition;
   }
 
   bindSceneEvent() {
@@ -395,6 +449,19 @@ export abstract class LineMode<
     return line;
   }
 
+  resetAdsorbLngLat(e: ILayerMouseEvent | ISceneMouseEvent) {
+    if (!this.options.adsorbOptions) {
+      return;
+    }
+    const adsorbPosition = this.getAdsorbPosition(
+      transLngLat2Position(getLngLat(e)),
+    );
+    if (adsorbPosition) {
+      resetEventLngLat(e, adsorbPosition);
+    }
+    return adsorbPosition;
+  }
+
   /**
    * 创建点之后，对应线段的处理
    * @param e
@@ -403,6 +470,7 @@ export abstract class LineMode<
     if (this.editLine) {
       return;
     }
+    this.resetAdsorbLngLat(e);
     const point = super.onPointCreate(e);
     const drawLine = this.drawLine;
     if (!point) {
@@ -428,6 +496,12 @@ export abstract class LineMode<
 
   onPointDragging(e: ISceneMouseEvent): IPointFeature | undefined {
     const dragPoint = super.onPointDragging(e);
+    if (dragPoint) {
+      const adsorbPosition = this.resetAdsorbLngLat(e);
+      if (adsorbPosition) {
+        dragPoint.geometry.coordinates = cloneDeep(adsorbPosition);
+      }
+    }
     const editLine = this.editLine;
     if (editLine && dragPoint) {
       this.syncLineNodes(
