@@ -221,6 +221,9 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     if (!drawPolygon || !nodes.length) {
       return;
     }
+    if (this.options.adsorbOptions) {
+      this.resetAdsorbLngLat(e);
+    }
     const mousePosition = getPosition(e);
     const dashLineData: IDashLineFeature[] = [];
     dashLineData.push(

@@ -1,4 +1,10 @@
-import { AdsorbTargetFeature, AdsorbResult, IAdsorbOptions } from '../typings';
+import {
+  AdsorbTargetFeature,
+  AdsorbResult,
+  IAdsorbOptions,
+  IPointFeature,
+  ILineFeature,
+} from '../typings';
 import { LineMode, PolygonMode } from '../mode';
 import {
   coordAll,
@@ -15,6 +21,7 @@ import {
 } from '@turf/turf';
 import { Scene } from '@antv/l7';
 import { findMinIndex } from './common';
+import { eq, isEqual } from 'lodash';
 
 /**
  * 获取当前数据对应的吸附点、线数组
@@ -40,10 +47,17 @@ export const getAdsorbFeature: (
   }
   if (features.length) {
     adsorbPoints = features
-      .map((feature) => feature.properties?.nodes)
+      .map((feature) => {
+        const { nodes = [], isActive = false } = feature.properties ?? {};
+        return isActive
+          ? nodes.filter((node: IPointFeature) => {
+              const equal = !isEqual(node.geometry.coordinates, position);
+              return equal;
+            })
+          : nodes;
+      })
       .flat()
       .filter((feature) => feature);
-
     if (!adsorbPoints.length) {
       adsorbPoints = coordAll(featureCollection(features)).map((position) =>
         point(position),
@@ -51,7 +65,14 @@ export const getAdsorbFeature: (
     }
 
     adsorbLines = features
-      .map((feature) => feature.properties?.line)
+      .map((feature) => {
+        const line: ILineFeature = feature.properties?.line ?? feature;
+        if (feature.properties?.isActive) {
+          return [line];
+        }
+        return [line];
+      })
+      .flat()
       .filter((feature) => feature);
 
     if (!adsorbLines.length) {
