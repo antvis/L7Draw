@@ -37,7 +37,7 @@ import {
 } from '../utils';
 import { IMidPointModeOptions, MidPointMode } from './mid-point-mode';
 import { DEFAULT_LINE_HELPER_CONFIG } from '../constant/helper';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 
 export interface ILineModeOptions<F extends Feature = Feature>
   extends IMidPointModeOptions<F> {
@@ -133,7 +133,6 @@ export abstract class LineMode<
     const { enablePointAdsorb, enableLineAdsorb, data } = adsorbOptions;
     let adsorbPosition: Position | null = null;
     const { points, lines } = getAdsorbFeature(data, this, position);
-
     if (points.length && enablePointAdsorb) {
       adsorbPosition = getAdsorbPoint(position, points, adsorbOptions, scene);
     }

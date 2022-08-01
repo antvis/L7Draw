@@ -22,32 +22,43 @@ const Demo: React.FC = () => {
       }),
     });
     scene.on('loaded', () => {
-      const targetPoint: Feature = {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'Point',
-          coordinates: [120.0421142578125, 30.280860989455412],
-        },
-      };
       const drawer = new DrawPolygon(scene, {
-        adsorbOptions: {
-          data: [targetPoint],
-        },
+        adsorbOptions: {},
+        initialData: [
+          {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'Polygon',
+              coordinates: [
+                [
+                  [120.11764526367186, 30.25521201642245],
+                  [120.10391235351564, 30.21398171687066],
+                  [120.16468048095703, 30.217838520965802],
+                  [120.11764526367186, 30.25521201642245],
+                ],
+              ],
+            },
+          },
+          {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'Polygon',
+              coordinates: [
+                [
+                  [120.11764526367186, 30.25521201642245],
+                  [120.16468048095703, 30.217838520965802],
+                  [120.18424987792969, 30.288717426233095],
+                  [120.11764526367186, 30.25521201642245],
+                ],
+              ],
+            },
+          },
+        ],
       });
       setPolygonDrawer(drawer);
       drawer.enable();
-
-      const pointLayer = new PointLayer()
-        .source(featureCollection([targetPoint]))
-        .shape('circle')
-        .size(8)
-        .color('red')
-        .style({
-          opacity: 0.5,
-        });
-
-      scene.addLayer(pointLayer);
     });
   }, []);
 

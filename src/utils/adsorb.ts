@@ -11,6 +11,7 @@ import {
   Feature,
   featureCollection,
   getType,
+  lineString,
   LineString,
   nearestPointOnLine,
   point,
@@ -20,7 +21,7 @@ import {
   Position,
 } from '@turf/turf';
 import { Scene } from '@antv/l7';
-import { findMinIndex } from './common';
+import { findMinIndex, splitByPosition } from './common';
 import { eq, isEqual } from 'lodash';
 
 /**
@@ -37,7 +38,6 @@ export const getAdsorbFeature: (
   let features: AdsorbTargetFeature[] = [];
   let adsorbPoints: Feature<Point>[] = [];
   let adsorbLines: Feature<LineString>[] = [];
-  // let dragPoint = draw.getDragPoint();
   if (adsorbDataConfig === 'drawData') {
     features = draw.getData();
   } else if (adsorbDataConfig instanceof Function) {
@@ -51,8 +51,7 @@ export const getAdsorbFeature: (
         const { nodes = [], isActive = false } = feature.properties ?? {};
         return isActive
           ? nodes.filter((node: IPointFeature) => {
-              const equal = !isEqual(node.geometry.coordinates, position);
-              return equal;
+              return !isEqual(node.geometry.coordinates, position);
             })
           : nodes;
       })
@@ -68,7 +67,13 @@ export const getAdsorbFeature: (
       .map((feature) => {
         const line: ILineFeature = feature.properties?.line ?? feature;
         if (feature.properties?.isActive) {
-          return [line];
+          const { nodes } = line.properties;
+          const positionsList = splitByPosition(
+            nodes.map((node) => node.geometry.coordinates),
+            position,
+          ).filter((positions) => positions.length > 1);
+
+          return positionsList.map((positions) => lineString(positions));
         }
         return [line];
       })

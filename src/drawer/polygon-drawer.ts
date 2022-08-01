@@ -175,6 +175,10 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
       const nodes = lineNodes.slice(0, lineNodes.length - 1);
       const firstLineNode = first(lineNodes)!;
       const lastLineNode = last(lineNodes)!;
+      // if (this.options.adsorbOptions) {
+      //   this.resetAdsorbLngLat(e);
+      // }
+      super.onPointDragging(e);
       if (
         isSameFeature(firstLineNode, feature) ||
         isSameFeature(lastLineNode, feature)
@@ -182,7 +186,6 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
         firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates =
           getPosition(e);
       }
-      super.onPointDragging(e);
       this.syncPolygonNodes(editPolygon, nodes);
       this.setActivePolygon(editPolygon);
     }
