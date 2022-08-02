@@ -1,6 +1,7 @@
 import { Scene } from '@antv/l7';
 import { Position } from '@turf/turf';
 import { ILayerMouseEvent, ILngLat, ISceneMouseEvent } from '../typings';
+import { isEqual, split } from 'lodash';
 
 // @ts-ignore
 export const isDev = process.env.NODE_ENV === 'development';
@@ -43,3 +44,40 @@ export const transLngLat2Position: (lngLat: ILngLat) => Position = ({
   lng,
   lat,
 }) => [lng, lat];
+
+/**
+ * 找到最小值的下标
+ * @param array
+ */
+export const findMinIndex = (array: number[]) => {
+  let maxValue = Number.MAX_SAFE_INTEGER;
+  let maxIndex = 0;
+  const length = array.length;
+  for (let index = 0; index < length; index++) {
+    if (array[index] < maxValue) {
+      maxValue = array[index];
+      maxIndex = index;
+    }
+  }
+  return maxIndex;
+};
+
+export const splitByPosition = (
+  positions: Position[],
+  splitPosition: Position,
+) => {
+  const linePositionsList: Position[][] = [];
+  let linePositions: Position[] = [];
+  positions.forEach((position) => {
+    if (!isEqual(position, splitPosition)) {
+      linePositions.push(position);
+    } else if (linePositions.length) {
+      linePositionsList.push(linePositions);
+      linePositions = [];
+    }
+  });
+  if (linePositions.length) {
+    linePositionsList.push(linePositions);
+  }
+  return linePositionsList;
+};

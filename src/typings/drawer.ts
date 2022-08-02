@@ -1,7 +1,8 @@
-import { Feature } from '@turf/turf';
+import { Feature, LineString, Point, Position } from '@turf/turf';
 import { Content, Props as TippyProps } from 'tippy.js';
 import { HistoryConfig } from './source';
 import { IStyle } from './style';
+import { ILineFeature, IPointFeature, IPolygonFeature } from './feature';
 
 /**
  * 鼠标指针类型
@@ -64,3 +65,23 @@ export interface IAreaOptions {
 export type PopupOptions = Partial<TippyProps>;
 
 export type PopupContent = Content | null | undefined;
+
+export type AdsorbTargetFeature =
+  | Feature
+  | IPointFeature
+  | ILineFeature
+  | IPolygonFeature;
+
+export interface IAdsorbOptions {
+  data:
+    | 'drawData'
+    | AdsorbTargetFeature[]
+    | ((position: Position) => AdsorbTargetFeature[]);
+  pointAdsorbPixel: number;
+  lineAdsorbPixel: number;
+}
+
+export type AdsorbResult = {
+  points: Feature<Point>[];
+  lines: Feature<LineString>[];
+};

@@ -175,12 +175,19 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
       const nodes = lineNodes.slice(0, lineNodes.length - 1);
       const firstLineNode = first(lineNodes)!;
       const lastLineNode = last(lineNodes)!;
-      if (
+      const isSame =
         isSameFeature(firstLineNode, feature) ||
-        isSameFeature(lastLineNode, feature)
-      ) {
+        isSameFeature(lastLineNode, feature);
+      if (isSame) {
         firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates =
           getPosition(e);
+      }
+      if (this.options.adsorbOptions && isSame) {
+        const adsorbPosition = this.resetAdsorbLngLat(e);
+        if (adsorbPosition) {
+          firstLineNode.geometry.coordinates =
+            lastLineNode.geometry.coordinates = adsorbPosition;
+        }
       }
       super.onPointDragging(e);
       this.syncPolygonNodes(editPolygon, nodes);
@@ -220,6 +227,9 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     const nodes = drawPolygon?.properties.nodes ?? [];
     if (!drawPolygon || !nodes.length) {
       return;
+    }
+    if (this.options.adsorbOptions) {
+      this.resetAdsorbLngLat(e);
     }
     const mousePosition = getPosition(e);
     const dashLineData: IDashLineFeature[] = [];

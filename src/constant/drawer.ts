@@ -1,5 +1,6 @@
 import {
   HistoryConfig,
+  IAdsorbOptions,
   IAreaOptions,
   IDistanceOptions,
   KeyBoardConfig,
@@ -48,4 +49,10 @@ export const DEFAULT_POPUP_CONFIG: PopupOptions = {
   trigger: 'manual',
   hideOnClick: false,
   theme: 'light',
+};
+
+export const DEFAULT_ADSORB_CONFIG: IAdsorbOptions = {
+  data: 'drawData',
+  pointAdsorbPixel: 12,
+  lineAdsorbPixel: 10,
 };

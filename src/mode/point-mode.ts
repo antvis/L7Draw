@@ -46,6 +46,14 @@ export abstract class PointMode<
     });
   }
 
+  getDragPoint() {
+    return this.dragPoint;
+  }
+
+  getEditPoint() {
+    return this.editPoint;
+  }
+
   /**
    * 获取点数据
    */
