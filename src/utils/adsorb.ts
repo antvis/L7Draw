@@ -71,7 +71,7 @@ export const getAdsorbFeature: (
           const positionsList = splitByPosition(
             nodes.map((node) => node.geometry.coordinates),
             position,
-          ).filter((positions) => positions.length > 1);
+          ).filter((positions: Position[]) => positions.length > 1);
 
           return positionsList.map((positions) => lineString(positions));
         }

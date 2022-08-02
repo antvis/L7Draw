@@ -2,7 +2,6 @@ import { Scene } from '@antv/l7';
 import { DrawLine } from '@antv/l7-draw';
 import { GaodeMapV2 } from '@antv/l7-maps';
 import React, { useEffect, useState } from 'react';
-import { lineList } from './mock';
 
 const id = String(Math.random());
 
@@ -21,7 +20,6 @@ const Demo: React.FC = () => {
     });
     scene.on('loaded', () => {
       const drawer = new DrawLine(scene, {
-        initialData: lineList,
         adsorbOptions: {},
       });
       setLineDrawer(drawer);

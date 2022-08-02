@@ -1,5 +1,5 @@
 ---
-title: 吸附
+title: 吸附能力
 order: 5
 group:
   path: /polygon

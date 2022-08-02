@@ -175,17 +175,21 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
       const nodes = lineNodes.slice(0, lineNodes.length - 1);
       const firstLineNode = first(lineNodes)!;
       const lastLineNode = last(lineNodes)!;
-      // if (this.options.adsorbOptions) {
-      //   this.resetAdsorbLngLat(e);
-      // }
-      super.onPointDragging(e);
-      if (
+      const isSame =
         isSameFeature(firstLineNode, feature) ||
-        isSameFeature(lastLineNode, feature)
-      ) {
+        isSameFeature(lastLineNode, feature);
+      if (isSame) {
         firstLineNode.geometry.coordinates = lastLineNode.geometry.coordinates =
           getPosition(e);
       }
+      if (this.options.adsorbOptions && isSame) {
+        const adsorbPosition = this.resetAdsorbLngLat(e);
+        if (adsorbPosition) {
+          firstLineNode.geometry.coordinates =
+            lastLineNode.geometry.coordinates = adsorbPosition;
+        }
+      }
+      super.onPointDragging(e);
       this.syncPolygonNodes(editPolygon, nodes);
       this.setActivePolygon(editPolygon);
     }
