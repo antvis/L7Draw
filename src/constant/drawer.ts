@@ -53,8 +53,6 @@ export const DEFAULT_POPUP_CONFIG: PopupOptions = {
 
 export const DEFAULT_ADSORB_CONFIG: IAdsorbOptions = {
   data: 'drawData',
-  pointAdsorbPixel: 14,
-  enablePointAdsorb: true,
-  lineAdsorbPixel: 14,
-  enableLineAdsorb: true,
+  pointAdsorbPixel: 12,
+  lineAdsorbPixel: 10,
 };

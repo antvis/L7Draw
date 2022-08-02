@@ -130,14 +130,14 @@ export abstract class LineMode<
       return position;
     }
     const scene = this.scene;
-    const { enablePointAdsorb, enableLineAdsorb, data } = adsorbOptions;
+    const { data, pointAdsorbPixel, lineAdsorbPixel } = adsorbOptions;
     let adsorbPosition: Position | null = null;
     const { points, lines } = getAdsorbFeature(data, this, position);
-    if (points.length && enablePointAdsorb) {
+    if (points.length && pointAdsorbPixel > 0) {
       adsorbPosition = getAdsorbPoint(position, points, adsorbOptions, scene);
     }
 
-    if (!adsorbPosition && lines.length && enableLineAdsorb) {
+    if (!adsorbPosition && lines.length && lineAdsorbPixel > 0) {
       adsorbPosition = getAdsorbLine(position, lines, adsorbOptions, scene);
     }
 

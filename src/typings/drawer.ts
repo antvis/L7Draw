@@ -77,8 +77,6 @@ export interface IAdsorbOptions {
     | 'drawData'
     | AdsorbTargetFeature[]
     | ((position: Position) => AdsorbTargetFeature[]);
-  enablePointAdsorb: boolean;
-  enableLineAdsorb: boolean;
   pointAdsorbPixel: number;
   lineAdsorbPixel: number;
 }
