@@ -37,7 +37,7 @@ import {
 } from '../utils';
 import { IMidPointModeOptions, MidPointMode } from './mid-point-mode';
 import { DEFAULT_LINE_HELPER_CONFIG } from '../constant/helper';
-import { cloneDeep, isEqual } from 'lodash';
+import { cloneDeep } from 'lodash';
 
 export interface ILineModeOptions<F extends Feature = Feature>
   extends IMidPointModeOptions<F> {

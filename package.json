@@ -1,6 +1,6 @@
 {
   "name": "@antv/l7-draw",
-  "version": "3.0.7",
+  "version": "3.0.7.1",
   "description": "A drawing package for L7",
   "license": "MIT",
   "scripts": {
@@ -27,7 +27,7 @@
   "main": "lib/index.js",
   "module": "es/index.js",
   "typings": "es/index.d.ts",
-  "browser": "dist/l7-draw.min.js",
+  "browser": "dist/l7-draw.js",
   "dependencies": {
     "@turf/turf": "^6.5.0",
     "eventemitter3": "^4.0.7",

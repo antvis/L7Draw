@@ -22,6 +22,7 @@ const Demo: React.FC = () => {
       const drawer = new DrawPolygon(scene, {
         distanceOptions: {},
         areaOptions: {},
+        liveUpdate: true,
       });
       setPolygonDrawer(drawer);
       drawer.enable();
