@@ -6,7 +6,6 @@ import {
   Position,
 } from '@turf/turf';
 import { first } from 'lodash';
-import { v4 } from 'uuid';
 import {
   IBaseFeature,
   ILineFeature,
@@ -25,7 +24,7 @@ import { isDev } from './common';
 export const getUuid = (() => {
   let count = 1;
   return (prefix: IRenderType) => {
-    return `${prefix}-${isDev ? count++ : v4()}`;
+    return `${prefix}-${isDev ? count++ : Date.now()}`;
   };
 })();
 

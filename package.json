@@ -35,8 +35,7 @@
     "mousetrap": "^1.6.5",
     "next-tick": "^1.1.0",
     "react": "^16.12.0 || ^17.0.0",
-    "tippy.js": "^6.3.7",
-    "uuid": "^8.3.2"
+    "tippy.js": "^6.3.7"
   },
   "devDependencies": {
     "@antv/dumi-theme-antv": "^0.2.1",
@@ -50,7 +49,6 @@
     "@types/lodash": "^4.14.177",
     "@types/mousetrap": "^1.6.9",
     "@types/next-tick": "^1.0.0",
-    "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "@umijs/fabric": "^2.8.1",
