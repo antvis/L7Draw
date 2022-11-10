@@ -152,6 +152,10 @@ export abstract class BaseMode<
 
   protected abstract get editItem(): Feature | null | undefined;
 
+  protected abstract get hoverItem(): Feature | null | undefined;
+
+  protected abstract get activeItem(): Feature | null | undefined;
+
   /**
    * 获取当前options配置的方法
    */

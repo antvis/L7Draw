@@ -51,6 +51,14 @@ export abstract class PolygonMode<
     return this.editPolygon;
   }
 
+  protected get hoverItem() {
+    return this.hoverPolygon;
+  }
+
+  protected get activeItem() {
+    return this.activePolygon;
+  }
+
   /**
    * 获取polygon类型对应的render
    * @protected
@@ -84,6 +92,14 @@ export abstract class PolygonMode<
       const { isActive, isDraw } = feature.properties;
       return !isDraw && isActive;
     });
+  }
+
+  protected get hoverPolygon() {
+    return this.getPolygonData().find((feature) => feature.properties.isHover);
+  }
+
+  protected get activePolygon() {
+    return this.getPolygonData().find((feature) => feature.properties.isActive);
   }
 
   getDragPolygon() {

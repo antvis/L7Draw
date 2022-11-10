@@ -34,6 +34,14 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     return this.editPoint;
   }
 
+  protected get hoverItem() {
+    return this.hoverPoint;
+  }
+
+  protected get activeItem() {
+    return this.activePoint;
+  }
+
   // @ts-ignore
   getDefaultOptions(options: DeepPartial<IPointDrawerOptions>) {
     const defaultOptions = {

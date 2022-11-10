@@ -41,6 +41,14 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     return this.editLine;
   }
 
+  protected get hoverItem() {
+    return this.hoverLine;
+  }
+
+  protected get activeItem() {
+    return this.activeLine;
+  }
+
   setData(lines: Feature<LineString>[]) {
     const lineFeatures = lines.map((line) => {
       line.properties = {

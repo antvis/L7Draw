@@ -73,6 +73,14 @@ export abstract class LineMode<
     return this.getLineData().find((feature) => feature.properties.isDraw);
   }
 
+  protected get hoverLine() {
+    return this.getLineData().find((feature) => feature.properties.isHover);
+  }
+
+  protected get activeLine() {
+    return this.getLineData().find((feature) => feature.properties.isActive);
+  }
+
   /**
    * 当前高亮的结点
    * @protected

@@ -41,9 +41,15 @@ export abstract class PointMode<
    * @protected
    */
   protected get editPoint() {
-    return this.getPointData().find((feature) => {
-      return feature.properties.isActive;
-    });
+    return this.getPointData().find((feature) => feature.properties.isActive);
+  }
+
+  protected get hoverPoint() {
+    return this.getPointData().find((feature) => feature.properties.isHover);
+  }
+
+  protected get activePoint() {
+    return this.getPointData().find((feature) => feature.properties.isActive);
   }
 
   getDragPoint() {
