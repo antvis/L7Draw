@@ -16,6 +16,7 @@ export interface ISceneMouseEvent {
   lnglat: ILngLat;
   lngLat: ILngLat;
   pixel?: { x: number; y: number };
+  point?: { x: number; y: number };
 }
 
 /**
