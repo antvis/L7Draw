@@ -270,7 +270,10 @@ export abstract class BaseMode<
   // 快捷键绑定
   bindKeyboardEvent() {
     const { revert, redo, remove } = this.options.keyboard || {};
-    remove && Mousetrap.bind(remove, this.removeActiveFeature);
+    remove &&
+      Mousetrap.bind(remove, () => {
+        this.removeActiveFeature();
+      });
     if (this.options.history) {
       revert && Mousetrap.bind(revert, this.revertHistory);
       redo && Mousetrap.bind(redo, this.redoHistory);
