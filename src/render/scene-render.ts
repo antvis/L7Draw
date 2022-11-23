@@ -27,7 +27,7 @@ export class SceneRender extends EventEmitter<
    * @param e
    */
   onDblClick = (e: ISceneMouseEvent) => {
-    const { x = 0, y = 0 } = e.pixel ?? {};
+    const { x = 0, y = 0 } = e.pixel ?? e.point ?? {};
     const time = Date.now();
 
     if (this.previousClick) {

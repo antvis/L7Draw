@@ -18,14 +18,14 @@ import { debounce, fromPairs, toPairs } from 'lodash';
 
 export class DrawControl extends Control {
   public controlOption: IDrawControlProps;
-  protected scene: Scene;
+  protected sceneInstance: Scene;
   protected drawMap: Partial<Record<DrawType, BaseMode>> = {};
   protected btnMap: Partial<Record<BtnType, HTMLElement>> = {};
   protected activeType: DrawType | null = null;
 
   constructor(scene: Scene, options: Partial<IDrawControlProps> = {}) {
     super(options);
-    this.scene = scene;
+    this.sceneInstance = scene;
     this.controlOption = {
       ...this.getDefault(),
       ...(options || {}),
@@ -95,8 +95,8 @@ export class DrawControl extends Control {
 
           // @ts-ignore;
           const Draw = DrawInstanceMap[btnType];
-          if (Draw && this.scene) {
-            const draw = new Draw(this.scene, {
+          if (Draw && this.sceneInstance) {
+            const draw = new Draw(this.sceneInstance, {
               ...this.controlOption.commonDrawOptions,
               ...(typeof options === 'boolean' ? {} : options),
             });
