@@ -84,6 +84,16 @@ export abstract class LineMode<
     });
   }
 
+  /**
+   * 当前悬停的线
+   * @protected
+   */
+  protected get hoverLine() {
+    return this.getLineData().find((feature) => {
+      return feature.properties.isHover;
+    });
+  }
+
   protected previousPosition: Position = [0, 0];
 
   getDragLine() {
@@ -379,18 +389,20 @@ export abstract class LineMode<
       return;
     }
     this.setCursor('lineHover');
-    this.setLineData((features) =>
-      updateTargetFeature({
-        target: line,
-        data: features,
-        targetHandler: (feature) => {
-          feature.properties.isHover = true;
-        },
-        otherHandler: (feature) => {
-          feature.properties.isHover = false;
-        },
-      }),
-    );
+    if (!isSameFeature(line, this.hoverLine)) {
+      this.setLineData((features) =>
+        updateTargetFeature({
+          target: line,
+          data: features,
+          targetHandler: (feature) => {
+            feature.properties.isHover = true;
+          },
+          otherHandler: (feature) => {
+            feature.properties.isHover = false;
+          },
+        }),
+      );
+    }
     return line;
   }
 

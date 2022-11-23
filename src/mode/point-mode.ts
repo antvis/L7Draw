@@ -12,6 +12,7 @@ import {
 import {
   createPointFeature,
   getLngLat,
+  isSameFeature,
   transLngLat2Position,
   updateTargetFeature,
 } from '../utils';
@@ -43,6 +44,16 @@ export abstract class PointMode<
   protected get editPoint() {
     return this.getPointData().find((feature) => {
       return feature.properties.isActive;
+    });
+  }
+
+  /**
+   * 当前悬停的结点
+   * @protected
+   */
+  protected get hoverPoint() {
+    return this.getPointData().find((feature) => {
+      return feature.properties.isHover;
     });
   }
 
@@ -120,18 +131,20 @@ export abstract class PointMode<
 
   handlePointHover(point: IPointFeature) {
     this.setCursor('pointHover');
-    this.setPointData((features) => {
-      return updateTargetFeature<IPointFeature>({
-        target: point,
-        data: features,
-        targetHandler: (item) => {
-          item.properties.isHover = true;
-        },
-        otherHandler: (item) => {
-          item.properties.isHover = false;
-        },
+    if (!isSameFeature(point, this.hoverPoint)) {
+      this.setPointData((features) => {
+        return updateTargetFeature<IPointFeature>({
+          target: point,
+          data: features,
+          targetHandler: (item) => {
+            item.properties.isHover = true;
+          },
+          otherHandler: (item) => {
+            item.properties.isHover = false;
+          },
+        });
       });
-    });
+    }
     return point;
   }
 

@@ -86,6 +86,16 @@ export abstract class PolygonMode<
     });
   }
 
+  /**
+   * 当前悬停的线
+   * @protected
+   */
+  protected get hoverPolygon() {
+    return this.getPolygonData().find((feature) => {
+      return feature.properties.isHover;
+    });
+  }
+
   getDragPolygon() {
     return this.dragPolygon;
   }
@@ -219,18 +229,20 @@ export abstract class PolygonMode<
 
   handlePolygonHover(polygon: IPolygonFeature) {
     this.setCursor('polygonHover');
-    this.setPolygonData((features) =>
-      updateTargetFeature({
-        target: polygon,
-        data: features,
-        targetHandler: (feature) => {
-          feature.properties.isHover = true;
-        },
-        otherHandler: (feature) => {
-          feature.properties.isHover = false;
-        },
-      }),
-    );
+    if (!isSameFeature(polygon, this.hoverPolygon)) {
+      this.setPolygonData((features) =>
+        updateTargetFeature({
+          target: polygon,
+          data: features,
+          targetHandler: (feature) => {
+            feature.properties.isHover = true;
+          },
+          otherHandler: (feature) => {
+            feature.properties.isHover = false;
+          },
+        }),
+      );
+    }
     return polygon;
   }
 
