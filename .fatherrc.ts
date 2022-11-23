@@ -1,5 +1,5 @@
 import { optimizeLodashImports } from '@optimize-lodash/rollup-plugin';
-import analyze from 'rollup-plugin-analyzer';
+// import analyze from 'rollup-plugin-analyzer';
 
 export default {
   esm: 'babel',
@@ -7,12 +7,12 @@ export default {
   umd: {
     name: 'L7.Draw',
     file: 'l7-draw',
-    minFile: false,
+    minFile: true,
     sourcemap: true,
     globals: {
       '@antv/l7': 'L7',
     },
   },
-  extraRollupPlugins: [optimizeLodashImports(), analyze()],
+  extraRollupPlugins: [optimizeLodashImports()], //analyze()
   lessInBabelMode: true,
 };
