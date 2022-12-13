@@ -1,9 +1,9 @@
 import { Scene } from '@antv/l7';
 import {
   bbox,
+  bearing,
   center,
-  circle,
-  coordAll,
+  destination,
   distance,
   Feature,
   Polygon,
@@ -153,15 +153,7 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
     endNode: IPointFeature,
     properties: Partial<ILineProperties> = {},
   ) {
-    const dis = distance(startNode, endNode, {
-      units: 'meters',
-    });
-    const positions = coordAll(
-      circle(startNode, dis, {
-        units: 'meters',
-        steps: this.options.circleSteps,
-      }),
-    );
+    const positions = this.getBoundaryPositions(startNode, endNode);
     const nodes = positions.map((position) => {
       return createPointFeature(position);
     });
@@ -172,15 +164,7 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
     const line = polygon.properties.line;
     const startNode = nodes[0]!;
     const endNode = nodes[1]!;
-    const dis = distance(startNode, endNode, {
-      units: 'meters',
-    });
-    const positions = coordAll(
-      circle(startNode, dis, {
-        units: 'meters',
-        steps: this.options.circleSteps,
-      }),
-    );
+    const positions = this.getBoundaryPositions(startNode, endNode);
 
     polygon.properties.nodes = nodes;
     polygon.geometry.coordinates = [positions];
@@ -226,5 +210,27 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
       this.emit(DrawEvent.Dragging, dragPolygon, this.getPolygonData());
     }
     return feature;
+  }
+
+  getBoundaryPositions(
+    startPoint: IPointFeature,
+    endPoint: IPointFeature,
+  ): number[][] {
+    const { circleSteps } = this.options;
+    const dis = distance(startPoint, endPoint, {
+      units: 'meters',
+    });
+    const startDegree = bearing(startPoint, endPoint);
+    const degreeUnit = 360 / circleSteps;
+    const positions: number[][] = [[...endPoint.geometry.coordinates]];
+    for (let index = 1; index <= circleSteps - 1; index++) {
+      positions.push(
+        destination(startPoint, dis, startDegree + degreeUnit * index, {
+          units: 'meters',
+        }).geometry.coordinates,
+      );
+    }
+    positions.push([...endPoint.geometry.coordinates]);
+    return positions;
   }
 }
