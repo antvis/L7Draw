@@ -16,7 +16,6 @@ import {
   IPolygonProperties,
   IRenderType,
 } from '../typings';
-import { isDev } from './common';
 
 /**
  * 获取feature唯一id
@@ -24,7 +23,7 @@ import { isDev } from './common';
 export const getUuid = (() => {
   let count = 1;
   return (prefix: IRenderType) => {
-    return `${prefix}-${isDev ? count++ : Date.now()}`;
+    return `${prefix}-${count++}`;
   };
 })();
 
