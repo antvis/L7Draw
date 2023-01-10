@@ -18,4 +18,8 @@ export class Cursor {
       this.cursor = cursor;
     }
   }
+
+  destroy() {
+    this.setCursor(null);
+  }
 }
