@@ -1,6 +1,6 @@
 import { Scene } from '@antv/l7';
 import { DrawLine } from '@antv/l7-draw';
-import { GaodeMapV2 } from '@antv/l7-maps';
+import { GaodeMap } from '@antv/l7-maps';
 import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { lineList } from './mock';
@@ -13,7 +13,7 @@ const Demo: React.FC = () => {
   useEffect(() => {
     const scene = new Scene({
       id,
-      map: new GaodeMapV2({
+      map: new GaodeMap({
         center: [120.151634, 30.244831],
         pitch: 0,
         style: 'dark',
