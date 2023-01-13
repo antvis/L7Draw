@@ -568,6 +568,8 @@ export abstract class BaseMode<
         this.removeAllListeners(EventName);
       });
     }, 0);
+    this.popup?.destroy();
+    this.cursor.destroy();
     this.emit(DrawEvent.Destroy, this);
   }
 }
