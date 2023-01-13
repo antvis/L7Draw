@@ -116,6 +116,7 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
   }
 
   drawPolygonFinish = () => {
+    console.log('finish')
     const drawPolygon = this.drawPolygon;
     const nodes = drawPolygon?.properties.nodes ?? [];
     if (!drawPolygon || nodes.length < 3) {
