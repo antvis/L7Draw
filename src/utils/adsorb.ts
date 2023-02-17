@@ -22,7 +22,7 @@ import {
 } from '@turf/turf';
 import { Scene } from '@antv/l7';
 import { findMinIndex, splitByPosition } from './common';
-import { eq, isEqual } from 'lodash';
+import { eq, isEqual } from 'lodash-es';
 
 /**
  * 获取当前数据对应的吸附点、线数组

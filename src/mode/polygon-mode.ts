@@ -5,7 +5,7 @@ import {
   featureCollection,
   lineString,
 } from '@turf/turf';
-import { cloneDeep, first, isEqual, last } from 'lodash';
+import { cloneDeep, first, isEqual, last } from 'lodash-es';
 import { DEFAULT_AREA_OPTIONS, DrawEvent, RenderEvent } from '../constant';
 import { PolygonRender } from '../render';
 import {

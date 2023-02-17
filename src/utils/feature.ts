@@ -5,7 +5,7 @@ import {
   point,
   Position,
 } from '@turf/turf';
-import { first } from 'lodash';
+import { first } from 'lodash-es';
 import {
   IBaseFeature,
   ILineFeature,

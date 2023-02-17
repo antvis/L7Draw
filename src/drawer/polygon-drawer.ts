@@ -1,6 +1,6 @@
 import { Scene } from '@antv/l7';
 import { coordAll, Feature, featureCollection, Polygon } from '@turf/turf';
-import { first, last } from 'lodash';
+import { first, last } from 'lodash-es';
 import { DrawEvent, RenderEvent } from '../constant';
 import { IPolygonModeOptions, PolygonMode } from '../mode';
 import {

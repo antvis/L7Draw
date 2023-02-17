@@ -1,6 +1,6 @@
 import { Scene } from '@antv/l7';
 import EventEmitter from 'eventemitter3';
-import { debounce } from 'lodash';
+import { debounce } from 'lodash-es';
 import { RenderEvent, SceneEvent } from '../constant';
 import { ISceneMouseEvent } from '../typings';
 

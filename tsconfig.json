@@ -11,7 +11,10 @@
     "strict": true,
     "sourceMap": true,
     "baseUrl": "./",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@antv/l7-draw": ["./src/index.ts"]
+    }
   },
   "include": ["docs", "src"],
   "exclude": [

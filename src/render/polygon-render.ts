@@ -1,6 +1,6 @@
 import { ILayer, PolygonLayer } from '@antv/l7';
 import { featureCollection } from '@turf/turf';
-import { debounce } from 'lodash';
+import { debounce } from 'lodash-es';
 import { LayerEvent, RenderEvent, SceneEvent } from '../constant';
 import {
   ILayerMouseEvent,
