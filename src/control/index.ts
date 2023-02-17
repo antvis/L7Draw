@@ -14,7 +14,7 @@ import { getParentByClassName } from '../typings';
 import './iconfont.js';
 import './index.less';
 import { ControlEvent, DrawEvent } from '../constant';
-import { debounce, fromPairs, toPairs } from 'lodash';
+import { debounce, fromPairs, toPairs } from 'lodash-es';
 
 export class DrawControl extends Control {
   public controlOption: IDrawControlProps;

@@ -8,7 +8,7 @@ import {
   isEqual,
   merge,
   toPairs,
-} from 'lodash';
+} from 'lodash-es';
 import Mousetrap from 'mousetrap';
 import {
   DEFAULT_CURSOR_MAP,

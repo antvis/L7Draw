@@ -5,7 +5,7 @@ import { PopupContent, PopupOptions } from '../typings';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light.css';
 import { DEFAULT_POPUP_CONFIG, SceneEvent } from '../constant';
-import { debounce } from 'lodash';
+import { debounce } from 'lodash-es';
 
 export class Popup {
   protected content: PopupContent = '';
