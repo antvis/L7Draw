@@ -34,11 +34,11 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     return this.editPoint;
   }
 
-  // @ts-ignore
   getDefaultOptions(options: DeepPartial<IPointDrawerOptions>) {
     const defaultOptions = {
       ...this.getCommonOptions(options),
       helper: cloneDeep(DEFAULT_POINT_HELPER_CONFIG),
+      initialData: options.initialData as Feature<Point>[] | undefined,
     };
     defaultOptions.style.point = DEFAULT_POINT_STYLE;
     return defaultOptions;
