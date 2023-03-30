@@ -1,24 +1,18 @@
-import { defineConfig } from 'father';
+import { optimizeLodashImports } from '@optimize-lodash/rollup-plugin';
+// import analyze from 'rollup-plugin-analyzer';
 
-export default defineConfig({
-  esm: { output: 'es' },
-  cjs: { output: 'lib' },
+export default {
+  esm: 'babel',
+  cjs: 'babel',
   umd: {
     name: 'L7.Draw',
-    output: 'dist',
-    extractCSS: true,
-    externals: {
-      'lodash-es': '_',
+    file: 'l7-draw',
+    minFile: true,
+    sourcemap: true,
+    globals: {
       '@antv/l7': 'L7',
-      '@turf/turf': 'turf',
-    },
-    chainWebpack(memo) {
-      memo
-        .plugin('webpack-bundle-analyzer')
-        .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin, [
-          { analyzerMode: 'static', openAnalyzer: false },
-        ]);
-      return memo;
     },
   },
-});
+  extraRollupPlugins: [optimizeLodashImports()], //analyze()
+  lessInBabelMode: true,
+};

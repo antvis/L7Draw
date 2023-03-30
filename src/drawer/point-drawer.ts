@@ -13,7 +13,7 @@ import {
 } from '../typings';
 import { getDefaultPointProperties, isSameFeature } from '../utils';
 import { DEFAULT_POINT_HELPER_CONFIG } from '../constant/helper';
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep } from 'lodash';
 
 export interface IPointDrawerOptions extends IBaseModeOptions<Feature<Point>> {
   helper: IPointHelperOptions | boolean;

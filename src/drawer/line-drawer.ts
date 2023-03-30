@@ -1,6 +1,6 @@
 import { Scene } from '@antv/l7';
 import { coordAll, Feature, LineString } from '@turf/turf';
-import { last } from 'lodash-es';
+import { last } from 'lodash';
 import { DrawEvent, RenderEvent } from '../constant';
 import { ILineModeOptions, LineMode } from '../mode';
 import {

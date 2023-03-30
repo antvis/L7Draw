@@ -8,7 +8,7 @@ import {
   Polygon,
   Position,
 } from '@turf/turf';
-import { cloneDeep, isEqual } from 'lodash-es';
+import { cloneDeep, isEqual } from 'lodash';
 import { DrawEvent } from '../constant';
 import { DragPolygonMode, IDragPolygonModeOptions } from '../mode';
 import {

@@ -1,7 +1,7 @@
 import { Scene } from '@antv/l7';
 import { Position } from '@turf/turf';
 import { ILayerMouseEvent, ILngLat, ISceneMouseEvent } from '../typings';
-import { isEqual, split } from 'lodash-es';
+import { isEqual, split } from 'lodash';
 
 // @ts-ignore
 export const isDev = process.env.NODE_ENV === 'development';

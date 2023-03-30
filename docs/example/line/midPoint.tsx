@@ -1,7 +1,7 @@
 import { Scene } from '@antv/l7';
 import { DrawLine } from '@antv/l7-draw';
 import { GaodeMap } from '@antv/l7-maps';
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { lineList } from './mock';
 

@@ -1,6 +1,6 @@
 import { Scene } from '@antv/l7';
 import { Feature } from '@turf/turf';
-import { cloneDeep, first, last } from 'lodash-es';
+import { cloneDeep, first, last } from 'lodash';
 import { DrawEvent, RenderEvent } from '../constant';
 import {
   DeepPartial,
