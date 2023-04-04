@@ -22,13 +22,6 @@ const Demo: React.FC = () => {
       const drawer = new DrawPoint(scene, {});
       setPointDrawer(drawer);
       drawer.enable();
-
-      scene.on('zoomchange', (e) => {
-        console.log(scene.getZoom());
-      });
-      scene.on('dragend', (e) => {
-        console.log(scene.getCenter());
-      });
     });
   }, []);
 

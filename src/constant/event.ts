@@ -14,6 +14,7 @@ export enum DrawEvent {
   DragStart = 'dragStart',
   Dragging = 'dragging',
   DragEnd = 'dragEnd',
+  Select = 'select',
   AddNode = 'addNode',
   RemoveNode = 'removeNode',
 }
