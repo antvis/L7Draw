@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3';
-import { cloneDeep, fromPairs } from 'lodash-es';
+import { cloneDeep, fromPairs } from 'lodash';
 import { DEFAULT_SOURCE_DATA, SourceEvent } from '../constant';
 import { LayerRender } from '../render';
 import {

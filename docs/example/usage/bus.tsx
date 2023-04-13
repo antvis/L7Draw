@@ -2,7 +2,7 @@ import { ILayer, ILngLat, PointLayer, Scene } from '@antv/l7';
 import { DrawLine } from '@antv/l7-draw';
 import { GaodeMap } from '@antv/l7-maps';
 import { coordAll } from '@turf/turf';
-import { first, last } from 'lodash-es';
+import { first, last } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { DrawEvent } from '../../../src';
 

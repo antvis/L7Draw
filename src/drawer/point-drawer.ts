@@ -13,7 +13,7 @@ import {
 } from '../typings';
 import { getDefaultPointProperties, isSameFeature } from '../utils';
 import { DEFAULT_POINT_HELPER_CONFIG } from '../constant/helper';
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep } from 'lodash';
 
 export interface IPointDrawerOptions extends IBaseModeOptions<Feature<Point>> {
   helper: IPointHelperOptions | boolean;
@@ -34,11 +34,11 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     return this.editPoint;
   }
 
-  // @ts-ignore
   getDefaultOptions(options: DeepPartial<IPointDrawerOptions>) {
     const defaultOptions = {
       ...this.getCommonOptions(options),
       helper: cloneDeep(DEFAULT_POINT_HELPER_CONFIG),
+      initialData: options.initialData as Feature<Point>[] | undefined,
     };
     defaultOptions.style.point = DEFAULT_POINT_STYLE;
     return defaultOptions;
