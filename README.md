@@ -6,9 +6,11 @@
 
 ## 📚 文档
 
-[文档](https://antv.vision/L7Draw/docs/draw/point)
+[文档](https://antv.vision/L7Draw/docs/draw/point) [示例](https://antv.vision/L7Draw/example/point/start)
 
-[示例](https://antv.vision/L7Draw/example/point/start)
+## 🔨 工具
+
+基于 L7Draw 的面向 GeoJSON 编辑工具 [L7Editor](https://l7editor.antv.antgroup.com/) 已上线，欢迎尝鲜~。
 
 ## 📦 安装
 
@@ -60,6 +62,12 @@ npm run start
 # 打包
 npm run build
 ```
+
+## 💬 答疑
+
+在使用 L7Draw 过程中，若有疑惑无法在文档中解决的可以扫码加入 L7 官方答疑群。
+
+<img src="https://mdn.alipayobjects.com/huamei_rzapb5/afts/img/A*ndWjTqmhTlEAAAAAAAAAAAAADqWCAQ/original" width="400"/>
 
 ## 🤝 如何贡献
 
