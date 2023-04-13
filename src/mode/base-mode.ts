@@ -19,6 +19,7 @@ import {
   RENDER_MAP,
   RenderEvent,
   SceneEvent,
+  SourceEvent,
 } from '../constant';
 import { Cursor, Popup } from '../interactive';
 import { SceneRender } from '../render';
@@ -241,6 +242,31 @@ export abstract class BaseMode<
     this.on(DrawEvent.Clear, this.emitChangeEvent);
     this.on(DrawEvent.AddNode, this.saveHistory);
     this.on(DrawEvent.RemoveNode, this.emitChangeEvent);
+    this.bindEmitSelectEvent(true);
+  }
+
+  /**
+   * 绑定判断 select 事件方法
+   * @param emit 
+   */
+  bindEmitSelectEvent(emit = false) {
+    let previousSelectFeature: Feature | null = null;
+    const onSourceChange = () => {
+      const newSelectFeature =
+        this.getData().find((feature) => feature.properties?.isActive) || null;
+      if (
+        previousSelectFeature?.properties?.id !==
+        newSelectFeature?.properties?.id
+      ) {
+        // @ts-ignore
+        previousSelectFeature = newSelectFeature;
+        this.emit(DrawEvent.Select, newSelectFeature);
+      }
+    };
+    this.source.on(SourceEvent.Change, onSourceChange);
+    if (emit) {
+      onSourceChange();
+    }
   }
 
   /**

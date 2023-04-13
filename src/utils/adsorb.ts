@@ -65,7 +65,7 @@ export const getAdsorbFeature: (
 
     adsorbLines = features
       .map((feature) => {
-        const line: ILineFeature = feature.properties?.line ?? feature;
+        const line: ILineFeature = feature.properties?.line;
         if (feature.properties?.isActive) {
           const { nodes } = line.properties;
           const positionsList = splitByPosition(

@@ -1,12 +1,12 @@
 import { Scene } from '@antv/l7';
 import {
   bbox,
-  bearing,
   center,
   destination,
   distance,
   Feature,
   Polygon,
+  Position,
 } from '@turf/turf';
 import { DrawEvent } from '../constant';
 import { DragPolygonMode, IDragPolygonModeOptions } from '../mode';
@@ -216,21 +216,20 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
     startPoint: IPointFeature,
     endPoint: IPointFeature,
   ): number[][] {
-    const { circleSteps } = this.options;
+    const { circleSteps: steps } = this.options;
     const dis = distance(startPoint, endPoint, {
       units: 'meters',
     });
-    const startDegree = bearing(startPoint, endPoint);
-    const degreeUnit = 360 / circleSteps;
-    const positions: number[][] = [[...endPoint.geometry.coordinates]];
-    for (let index = 1; index <= circleSteps - 1; index++) {
+
+    const positions: Position[] = [];
+    for (let i = 0; i < steps; i++) {
       positions.push(
-        destination(startPoint, dis, startDegree + degreeUnit * index, {
-          units: 'meters',
-        }).geometry.coordinates,
+        destination(startPoint, dis, (i * -360) / steps, { units: 'meters' })
+          .geometry.coordinates,
       );
     }
-    positions.push([...endPoint.geometry.coordinates]);
+    positions.push(positions[0]);
+
     return positions;
   }
 }
