@@ -155,6 +155,9 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
       return;
     }
     this.removeNode(deleteNode, editLine);
+    this.scene.setMapStatus({
+      dragEnable: true,
+    });
     return deleteNode;
   }
 
