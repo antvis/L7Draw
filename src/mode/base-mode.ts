@@ -131,6 +131,7 @@ export abstract class BaseMode<
     this.source = new Source({
       render: this.render,
       history: this.options.history || undefined,
+      scene,
     });
     this.cursor = new Cursor(scene, this.options.cursor);
 
@@ -247,7 +248,7 @@ export abstract class BaseMode<
 
   /**
    * 绑定判断 select 事件方法
-   * @param emit 
+   * @param emit
    */
   bindEmitSelectEvent(emit = false) {
     let previousSelectFeature: Feature | null = null;
