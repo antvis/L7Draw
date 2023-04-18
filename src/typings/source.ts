@@ -1,3 +1,4 @@
+import { Scene } from '@antv/l7';
 import {
   DashLineRender,
   LineRender,
@@ -51,4 +52,5 @@ export interface SourceOptions {
   data?: Partial<SourceData>;
   render: RenderMap;
   history?: HistoryConfig;
+  scene: Scene;
 }

@@ -11,10 +11,12 @@ import {
   SourceOptions,
 } from '../typings';
 import { History } from './history';
+import { Scene } from '@antv/l7';
 
 export class Source extends EventEmitter<
   SourceEvent | keyof typeof SourceEvent
 > {
+  protected scene: Scene;
   /**
    * 用于存储渲染器render映射
    * @protected
@@ -45,9 +47,10 @@ export class Source extends EventEmitter<
    */
   protected history?: History;
 
-  constructor({ data, render, history: historyConfig }: SourceOptions) {
+  constructor({ data, render, history: historyConfig, scene }: SourceOptions) {
     super();
 
+    this.scene = scene;
     this.render = render;
     if (historyConfig) {
       this.history = new History({
@@ -161,6 +164,9 @@ export class Source extends EventEmitter<
       this.emit(SourceEvent.Update, this.data, this.diffData);
       this.diffData = {};
       this.timeout = null;
+      requestAnimationFrame(() => {
+        this.scene.render();
+      });
     }
   }
 
