@@ -1,7 +1,7 @@
 import { Scene } from '@antv/l7';
-import { DrawControl } from '@antv/l7-draw';
+import { DrawControl, getSingleColorStyle } from '@antv/l7-draw';
 import { GaodeMap } from '@antv/l7-maps';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 const id = String(Math.random());
 
@@ -22,6 +22,9 @@ const Demo: React.FC = () => {
       // 实例化 DrawControl
       const drawControl = new DrawControl(scene, {
         defaultActiveType: 'point',
+        commonDrawOptions: {
+          style: getSingleColorStyle('#ff0000'),
+        },
       });
 
       // 将 Control 添加至地图中

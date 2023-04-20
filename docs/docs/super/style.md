@@ -60,6 +60,15 @@ const drawer = new DrawPoint(scene, {
 });
 ```
 
+## 方法
+
+| 方法名              | 说明                                                          | 类型                        |
+| ------------------- | ------------------------------------------------------------- | --------------------------- |
+| getSingleColorStyle | 传入颜色字符串，返回在 Draw 实例中展示单一颜色的 `style` 配置 | `(color: string) => IStyle` |
+
+
+<code src="./style.tsx" compact="true"></code>
+
 ## 配置
 
 绘制样式的描述对象主要分为以下六个类型：
