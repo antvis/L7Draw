@@ -1,4 +1,4 @@
-import { Scene } from '@antv/l7';
+import { ILayer, Scene } from '@antv/l7';
 import { Feature } from '@turf/turf';
 import EventEmitter from 'eventemitter3';
 import {
@@ -190,6 +190,11 @@ export abstract class BaseMode<
    * 获取数据
    */
   abstract getData(): IBaseFeature[];
+
+  /**
+   * 获取主图层实例
+   */
+  abstract getMainLayer(): ILayer[];
 
   /**
    * 设置数据

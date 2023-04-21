@@ -41,6 +41,10 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     return this.editLine;
   }
 
+  getMainLayer() {
+    return this.render.line?.getLayers() ?? [];
+  }
+
   setData(lines: Feature<LineString>[]) {
     const lineFeatures = lines.map((line) => {
       line.properties = {

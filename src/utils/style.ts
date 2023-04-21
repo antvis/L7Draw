@@ -2,8 +2,8 @@ import { DeepPartial, IStyle } from '../typings';
 
 /**
  * 获取单个颜色的 style 供 draw 实例使用
- * @param color 
- * @returns 
+ * @param color
+ * @returns
  */
 export function getSingleColorStyle(color: string): DeepPartial<IStyle> {
   return {

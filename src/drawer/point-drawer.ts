@@ -58,6 +58,10 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     return ['point'];
   }
 
+  getMainLayer() {
+    return this.render.point?.getLayers() ?? [];
+  }
+
   setData(points: Feature<Point>[]) {
     this.setPointData(
       points.map((point) => {
