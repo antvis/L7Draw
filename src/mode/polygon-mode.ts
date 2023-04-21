@@ -116,6 +116,10 @@ export abstract class PolygonMode<
     return this.getPolygonData();
   }
 
+  getMainLayer() {
+    return this.render.polygon?.getLayers() ?? [];
+  }
+
   getDefaultOptions(options: DeepPartial<T>): T {
     const newOptions: T = {
       ...super.getDefaultOptions(options),
