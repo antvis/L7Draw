@@ -11,7 +11,7 @@ import {
 import { LayerRender } from './layer-render';
 
 export class LineRender extends LayerRender<ILineFeature, ILineStyle> {
-  getLayers(): ILayer[] {
+  initLayers(): ILayer[] {
     const { normal, hover, active, style, options } = this.style;
 
     const layer = new LineLayer(options ?? {})

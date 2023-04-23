@@ -33,7 +33,7 @@ export abstract class LayerRender<
 
     this.scene = scene;
     this.style = style;
-    this.layers = this.getLayers();
+    this.layers = this.initLayers();
 
     this.layers.forEach((layer) => {
       scene.addLayer(layer);
@@ -48,7 +48,11 @@ export abstract class LayerRender<
   /**
    * 子类继承时需要实现该方法并返回对应的layer数组
    */
-  abstract getLayers(): ILayer[];
+  abstract initLayers(): ILayer[];
+
+  getLayers() {
+    return this.layers;
+  }
 
   /**
    * 显示所有图层

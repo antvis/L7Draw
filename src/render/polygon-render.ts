@@ -12,7 +12,7 @@ import {
 import { LayerRender } from './layer-render';
 
 export class PolygonRender extends LayerRender<IPolygonFeature, IPolygonStyle> {
-  getLayers(): ILayer[] {
+  initLayers(): ILayer[] {
     const { normal, hover, active, style, options } = this.style;
     const polygonLayer = new PolygonLayer(options ?? {});
 

@@ -7,7 +7,7 @@ export class DashLineRender extends LayerRender<
   IDashLineFeature,
   IDashLineStyle
 > {
-  getLayers(): ILayer[] {
+  initLayers(): ILayer[] {
     const { normal, style, options } = this.style;
 
     const layer = new LineLayer(options ?? {})
