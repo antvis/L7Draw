@@ -8,7 +8,7 @@ export class MidPointRender extends LayerRender<
   IMidPointFeature,
   IMidPointStyle
 > {
-  getLayers(): ILayer[] {
+  initLayers(): ILayer[] {
     const { normal, style, options } = this.style;
     const { shape, size, color, stroke } = normal;
     const layer = new PointLayer(options ?? {})
