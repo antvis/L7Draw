@@ -80,9 +80,7 @@ export abstract class LayerRender<
     this.data = features;
     const newData = featureCollection(features);
     this.layers.forEach((layer) => {
-      layer.setData(newData, {
-        autoRender: false,
-      });
+      layer.setData(newData);
     });
   }
 
