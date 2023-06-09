@@ -360,6 +360,7 @@ export abstract class BaseMode<
     }
     if (this.source.revertHistory()) {
       this.correctDrawItem();
+      this.emit(DrawEvent.Change, this.getData());
     }
   }
 
@@ -372,6 +373,7 @@ export abstract class BaseMode<
     }
     if (this.source.redoHistory()) {
       this.correctDrawItem();
+      this.emit(DrawEvent.Change, this.getData());
     }
   }
 
