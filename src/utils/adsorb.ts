@@ -139,6 +139,9 @@ export const getAdsorbLine = (
     .map((line) => {
       return nearestPointOnLine(line, position);
     });
+  if (!nearestPointList.length) {
+    return null;
+  }
   const squareDistanceList = nearestPointList.map((point) => {
     const [lng, lat] = point.geometry.coordinates;
     const { x, y } = scene.lngLatToPixel([lng, lat]);
