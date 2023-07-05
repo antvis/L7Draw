@@ -373,6 +373,7 @@ export abstract class PolygonMode<
       return features.map((feature) => {
         feature.properties = {
           ...feature.properties,
+          isDrag: false,
           isActive: false,
           isHover: false,
         };

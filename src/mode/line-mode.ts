@@ -369,6 +369,7 @@ export abstract class LineMode<
       line: this.getLineData().map((feature) => {
         feature.properties = {
           ...feature.properties,
+          isDrag: false,
           isActive: false,
           isHover: false,
         };
