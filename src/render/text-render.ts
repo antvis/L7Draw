@@ -5,7 +5,7 @@ import { LayerRender } from './layer-render';
 
 export class TextRender extends LayerRender<ITextFeature, ITextStyle> {
   initLayers(): ILayer[] {
-    const { normal, active, style, options } = this.style;
+    const { normal, active, style = {}, options } = this.style;
     const layer = new PointLayer(options ?? {})
       .source(featureCollection([]))
       .size('isActive', (isActive: boolean) => {
