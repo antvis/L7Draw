@@ -22,8 +22,6 @@ export interface IPointStyleItem {
   color: string;
   shape: string;
   size: number;
-  // borderWidth: number;
-  stroke: string;
 }
 
 /**

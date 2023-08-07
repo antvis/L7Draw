@@ -24,29 +24,7 @@ export class PointRender extends LayerRender<IPointFeature, IPointStyle> {
       .shape('isHover*isActive', (isHover: boolean, isActive: boolean) => {
         return isActive ? active.shape : isHover ? hover.shape : normal.shape;
       })
-      .style({
-        stroke: [
-          'isHover*isActive',
-          (isHover: boolean, isActive: boolean) => {
-            return isActive
-              ? active.stroke
-              : isHover
-              ? hover.stroke
-              : normal.stroke;
-          },
-        ],
-        // strokeWidth: [
-        //   'isHover*isActive',
-        //   (isHover: boolean, isActive: boolean) => {
-        //     return isActive
-        //       ? active.borderWidth
-        //       : isHover
-        //       ? hover.borderWidth
-        //       : normal.borderWidth;
-        //   },
-        // ],
-        ...style,
-      });
+      .style(style);
 
     return [layer];
   }
