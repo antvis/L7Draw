@@ -10,16 +10,13 @@ export class MidPointRender extends LayerRender<
 > {
   initLayers(): ILayer[] {
     const { normal, style, options } = this.style;
-    const { shape, size, color, stroke } = normal;
+    const { shape, size, color } = normal;
     const layer = new PointLayer(options ?? {})
       .source(featureCollection([]))
       .size(size)
       .color(color)
       .shape(shape)
-      .style({
-        stroke: stroke,
-        ...style,
-      });
+      .style(style);
 
     return [layer];
   }
