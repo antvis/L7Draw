@@ -12,7 +12,7 @@ import { LayerRender } from './layer-render';
 
 export class PointRender extends LayerRender<IPointFeature, IPointStyle> {
   initLayers(): ILayer[] {
-    const { normal, hover, active, style, options } = this.style;
+    const { normal, hover, active, style = {}, options } = this.style;
     const layer = new PointLayer(options ?? {})
       .source(featureCollection([]))
       .size('isHover*isActive', (isHover: boolean, isActive: boolean) => {
