@@ -24,7 +24,6 @@ const Demo: React.FC = () => {
         color: '#0000ff',
         size: 8,
         shape: 'square',
-        stroke: '#ffff00',
       };
 
       const drawer = new DrawPoint(scene, {

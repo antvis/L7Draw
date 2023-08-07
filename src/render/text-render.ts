@@ -15,21 +15,7 @@ export class TextRender extends LayerRender<ITextFeature, ITextStyle> {
         return isActive ? active.color : normal.color;
       })
       .shape('text', 'text')
-      .style({
-        stroke: [
-          'isActive',
-          (isActive: boolean) => {
-            return isActive ? active.stroke : normal.stroke;
-          },
-        ],
-        // strokeWidth: [
-        //   'isActive',
-        //   (isActive: boolean) => {
-        //     return isActive ? active.borderWidth : normal.borderWidth;
-        //   },
-        // ],
-        ...style,
-      });
+      .style(style);
 
     return [layer];
   }
