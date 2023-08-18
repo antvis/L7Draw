@@ -20,6 +20,8 @@ npm install @antv/l7-draw
 
 ## 🔨 使用
 
+### 通过 NPM 引入
+
 ```tsx | pure
 // ----js-----
 import { GaodeMap, Scene } from '@antv/l7';
@@ -48,6 +50,30 @@ scene.on('loaded', () => {
 
 // ----html----
 <div id="map"></div>;
+```
+
+### 通过 CDN 引入
+
+```html | pure
+<!-- 引入依赖包 -->
+<script src="https://unpkg.com/@antv/l7"></script>
+<script src="https://unpkg.com/@antv/l7-draw"></script>
+
+<script>
+  const scene = new L7.Scene({
+    id: 'map',
+    map: new L7.GaodeMap({
+      style: 'dark',
+      center: [104.288144, 31.239692],
+      zoom: 4.4,
+    }),
+  });
+  scene.on('loaded', () => {
+    // 通过 L7.Draw.*** 访问
+    const draw = new L7.Draw.DrawPoint(scene, {});
+    draw.enable();
+  });
+</script>
 ```
 
 ## ⌨️ 本地开发
