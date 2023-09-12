@@ -40,6 +40,7 @@ import { getLngLat, isSameFeature } from '../utils';
 export abstract class BaseMode<
   O extends IBaseModeOptions = IBaseModeOptions,
 > extends EventEmitter<DrawEvent | keyof typeof DrawEvent> {
+  public static instances: BaseMode[] = [];
   /**
    * L7 场景实例，在构造器中传入
    */
@@ -148,6 +149,8 @@ export abstract class BaseMode<
     this.bindCommonEvent();
     this.emit(DrawEvent.Init, this);
     this.bindEnableEvent();
+
+    BaseMode.instances.push(this);
   }
 
   protected abstract get dragItem(): Feature | null | undefined;
@@ -605,5 +608,10 @@ export abstract class BaseMode<
     this.popup?.destroy();
     this.cursor.destroy();
     this.emit(DrawEvent.Destroy, this);
+
+    const targetIndex = BaseMode.instances.indexOf(this);
+    if (targetIndex > -1) {
+      BaseMode.instances.splice(targetIndex, 1);
+    }
   }
 }

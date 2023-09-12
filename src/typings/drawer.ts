@@ -75,6 +75,7 @@ export type AdsorbTargetFeature =
 export interface IAdsorbOptions {
   data:
     | 'drawData'
+    | 'allDrawData'
     | AdsorbTargetFeature[]
     | ((position: Position) => AdsorbTargetFeature[]);
   pointAdsorbPixel: number;
