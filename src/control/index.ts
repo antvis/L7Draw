@@ -15,6 +15,7 @@ import './iconfont.js';
 import './index.less';
 import { ControlEvent, DrawEvent } from '../constant';
 import { debounce, fromPairs, toPairs } from 'lodash';
+import { Feature } from '@turf/turf';
 
 export class DrawControl extends Control {
   public controlOption: IDrawControlProps;
@@ -101,6 +102,9 @@ export class DrawControl extends Control {
               ...(typeof options === 'boolean' ? {} : options),
             });
             draw.on(DrawEvent.Change, this.emitDataChange);
+            draw.on(DrawEvent.Select, (feature?: Feature) => {
+              this.emitDrawSelect(btnType as DrawType, feature);
+            });
             this.drawMap[btnType as DrawType] = draw;
           }
         }
@@ -128,6 +132,10 @@ export class DrawControl extends Control {
   emitDataChange = debounce(() => {
     this.emit(ControlEvent.DataChange, this.getDrawData());
   }, 16);
+
+  emitDrawSelect = (drawType: DrawType, feature?: Feature) => {
+    this.emit(ControlEvent.DrawSelect, drawType, feature);
+  };
 
   /**
    * 按钮的点击事件

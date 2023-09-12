@@ -77,3 +77,4 @@ type DrawType = 'point' | 'line' | 'polygon' | 'rect' | 'circle';
 | ------------------------------------------- | ------------------------ | -------------------------------------------------- |
 | ControlEvent.DrawChange &#124; 'drawChange' | 当激活绘制变化时触发     | `(type: DrawType &#124; null) => void;`            |
 | ControlEvent.DataChange &#124; 'dataChange' | 当绘制数据发生更改时触发 | `(drawData: Record<DrawType, Feature[]>) => void;` |
+| ControlEvent.DrawSelect &#124; 'drawselect' | 当前选中元素发生更改 | `(drawType: DrawType, feature: Feature &#124; null) => void;` |
