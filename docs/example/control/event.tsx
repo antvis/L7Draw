@@ -34,6 +34,10 @@ const Demo: React.FC = () => {
       drawControl.on(ControlEvent.DataChange, (newData) => {
         console.log('当前绘制数据发生更改', newData);
       });
+
+      drawControl.on(ControlEvent.DrawSelect, (drawType, feature) => {
+        console.log('当前选中数据发生更改', drawType, feature);
+      });
     });
   }, []);
 
