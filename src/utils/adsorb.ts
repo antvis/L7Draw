@@ -5,7 +5,7 @@ import {
   IPointFeature,
   ILineFeature,
 } from '../typings';
-import { LineMode, PolygonMode } from '../mode';
+import { BaseMode, LineMode, PolygonMode } from '../mode';
 import {
   coordAll,
   Feature,
@@ -38,7 +38,9 @@ export const getAdsorbFeature: (
   let features: AdsorbTargetFeature[] = [];
   let adsorbPoints: Feature<Point>[] = [];
   let adsorbLines: Feature<LineString>[] = [];
-  if (adsorbDataConfig === 'drawData') {
+  if (adsorbDataConfig === 'allDrawData') {
+    features = BaseMode.instances.map((draw) => draw.getData()).flat();
+  } else if (adsorbDataConfig === 'drawData') {
     features = draw.getData();
   } else if (adsorbDataConfig instanceof Function) {
     features = adsorbDataConfig(position);
