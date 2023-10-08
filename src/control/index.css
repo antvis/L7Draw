@@ -3,6 +3,7 @@
   overflow: hidden;
   background: #ffffff;
   border-radius: 2px;
+  box-shadow: 0 0 20px #00000026;
 }
 .l7-draw-control__btn {
   display: inline-flex;
@@ -12,6 +13,7 @@
   height: 30px;
   padding: 0;
   text-align: center;
+  background: transparent;
   border-width: 0 0 0 0;
   border-right: 1px solid #e0e0e0;
   outline: 0;
@@ -21,6 +23,7 @@
   background-color: #e5e5e5;
 }
 .l7-draw-control__btn:last-child {
+  border-right: 0;
   border-bottom: 0;
 }
 .l7-draw-control__btn .l7-draw-icon {
