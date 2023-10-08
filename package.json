@@ -8,6 +8,7 @@
     "start": "dumi dev",
     "docs:build": "dumi build",
     "docs:deploy": "gh-pages -d docs-dist",
+    "less": "lessc ./src/control/index.less ./src/control/index.css",
     "analyze": "ANALYZE=1 dumi build",
     "build": "father-build",
     "deploy": "npm run docs:build && npm run docs:deploy",
@@ -76,7 +77,6 @@
     }
   },
   "lint-staged": {
-    "*.less": "stylelint --fix",
     "*.{ts,tsx}": "eslint --fix",
     "*.{ts,tsx,md,json}": [
       "prettier --write"
