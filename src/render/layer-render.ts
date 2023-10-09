@@ -77,10 +77,12 @@ export abstract class LayerRender<
    * @param features 设置对应的Feature数组
    */
   setData(features: F[]) {
-    this.data = features;
-    const newData = featureCollection(features);
+    const newFeatures = [...features].sort(
+      (a, b) => +a.properties.isActive! - +b.properties.isActive!,
+    );
+    this.data = newFeatures;
     this.layers.forEach((layer) => {
-      layer.setData(newData);
+      layer.setData(featureCollection(newFeatures));
     });
   }
 
