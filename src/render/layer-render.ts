@@ -81,9 +81,8 @@ export abstract class LayerRender<
       (a, b) => +a.properties.isActive! - +b.properties.isActive!,
     );
     this.data = newFeatures;
-    const newData = featureCollection(newFeatures);
     this.layers.forEach((layer) => {
-      layer.setData(newData);
+      layer.setData(featureCollection(newFeatures));
     });
   }
 
