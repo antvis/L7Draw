@@ -138,10 +138,7 @@ export class Source extends EventEmitter<
         ? updater(this.getRenderData(renderType))
         : updater;
     this.setData({
-      [renderType]: [...data].sort((a, b) => {
-        // @ts-ignore
-        return +a.properties.isActive - +b.properties.isActive;
-      }),
+      [renderType]: data,
     });
     this.emit(SourceEvent.Change, this.data);
     return data;
