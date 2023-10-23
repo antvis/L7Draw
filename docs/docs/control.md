@@ -43,14 +43,23 @@ options 配置是 Draw 实例化的时候，作为第二个参数传入，所有
 ### DrawBtnConfig
 
 ```ts
-type DrawBtnConfig = {
-  point?: boolean | DeepPartial<IPointDrawerOptions>;
-  line?: boolean | DeepPartial<ILineDrawerOptions>;
-  polygon?: boolean | DeepPartial<IPolygonDrawerOptions>;
-  rect?: boolean | DeepPartial<IRectDrawerOptions>;
-  circle?: boolean | DeepPartial<ICircleDrawerOptions>;
-  clear?: boolean;
-};
+export type DrawBtnConfig = Record<
+  BtnType | string,                 // key 值为 DrawType 时，DrawControl 会创建内置的绘制按钮，为其他字符串值时，则会将 button 插入 DrawControl 按钮组中
+  | boolean                         // 可以通过 true/false 开关按钮
+  | (DeepPartial<                   // 可以传各个绘制类的 options
+      | IPointDrawerOptions
+      | ILineDrawerOptions
+      | IPolygonDrawerOptions
+      | IRectDrawerOptions
+      | ICircleDrawerOptions
+    > & {
+      order?: number;               // 当前绘制按钮的顺序
+    })
+  | { 
+      button?: HTMLElement;         // 自定义的绘制按钮
+      order?: number                // 自定义绘制按钮的顺序
+    }
+>;
 ```
 
 ### DrawType

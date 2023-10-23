@@ -9,12 +9,13 @@ import {
   DrawIconMap,
   DrawInstanceMap,
   DrawTypeAttrName,
+  DrawTypeList,
 } from './constant';
 import { getParentByClassName } from '../typings';
 import './iconfont.js';
 import './index.less';
 import { ControlEvent, DrawEvent } from '../constant';
-import { debounce, fromPairs, toPairs } from 'lodash';
+import { debounce, fromPairs, omit, toPairs } from 'lodash';
 import { Feature } from '@turf/turf';
 
 export class DrawControl extends Control {
@@ -86,9 +87,34 @@ export class DrawControl extends Control {
   init() {
     const btnList: HTMLButtonElement[] = [];
 
-    (Object.entries(this.controlOption.drawConfig) as [BtnType, any][]).forEach(
-      ([btnType, options]) => {
-        if (options) {
+    (Object.entries(this.controlOption.drawConfig) as [BtnType, any][])
+      .filter(([_, options]) => options)
+      .sort((item1, item2) => {
+        const [, options1] = item1;
+        const [, options2] = item2;
+        const { MAX_SAFE_INTEGER } = Number;
+        const order1 =
+          typeof options1 === 'boolean' ? MAX_SAFE_INTEGER : options1.order;
+        const order2 =
+          typeof options2 === 'boolean' ? MAX_SAFE_INTEGER : options2.order;
+        return order1 - order2;
+      })
+      .map(
+        ([drawType, options]) =>
+          [
+            drawType,
+            typeof options === 'object' ? omit(options, 'order') : options,
+          ] as const,
+      )
+      .forEach(([btnType, options]) => {
+        if (typeof options === 'object' && options.button) {
+          const btn = options.button;
+          if (!btn.classList.contains('l7-draw-control__btn')) {
+            btn.classList.add('l7-draw-control__btn');
+          }
+          this.btnMap[btnType] = btn;
+          btnList.push(btn);
+        } else if (options && DrawTypeList.includes(btnType)) {
           const newBtn = this.initBtn(btnType);
           newBtn.addEventListener('click', this.onBtnClick);
           btnList.push(newBtn);
@@ -108,8 +134,7 @@ export class DrawControl extends Control {
             this.drawMap[btnType as DrawType] = draw;
           }
         }
-      },
-    );
+      });
     this.container.append(...btnList);
 
     if (this.controlOption.defaultActiveType) {
