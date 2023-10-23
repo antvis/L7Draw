@@ -7,6 +7,15 @@ import {
 } from '../drawer';
 import { BtnType, DrawType } from './types';
 
+export const DrawTypeList: BtnType[] = [
+  'point',
+  'line',
+  'polygon',
+  'rect',
+  'circle',
+  'clear',
+];
+
 export const DrawIconMap: Record<BtnType, string> = {
   point: '#l7draw-point',
   line: '#l7draw-line',

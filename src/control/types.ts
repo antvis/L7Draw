@@ -1,25 +1,32 @@
 import { IControlOption } from '@antv/l7';
 import { DeepPartial, IBaseModeOptions } from '../typings';
 import {
-  IPointDrawerOptions,
+  ICircleDrawerOptions,
   ILineDrawerOptions,
+  IPointDrawerOptions,
   IPolygonDrawerOptions,
   IRectDrawerOptions,
-  ICircleDrawerOptions,
 } from '../drawer';
 
 export type DrawType = 'point' | 'line' | 'polygon' | 'rect' | 'circle';
 
 export type BtnType = DrawType | 'clear';
 
-export type DrawBtnConfig = {
-  point?: boolean | DeepPartial<IPointDrawerOptions>;
-  line?: boolean | DeepPartial<ILineDrawerOptions>;
-  polygon?: boolean | DeepPartial<IPolygonDrawerOptions>;
-  rect?: boolean | DeepPartial<IRectDrawerOptions>;
-  circle?: boolean | DeepPartial<ICircleDrawerOptions>;
-  clear?: boolean;
-};
+export type DrawBtnConfig = Record<
+  // 当 key 为 BtnType 时，展示的是内置按钮，当 key 为 string 时，展示的是自定义按钮
+  BtnType | string,
+  | boolean
+  | (DeepPartial<
+      | IPointDrawerOptions
+      | ILineDrawerOptions
+      | IPolygonDrawerOptions
+      | IRectDrawerOptions
+      | ICircleDrawerOptions
+    > & {
+      order?: number;
+    })
+  | { button?: HTMLElement; order?: number }
+>;
 
 export interface IDrawControlProps extends IControlOption {
   drawConfig: DrawBtnConfig;
