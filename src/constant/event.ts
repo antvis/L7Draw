@@ -88,4 +88,5 @@ export enum ControlEvent {
   DrawChange = 'drawchange',
   DataChange = 'datachange',
   DrawSelect = 'drawselect',
+  DrawClear = 'drawclear',
 }
