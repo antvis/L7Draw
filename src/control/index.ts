@@ -227,6 +227,7 @@ export class DrawControl extends Control {
     Object.values(this.drawMap).forEach((draw) => {
       draw?.clear();
     });
+    this.emit(ControlEvent.DrawClear);
   }
 
   /**
