@@ -44,20 +44,21 @@ options 配置是 Draw 实例化的时候，作为第二个参数传入，所有
 
 ```ts
 export type DrawBtnConfig = Record<
-  BtnType | string,                 // key 值为 DrawType 时，DrawControl 会创建内置的绘制按钮，为其他字符串值时，则会将 button 插入 DrawControl 按钮组中
-  | boolean                         // 可以通过 true/false 开关按钮
-  | (DeepPartial<                   // 可以传各个绘制类的 options
+  BtnType | string, // key 值为 DrawType 时，DrawControl 会创建内置的绘制按钮，为其他字符串值时，则会将 button 插入 DrawControl 按钮组中
+  | boolean // 可以通过 true/false 开关按钮
+  | (DeepPartial<
+      // 可以传各个绘制类的 options
       | IPointDrawerOptions
       | ILineDrawerOptions
       | IPolygonDrawerOptions
       | IRectDrawerOptions
       | ICircleDrawerOptions
     > & {
-      order?: number;               // 当前绘制按钮的顺序
+      order?: number; // 当前绘制按钮的顺序
     })
-  | { 
-      button?: HTMLElement;         // 自定义的绘制按钮
-      order?: number                // 自定义绘制按钮的顺序
+  | {
+      button?: HTMLElement; // 自定义的绘制按钮
+      order?: number; // 自定义绘制按钮的顺序
     }
 >;
 ```
@@ -87,4 +88,4 @@ type DrawType = 'point' | 'line' | 'polygon' | 'rect' | 'circle';
 | ControlEvent.DrawChange &#124; 'drawChange' | 当激活绘制变化时触发     | `(type: DrawType &#124; null) => void;`                       |
 | ControlEvent.DataChange &#124; 'dataChange' | 当绘制数据发生更改时触发 | `(drawData: Record<DrawType, Feature[]>) => void;`            |
 | ControlEvent.DrawSelect &#124; 'drawselect' | 当前选中元素发生更改     | `(drawType: DrawType, feature: Feature &#124; null) => void;` |
-| ControlEvent.DrawClear &#124; 'drawclear'   | 当清空数据时触发         | `() => void;` |
+| ControlEvent.DrawClear &#124; 'drawclear'   | 当清空数据时触发         | `() => void;`                                                 |

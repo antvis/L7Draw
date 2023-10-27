@@ -19,6 +19,10 @@ export default defineConfig({
       path: '/example',
     },
     {
+      title: '工具',
+      path: 'https://l7editor.antv.antgroup.com',
+    },
+    {
       title: '周边生态',
       children: [
         {
