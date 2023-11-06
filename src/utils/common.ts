@@ -1,7 +1,7 @@
 import { Scene } from '@antv/l7';
 import { Position } from '@turf/turf';
 import { ILayerMouseEvent, ILngLat, ISceneMouseEvent } from '../typings';
-import { isEqual, split } from 'lodash';
+import { isEqual } from 'lodash';
 
 // @ts-ignore
 export const isDev = process.env.NODE_ENV === 'development';
@@ -10,11 +10,13 @@ export const isDev = process.env.NODE_ENV === 'development';
  * 获取完全覆盖地图区域的DOM，会根据地图类型返回不同的结果
  * @param scene
  */
-export const getMapDom = (scene: Scene): HTMLDivElement | null => {
+export const getMapDom = (scene: Scene): HTMLElement | null => {
   const container = scene.getContainer();
   return (
-    container?.querySelector('.l7-marker-container') ??
-    container?.querySelector('.amap-maps') ??
+    scene.getMapCanvasContainer() ??
+    container?.querySelector('.l7-scene') ??
+    container?.querySelector('.l7-control-container') ??
+    container?.querySelector('.l7-marker-container2') ??
     null
   );
 };

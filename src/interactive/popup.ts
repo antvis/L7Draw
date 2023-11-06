@@ -10,21 +10,24 @@ import { debounce } from 'lodash';
 export class Popup {
   protected content: PopupContent = '';
 
-  protected tippy: TippyInstance;
+  protected tippy?: TippyInstance;
 
   protected scene: Scene;
 
   protected isMouseInner = false;
 
   constructor(scene: Scene, tippyProps: PopupOptions) {
-    this.tippy = Tippy(getMapDom(scene)!, {
-      ...DEFAULT_POPUP_CONFIG,
-      ...tippyProps,
-    });
-    this.tippy.hide();
+    const container = getMapDom(scene);
     this.scene = scene;
-    scene.on(SceneEvent.Mousemove, this.onMouseMove);
-    scene.on(SceneEvent.Mouseout, this.onMouseOut);
+    if (container) {
+      this.tippy = Tippy(getMapDom(scene)!, {
+        ...DEFAULT_POPUP_CONFIG,
+        ...tippyProps,
+      });
+      this.tippy.hide();
+      scene.on(SceneEvent.Mousemove, this.onMouseMove);
+      scene.on(SceneEvent.Mouseout, this.onMouseOut);
+    }
   }
 
   onMouseMove = () => {
@@ -44,7 +47,7 @@ export class Popup {
   setContent = debounce(
     (content: PopupContent | null) => {
       this.content = content ?? '';
-      this.tippy.setContent(content ?? '');
+      this.tippy?.setContent(content ?? '');
       this.checkTippyShow();
     },
     16,
@@ -55,15 +58,15 @@ export class Popup {
 
   checkTippyShow() {
     if (this.content && this.isMouseInner) {
-      this.tippy.show();
+      this.tippy?.show();
     } else {
-      this.tippy.hide();
+      this.tippy?.hide();
     }
   }
 
   destroy() {
     this.scene.off(SceneEvent.Mousemove, this.onMouseMove);
     this.scene.off(SceneEvent.Mouseout, this.onMouseOut);
-    this.tippy.destroy();
+    this.tippy?.destroy();
   }
 }
