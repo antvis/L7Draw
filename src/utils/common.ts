@@ -13,6 +13,8 @@ export const isDev = process.env.NODE_ENV === 'development';
 export const getMapDom = (scene: Scene): HTMLElement | null => {
   const container = scene.getContainer();
   return (
+    container?.querySelector('.l7-marker-container') ??
+    container?.querySelector('.BMap_mask') ??
     scene.getMapCanvasContainer() ??
     container?.querySelector('.l7-scene') ??
     container?.querySelector('.l7-control-container') ??
