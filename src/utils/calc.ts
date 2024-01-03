@@ -3,6 +3,7 @@ import {
   area,
   center,
   centerOfMass,
+  coordAll,
   distance,
   Feature,
   featureCollection,
@@ -55,11 +56,12 @@ export const calcDistanceTextsByLine = (
     const meters = length(feature, {
       units: 'meters',
     });
+    const pointFeatures = coordAll(feature).map((item) => point(item));
     text.properties = {
       id: getUuid('text'),
       isActive: false,
       meters,
-      text: format(meters),
+      text: format(meters, pointFeatures),
       type: 'totalDistance',
       ...properties,
     };
@@ -80,7 +82,7 @@ export const calcDistanceTextsByLine = (
         id: getUuid('text'),
         isActive: false,
         meters,
-        text: format(meters),
+        text: format(meters, [currentPoint, nextPoint]),
         type: 'distance',
         ...properties,
       };
@@ -106,7 +108,7 @@ export const calcAreaText = (
   return centerOfMass(feature, {
     properties: {
       meters,
-      text: format(meters),
+      text: format(meters, feature),
       type: 'area',
       isActive: false,
       ...properties,

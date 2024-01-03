@@ -22,7 +22,7 @@ import { DrawPoint } from '@antv/l7-draw';
 
 const drawer = new DrawPoint(scene, {
   areaOptions: {
-    format: (squareMeters: number) => {
+    format: (squareMeters: number, polygonFeature: Feature<Polygon>) => {
       return squareMeters > 1000000
         ? `${+(squareMeters / 1000000).toFixed(2)}km²`
         : `${+squareMeters.toFixed(2)}m²`;
@@ -35,6 +35,6 @@ const drawer = new DrawPoint(scene, {
 
 ## 配置
 
-| 名称   | 说明                   | 类型                               | 默认值                          |
-| ------ | ---------------------- | ---------------------------------- | ------------------------------- |
-| format | 格式化面积平方米的函数 | `(squareMeters: number) => string` | [见示例中的 format 方法](#示例) |
+| 名称   | 说明                   | 类型                                                                 | 默认值                          |
+| ------ | ---------------------- | -------------------------------------------------------------------- | ------------------------------- |
+| format | 格式化面积平方米的函数 | `(squareMeters: number, polygonFeature: Feature<Polygon>) => string` | [见示例中的 format 方法](#示例) |

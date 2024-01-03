@@ -24,7 +24,7 @@ const drawer = new DrawPoint(scene, {
   distanceOptions: {
     showTotalDistance: false,
     showDashDistance: true,
-    format: (meters) => {
+    format: (meters, points: Feature<Point>[]) => {
       if (meters >= 1000) {
         return +(meters / 1000).toFixed(2) + 'km';
       } else {
@@ -43,4 +43,4 @@ const drawer = new DrawPoint(scene, {
 | ----------------- | ---------------------------------------- | ---------------------------- | ------------------------------- |
 | showTotalDistance | 是否展示线段总长度，但是分段距离会不展示 | `boolean`                    | `false`                         |
 | showDashDistance  | 是否展示虚线的长度                       | `boolean`                    | `true`                          |
-| format            | 格式化距离长度的函数                     | `(meters: number) => string` | [见示例中的 format 方法](#示例) |
+| format            | 格式化距离长度的函数                     | `(meters: number, points: Feature<Point>[]) => string` | [见示例中的 format 方法](#示例) |

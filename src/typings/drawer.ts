@@ -1,4 +1,4 @@
-import { Feature, LineString, Point, Position } from '@turf/turf';
+import { Feature, LineString, Point, Polygon, Position } from '@turf/turf';
 import { Content, Props as TippyProps } from 'tippy.js';
 import { HistoryConfig } from './source';
 import { IStyle } from './style';
@@ -51,14 +51,14 @@ export interface IDistanceOptions {
   showTotalDistance: boolean;
   showDashDistance: boolean;
   showWhen: ('normal' | 'active')[];
-  format: (meters: number) => string;
+  format: (meters: number, points: Feature<Point>[]) => string;
 }
 
 /**
  * 面积文案配置
  */
 export interface IAreaOptions {
-  format: (squareMeters: number) => string;
+  format: (squareMeters: number, polygonFeature: Feature<Polygon>) => string;
   showWhen: ('normal' | 'active')[];
 }
 
