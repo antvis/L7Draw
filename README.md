@@ -2,7 +2,7 @@
 
 > 基于 [L7](https://l7.antv.vision/zh) 封装的地理绘制库，支持在地图上通过单击、拖拽等方式绘制点、线、面的 GeoJSON 的数据
 
-[![npm Version](https://img.shields.io/npm/v/@antv/l7-draw.svg)](https://www.npmjs.com/package/@antv/l7-draw) [![npm Download](https://img.shields.io/npm/dm/@antv/l7-draw.svg)](https://www.npmjs.com/package/@antv/l7-draw) 
+[![npm Version](https://img.shields.io/npm/v/@antv/l7-draw.svg)](https://www.npmjs.com/package/@antv/l7-draw) [![npm Download](https://img.shields.io/npm/dm/@antv/l7-draw.svg)](https://www.npmjs.com/package/@antv/l7-draw)
 
 [文档](https://antv.vision/L7Draw/docs/draw/point) · [示例](https://antv.vision/L7Draw/example/point/start)
 
