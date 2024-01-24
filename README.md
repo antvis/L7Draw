@@ -93,6 +93,16 @@ npm run build
 
 <img src="https://mdn.alipayobjects.com/huamei_baaa7a/afts/img/A*GZGoTLCplgYAAAAAAAAAAAAADqSCAQ/original" width="400"/>
 
+## 📋 待办
+
+- [ ] 新增 Marker 绘制类型
+- [ ] 新增 文本 绘制类型
+- [ ] 两个 Polygon 交/并/异或/差集（合并/挖孔/切割）
+- [ ] 通过拖拽自动打点自动打点
+- [ ] 支持 Multi 格式的 Feature 元素编辑
+- [ ] 吸附计算性能优化
+- [ ] DrawControl Icon 优化
+
 ## 🤝 如何贡献
 
 如果您在使用的过程中碰到问题，可以先通过 [issues](https://github.com/antvis/l7-draw/issues) 看看有没有类似的 bug 或者建议。
