@@ -34,8 +34,6 @@
     "eventemitter3": "^4.0.7",
     "lodash": "^4.17.21",
     "mousetrap": "^1.6.5",
-    "next-tick": "^1.1.0",
-    "react": "^16.12.0 || ^17.0.0",
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {
