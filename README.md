@@ -1,12 +1,10 @@
 # L7Draw
 
-> 基于 [L7](https://l7.antv.vision/zh) 封装的地理绘制库
+> 基于 [L7](https://l7.antv.vision/zh) 封装的地理绘制库，支持在地图上通过单击、拖拽等方式绘制点、线、面的 GeoJSON 的数据
 
-[![npm Version](https://img.shields.io/npm/v/@antv/l7-draw.svg)](https://www.npmjs.com/package/@antv/l7-draw) [![npm Download](https://img.shields.io/npm/dm/@antv/l7-draw.svg)](https://www.npmjs.com/package/@antv/l7-draw) ![Status](https://badgen.net/github/status/antvis/l7-draw) [![Percentage of issues still open](http://isitmaintained.com/badge/open/antvis/l7-draw.svg)](http://isitmaintained.com/project/antvis/l7-draw 'Percentage of issues still open') [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/antvis/l7-draw.svg)](http://isitmaintained.com/project/antvis/l7-draw 'Average time to resolve an issue')
+[![npm Version](https://img.shields.io/npm/v/@antv/l7-draw.svg)](https://www.npmjs.com/package/@antv/l7-draw) [![npm Download](https://img.shields.io/npm/dm/@antv/l7-draw.svg)](https://www.npmjs.com/package/@antv/l7-draw) 
 
-## 📚 文档
-
-[文档](https://antv.vision/L7Draw/docs/draw/point) [示例](https://antv.vision/L7Draw/example/point/start)
+[文档](https://antv.vision/L7Draw/docs/draw/point) · [示例](https://antv.vision/L7Draw/example/point/start)
 
 ## 🔨 工具
 
@@ -15,7 +13,7 @@
 ## 📦 安装
 
 ```bash
-npm install @antv/l7-draw
+npm install -S @antv/l7-draw
 ```
 
 ## 🔨 使用
@@ -93,7 +91,7 @@ npm run build
 
 在使用 L7Draw 过程中，若有疑惑无法在文档中解决的可以扫码加入 L7 官方答疑群。
 
-<img src="https://mdn.alipayobjects.com/huamei_rzapb5/afts/img/A*ndWjTqmhTlEAAAAAAAAAAAAADqWCAQ/original" width="400"/>
+<img src="https://mdn.alipayobjects.com/huamei_baaa7a/afts/img/A*GZGoTLCplgYAAAAAAAAAAAAADqSCAQ/original" width="400"/>
 
 ## 🤝 如何贡献
 
