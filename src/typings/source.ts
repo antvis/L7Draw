@@ -53,4 +53,5 @@ export interface SourceOptions {
   render: RenderMap;
   history?: HistoryConfig;
   scene: Scene;
+  bbox: boolean;
 }

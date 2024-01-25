@@ -12,6 +12,7 @@ import {
 } from '../typings';
 import { History } from './history';
 import { Scene } from '@antv/l7';
+import { injectFeatureBBox } from '../utils';
 
 export class Source extends EventEmitter<
   SourceEvent | keyof typeof SourceEvent
@@ -41,13 +42,23 @@ export class Source extends EventEmitter<
    */
   protected diffData: Partial<SourceData> = {};
 
+  protected enableBBox: boolean;
+
+  protected featureType: 'point' | 'line' | 'polygon';
+
   /**
    *
    * @protected
    */
   protected history?: History;
 
-  constructor({ data, render, history: historyConfig, scene }: SourceOptions) {
+  constructor({
+    data,
+    render,
+    history: historyConfig,
+    scene,
+    bbox,
+  }: SourceOptions) {
     super();
 
     this.scene = scene;
@@ -60,6 +71,17 @@ export class Source extends EventEmitter<
     if (data) {
       this.setData(data);
     }
+
+    this.featureType = (() => {
+      if (render.polygon) {
+        return 'polygon';
+      }
+      if (render.line) {
+        return 'line';
+      }
+      return 'point';
+    })();
+    this.enableBBox = bbox;
   }
 
   saveHistory() {
@@ -88,6 +110,11 @@ export class Source extends EventEmitter<
    */
   setData(data: Partial<SourceData>) {
     if (Object.keys(data).length) {
+      if (this.enableBBox && data[this.featureType]?.length) {
+        // @ts-ignore
+        data[this.featureType] = injectFeatureBBox(data[this.featureType]!);
+      }
+
       this.data = {
         ...this.data,
         ...data,

@@ -133,6 +133,7 @@ export abstract class BaseMode<
       render: this.render,
       history: this.options.history || undefined,
       scene,
+      bbox: this.options.bbox ?? false,
     });
     this.cursor = new Cursor(scene, this.options.cursor);
 

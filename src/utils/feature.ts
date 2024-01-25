@@ -1,4 +1,5 @@
 import {
+  bbox,
   coordAll,
   featureCollection,
   lineString,
@@ -156,4 +157,22 @@ export const createPolygonFeature = (
       coordinates: [coordAll(featureCollection([...nodes, first(nodes)!]))],
     },
   } as IPolygonFeature;
+};
+
+/**
+ * 为 feature 加入 bbox 属性
+ * @param data
+ * @returns
+ */
+export const injectFeatureBBox = <T extends IBaseFeature | IBaseFeature[]>(
+  data: T,
+) => {
+  if (Array.isArray(data)) {
+    data.forEach((feature) => {
+      feature.bbox = bbox(feature);
+    });
+  } else {
+    data.bbox = bbox(data);
+  }
+  return data;
 };
