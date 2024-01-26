@@ -9,7 +9,7 @@ group:
 
 ## 说明
 
-在 `DrawLine` 和 `DrawPolygon` 中，在**绘制和拖拽结点**的过程中，当结点位置距离目标吸附物的点或线指定像素值内时，会将当前操作结点自动吸附到吸附物的点或线上。
+在 `DrawLine` 和 `DrawPolygon` 中，在**绘制和拖拽结点**的过程中，当结点位置距离目标吸附物的点或线指定像素值内时，会将当前操作结点自动吸附到吸附物的点或线上，若开启吸附时会自动计算各个 `Feature` 的 `bbox` 用于吸附的计算性能提升。
 
 <img src="https://gw.alipayobjects.com/mdn/rms_2591f5/afts/img/A*yOxpRKJaS_YAAAAAAAAAAAAAARQnAQ" width="300"/>
 

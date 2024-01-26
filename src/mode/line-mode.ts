@@ -25,9 +25,7 @@ import {
   calcDistanceTextsByLine,
   createLineFeature,
   createPointFeature,
-  getAdsorbFeature,
-  getAdsorbLine,
-  getAdsorbPoint,
+  getAdsorbPosition,
   getLngLat,
   getPosition,
   isSameFeature,
@@ -126,6 +124,8 @@ export abstract class LineMode<
         ...DEFAULT_ADSORB_CONFIG,
         ...newOptions.adsorbOptions,
       };
+      // 开启吸附后，默认开启 bbox 加速吸附计算性能
+      newOptions.bbox = true;
     }
     return newOptions;
   }
@@ -140,18 +140,13 @@ export abstract class LineMode<
       return position;
     }
     const scene = this.scene;
-    const { data, pointAdsorbPixel, lineAdsorbPixel } = adsorbOptions;
-    let adsorbPosition: Position | null = null;
-    const { points, lines } = getAdsorbFeature(data, this, position);
-    if (points.length && pointAdsorbPixel > 0) {
-      adsorbPosition = getAdsorbPoint(position, points, adsorbOptions, scene);
-    }
 
-    if (!adsorbPosition && lines.length && lineAdsorbPixel > 0) {
-      adsorbPosition = getAdsorbLine(position, lines, adsorbOptions, scene);
-    }
-
-    return adsorbPosition;
+    return getAdsorbPosition({
+      adsorbOptions,
+      position,
+      scene,
+      draw: this,
+    });
   }
 
   bindSceneEvent() {

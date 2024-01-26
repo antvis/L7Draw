@@ -12,7 +12,7 @@ import {
 } from '../typings';
 import { History } from './history';
 import { Scene } from '@antv/l7';
-import { injectFeatureBBox } from '../utils';
+import { injectFeaturesBBox } from '../utils';
 
 export class Source extends EventEmitter<
   SourceEvent | keyof typeof SourceEvent
@@ -112,7 +112,7 @@ export class Source extends EventEmitter<
     if (Object.keys(data).length) {
       if (this.enableBBox && data[this.featureType]?.length) {
         // @ts-ignore
-        data[this.featureType] = injectFeatureBBox(data[this.featureType]!);
+        data[this.featureType] = injectFeaturesBBox(data[this.featureType]!);
       }
 
       this.data = {
