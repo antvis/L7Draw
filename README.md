@@ -100,7 +100,7 @@ npm run build
 - [ ] 两个 Polygon 交/并/异或/差集（合并/挖孔/切割）
 - [ ] 通过拖拽自动打点自动打点
 - [ ] 支持 Multi 格式的 Feature 元素编辑
-- [ ] 吸附计算性能优化
+- [x] 吸附计算性能优化
 - [ ] DrawControl Icon 优化
 
 ## 🤝 如何贡献
