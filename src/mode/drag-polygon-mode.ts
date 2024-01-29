@@ -1,7 +1,6 @@
-import { Scene } from '@antv/l7';
 import { Feature } from '@turf/turf';
 import { cloneDeep, first, last } from 'lodash';
-import { DrawEvent, RenderEvent } from '../constant';
+import { DrawEvent } from '../constant';
 import {
   DeepPartial,
   IDragPolygonHelperOptions,
@@ -25,36 +24,20 @@ import {
 } from '../utils';
 import { IPolygonModeOptions, PolygonMode } from './polygon-mode';
 import {
-  DEFAULT_TRIGGER_DRAG_HELPER_CONFIG,
   DEFAULT_DRAG_POLYGON_HELPER_CONFIg,
-} from '../constant/helper';
+  DEFAULT_TRIGGER_DRAG_HELPER_CONFIG,
+} from '../constant';
 
 export interface IDragPolygonModeOptions<F extends Feature = Feature>
   extends IPolygonModeOptions<F> {
-  trigger: 'click' | 'drag';
   helper: IPolygonHelperOptions | boolean;
 }
 
 export abstract class DragPolygonMode<
   T extends IDragPolygonModeOptions,
 > extends PolygonMode<T> {
-  constructor(scene: Scene, options: DeepPartial<T>) {
-    super(scene, options);
-
-    this.onSceneDragStart = this.onSceneDragStart.bind(this);
-    this.onSceneDragEnd = this.onSceneDragEnd.bind(this);
-  }
-
   get drawLine() {
     return this.drawPolygon?.properties.line;
-  }
-
-  get isDragTrigger() {
-    return this.options.trigger === 'drag';
-  }
-
-  get isClickTrigger() {
-    return this.options.trigger === 'click';
   }
 
   getDefaultOptions(options: DeepPartial<T>): T {
@@ -283,43 +266,5 @@ export abstract class DragPolygonMode<
     this.setDashLineData([drawPolygon.properties.line]);
     this.setTextData(this.getAllTexts());
     this.resetCursor();
-  }
-
-  bindSceneDragEvent() {
-    this.unbindSceneDragEvent();
-    this.sceneRender.on(RenderEvent.Dragstart, this.onSceneDragStart);
-    this.sceneRender.on(RenderEvent.Dragend, this.onSceneDragEnd);
-
-    this.scene.setMapStatus({
-      dragEnable: false,
-    });
-  }
-
-  unbindSceneDragEvent() {
-    this.sceneRender.off(RenderEvent.Dragstart, this.onSceneDragStart);
-    this.sceneRender.off(RenderEvent.Dragend, this.onSceneDragEnd);
-    this.scene.setMapStatus({
-      dragEnable: true,
-    });
-  }
-
-  bindEnableEvent() {
-    super.bindEnableEvent();
-    if (this.isDragTrigger) {
-      this.bindSceneDragEvent();
-    }
-  }
-
-  unbindEnableEvent() {
-    super.unbindEnableEvent();
-    if (this.isDragTrigger) {
-      this.unbindSceneDragEvent();
-    }
-  }
-
-  bindThis() {
-    super.bindThis();
-    this.onSceneDragStart = this.onSceneDragStart.bind(this);
-    this.onSceneDragEnd = this.onSceneDragEnd.bind(this);
   }
 }

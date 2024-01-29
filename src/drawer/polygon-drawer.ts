@@ -252,6 +252,13 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     this.setTextData(this.getAllTexts());
   }
 
+  onSceneDragEnd(e: ISceneMouseEvent) {
+    if (!this.isDragTrigger || !this.addable || !this.drawLine) {
+      return;
+    }
+    this.drawPolygonFinish();
+  }
+
   removeNode(node: Feature | string, feature: Feature | string) {
     const targetFeature = this.getTargetFeature(feature) as
       | IPolygonFeature

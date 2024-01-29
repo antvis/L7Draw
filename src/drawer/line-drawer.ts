@@ -239,6 +239,13 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     this.setTextData(this.getAllTexts());
   }
 
+  onSceneDragEnd(e: ISceneMouseEvent) {
+    if (!this.isDragTrigger || !this.addable || !this.drawLine) {
+      return;
+    }
+    this.drawLineFinish();
+  }
+
   setActiveFeature(target: Feature | string | null | undefined) {
     const targetFeature = this.getTargetFeature(target);
     if (targetFeature) {
