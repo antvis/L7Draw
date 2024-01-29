@@ -1,3 +1,4 @@
+import { ILineDrawerOptions } from '../drawer/line-drawer';
 import {
   HistoryConfig,
   IAdsorbOptions,
@@ -55,4 +56,9 @@ export const DEFAULT_ADSORB_CONFIG: IAdsorbOptions = {
   data: 'drawData',
   pointAdsorbPixel: 12,
   lineAdsorbPixel: 10,
+};
+
+export const DEFAULT_DRAG_OPTIONS: ILineDrawerOptions['dragOptions'] = {
+  dotDuration: 100,
+  dotDistance: 30,
 };

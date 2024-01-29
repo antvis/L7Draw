@@ -2,6 +2,7 @@ import { coordAll, Feature, featureCollection, Position } from '@turf/turf';
 import {
   DEFAULT_ADSORB_CONFIG,
   DEFAULT_DISTANCE_OPTIONS,
+  DEFAULT_DRAG_OPTIONS,
   RenderEvent,
 } from '../constant';
 import { LineRender } from '../render';
@@ -34,11 +35,19 @@ import {
   updateTargetFeature,
 } from '../utils';
 import { IMidPointModeOptions, MidPointMode } from './mid-point-mode';
-import { DEFAULT_LINE_HELPER_CONFIG } from '../constant/helper';
-import { cloneDeep } from 'lodash';
+import {
+  DEFAULT_LINE_HELPER_CONFIG,
+  DEFAULT_TRIGGER_DRAG_HELPER_CONFIG,
+} from '../constant/helper';
+import { cloneDeep, last } from 'lodash';
 
 export interface ILineModeOptions<F extends Feature = Feature>
   extends IMidPointModeOptions<F> {
+  trigger: 'click' | 'drag';
+  dragOptions: {
+    dotDistance: number;
+    dotDuration: number;
+  };
   distanceOptions: false | IDistanceOptions;
   helper: ILineHelperOptions | boolean;
   adsorbOptions: IAdsorbOptions | false;
@@ -47,6 +56,27 @@ export interface ILineModeOptions<F extends Feature = Feature>
 export abstract class LineMode<
   T extends ILineModeOptions,
 > extends MidPointMode<T> {
+  protected prevCreateTime: number = Date.now();
+
+  get isDragTrigger() {
+    return this.options.trigger === 'drag';
+  }
+
+  get isClickTrigger() {
+    return this.options.trigger === 'click';
+  }
+
+  /**
+   * 当前高亮的结点
+   * @protected
+   */
+  protected get editLine() {
+    return this.getLineData().find((feature) => {
+      const { isActive, isDraw } = feature.properties;
+      return !isDraw && isActive;
+    });
+  }
+
   /**
    * 获取line类型对应的render
    * @protected
@@ -69,17 +99,6 @@ export abstract class LineMode<
    */
   protected get drawLine() {
     return this.getLineData().find((feature) => feature.properties.isDraw);
-  }
-
-  /**
-   * 当前高亮的结点
-   * @protected
-   */
-  protected get editLine() {
-    return this.getLineData().find((feature) => {
-      const { isActive, isDraw } = feature.properties;
-      return !isDraw && isActive;
-    });
   }
 
   /**
@@ -112,6 +131,7 @@ export abstract class LineMode<
       showMidPoint: true,
       distanceOptions: false,
       helper: cloneDeep(DEFAULT_LINE_HELPER_CONFIG),
+      dragOptions: cloneDeep(DEFAULT_DRAG_OPTIONS),
     };
     if (options.distanceOptions) {
       newOptions.distanceOptions = {
@@ -126,6 +146,13 @@ export abstract class LineMode<
       };
       // 开启吸附后，默认开启 bbox 加速吸附计算性能
       newOptions.bbox = true;
+    }
+    if (options.trigger === 'drag') {
+      newOptions.autoActive = false;
+      newOptions.helper = {
+        ...(newOptions.helper as ILineHelperOptions),
+        ...DEFAULT_TRIGGER_DRAG_HELPER_CONFIG,
+      };
     }
     return newOptions;
   }
@@ -715,5 +742,98 @@ export abstract class LineMode<
     this.lineRender?.disableUnClick();
     this.lineRender?.disableHover();
     this.lineRender?.disableDrag();
+  }
+
+  onSceneDragStart(e: ISceneMouseEvent) {
+    if (
+      !this.isDragTrigger ||
+      !this.addable ||
+      this.dragPoint ||
+      this.editLine
+    ) {
+      return;
+    }
+    this.scene.setMapStatus({
+      dragEnable: false,
+    });
+    this.onPointCreate(e as any);
+    this.prevCreateTime = Date.now();
+
+    this.sceneRender.on(RenderEvent.Dragging, this.onSceneDragging);
+  }
+
+  onSceneDragging(e: ISceneMouseEvent) {
+    const drawLine = this.drawLine;
+    const now = Date.now();
+    const { dotDistance, dotDuration } = {
+      ...DEFAULT_DRAG_OPTIONS,
+      ...this.options.dragOptions,
+    };
+    if (
+      !this.isDragTrigger ||
+      !this.addable ||
+      !drawLine ||
+      (dotDuration && now - this.prevCreateTime < dotDuration)
+    ) {
+      return;
+    }
+    const { lng: currLng, lat: currLat } = getLngLat(e);
+    const lastPosition = last(drawLine.properties.nodes)!.geometry.coordinates;
+    const { x: prevX, y: prevY } = this.scene.lngLatToPixel([
+      lastPosition[0],
+      lastPosition[1],
+    ]);
+    const { x: currX, y: currY } = this.scene.lngLatToPixel([currLng, currLat]);
+
+    if (
+      !dotDistance ||
+      (currX - prevX) ** 2 + (currY - prevY) ** 2 > dotDistance ** 2
+    ) {
+      this.onPointCreate(e as any);
+      this.prevCreateTime = now;
+    }
+  }
+
+  onSceneDragEnd(e: ISceneMouseEvent) {}
+
+  bindSceneDragEvent() {
+    this.unbindSceneDragEvent();
+    this.sceneRender.on(RenderEvent.Dragstart, this.onSceneDragStart);
+    this.sceneRender.on(RenderEvent.Dragging, this.onSceneDragging);
+    this.sceneRender.on(RenderEvent.Dragend, this.onSceneDragEnd);
+
+    this.scene.setMapStatus({
+      dragEnable: false,
+    });
+  }
+
+  unbindSceneDragEvent() {
+    this.sceneRender.off(RenderEvent.Dragstart, this.onSceneDragStart);
+    this.sceneRender.off(RenderEvent.Dragging, this.onSceneDragging);
+    this.sceneRender.off(RenderEvent.Dragend, this.onSceneDragEnd);
+    this.scene.setMapStatus({
+      dragEnable: true,
+    });
+  }
+
+  bindEnableEvent() {
+    super.bindEnableEvent();
+    if (this.isDragTrigger) {
+      this.bindSceneDragEvent();
+    }
+  }
+
+  unbindEnableEvent() {
+    super.unbindEnableEvent();
+    if (this.isDragTrigger) {
+      this.unbindSceneDragEvent();
+    }
+  }
+
+  bindThis() {
+    super.bindThis();
+    this.onSceneDragStart = this.onSceneDragStart.bind(this);
+    this.onSceneDragging = this.onSceneDragging.bind(this);
+    this.onSceneDragEnd = this.onSceneDragEnd.bind(this);
   }
 }
