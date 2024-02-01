@@ -97,11 +97,10 @@ npm run build
 
 - [ ] 新增 Marker 绘制类型
 - [ ] 新增 文本 绘制类型
-- [ ] 两个 Polygon 交/并/异或/差集（合并/挖孔/切割）
-- [x] 通过拖拽自动打点自动打点
-- [ ] 支持 Multi 格式的 Feature 元素编辑
-- [x] 吸附计算性能优化
-- [ ] DrawControl Icon 优化
+- [ ] 新增支持编辑挖孔 Polygon
+- [ ] 新增 两个 Polygon 交/并/异或/差集（合并/挖孔/切割）
+- [ ] 优化 DrawControl Icon 
+- [ ] 优化拖拽时数据精度过长
 
 ## 🤝 如何贡献
 
