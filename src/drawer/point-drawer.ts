@@ -82,8 +82,12 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     );
   }
 
-  getData() {
-    return joinMultiFeatures(this.getPointData());
+  getData(getOriginData = false) {
+    const points = this.getPointData();
+    if (getOriginData) {
+      return points;
+    }
+    return joinMultiFeatures(points);
   }
 
   onPointCreate(e: ILayerMouseEvent<IPointFeature>): IPointFeature | undefined {

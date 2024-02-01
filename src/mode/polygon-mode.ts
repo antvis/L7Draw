@@ -113,8 +113,12 @@ export abstract class PolygonMode<
     return ['polygon', 'line', 'dashLine', 'midPoint', 'point', 'text'];
   }
 
-  getData(): IPolygonFeature[] {
-    return joinMultiFeatures(this.getPolygonData());
+  getData(getOriginData = false): IPolygonFeature[] {
+    const polygons = this.getPolygonData();
+    if (getOriginData) {
+      return polygons;
+    }
+    return joinMultiFeatures(polygons);
   }
 
   getMainLayer() {
