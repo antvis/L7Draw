@@ -3,8 +3,14 @@ import {
   coordAll,
   Feature,
   featureCollection,
+  LineString,
   lineString,
+  MultiLineString,
+  MultiPoint,
+  MultiPolygon,
+  Point,
   point,
+  Polygon,
   Position,
 } from '@turf/turf';
 import { first } from 'lodash';
@@ -179,4 +185,79 @@ export const injectFeaturesBBox = <
     feature.bbox = bbox(feature);
   });
   return features;
+};
+
+/**
+ * 在 setData 时调用，将数据中的 Multi 元素拆分成多个单元素，并赋予 multiIndex，以便在 getData 时组装
+ * @param features
+ * @returns
+ */
+export const splitMultiFeatures = <
+  T extends Feature<
+    Point | MultiPoint | LineString | MultiLineString | Polygon | MultiPolygon
+  >,
+>(
+  features: T[],
+) => {
+  return features
+    .map((feature, index) => {
+      if (feature.geometry.type.startsWith('Multi')) {
+        const newType = feature.geometry.type.replace('Multi', '') as any;
+
+        return feature.geometry.coordinates.map((coordinates) => {
+          return {
+            type: 'Feature',
+            properties: { ...feature.properties, multiIndex: index },
+            geometry: {
+              type: newType,
+              coordinates,
+            },
+          };
+        });
+      }
+      return feature;
+    })
+    .flat() as T[];
+};
+
+/**
+ * 在 getData 时调用，将分散的 Multi 数据组装成原始 Multi 结构的 feature
+ * @param features
+ * @returns
+ */
+export const joinMultiFeatures = <
+  T extends Feature<
+    Point | MultiPoint | LineString | MultiLineString | Polygon | MultiPolygon
+  >,
+>(
+  features: T[],
+) => {
+  const newFeatures: T[] = [];
+  const multiFeatureMap: Record<string, T> = {};
+  features.forEach((feature) => {
+    const multiIndex = feature.properties?.multiIndex;
+    if (typeof multiIndex === 'number') {
+      const targetMultiFeature = multiFeatureMap[multiIndex];
+      if (targetMultiFeature) {
+        targetMultiFeature.geometry.coordinates.push(
+          feature.geometry.coordinates as any,
+        );
+      } else {
+        const newType = `Multi${feature.geometry.type}` as any;
+        const newMultiFeature = {
+          type: 'Feature',
+          properties: { ...feature.properties },
+          geometry: {
+            type: newType,
+            coordinates: [feature.geometry.coordinates],
+          },
+        } as T;
+        multiFeatureMap[multiIndex] = newMultiFeature;
+        newFeatures.push(newMultiFeature);
+      }
+    } else {
+      newFeatures.push(feature);
+    }
+  });
+  return newFeatures;
 };

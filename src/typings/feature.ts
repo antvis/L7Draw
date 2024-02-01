@@ -8,6 +8,7 @@ export interface IBaseProperties {
   id: string;
   isDraw?: boolean;
   isActive?: boolean;
+  multiIndex?: number;
   [key: string]: any;
 }
 

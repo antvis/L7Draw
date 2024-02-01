@@ -1,5 +1,5 @@
 import { Scene } from '@antv/l7';
-import { Feature, Point } from '@turf/turf';
+import { Feature, MultiPoint, Point, multiPoint, point } from '@turf/turf';
 import { DEFAULT_POINT_STYLE, DrawEvent } from '../constant';
 import { PointMode } from '../mode';
 import {
@@ -11,11 +11,17 @@ import {
   IRenderType,
   ISceneMouseEvent,
 } from '../typings';
-import { getDefaultPointProperties, isSameFeature } from '../utils';
+import {
+  getDefaultPointProperties,
+  isSameFeature,
+  joinMultiFeatures,
+  splitMultiFeatures,
+} from '../utils';
 import { DEFAULT_POINT_HELPER_CONFIG } from '../constant/helper';
 import { cloneDeep } from 'lodash';
 
-export interface IPointDrawerOptions extends IBaseModeOptions<Feature<Point>> {
+export interface IPointDrawerOptions
+  extends IBaseModeOptions<Feature<Point | MultiPoint>> {
   helper: IPointHelperOptions | boolean;
 }
 
@@ -38,7 +44,9 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     const defaultOptions = {
       ...this.getCommonOptions(options),
       helper: cloneDeep(DEFAULT_POINT_HELPER_CONFIG),
-      initialData: options.initialData as Feature<Point>[] | undefined,
+      initialData: options.initialData as
+        | Feature<Point | MultiPoint>[]
+        | undefined,
     };
     defaultOptions.style.point = DEFAULT_POINT_STYLE;
     return defaultOptions;
@@ -62,12 +70,12 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
     return this.render.point?.getLayers() ?? [];
   }
 
-  setData(points: Feature<Point>[]) {
+  setData(points: Feature<Point | MultiPoint>[]) {
     this.setPointData(
-      points.map((point) => {
+      splitMultiFeatures(points).map((point) => {
         point.properties = {
           ...getDefaultPointProperties(),
-          ...(point.properties ?? {}),
+          ...point.properties,
         };
         return point as IPointFeature;
       }),
@@ -75,7 +83,7 @@ export class PointDrawer extends PointMode<IPointDrawerOptions> {
   }
 
   getData() {
-    return this.getPointData();
+    return joinMultiFeatures(this.getPointData());
   }
 
   onPointCreate(e: ILayerMouseEvent<IPointFeature>): IPointFeature | undefined {

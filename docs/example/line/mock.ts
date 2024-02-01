@@ -1,4 +1,4 @@
-import { Feature, LineString } from '@turf/turf';
+import { Feature, LineString, MultiLineString } from '@turf/turf';
 
 export const lineList: Feature<LineString>[] = [
   {
@@ -83,6 +83,29 @@ export const lineList: Feature<LineString>[] = [
         [120.147426, 30.172062],
         [120.146042, 30.176801],
         [120.135382, 30.17619],
+      ],
+    },
+  },
+];
+
+export const multiLineList: Feature<MultiLineString>[] = [
+  {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'MultiLineString',
+      coordinates: [
+        [
+          [120.023854, 30.309834],
+          [120.027542, 30.162633],
+          [120.090236, 30.170923],
+          [120.111625, 30.053525],
+        ],
+        [
+          [120.20671, 30.277609],
+          [120.174986, 30.151506],
+          [120.25218, 30.106691],
+        ],
       ],
     },
   },

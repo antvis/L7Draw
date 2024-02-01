@@ -1,5 +1,5 @@
 import { Scene } from '@antv/l7';
-import { coordAll, Feature, LineString } from '@turf/turf';
+import { coordAll, Feature, LineString, MultiLineString } from '@turf/turf';
 import { last } from 'lodash';
 import { DrawEvent, RenderEvent } from '../constant';
 import { ILineModeOptions, LineMode } from '../mode';
@@ -18,9 +18,13 @@ import {
   getDefaultLineProperties,
   getPosition,
   isSameFeature,
+  joinMultiFeatures,
+  splitMultiFeatures,
 } from '../utils';
 
-export type ILineDrawerOptions = ILineModeOptions<Feature<LineString>>;
+export type ILineDrawerOptions = ILineModeOptions<
+  Feature<LineString | MultiLineString>
+>;
 
 export class LineDrawer extends LineMode<ILineDrawerOptions> {
   constructor(scene: Scene, options: DeepPartial<ILineDrawerOptions>) {
@@ -45,19 +49,21 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     return this.render.line?.getLayers() ?? [];
   }
 
-  setData(lines: Feature<LineString>[]) {
-    const lineFeatures = lines.map((line) => {
-      line.properties = {
-        ...getDefaultLineProperties(),
-        ...(line.properties ?? {}),
-      };
-      if (!line.properties.nodes?.length) {
-        line.properties.nodes = coordAll(line).map((position) => {
-          return createPointFeature(position);
-        });
-      }
-      return line as ILineFeature;
-    });
+  setData(lines: Feature<LineString | MultiLineString>[]) {
+    const lineFeatures: ILineFeature[] = splitMultiFeatures(lines).map(
+      (line) => {
+        line.properties = {
+          ...getDefaultLineProperties(),
+          ...(line.properties ?? {}),
+        };
+        if (!line.properties.nodes?.length) {
+          line.properties.nodes = coordAll(line).map((position) => {
+            return createPointFeature(position);
+          });
+        }
+        return line as ILineFeature;
+      },
+    );
     this.source.setData({
       point: [],
       midPoint: [],
@@ -72,7 +78,7 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
   }
 
   getData(): ILineFeature[] {
-    return this.getLineData();
+    return joinMultiFeatures(this.getLineData());
   }
 
   getRenderTypes(): IRenderType[] {

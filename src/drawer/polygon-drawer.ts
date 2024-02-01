@@ -1,5 +1,11 @@
 import { Scene } from '@antv/l7';
-import { coordAll, Feature, featureCollection, Polygon } from '@turf/turf';
+import {
+  coordAll,
+  Feature,
+  featureCollection,
+  MultiPolygon,
+  Polygon,
+} from '@turf/turf';
 import { first, last } from 'lodash';
 import { DrawEvent, RenderEvent } from '../constant';
 import { IPolygonModeOptions, PolygonMode } from '../mode';
@@ -19,10 +25,11 @@ import {
   getDefaultPolygonProperties,
   getPosition,
   isSameFeature,
+  splitMultiFeatures,
 } from '../utils';
 
 export interface IPolygonDrawerOptions
-  extends IPolygonModeOptions<Feature<Polygon>> {
+  extends IPolygonModeOptions<Feature<Polygon | MultiPolygon>> {
   liveUpdate: boolean;
 }
 
@@ -47,8 +54,8 @@ export class PolygonDrawer extends PolygonMode<IPolygonDrawerOptions> {
     };
   }
 
-  setData(data: Feature<Polygon>[]) {
-    const polygonFeatures = data.map((polygon) => {
+  setData(data: Feature<Polygon | MultiPolygon>[]) {
+    const polygonFeatures = splitMultiFeatures(data).map((polygon) => {
       polygon.properties = {
         ...getDefaultPolygonProperties(),
         ...(polygon.properties ?? {}),
