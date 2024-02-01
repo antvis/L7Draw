@@ -205,9 +205,9 @@ export const getAdsorbPosition: ({
   const { data: adsorbData, pointAdsorbPixel, lineAdsorbPixel } = adsorbOptions;
   let features: AdsorbTargetFeature[] = [];
   if (adsorbData === 'allDrawData') {
-    features = BaseMode.instances.map((draw) => draw.getData()).flat();
+    features = BaseMode.instances.map((draw) => draw.getData(true)).flat();
   } else if (adsorbData === 'drawData') {
-    features = draw.getData();
+    features = draw.getData(true);
   } else if (adsorbData instanceof Function) {
     features = adsorbData(position);
   } else {

@@ -77,8 +77,12 @@ export class LineDrawer extends LineMode<ILineDrawerOptions> {
     }
   }
 
-  getData(): ILineFeature[] {
-    return joinMultiFeatures(this.getLineData());
+  getData(getOriginData = false): ILineFeature[] {
+    const lines = this.getLineData();
+    if (getOriginData) {
+      return lines;
+    }
+    return joinMultiFeatures(lines);
   }
 
   getRenderTypes(): IRenderType[] {

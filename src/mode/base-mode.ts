@@ -193,7 +193,7 @@ export abstract class BaseMode<
   /**
    * 获取数据
    */
-  abstract getData(): Feature[];
+  abstract getData(getOriginData?: boolean): Feature[];
 
   /**
    * 获取主图层实例
@@ -263,7 +263,8 @@ export abstract class BaseMode<
     let previousSelectFeature: Feature | null = null;
     const onSourceChange = () => {
       const newSelectFeature =
-        this.getData().find((feature) => feature.properties?.isActive) || null;
+        this.getData(true).find((feature) => feature.properties?.isActive) ||
+        null;
       if (
         previousSelectFeature?.properties?.id !==
         newSelectFeature?.properties?.id
@@ -395,7 +396,7 @@ export abstract class BaseMode<
   // 传入 Feature 或者 id 获取当前数据中的目标 Feature
   getTargetFeature(
     target: Feature | string | null | undefined,
-    data = this.getData(),
+    data = this.getData(true),
   ) {
     let targetFeature: IBaseFeature | null = null;
     if (target) {
@@ -425,7 +426,7 @@ export abstract class BaseMode<
    * 删除当前active的绘制物
    */
   removeActiveFeature() {
-    const activeItem = this.getData().find((item) => {
+    const activeItem = this.getData(true).find((item) => {
       const { isActive, isDraw } = item.properties ?? {};
       return isActive || isDraw;
     });
@@ -440,7 +441,7 @@ export abstract class BaseMode<
    * @param target
    */
   removeFeature(target: Feature | string) {
-    const data = this.getData();
+    const data = this.getData(true);
     const targetFeature = this.getTargetFeature(target);
     if (targetFeature) {
       this.setData(
@@ -455,7 +456,7 @@ export abstract class BaseMode<
    * 矫正正在绘制Feature的虚线部分（Drawer中都是在onSceneMouseMove中进行绘制）
    */
   correctDrawItem() {
-    const drawItem = this.getData().find((item) => item.properties?.isDraw);
+    const drawItem = this.getData(true).find((item) => item.properties?.isDraw);
     // 如果当前有正在绘制的元素，需要将虚线部分与鼠标位置表现一致，而非history保存时的虚线位置
     if (drawItem) {
       this.onSceneMouseMove({
