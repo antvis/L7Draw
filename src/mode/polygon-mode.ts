@@ -29,6 +29,7 @@ import {
   createPolygonFeature,
   getPosition,
   isSameFeature,
+  joinMultiFeatures,
   updateTargetFeature,
 } from '../utils';
 import { ILineModeOptions, LineMode } from './line-mode';
@@ -113,7 +114,7 @@ export abstract class PolygonMode<
   }
 
   getData(): IPolygonFeature[] {
-    return this.getPolygonData();
+    return joinMultiFeatures(this.getPolygonData());
   }
 
   getMainLayer() {

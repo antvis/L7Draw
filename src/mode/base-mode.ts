@@ -104,7 +104,7 @@ export abstract class BaseMode<
   get addable() {
     const data = this.getData();
     const { multiple, maxCount } = this.options;
-    const drawItem = data.find((item) => item.properties.isDraw);
+    const drawItem = data.find((item) => item.properties?.isDraw);
     if (!this.enabled || !this.allowCreate) {
       return false;
     }
@@ -193,7 +193,7 @@ export abstract class BaseMode<
   /**
    * 获取数据
    */
-  abstract getData(): IBaseFeature[];
+  abstract getData(): Feature[];
 
   /**
    * 获取主图层实例
@@ -400,15 +400,16 @@ export abstract class BaseMode<
     let targetFeature: IBaseFeature | null = null;
     if (target) {
       targetFeature =
-        data.find(
+        (data.find(
           (feature) =>
-            feature.properties.id ===
+            feature.properties?.id ===
             (typeof target === 'string' ? target : target.properties?.id),
-        ) ?? null;
+        ) as IBaseFeature) ?? null;
       if (!targetFeature && target instanceof Object) {
         targetFeature =
-          data.find((feature) => isEqual(target.geometry, feature.geometry)) ??
-          null;
+          (data.find((feature) =>
+            isEqual(target.geometry, feature.geometry),
+          ) as IBaseFeature) ?? null;
       }
     }
     return targetFeature;
@@ -425,7 +426,7 @@ export abstract class BaseMode<
    */
   removeActiveFeature() {
     const activeItem = this.getData().find((item) => {
-      const { isActive, isDraw } = item.properties;
+      const { isActive, isDraw } = item.properties ?? {};
       return isActive || isDraw;
     });
     if (activeItem) {
@@ -442,8 +443,8 @@ export abstract class BaseMode<
     const data = this.getData();
     const targetFeature = this.getTargetFeature(target);
     if (targetFeature) {
-      // @ts-ignore
       this.setData(
+        // @ts-ignore
         data.filter((feature) => !isSameFeature(targetFeature, feature)),
       );
       this.emit(DrawEvent.Remove, target, this.getData());
@@ -454,7 +455,7 @@ export abstract class BaseMode<
    * 矫正正在绘制Feature的虚线部分（Drawer中都是在onSceneMouseMove中进行绘制）
    */
   correctDrawItem() {
-    const drawItem = this.getData().find((item) => item.properties.isDraw);
+    const drawItem = this.getData().find((item) => item.properties?.isDraw);
     // 如果当前有正在绘制的元素，需要将虚线部分与鼠标位置表现一致，而非history保存时的虚线位置
     if (drawItem) {
       this.onSceneMouseMove({
