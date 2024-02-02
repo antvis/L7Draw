@@ -100,7 +100,6 @@ npm run build
 - [ ] 新增支持编辑挖孔 Polygon
 - [ ] 新增 两个 Polygon 交/并/异或/差集（合并/挖孔/切割）
 - [ ] 优化 DrawControl Icon 
-- [ ] 优化拖拽时数据精度过长
 
 ## 🤝 如何贡献
 
