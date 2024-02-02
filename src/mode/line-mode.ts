@@ -29,6 +29,7 @@ import {
   getAdsorbPosition,
   getLngLat,
   getPosition,
+  getPrecisionNumber,
   isSameFeature,
   resetEventLngLat,
   transLngLat2Position,
@@ -461,8 +462,8 @@ export abstract class LineMode<
     nodes.forEach((node) => {
       const { coordinates } = node.geometry;
       node.geometry.coordinates = [
-        coordinates[0] + lng - preLng,
-        coordinates[1] + lat - preLat,
+        getPrecisionNumber(coordinates[0] + lng - preLng),
+        getPrecisionNumber(coordinates[1] + lat - preLat),
       ];
     });
     this.syncLineNodes(line, nodes);

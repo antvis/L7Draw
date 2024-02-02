@@ -23,6 +23,16 @@ import {
 import { getUuid } from './feature';
 
 /**
+ * 将数字转四舍五入为目标精度位数的数字
+ * @param num
+ * @param precision
+ * @returns
+ */
+export const getPrecisionNumber = (num: number, precision = 6) => {
+  return Math.round(num * Math.pow(10, precision)) / Math.pow(10, precision);
+};
+
+/**
  * 获取线段的中心点Feature
  * @param feature
  */

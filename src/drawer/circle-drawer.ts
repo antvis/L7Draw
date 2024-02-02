@@ -26,6 +26,7 @@ import {
   createPointFeature,
   getDefaultPolygonProperties,
   getPosition,
+  getPrecisionNumber,
   isSameFeature,
 } from '../utils';
 import { DEFAULT_CIRCLE_HELPER_CONFIG } from '../constant/helper';
@@ -199,8 +200,8 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
       nodes.forEach((node) => {
         const [lng, lat] = node.geometry.coordinates;
         node.geometry.coordinates = [
-          lng + curLng - preLng,
-          lat + curLat - preLat,
+          getPrecisionNumber(lng + curLng - preLng),
+          getPrecisionNumber(lat + curLat - preLat),
         ];
       });
       this.syncPolygonNodes(dragPolygon, dragPolygon.properties.nodes);
@@ -224,8 +225,9 @@ export class CircleDrawer extends DragPolygonMode<ICircleDrawerOptions> {
     const positions: Position[] = [];
     for (let i = 0; i < steps; i++) {
       positions.push(
-        destination(startPoint, dis, (i * -360) / steps, { units: 'meters' })
-          .geometry.coordinates,
+        destination(startPoint, dis, (i * -360) / steps, {
+          units: 'meters',
+        }).geometry.coordinates.map((item) => getPrecisionNumber(item, 6)),
       );
     }
     positions.push(positions[0]);
