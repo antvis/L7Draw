@@ -99,5 +99,8 @@
   },
   "bugs": {
     "url": "https://github.com/antvis/l7-draw/issues"
+  },
+  "engines": {
+    "node": "^16.20.0"
   }
 }
