@@ -18,9 +18,16 @@
   border-right: 1px solid #e0e0e0;
   outline: 0;
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+.l7-draw-control__btn svg {
+  transition: color 0.3s;
 }
 .l7-draw-control__btn:hover {
   background-color: #e5e5e5;
+}
+.l7-draw-control__btn:hover svg {
+  color: #000;
 }
 .l7-draw-control__btn:last-child {
   border-right: 0;
@@ -32,6 +39,11 @@
   overflow: hidden;
   fill: currentColor;
 }
-.l7-draw-control__btn--active svg {
-  color: #0370fe;
+.l7-draw-control__btn--active,
+.l7-draw-control__btn--active:hover {
+  background-color: #0370fe;
+}
+.l7-draw-control__btn--active svg,
+.l7-draw-control__btn--active:hover svg {
+  color: #fff;
 }

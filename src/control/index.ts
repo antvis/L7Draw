@@ -130,6 +130,13 @@ export class DrawControl extends Control {
             draw.on(DrawEvent.Change, this.emitDataChange);
             draw.on(DrawEvent.Select, (feature?: Feature) => {
               this.emitDrawSelect(btnType as DrawType, feature);
+              if (feature) {
+                Object.values(this.drawMap).forEach((drawInstance) => {
+                  if (drawInstance !== draw) {
+                    drawInstance.setActiveFeature(null);
+                  }
+                });
+              }
             });
             this.drawMap[btnType as DrawType] = draw;
           }

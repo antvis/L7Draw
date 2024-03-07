@@ -21,8 +21,15 @@
     border-right: 1px solid #e0e0e0;
     outline: 0;
     cursor: pointer;
+    transition: background-color 0.3s;
+    svg {
+      transition: color 0.3s;
+    }
     &:hover {
       background-color: #e5e5e5;
+      svg {
+        color: #000;
+      }
     }
     &:last-child {
       border-right: 0;
@@ -34,9 +41,11 @@
       overflow: hidden;
       fill: currentColor;
     }
-    &--active {
+    &--active,
+    &--active:hover {
+      background-color: #0370fe;
       svg {
-        color: #0370fe;
+        color: #fff;
       }
     }
   }
