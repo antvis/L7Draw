@@ -1,6 +1,6 @@
 {
   "name": "@antv/l7-draw",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "A drawing package for L7",
   "license": "MIT",
   "scripts": {
@@ -99,8 +99,5 @@
   },
   "bugs": {
     "url": "https://github.com/antvis/l7-draw/issues"
-  },
-  "engines": {
-    "node": "^16.20.0"
   }
 }
