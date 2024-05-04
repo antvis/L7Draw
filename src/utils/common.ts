@@ -30,7 +30,7 @@ export const getMapDom = (scene: Scene): HTMLElement | null => {
  */
 export const getLngLat = (e: ISceneMouseEvent | ILayerMouseEvent) => {
   // @ts-ignore
-  return e.lngLat || e.lnglat;
+  return e.lngLat || e.lnglat || e.latlng;
 };
 
 export const getPosition: (
