@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@antv/dumi-theme-antv": "^0.2.1",
-    "@antv/l7": "^2.3.0",
+    "@antv/l7": "^2.21.8",
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
     "@optimize-lodash/rollup-plugin": "^3.0.0",
@@ -66,7 +66,7 @@
     "yorkie": "^2.0.0"
   },
   "peerDependencies": {
-    "@antv/l7": "^2.8.35"
+    "@antv/l7": "^2.21.8"
   },
   "husky": {
     "hooks": {
