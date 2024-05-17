@@ -251,6 +251,7 @@ export class DrawControl extends Control {
       <use xlink:href="${DrawIconMap[type]}"></use>
     </svg>`;
     btn.setAttribute(DrawTypeAttrName, type);
+    btn.type = 'button'
     return btn;
   }
 }
