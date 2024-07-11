@@ -97,6 +97,9 @@
     "type": "git",
     "url": "https://github.com/antvis/l7-draw"
   },
+  "engines": {
+    "node": "16"
+  },
   "bugs": {
     "url": "https://github.com/antvis/l7-draw/issues"
   }

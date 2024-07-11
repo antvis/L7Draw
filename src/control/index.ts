@@ -1,6 +1,5 @@
 import { Control, DOM, Scene } from '@antv/l7';
 import { BaseMode } from '../mode';
-import { Container } from 'inversify';
 import { BtnType, DrawType, IDrawControlProps } from './types';
 import {
   DrawBtnActiveClassName,
@@ -60,7 +59,7 @@ export class DrawControl extends Control {
     };
   }
 
-  public addTo(container: Container) {
+  public addTo(container: any) {
     super.addTo(container);
     this.init();
     return this;
