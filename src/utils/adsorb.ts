@@ -58,6 +58,10 @@ const getAdsorbPoint = (
     return isPositionInBBox(position, pointExpandBBox);
   });
 
+  if (!points.length) {
+    return null;
+  }
+
   const [lng, lat] = position;
   const { x: mouseX, y: mouseY } = scene.lngLatToPixel([lng, lat]);
   const squareDistanceList = points.map((point) => {

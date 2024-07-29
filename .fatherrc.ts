@@ -1,4 +1,5 @@
 import { optimizeLodashImports } from '@optimize-lodash/rollup-plugin';
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 // import analyze from 'rollup-plugin-analyzer';
 
 export default {
@@ -13,6 +14,6 @@ export default {
       '@antv/l7': 'L7',
     },
   },
-  extraRollupPlugins: [optimizeLodashImports()], //analyze()
+  extraRollupPlugins: [optimizeLodashImports(), nodePolyfills()], //analyze()
   lessInBabelMode: true,
 };

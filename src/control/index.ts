@@ -59,7 +59,7 @@ export class DrawControl extends Control {
     };
   }
 
-  public addTo(container: L7Container) {
+  public addTo(container: any) {
     super.addTo(container);
     this.init();
     return this;
@@ -250,6 +250,7 @@ export class DrawControl extends Control {
       <use xlink:href="${DrawIconMap[type]}"></use>
     </svg>`;
     btn.setAttribute(DrawTypeAttrName, type);
+    btn.type = 'button';
     return btn;
   }
 }
