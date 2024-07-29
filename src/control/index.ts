@@ -1,4 +1,4 @@
-import { Control, DOM, Scene } from '@antv/l7';
+import { Control, DOM, L7Container, Scene } from '@antv/l7';
 import { BaseMode } from '../mode';
 import { BtnType, DrawType, IDrawControlProps } from './types';
 import {
@@ -250,7 +250,7 @@ export class DrawControl extends Control {
       <use xlink:href="${DrawIconMap[type]}"></use>
     </svg>`;
     btn.setAttribute(DrawTypeAttrName, type);
-    btn.type = 'button'
+    btn.type = 'button';
     return btn;
   }
 }
